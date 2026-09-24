@@ -1,0 +1,11 @@
+{
+  "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。",
+  "video_overrides": [
+    {"video_id": "rOpJGEOqWIM", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『10月31日(土) Aマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
+    {"video_id": "wFHhXe2dZMs", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『10月31日(土) Bマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
+    {"video_id": "42xYHFkxEt0", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『10月31日(土) Cマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
+    {"video_id": "kcWTx9FUZ60", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『11月1日(土) Aマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
+    {"video_id": "uo4CNIv1o6s", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『11月1日(土) Bマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
+    {"video_id": "um3Y3mUuP3E", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『11月1日(土) Cマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+ "built_at": "2026-09-24T14:00:39+09:00",
+ "as_of": "2026-09-24",
+ "video_count": 3077,
+ "raw_count": 3077,
+ "duplicate_ids_removed": 0,
+ "link_counts": {
+  "derived": 127,
+  "matched": 2357,
+  "manual": 6,
+  "livedate": 177,
+  "candidate": 193,
+  "series_only": 28,
+  "unmatched": 189
+ },
+ "overrides_applied": 6,
+ "master_events": 443,
+ "derived_events": 30,
+ "events_with_videos": 197,
+ "previous_video_count": 3077,
+ "missing_from_previous": [],
+ "new_since_previous": 0,
+ "unavailable_now": []
+}

@@ -1,0 +1,1081 @@
+{
+ "series": {
+  "藤波朱理杯": {
+   "s": "x-fujinami-cup"
+  },
+  "全日本学生レスリング選手権大会": {
+   "s": "intercollegiate"
+  },
+  "第42回 全国高校生グレコローマンレスリング選手権大会": {
+   "s": "highschool-greco"
+  },
+  "第43回 全日本社会人オープン": {
+   "s": "shakaijin-open"
+  },
+  "東日本学生レスリング選手権大会": {
+   "s": "east-spring"
+  },
+  "第73回 全日本社会人レスリング選手権大会": {
+   "s": "shakaijin"
+  },
+  "A 茨城ジュニア大会": {
+   "s": "x-ibaraki-junior"
+  },
+  "第40回東日本少年少女レスリング選手権大会": {
+   "s": "x-east-kids"
+  },
+  "東日本学生レスリングリーグ戦": {
+   "s": "east-league"
+  },
+  "第79回 杉並区区民体育祭・杉並区レスリング大会": {
+   "s": "x-suginami"
+  },
+  "U17,U20全日本レスリング選手権大会": {
+   "s": "joc-junior"
+  },
+  "第69回全国高等学校選抜レスリング大会": {
+   "s": "highschool-senbatsu"
+  },
+  "第11回日野レスリング選手権大会": {
+   "s": "local-283989"
+  },
+  "第19回堺市レスリング連盟少年少女レスリング選手権大会": {
+   "s": "local-282985"
+  },
+  "第3回高谷惣亮杯": {
+   "s": "x-takatani-cup"
+  },
+  "全日本選手権": {
+   "s": "tenno-cup"
+  },
+  "兵庫オープン": {
+   "s": "local-280653"
+  },
+  "第16回全国中学選抜 U15レスリング選手権大会": {
+   "s": "juniorhigh-senbatsu"
+  },
+  "東日本女子リーグ戦": {
+   "s": "east-women-league"
+  },
+  "全日本大学選手権": {
+   "s": "university-championship"
+  },
+  "第42回 全国社会人オープン": {
+   "s": "shakaijin-open"
+  },
+  "三重県少年少女レスリング大会": {
+   "s": "x-fujinami-cup"
+  },
+  "UNIVASカップ": {
+   "s": "intercollegiate"
+  },
+  "第41回全国高校生グレコローマンレスリング選手権大会": {
+   "s": "highschool-greco"
+  },
+  "第72回 全日本社会人レスリング選手権大会": {
+   "s": "shakaijin"
+  },
+  "第78回 杉並区区民体育祭・杉並区レスリング大会": {
+   "s": "x-suginami"
+  },
+  "8-4 第71回関東高等学校レスリング大会": {
+   "s": "regional-関東-summer"
+  },
+  "東日本リーグ戦": {
+   "s": "east-league"
+  },
+  "第68回全国高等学校選抜レスリング大会": {
+   "s": "highschool-senbatsu"
+  },
+  "第10回日野町少年少女レスリング大会": {
+   "s": "interhigh"
+  },
+  "第18回堺市レスリング連盟少年少女レスリング選手権大会": {
+   "s": "local-263382"
+  },
+  "・第9回関東高等学校選抜女子レスリング大会": {
+   "s": "regional-関東-qualifier"
+  },
+  "11-１ 2024斎藤つよし杯": {
+   "s": "x-kanto-hs-league"
+  },
+  "第15回全国中学選抜 U15レスリング選手権大会": {
+   "s": "juniorhigh-senbatsu"
+  },
+  "第6回東日本大学女子リーグ戦": {
+   "s": "east-women-league"
+  },
+  "第41回 全国社会人オープン": {
+   "s": "shakaijin-open"
+  },
+  "第40回 全国高校生グレコローマンレスリング選手権": {
+   "s": "highschool-greco"
+  },
+  "30C 全日本社会人選手権": {
+   "s": "shakaijin"
+  },
+  "押立杯": {
+   "s": "x-oshitate"
+  },
+  "02-3第70回関東高等学校レスリング大会": {
+   "s": "regional-関東-summer"
+  },
+  "全日本選抜選手権": {
+   "s": "meiji-cup"
+  },
+  "28-5 JOCジュニアオリンピックカップ": {
+   "s": "joc-junior"
+  },
+  "全国高校選抜大会": {
+   "s": "highschool-senbatsu"
+  },
+  "10A第9回 日野町少年少女レスリング大会": {
+   "s": "x-hino-junior"
+  },
+  "1 第17回 堺市レスリング連盟 少年少女レスリング選手権大会": {
+   "s": "x-sakai-junior"
+  },
+  "第50回関東高等学校選抜レスリング大会": {
+   "s": "regional-関東-qualifier"
+  },
+  "第5回東日本大学女子リーグ戦": {
+   "s": "east-women-league"
+  },
+  "第22回 兵庫ジュニアオープン": {
+   "s": "x-hyogo-junior"
+  },
+  "パリオリンピック代表へ‼︎12 21開催！天皇杯": {
+   "s": "tenno-cup"
+  },
+  "第14回全国中学選抜 U15レスリング選手権大会": {
+   "s": "juniorhigh-senbatsu"
+  },
+  "日韓交歓レスリング大会": {
+   "s": "japan-korea-highschool"
+  },
+  "C21 第40回 全国社会人オープン": {
+   "s": "shakaijin-open"
+  },
+  "D15 フォーデイズ杯": {
+   "s": "women-open"
+  },
+  "2023世界選手権": {
+   "s": "x-world-championships"
+  },
+  "20-4 第39回 全国高校生グレコローマンレスリング選手権大会": {
+   "s": "highschool-greco"
+  },
+  "第70回 全日本社会人レスリング選手権大会": {
+   "s": "shakaijin"
+  },
+  "4-4 第 69 回関東高等学校レスリング大会": {
+   "s": "regional-関東-summer"
+  },
+  "第66回全国高等学校選抜レスリング大会": {
+   "s": "highschool-senbatsu"
+  },
+  "全日本ジュニア選手権": {
+   "s": "joc-junior"
+  },
+  "ジュニアクイーンズカップ": {
+   "s": "queens-cup"
+  },
+  "関西オープン": {
+   "s": "x-kansai-camp"
+  },
+  "第8回 日野町少年少女レスリング大会": {
+   "s": "x-hino-junior"
+  },
+  "B第39回関東少年少女レスリング横須賀大会": {
+   "s": "x-kanto-kids-yokosuka"
+  },
+  "堺市少年少女レスリング大会": {
+   "s": "x-sakai-junior"
+  },
+  "第7回関東高等学校選抜女子レスリング大会": {
+   "s": "regional-関東-qualifier"
+  },
+  "第35回近畿少年少女レスリング選手権": {
+   "s": "x-kinki-kids"
+  },
+  "第39回 全国社会人オープン": {
+   "s": "shakaijin-open"
+  },
+  "令和 4 年度全日本大学レスリンググレコローマンスタイル選手権大会": {
+   "s": "university-greco"
+  },
+  "第15回全日本女子オープン": {
+   "s": "women-open"
+  },
+  "全国高校生グレコローマン選手権": {
+   "s": "highschool-greco"
+  },
+  "令和 4 年度東日本学生レスリングリーグ戦": {
+   "s": "east-league"
+  },
+  "H26年度全日本学生選手権": {
+   "s": "intercollegiate"
+  },
+  "全国中学生選手権": {
+   "s": "juniorhigh"
+  },
+  "第48回 全国中学生レスリング選手権大会": {
+   "s": "juniorhigh"
+  },
+  "24-2 ＪＯＣジュニアオリンピックカップ": {
+   "s": "joc-junior"
+  },
+  "全国中学選抜選手権大会": {
+   "s": "juniorhigh-senbatsu"
+  },
+  "(いちご一会とちぎ国体レスリング競技リハーサル大会": {
+   "s": "university-championship"
+  },
+  "二日目A 全日本学生選手権": {
+   "s": "intercollegiate"
+  },
+  "一日目D 全日本学生選手権": {
+   "s": "intercollegiate"
+  },
+  "西日本学生選手権": {
+   "s": "west-championship"
+  },
+  "二日目 第 全日本大学グレコローマン選手権": {
+   "s": "university-greco"
+  },
+  "一日目 第 全日本大学グレコローマン選手権": {
+   "s": "university-greco"
+  },
+  "尾﨑野乃香 世界選手権": {
+   "s": "x-world-championships"
+  },
+  "第67回関東高校レスリング大会": {
+   "s": "regional-関東-summer"
+  },
+  "Ｂ ジュニアクイーンズカップ": {
+   "s": "queens-cup"
+  },
+  "： （日）西日本学生秋季リーグ戦": {
+   "s": "west-autumn-league"
+  },
+  "： （土）西日本学生秋季リーグ戦": {
+   "s": "west-autumn-league"
+  },
+  "（金）：全日本大学グレコローマン選手権": {
+   "s": "university-greco"
+  },
+  "（木）：全日本大学グレコローマン選手権": {
+   "s": "university-greco"
+  },
+  "全日本大学グレコローマン選手権": {
+   "s": "university-greco"
+  },
+  "全国少年少女レスリング大会": {
+   "s": "kids"
+  },
+  "東日本学生春季選手権": {
+   "s": "east-spring"
+  },
+  "東日本学生秋季選手権": {
+   "s": "east-autumn"
+  },
+  "全日本大学学生選手権": {
+   "s": "interhigh"
+  },
+  "東日本レスリング 連盟 リーグ戦": {
+   "s": "east-league"
+  },
+  "全日本レスリング選手権大会": {
+   "s": "tenno-cup"
+  },
+  "全日本女子オープン": {
+   "s": "women-open"
+  },
+  "全日本学生レスリング選手権大会": {
+   "s": "intercollegiate"
+  },
+  "三笠宮賜杯": {
+   "s": "interhigh"
+  },
+  "東日本学生春季女子選手権": {
+   "s": "east-spring"
+  },
+  "東日本学生春季新人選手権": {
+   "s": "east-spring"
+  },
+  "西日本学生秋季リーグ戦": {
+   "s": "west-autumn-league"
+  },
+  "東日本学生秋季新人選手権": {
+   "s": "east-autumn"
+  },
+  "国民体育大会": {
+   "s": "kokutai"
+  },
+  "東日本学生女子大会": {
+   "s": "east-spring"
+  },
+  "西日本学生春季リーグ戦": {
+   "s": "west-spring-league"
+  },
+  "全国中学生選抜選手権大会": {
+   "s": "juniorhigh-senbatsu"
+  },
+  "２２日天皇杯": {
+   "s": "tenno-cup"
+  },
+  "天皇杯": {
+   "s": "tenno-cup"
+  },
+  "明治杯": {
+   "s": "meiji-cup"
+  }
+ },
+ "occurrence": {
+  "藤波朱理杯(2026)": {
+   "s": "x-fujinami-cup",
+   "e": "x-fujinami-cup-2026-08-29"
+  },
+  "全日本学生レスリング選手権大会(2026)": {
+   "s": "intercollegiate",
+   "e": "wre-2026-intercollegiate-0820"
+  },
+  "第42回 全国高校生グレコローマンレスリング選手権大会(2026)": {
+   "s": "highschool-greco",
+   "e": "wre-2026-highschool-greco-0814"
+  },
+  "第43回 全日本社会人オープン(2026)": {
+   "s": "shakaijin-open",
+   "e": "wre-2026-shakaijin-open-1031"
+  },
+  "東日本学生レスリング選手権大会(2026)": {
+   "s": "east-spring",
+   "e": "wre-2026-east-spring-0713"
+  },
+  "第73回 全日本社会人レスリング選手権大会(2026)": {
+   "s": "shakaijin",
+   "e": "wre-2026-shakaijin-0711"
+  },
+  "A 茨城ジュニア大会(2026)": {
+   "s": "x-ibaraki-junior",
+   "e": "x-ibaraki-junior-2026-07-04"
+  },
+  "第40回東日本少年少女レスリング選手権大会(2026)": {
+   "s": "x-east-kids",
+   "e": "x-east-kids-2026-06-28"
+  },
+  "東日本学生レスリングリーグ戦(2026)": {
+   "s": "east-league",
+   "e": "wre-2026-east-league-0616"
+  },
+  "第79回 杉並区区民体育祭・杉並区レスリング大会(2026)": {
+   "s": "x-suginami",
+   "e": "x-suginami-2026-05-10"
+  },
+  "U17,U20全日本レスリング選手権大会(2026)": {
+   "s": "joc-junior",
+   "e": "wre-2026-joc-junior-0425"
+  },
+  "第69回全国高等学校選抜レスリング大会(2026)": {
+   "s": "highschool-senbatsu",
+   "e": "wre-2026-highschool-senbatsu-0327"
+  },
+  "第11回日野レスリング選手権大会(2026)": {
+   "s": "local-283989",
+   "e": "wre-2026-local-283989-0307"
+  },
+  "第19回堺市レスリング連盟少年少女レスリング選手権大会(2026)": {
+   "s": "local-282985",
+   "e": "wre-2026-local-282985-0208"
+  },
+  "第3回高谷惣亮杯(2025)": {
+   "s": "x-takatani-cup",
+   "e": "x-takatani-cup-2025-12-27"
+  },
+  "全日本選手権(2025)": {
+   "s": "tenno-cup",
+   "e": "wre-2025-tenno-cup-1218"
+  },
+  "兵庫オープン(2025)": {
+   "s": "local-280653",
+   "e": "wre-2025-local-280653-1221"
+  },
+  "第16回全国中学選抜 U15レスリング選手権大会(2025)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2025-juniorhigh-senbatsu-1206"
+  },
+  "東日本学生レスリング選手権大会(2025)": {
+   "s": "east-spring",
+   "e": "wre-2025-east-spring-0709"
+  },
+  "東日本女子リーグ戦(2025)": {
+   "s": "east-women-league",
+   "e": "wre-2025-east-women-league-1123"
+  },
+  "全日本大学選手権(2025)": {
+   "s": "university-greco",
+   "e": "wre-2025-university-greco-1018"
+  },
+  "第42回 全国社会人オープン(2025)": {
+   "s": "shakaijin-open",
+   "e": "wre-2025-shakaijin-open-1101"
+  },
+  "三重県少年少女レスリング大会(2025)": {
+   "s": "x-fujinami-cup",
+   "e": "x-fujinami-cup-2025-08-31"
+  },
+  "全日本学生レスリング選手権大会(2025)": {
+   "s": "intercollegiate",
+   "e": "wre-2025-intercollegiate-0821"
+  },
+  "UNIVASカップ(2025)": {
+   "s": "intercollegiate",
+   "e": "wre-2025-intercollegiate-0821"
+  },
+  "第41回全国高校生グレコローマンレスリング選手権大会(2025)": {
+   "s": "highschool-greco",
+   "e": "wre-2025-highschool-greco-0815"
+  },
+  "第72回 全日本社会人レスリング選手権大会(2025)": {
+   "s": "shakaijin",
+   "e": "wre-2025-shakaijin-0712"
+  },
+  "第78回 杉並区区民体育祭・杉並区レスリング大会(2025)": {
+   "s": "x-suginami",
+   "e": "x-suginami-2025-06-29"
+  },
+  "8-4 第71回関東高等学校レスリング大会(2025)": {
+   "s": "regional-関東-summer",
+   "e": "wre-2025-regional-関東-summer-0607"
+  },
+  "東日本リーグ戦(2025)": {
+   "s": "east-league",
+   "e": "wre-2025-east-league-0526"
+  },
+  "U17,U20全日本レスリング選手権大会(2025)": {
+   "s": "joc-junior",
+   "e": "wre-2025-joc-junior-0426"
+  },
+  "第68回全国高等学校選抜レスリング大会(2025)": {
+   "s": "highschool-senbatsu",
+   "e": "wre-2025-highschool-senbatsu-0327"
+  },
+  "第10回日野町少年少女レスリング大会(2025)": {
+   "s": "interhigh"
+  },
+  "第18回堺市レスリング連盟少年少女レスリング選手権大会(2025)": {
+   "s": "local-263382",
+   "e": "wre-2025-local-263382-0208"
+  },
+  "・第9回関東高等学校選抜女子レスリング大会(2025)": {
+   "s": "regional-関東-qualifier"
+  },
+  "11-１ 2024斎藤つよし杯(2025)": {
+   "s": "x-kanto-hs-league",
+   "e": "x-kanto-hs-league-2025-01-12"
+  },
+  "UNIVASカップ(2024)": {
+   "s": "x-takatani-cup",
+   "e": "x-takatani-cup-2024-12-28"
+  },
+  "全日本選手権(2024)": {
+   "s": "tenno-cup",
+   "e": "wre-2024-tenno-cup-1219"
+  },
+  "第15回全国中学選抜 U15レスリング選手権大会(2024)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2024-juniorhigh-senbatsu-1130"
+  },
+  "東日本学生レスリング選手権大会(2024)": {
+   "s": "east-spring",
+   "e": "wre-2024-east-spring-0708"
+  },
+  "第6回東日本大学女子リーグ戦(2024)": {
+   "s": "east-women-league",
+   "e": "wre-2024-east-women-league-1124"
+  },
+  "全日本大学選手権(2024)": {
+   "s": "university-greco",
+   "e": "wre-2024-university-greco-1023"
+  },
+  "第41回 全国社会人オープン(2024)": {
+   "s": "shakaijin-open",
+   "e": "wre-2024-shakaijin-open-1102"
+  },
+  "全日本学生レスリング選手権大会(2024)": {
+   "s": "intercollegiate",
+   "e": "wre-2024-intercollegiate-0823"
+  },
+  "第40回 全国高校生グレコローマンレスリング選手権(2024)": {
+   "s": "highschool-greco",
+   "e": "wre-2024-highschool-greco-0818"
+  },
+  "30C 全日本社会人選手権(2024)": {
+   "s": "shakaijin",
+   "e": "wre-2024-shakaijin-0629"
+  },
+  "東日本学生レスリングリーグ戦(2024)": {
+   "s": "east-league",
+   "e": "wre-2024-east-league-0624"
+  },
+  "押立杯(2024)": {
+   "s": "x-oshitate",
+   "e": "x-oshitate-2024-06-23"
+  },
+  "02-3第70回関東高等学校レスリング大会(2024)": {
+   "s": "regional-関東-summer",
+   "e": "wre-2024-regional-関東-summer-0601"
+  },
+  "全日本選抜選手権(2024)": {
+   "s": "meiji-cup",
+   "e": "wre-2024-meiji-cup-0523"
+  },
+  "28-5 JOCジュニアオリンピックカップ(2024)": {
+   "s": "joc-junior",
+   "e": "wre-2024-joc-junior-0427"
+  },
+  "全国高校選抜大会(2024)": {
+   "s": "highschool-senbatsu"
+  },
+  "10A第9回 日野町少年少女レスリング大会(2024)": {
+   "s": "x-hino-junior",
+   "e": "x-hino-junior-2024-03-09"
+  },
+  "1 第17回 堺市レスリング連盟 少年少女レスリング選手権大会(2024)": {
+   "s": "x-sakai-junior",
+   "e": "x-sakai-junior-2024-02-11"
+  },
+  "第50回関東高等学校選抜レスリング大会(2024)": {
+   "s": "regional-関東-qualifier",
+   "e": "wre-2024-regional-関東-qualifier-0203"
+  },
+  "第5回東日本大学女子リーグ戦(2024)": {
+   "s": "east-women-league",
+   "e": "wre-2024-east-women-league-0114"
+  },
+  "全日本選手権(2023)": {
+   "s": "tenno-cup",
+   "e": "wre-2023-tenno-cup-1221"
+  },
+  "第22回 兵庫ジュニアオープン(2023)": {
+   "s": "x-hyogo-junior",
+   "e": "x-hyogo-junior-2023-12-17"
+  },
+  "パリオリンピック代表へ‼︎12 21開催！天皇杯(2023)": {
+   "s": "tenno-cup"
+  },
+  "第14回全国中学選抜 U15レスリング選手権大会(2023)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2023-juniorhigh-senbatsu-1125"
+  },
+  "日韓交歓レスリング大会(2023)": {
+   "s": "japan-korea-highschool",
+   "e": "wre-2023-japan-korea-highschool-1123"
+  },
+  "全日本大学選手権(2023)": {
+   "s": "university-greco",
+   "e": "wre-2023-university-greco-1018"
+  },
+  "東日本学生レスリング選手権大会(2023)": {
+   "s": "east-spring",
+   "e": "wre-2023-east-spring-0626"
+  },
+  "C21 第40回 全国社会人オープン(2023)": {
+   "s": "shakaijin-open",
+   "e": "wre-2023-shakaijin-open-1021"
+  },
+  "D15 フォーデイズ杯(2023)": {
+   "s": "women-open",
+   "e": "wre-2023-women-open-1014"
+  },
+  "2023世界選手権(2023)": {
+   "s": "u23-selection",
+   "e": "wre-2023-u23-selection-0422"
+  },
+  "全日本学生レスリング選手権大会(2023)": {
+   "s": "intercollegiate",
+   "e": "wre-2023-intercollegiate-0826"
+  },
+  "20-4 第39回 全国高校生グレコローマンレスリング選手権大会(2023)": {
+   "s": "highschool-greco",
+   "e": "wre-2023-highschool-greco-0818"
+  },
+  "第70回 全日本社会人レスリング選手権大会(2023)": {
+   "s": "shakaijin",
+   "e": "wre-2023-shakaijin-0701"
+  },
+  "全日本選抜選手権(2023)": {
+   "s": "meiji-cup",
+   "e": "wre-2023-meiji-cup-0615"
+  },
+  "4-4 第 69 回関東高等学校レスリング大会(2023)": {
+   "s": "regional-関東-summer",
+   "e": "wre-2023-regional-関東-summer-0603"
+  },
+  "東日本リーグ戦(2023)": {
+   "s": "east-league",
+   "e": "wre-2023-east-league-0516"
+  },
+  "東日本学生レスリングリーグ戦(2023)": {
+   "s": "east-league"
+  },
+  "第66回全国高等学校選抜レスリング大会(2023)": {
+   "s": "highschool-senbatsu",
+   "e": "wre-2023-highschool-senbatsu-0327"
+  },
+  "全日本ジュニア選手権(2023)": {
+   "s": "joc-junior",
+   "e": "wre-2023-joc-junior-0415"
+  },
+  "ジュニアクイーンズカップ(2023)": {
+   "s": "queens-cup",
+   "e": "wre-2023-queens-cup-0408"
+  },
+  "関西オープン(2023)": {
+   "s": "x-kansai-camp",
+   "e": "x-kansai-camp-2023-03-12"
+  },
+  "第8回 日野町少年少女レスリング大会(2023)": {
+   "s": "x-hino-junior",
+   "e": "x-hino-junior-2023-03-11"
+  },
+  "B第39回関東少年少女レスリング横須賀大会(2023)": {
+   "s": "x-kanto-kids-yokosuka",
+   "e": "x-kanto-kids-yokosuka-2023-03-04"
+  },
+  "堺市少年少女レスリング大会(2023)": {
+   "s": "x-sakai-junior",
+   "e": "x-sakai-junior-2023-02-12"
+  },
+  "第7回関東高等学校選抜女子レスリング大会(2023)": {
+   "s": "regional-関東-qualifier"
+  },
+  "全日本選手権(2022-2023)": {
+   "s": "tenno-cup",
+   "e": "wre-2022-tenno-cup-1222"
+  },
+  "第35回近畿少年少女レスリング選手権(2022)": {
+   "s": "x-kinki-kids",
+   "e": "x-kinki-kids-2022-12-18"
+  },
+  "東日本学生レスリング選手権大会(2022)": {
+   "s": "east-spring",
+   "e": "wre-2022-east-spring-0629"
+  },
+  "全日本大学選手権(2022)": {
+   "s": "university-championship",
+   "e": "wre-2022-university-championship-1119"
+  },
+  "第39回 全国社会人オープン(2022)": {
+   "s": "shakaijin-open",
+   "e": "wre-2022-shakaijin-open-1029"
+  },
+  "令和 4 年度全日本大学レスリンググレコローマンスタイル選手権大会(2022)": {
+   "s": "university-greco",
+   "e": "wre-2022-university-greco-1019"
+  },
+  "第15回全日本女子オープン(2022)": {
+   "s": "women-open",
+   "e": "wre-2022-women-open-1015"
+  },
+  "2023世界選手権(2022)": {
+   "s": "x-world-championships",
+   "e": "x-world-championships-2022-09-12"
+  },
+  "全国高校生グレコローマン選手権(2022)": {
+   "s": "highschool-greco",
+   "e": "wre-2022-highschool-greco-0817"
+  },
+  "全日本学生レスリング選手権大会(2022)": {
+   "s": "intercollegiate",
+   "e": "wre-2022-intercollegiate-0815"
+  },
+  "30C 全日本社会人選手権(2022)": {
+   "s": "shakaijin",
+   "e": "wre-2022-shakaijin-0702"
+  },
+  "令和 4 年度東日本学生レスリングリーグ戦(2022)": {
+   "s": "east-league",
+   "e": "wre-2022-east-league-0518"
+  },
+  "H26年度全日本学生選手権(2022)": {
+   "s": "intercollegiate",
+   "e": "wre-2014-intercollegiate-0826"
+  },
+  "全日本選抜選手権(2022)": {
+   "s": "meiji-cup"
+  },
+  "全日本選手権(2022)": {
+   "s": "meiji-cup"
+  },
+  "全国中学生選手権(2022)": {
+   "s": "juniorhigh",
+   "e": "wre-2022-juniorhigh-0611"
+  },
+  "第48回 全国中学生レスリング選手権大会(2022)": {
+   "s": "juniorhigh",
+   "e": "wre-2022-juniorhigh-0611"
+  },
+  "24-2 ＪＯＣジュニアオリンピックカップ(2022)": {
+   "s": "joc-junior",
+   "e": "wre-2022-joc-junior-0423"
+  },
+  "ジュニアクイーンズカップ(2022)": {
+   "s": "queens-cup",
+   "e": "wre-2022-queens-cup-0409"
+  },
+  "全国高校選抜大会(2022)": {
+   "s": "highschool-senbatsu",
+   "e": "wre-2022-highschool-senbatsu-0327"
+  },
+  "全日本選手権(2021)": {
+   "s": "tenno-cup",
+   "e": "wre-2020-tenno-cup-1217"
+  },
+  "全国中学選抜選手権大会(2021)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2021-juniorhigh-senbatsu-1127"
+  },
+  "東日本学生レスリング選手権大会(2021)": {
+   "s": "east-spring"
+  },
+  "(いちご一会とちぎ国体レスリング競技リハーサル大会(2021)": {
+   "s": "university-championship",
+   "e": "wre-2021-university-championship-1113"
+  },
+  "二日目A 全日本学生選手権(2021)": {
+   "s": "intercollegiate",
+   "e": "wre-2021-intercollegiate-1013"
+  },
+  "一日目D 全日本学生選手権(2021)": {
+   "s": "intercollegiate",
+   "e": "wre-2021-intercollegiate-1013"
+  },
+  "西日本学生選手権(2021)": {
+   "s": "west-championship",
+   "e": "wre-2021-west-championship-1020"
+  },
+  "全日本学生レスリング選手権大会(2021)": {
+   "s": "intercollegiate",
+   "e": "wre-2021-intercollegiate-1013"
+  },
+  "二日目 第 全日本大学グレコローマン選手権(2021)": {
+   "s": "university-greco",
+   "e": "wre-2021-university-greco-1009"
+  },
+  "一日目 第 全日本大学グレコローマン選手権(2021)": {
+   "s": "university-greco",
+   "e": "wre-2021-university-greco-1009"
+  },
+  "尾﨑野乃香 世界選手権(2021)": {
+   "s": "x-world-championships",
+   "e": "x-world-championships-2021-10-05"
+  },
+  "全国高校生グレコローマン選手権(2021)": {
+   "s": "highschool-greco",
+   "e": "wre-2021-highschool-greco-0717"
+  },
+  "全国高校選抜大会(2021)": {
+   "s": "highschool-senbatsu"
+  },
+  "第67回関東高校レスリング大会(2021)": {
+   "s": "regional-関東-summer",
+   "e": "wre-2021-regional-関東-summer-0605"
+  },
+  "全日本選抜選手権(2021)": {
+   "s": "meiji-cup",
+   "e": "wre-2021-meiji-cup-0527"
+  },
+  "ジュニアクイーンズカップ(2021)": {
+   "s": "queens-cup",
+   "e": "wre-2021-queens-cup-0410"
+  },
+  "Ｂ ジュニアクイーンズカップ(2021)": {
+   "s": "queens-cup",
+   "e": "wre-2021-queens-cup-0410"
+  },
+  "全日本選手権(2020)": {
+   "s": "tenno-cup",
+   "e": "wre-2020-tenno-cup-1217"
+  },
+  "全日本大学選手権(2020)": {
+   "s": "university-championship",
+   "e": "wre-2020-university-championship-1107"
+  },
+  "： （日）西日本学生秋季リーグ戦(2020)": {
+   "s": "west-autumn-league",
+   "e": "wre-2020-west-autumn-league-1205"
+  },
+  "： （土）西日本学生秋季リーグ戦(2020)": {
+   "s": "west-autumn-league",
+   "e": "wre-2020-west-autumn-league-1205"
+  },
+  "（金）：全日本大学グレコローマン選手権(2020)": {
+   "s": "university-greco",
+   "e": "wre-2020-university-greco-1015"
+  },
+  "（木）：全日本大学グレコローマン選手権(2020)": {
+   "s": "university-greco",
+   "e": "wre-2020-university-greco-1015"
+  },
+  "全日本選手権(2019)": {
+   "s": "tenno-cup",
+   "e": "wre-2019-tenno-cup-1219"
+  },
+  "全日本大学選手権(2019)": {
+   "s": "university-championship",
+   "e": "wre-2019-university-championship-1109"
+  },
+  "全日本大学グレコローマン選手権(2019)": {
+   "s": "university-greco",
+   "e": "wre-2019-university-greco-1017"
+  },
+  "全日本学生レスリング選手権大会(2019)": {
+   "s": "intercollegiate",
+   "e": "wre-2019-intercollegiate-0820"
+  },
+  "全国少年少女レスリング大会(2019)": {
+   "s": "kids"
+  },
+  "東日本リーグ戦(2019)": {
+   "s": "east-league",
+   "e": "wre-2019-east-league-0513"
+  },
+  "東日本学生春季選手権(2019)": {
+   "s": "east-spring",
+   "e": "wre-2019-east-spring-0626"
+  },
+  "全日本選抜選手権(2019)": {
+   "s": "meiji-cup",
+   "e": "wre-2019-meiji-cup-0613"
+  },
+  "全国中学生選手権(2019)": {
+   "s": "juniorhigh",
+   "e": "wre-2019-juniorhigh-0608"
+  },
+  "全日本選手権(2018-2019)": {
+   "s": "tenno-cup",
+   "e": "wre-2018-tenno-cup-1220"
+  },
+  "東日本学生秋季選手権(2018)": {
+   "s": "east-autumn",
+   "e": "wre-2018-east-autumn-1126"
+  },
+  "全日本大学選手権(2018)": {
+   "s": "university-greco",
+   "e": "wre-2018-university-greco-1018"
+  },
+  "全日本選抜選手権(2018)": {
+   "s": "meiji-cup",
+   "e": "wre-2018-meiji-cup-0614"
+  },
+  "全日本大学学生選手権(2018)": {
+   "s": "interhigh"
+  },
+  "2023世界選手権(2018)": {
+   "s": "national-team-playoff",
+   "e": "wre-2018-national-team-playoff-0707"
+  },
+  "全国中学選抜選手権大会(2017)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2017-juniorhigh-senbatsu-1125"
+  },
+  "全日本大学選手権(2017)": {
+   "s": "university-greco",
+   "e": "wre-2017-university-greco-1021"
+  },
+  "全日本選抜選手権(2017)": {
+   "s": "meiji-cup",
+   "e": "wre-2017-meiji-cup-0616"
+  },
+  "全日本学生レスリング選手権大会(2017)": {
+   "s": "intercollegiate",
+   "e": "wre-2017-intercollegiate-0828"
+  },
+  "全国中学生選手権(2017)": {
+   "s": "juniorhigh",
+   "e": "wre-2017-juniorhigh-0610"
+  },
+  "東日本レスリング 連盟 リーグ戦(2017)": {
+   "s": "east-league",
+   "e": "wre-2017-east-league-0517"
+  },
+  "ジュニアクイーンズカップ(2017)": {
+   "s": "queens-cup",
+   "e": "wre-2017-queens-cup-0402"
+  },
+  "全日本選手権(2017)": {
+   "s": "tenno-cup",
+   "e": "wre-2016-tenno-cup-1221"
+  },
+  "全日本レスリング選手権大会(2017)": {
+   "s": "tenno-cup",
+   "e": "wre-2016-tenno-cup-1221"
+  },
+  "全国中学選抜選手権大会(2016)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2016-juniorhigh-senbatsu-1126"
+  },
+  "全日本学生レスリング選手権大会(2016)": {
+   "s": "intercollegiate",
+   "e": "wre-2016-intercollegiate-0825"
+  },
+  "全日本大学選手権(2016)": {
+   "s": "university-championship"
+  },
+  "全日本女子オープン(2016)": {
+   "s": "women-open",
+   "e": "wre-2016-women-open-1002"
+  },
+  "全日本学生レスリング選手権大会(2016)": {
+   "s": "intercollegiate"
+  },
+  "三笠宮賜杯(2016)": {
+   "s": "interhigh",
+   "e": "wre-2016-interhigh-0802"
+  },
+  "東日本学生春季女子選手権(2016)": {
+   "s": "east-spring",
+   "e": "wre-2016-east-spring-0623"
+  },
+  "東日本学生春季新人選手権(2016)": {
+   "s": "east-spring",
+   "e": "wre-2016-east-spring-0623"
+  },
+  "全日本選抜選手権(2016)": {
+   "s": "meiji-cup"
+  },
+  "全国中学生選手権(2016)": {
+   "s": "juniorhigh",
+   "e": "wre-2016-juniorhigh-0611"
+  },
+  "ジュニアクイーンズカップ(2016)": {
+   "s": "queens-cup",
+   "e": "wre-2016-queens-cup-0403"
+  },
+  "全日本選手権(2015)": {
+   "s": "tenno-cup",
+   "e": "wre-2015-tenno-cup-1221"
+  },
+  "西日本学生秋季リーグ戦(2015)": {
+   "s": "west-autumn-league",
+   "e": "wre-2015-west-autumn-league-1205"
+  },
+  "東日本学生秋季新人選手権(2015)": {
+   "s": "east-autumn",
+   "e": "wre-2015-east-autumn-1125"
+  },
+  "全国中学選抜選手権大会(2015)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2015-juniorhigh-senbatsu-1128"
+  },
+  "全日本大学選手権(2015)": {
+   "s": "university-championship",
+   "e": "wre-2015-university-championship-1114"
+  },
+  "西日本学生選手権(2015)": {
+   "s": "west-championship",
+   "e": "wre-2015-west-championship-1016"
+  },
+  "国民体育大会(2015)": {
+   "s": "kokutai",
+   "e": "wre-2015-kokutai-0927"
+  },
+  "全日本学生レスリング選手権大会(2015)": {
+   "s": "intercollegiate",
+   "e": "wre-2015-intercollegiate-0818"
+  },
+  "全国高校生グレコローマン選手権(2015)": {
+   "s": "highschool-greco",
+   "e": "wre-2015-highschool-greco-0816"
+  },
+  "三笠宮賜杯(2015)": {
+   "s": "interhigh",
+   "e": "wre-2015-interhigh-0802"
+  },
+  "東日本学生女子大会(2015)": {
+   "s": "east-spring",
+   "e": "wre-2015-east-spring-0624"
+  },
+  "全日本選抜選手権(2015)": {
+   "s": "meiji-cup",
+   "e": "wre-2015-meiji-cup-0619"
+  },
+  "全国中学生選手権(2015)": {
+   "s": "juniorhigh",
+   "e": "wre-2015-juniorhigh-0613"
+  },
+  "西日本学生春季リーグ戦(2015)": {
+   "s": "west-spring-league",
+   "e": "wre-2015-west-spring-league-0530"
+  },
+  "東日本学生レスリングリーグ戦(2015)": {
+   "s": "east-league",
+   "e": "wre-2015-east-league-0520"
+  },
+  "全国高校選抜大会(2015)": {
+   "s": "highschool-senbatsu",
+   "e": "wre-2015-highschool-senbatsu-0327"
+  },
+  "全国中学生選抜選手権大会(2015)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2014-juniorhigh-senbatsu-1123"
+  },
+  "全日本選手権(2014)": {
+   "s": "tenno-cup",
+   "e": "wre-2014-tenno-cup-1221"
+  },
+  "２２日天皇杯(2014)": {
+   "s": "tenno-cup",
+   "e": "wre-2014-tenno-cup-1221"
+  },
+  "天皇杯(2014)": {
+   "s": "tenno-cup",
+   "e": "wre-2014-tenno-cup-1221"
+  },
+  "西日本学生秋季リーグ戦(2014)": {
+   "s": "west-autumn-league",
+   "e": "wre-2014-west-autumn-league-1129"
+  },
+  "全国中学生選抜選手権大会(2014)": {
+   "s": "juniorhigh-senbatsu",
+   "e": "wre-2014-juniorhigh-senbatsu-1123"
+  },
+  "全日本大学選手権(2014)": {
+   "s": "university-greco",
+   "e": "wre-2014-university-greco-0925"
+  },
+  "西日本学生選手権(2014)": {
+   "s": "west-championship",
+   "e": "wre-2014-west-championship-1025"
+  },
+  "全日本女子オープン(2014)": {
+   "s": "women-open",
+   "e": "wre-2014-women-open-1005"
+  },
+  "全日本学生レスリング選手権大会(2014)": {
+   "s": "intercollegiate",
+   "e": "wre-2014-intercollegiate-0826"
+  },
+  "H26年度全日本学生選手権(2014)": {
+   "s": "intercollegiate",
+   "e": "wre-2014-intercollegiate-0826"
+  },
+  "全国高校生グレコローマン選手権(2014)": {
+   "s": "highschool-greco",
+   "e": "wre-2014-highschool-greco-0817"
+  },
+  "明治杯(2014)": {
+   "s": "meiji-cup",
+   "e": "wre-2014-meiji-cup-0614"
+  },
+  "東日本学生女子大会(2014)": {
+   "s": "east-spring",
+   "e": "wre-2014-east-spring-0625"
+  },
+  "全国中学生選手権(2014)": {
+   "s": "juniorhigh",
+   "e": "wre-2014-juniorhigh-0607"
+  }
+ }
+}

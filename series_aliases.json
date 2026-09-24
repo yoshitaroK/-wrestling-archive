@@ -1,0 +1,1288 @@
+{
+  "as_of": "2026-09-24",
+  "purpose": "検索語辞書・誤統合防止ルール。自動確定済みの動画紐付け表ではない。",
+  "normalization": [
+    "元タイトルを保存する。",
+    "検索用文字列のみUnicode NFKCと濁点等の正規化、余分な空白・ゼロ幅文字の整理を行う。",
+    "年度・回数・日目・マットを別項目へ抽出してから大会名を比較する。",
+    "U15/U17/U20/U23、春季/秋季、大学/学生、選抜/通常、フリー/グレコは意味があるため消さない。",
+    "先頭の数字やA/Bを一律削除しない。マット・配信番号と確認できたものだけ表示名から分離する。"
+  ],
+  "series": [
+    {
+      "series_id": "beach-national",
+      "display_name": "全日本ビーチレスリング選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2014-beach-national-0810",
+        "wre-2015-beach-national-0809",
+        "wre-2017-beach-national-0811",
+        "wre-2018-beach-national-0811",
+        "wre-2022-beach-national-0811",
+        "wre-2023-beach-national-0811",
+        "wre-2025-beach-national-0810",
+        "wre-2026-beach-national-0504"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "beach-okinawa",
+      "display_name": "全日本ビーチレスリング沖縄大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2015-beach-okinawa-1018",
+        "wre-2016-beach-okinawa-1016",
+        "wre-2017-beach-okinawa-1105",
+        "wre-2018-beach-okinawa-1104",
+        "wre-2019-beach-okinawa-1027",
+        "wre-2020-beach-okinawa-1025",
+        "wre-2021-beach-okinawa-1024",
+        "wre-2022-beach-okinawa-1023",
+        "wre-2023-beach-okinawa-1022",
+        "wre-2024-beach-okinawa-1103",
+        "wre-2025-beach-okinawa-1012"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "east-autumn",
+      "display_name": "東日本学生選手権（秋季大会）",
+      "search_aliases": [
+        "東日本学生秋季選手権",
+        "東日本学生選手権秋季大会",
+        "東日本学生秋季新人選手権"
+      ],
+      "source_event_ids": [
+        "wre-2014-east-autumn-1126",
+        "wre-2015-east-autumn-1125",
+        "wre-2016-east-autumn-1205",
+        "wre-2017-east-autumn-1127",
+        "wre-2018-east-autumn-1126",
+        "wre-2019-east-autumn-1125",
+        "wre-2020-east-autumn-1124",
+        "wre-2021-east-autumn-1123",
+        "wre-2022-east-autumn-1128",
+        "wre-2023-east-autumn-1109",
+        "wre-2024-east-autumn-1126",
+        "wre-2025-east-autumn-1127",
+        "wre-2026-east-autumn-1123"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "east-league",
+      "display_name": "東日本学生リーグ戦",
+      "search_aliases": [
+        "東日本学生リーグ戦",
+        "東日本学生レスリングリーグ戦",
+        "東日本リーグ戦",
+        "東日本レスリング連盟リーグ戦"
+      ],
+      "source_event_ids": [
+        "wre-2014-east-league-0527",
+        "wre-2015-east-league-0520",
+        "wre-2016-east-league-0511",
+        "wre-2017-east-league-0517",
+        "wre-2018-east-league-0516",
+        "wre-2019-east-league-0513",
+        "wre-2020-east-league-0520",
+        "wre-2021-east-league-0519",
+        "wre-2022-east-league-0518",
+        "wre-2023-east-league-0516",
+        "wre-2024-east-league-0624",
+        "wre-2025-east-league-0526",
+        "wre-2026-east-league-0616"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "east-spring",
+      "display_name": "東日本学生選手権（春季大会）",
+      "search_aliases": [
+        "東日本学生春季選手権",
+        "東日本学生選手権春季大会",
+        "東日本学生春季新人選手権",
+        "東日本学生春季女子選手権"
+      ],
+      "source_event_ids": [
+        "wre-2014-east-spring-0625",
+        "wre-2015-east-spring-0624",
+        "wre-2016-east-spring-0623",
+        "wre-2017-east-spring-0621",
+        "wre-2018-east-spring-0627",
+        "wre-2019-east-spring-0626",
+        "wre-2020-east-spring-0624",
+        "wre-2021-east-spring-0623",
+        "wre-2022-east-spring-0629",
+        "wre-2023-east-spring-0626",
+        "wre-2024-east-spring-0708",
+        "wre-2025-east-spring-0709",
+        "wre-2026-east-spring-0713"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "east-women-league",
+      "display_name": "東日本大学女子リーグ戦",
+      "search_aliases": [
+        "東日本大学女子リーグ戦",
+        "東日本女子リーグ戦",
+        "東日本女子大学リーグ戦"
+      ],
+      "source_event_ids": [
+        "wre-2018-east-women-league-1028",
+        "wre-2019-east-women-league-0714",
+        "wre-2022-east-women-league-1106",
+        "wre-2024-east-women-league-0114",
+        "wre-2024-east-women-league-1124",
+        "wre-2025-east-women-league-1123"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "highschool-greco",
+      "display_name": "全国高校生グレコローマン選手権",
+      "search_aliases": [
+        "全国高校生グレコローマン選手権",
+        "全国高校生グレコローマンレスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-highschool-greco-0817",
+        "wre-2015-highschool-greco-0816",
+        "wre-2016-highschool-greco-0817",
+        "wre-2017-highschool-greco-0817",
+        "wre-2018-highschool-greco-0817",
+        "wre-2019-highschool-greco-0817",
+        "wre-2020-highschool-greco-0717",
+        "wre-2021-highschool-greco-0717",
+        "wre-2022-highschool-greco-0817",
+        "wre-2023-highschool-greco-0818",
+        "wre-2024-highschool-greco-0818",
+        "wre-2025-highschool-greco-0815",
+        "wre-2026-highschool-greco-0814"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "highschool-senbatsu",
+      "display_name": "全国高校選抜大会",
+      "search_aliases": [
+        "全国高校選抜大会",
+        "全国高等学校選抜レスリング大会",
+        "風間杯全国高校選抜大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-highschool-senbatsu-0327",
+        "wre-2015-highschool-senbatsu-0327",
+        "wre-2016-highschool-senbatsu-0327",
+        "wre-2017-highschool-senbatsu-0327",
+        "wre-2018-highschool-senbatsu-0327",
+        "wre-2019-highschool-senbatsu-0327",
+        "wre-2020-highschool-senbatsu-1009",
+        "wre-2021-highschool-senbatsu-0324",
+        "wre-2022-highschool-senbatsu-0327",
+        "wre-2023-highschool-senbatsu-0327",
+        "wre-2024-highschool-senbatsu-0327",
+        "wre-2025-highschool-senbatsu-0327",
+        "wre-2026-highschool-senbatsu-0327"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "intercollegiate",
+      "display_name": "全日本学生選手権（インカレ）",
+      "search_aliases": [
+        "インカレ",
+        "全日本学生選手権",
+        "全日本学生レスリング選手権大会",
+        "H26年度全日本学生選手権"
+      ],
+      "source_event_ids": [
+        "wre-2014-intercollegiate-0826",
+        "wre-2015-intercollegiate-0818",
+        "wre-2016-intercollegiate-0825",
+        "wre-2017-intercollegiate-0828",
+        "wre-2018-intercollegiate-0828",
+        "wre-2019-intercollegiate-0820",
+        "wre-2020-intercollegiate-0929",
+        "wre-2021-intercollegiate-1013",
+        "wre-2022-intercollegiate-0815",
+        "wre-2023-intercollegiate-0826",
+        "wre-2024-intercollegiate-0823",
+        "wre-2025-intercollegiate-0821",
+        "wre-2026-intercollegiate-0820"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "interhigh",
+      "display_name": "全国高校総体（インターハイ）",
+      "search_aliases": [
+        "インターハイ",
+        "全国高校総体",
+        "全国高等学校総合体育大会レスリング競技"
+      ],
+      "source_event_ids": [
+        "wre-2014-interhigh-0802",
+        "wre-2015-interhigh-0802",
+        "wre-2016-interhigh-0802",
+        "wre-2017-interhigh-0730",
+        "wre-2018-interhigh-0804",
+        "wre-2019-interhigh-0729",
+        "wre-2020-interhigh-0821",
+        "wre-2021-interhigh-0821",
+        "wre-2022-interhigh-0801",
+        "wre-2023-interhigh-0727",
+        "wre-2024-interhigh-0801",
+        "wre-2025-interhigh-0727",
+        "wre-2026-interhigh-0723"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "japan-korea-highschool",
+      "display_name": "日韓高校選抜交流・交歓競技会（日本開催・親善試合）",
+      "search_aliases": [
+        "日韓高校親善試合",
+        "日韓高校交歓競技会",
+        "日韓高校選抜交流競技会"
+      ],
+      "source_event_ids": [
+        "wre-2014-japan-korea-highschool-1201",
+        "wre-2015-japan-korea-highschool-1124",
+        "wre-2016-japan-korea-highschool-1128",
+        "wre-2017-japan-korea-highschool-1123",
+        "wre-2018-japan-korea-highschool-1126",
+        "wre-2019-japan-korea-highschool-1124",
+        "wre-2023-japan-korea-highschool-1123",
+        "wre-2024-japan-korea-highschool-1102",
+        "wre-2025-japan-korea-highschool-1103"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "joc-junior",
+      "display_name": "JOC杯全日本ジュニア・U20・U17選手権",
+      "search_aliases": [
+        "JOCジュニアオリンピックカップ",
+        "全日本ジュニア選手権",
+        "U17,U20全日本レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-joc-junior-0426",
+        "wre-2015-joc-junior-0425",
+        "wre-2016-joc-junior-0423",
+        "wre-2017-joc-junior-0422",
+        "wre-2018-joc-junior-0414",
+        "wre-2019-joc-junior-0427",
+        "wre-2020-joc-junior-0425",
+        "wre-2021-joc-junior-0424",
+        "wre-2022-joc-junior-0423",
+        "wre-2023-joc-junior-0415",
+        "wre-2024-joc-junior-0427",
+        "wre-2025-joc-junior-0426",
+        "wre-2026-joc-junior-0425"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "juniorhigh",
+      "display_name": "全国中学生選手権",
+      "search_aliases": [
+        "全国中学生選手権",
+        "全国中学生レスリング選手権大会",
+        "沼尻杯",
+        "沼尻直杯"
+      ],
+      "source_event_ids": [
+        "wre-2014-juniorhigh-0607",
+        "wre-2015-juniorhigh-0613",
+        "wre-2016-juniorhigh-0611",
+        "wre-2017-juniorhigh-0610",
+        "wre-2018-juniorhigh-0609",
+        "wre-2019-juniorhigh-0608",
+        "wre-2020-juniorhigh-0613",
+        "wre-2021-juniorhigh-0612",
+        "wre-2022-juniorhigh-0611",
+        "wre-2023-juniorhigh-0610",
+        "wre-2024-juniorhigh-0608",
+        "wre-2025-juniorhigh-0504",
+        "wre-2026-juniorhigh-0613"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "juniorhigh-senbatsu",
+      "display_name": "全国中学選抜・全国中学選抜U15選手権",
+      "search_aliases": [
+        "全国中学選抜選手権",
+        "全国中学選抜U15レスリング選手権大会",
+        "全国中学生選抜選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-juniorhigh-senbatsu-1123",
+        "wre-2015-juniorhigh-senbatsu-1128",
+        "wre-2016-juniorhigh-senbatsu-1126",
+        "wre-2017-juniorhigh-senbatsu-1125",
+        "wre-2018-juniorhigh-senbatsu-1124",
+        "wre-2019-juniorhigh-senbatsu-1123",
+        "wre-2020-juniorhigh-senbatsu-1128",
+        "wre-2021-juniorhigh-senbatsu-1127",
+        "wre-2022-juniorhigh-senbatsu-1126",
+        "wre-2023-juniorhigh-senbatsu-1125",
+        "wre-2024-juniorhigh-senbatsu-1130",
+        "wre-2025-juniorhigh-senbatsu-1206"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "kids",
+      "display_name": "全国少年少女選手権",
+      "search_aliases": [
+        "全国少年少女選手権",
+        "全国少年少女レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-kids-0725",
+        "wre-2015-kids-0724",
+        "wre-2016-kids-0722",
+        "wre-2017-kids-0721",
+        "wre-2018-kids-0727",
+        "wre-2019-kids-0726",
+        "wre-2020-kids-1120",
+        "wre-2021-kids-1106",
+        "wre-2022-kids-0730",
+        "wre-2023-kids-0728",
+        "wre-2024-kids-0726",
+        "wre-2025-kids-0725",
+        "wre-2026-kids-0724"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "kids-senbatsu",
+      "display_name": "全国少年少女選抜選手権",
+      "search_aliases": [
+        "全国少年少女選抜選手権",
+        "全国少年少女選抜レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-kids-senbatsu-0308",
+        "wre-2015-kids-senbatsu-0314",
+        "wre-2016-kids-senbatsu-0305",
+        "wre-2017-kids-senbatsu-0311",
+        "wre-2018-kids-senbatsu-0224",
+        "wre-2019-kids-senbatsu-0223",
+        "wre-2020-kids-senbatsu-0222",
+        "wre-2021-kids-senbatsu-0306",
+        "wre-2022-kids-senbatsu-0226",
+        "wre-2023-kids-senbatsu-0128",
+        "wre-2024-kids-senbatsu-0127",
+        "wre-2025-kids-senbatsu-0125",
+        "wre-2026-kids-senbatsu-0124"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "kokutai",
+      "display_name": "国民体育大会・国民スポーツ大会",
+      "search_aliases": [
+        "国体",
+        "国スポ",
+        "国民体育大会",
+        "国民スポーツ大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-kokutai-1014",
+        "wre-2015-kokutai-0927",
+        "wre-2016-kokutai-1007",
+        "wre-2017-kokutai-1007",
+        "wre-2018-kokutai-0930",
+        "wre-2019-kokutai-0928",
+        "wre-2020-kokutai-1004",
+        "wre-2021-kokutai-0911",
+        "wre-2022-kokutai-1002",
+        "wre-2023-kokutai-0921",
+        "wre-2024-kokutai-1006",
+        "wre-2025-kokutai-0929",
+        "wre-2026-kokutai-1012"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-107220",
+      "display_name": "第2回神奈川県少年少女選手権春季横須賀大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2017-local-107220-0506"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-116514",
+      "display_name": "第25回神奈川県少年少女レスリング選手権大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2017-local-116514-1008"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-122691",
+      "display_name": "全自衛隊大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2018-local-122691-0303"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-262723",
+      "display_name": "第29回齋藤つよし杯関東高校レスリング大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-262723-0112"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-262724",
+      "display_name": "第2回ライオンズ杯東京都少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-262724-0118"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-263337",
+      "display_name": "第36回少年少女選手権/新宿キッズトーナメント2025",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-263337-0211"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-263382",
+      "display_name": "第18回堺市レスリング連盟少年少女レスリング選手権大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-263382-0208"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-264275",
+      "display_name": "第39回高槻市長杯少年少女レスリング大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-264275-0302"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-264485",
+      "display_name": "第10回日野町少年少女大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-264485-0308"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-265888",
+      "display_name": "第35回西日本中学生選手権・第29回茨木市フェスティバル春季大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-265888-0406"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-268771",
+      "display_name": "押立杯第44回吹田市民少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-268771-0615"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-275021",
+      "display_name": "栄和人杯集まれ!未来のメダリスト",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-275021-0914"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-278772",
+      "display_name": "第4回大府市長杯土性沙羅レスリング大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-278772-1129"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-280562",
+      "display_name": "第5回本庄市民レスリング大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-280562-1214"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-280653",
+      "display_name": "第24回兵庫県ジュニアレスリングオープン大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-local-280653-1221"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-281689",
+      "display_name": "第3回ライオンズ杯東京都少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-281689-0118"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-282815",
+      "display_name": "第37回少年少女選手権/新宿キッズトーナメント2026",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-282815-0211"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-282985",
+      "display_name": "堺市レスリング連盟 少年少女レスリング選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-282985-0208"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-283422",
+      "display_name": "宮津市長杯少年少女レスリング選手権大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-283422-0222"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-283739",
+      "display_name": "第40回高槻市長杯少年少女大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-283739-0301"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-283989",
+      "display_name": "第11回日野レスリング選手権大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-283989-0307"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-288221",
+      "display_name": "第7回濃尾少年少女レスリング競技大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-288221-0516"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-288834",
+      "display_name": "2026年押立杯吹田市民少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-local-288834-0607"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-55908",
+      "display_name": "関東中学校選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2014-local-55908-0831"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-59069",
+      "display_name": "押立杯関西少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2014-local-59069-1012"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-59479",
+      "display_name": "神奈川県少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2014-local-59479-1012"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-80167",
+      "display_name": "第22回東北地区大学選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2015-local-80167-1003"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-80733",
+      "display_name": "神奈川県少年少女大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2015-local-80733-1011"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-80844",
+      "display_name": "押立杯関西少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2015-local-80844-1018"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "local-98937",
+      "display_name": "神奈川県少年少女選手権",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2016-local-98937-1009"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "masters",
+      "display_name": "全日本マスターズ選手権",
+      "search_aliases": [
+        "全日本マスターズ",
+        "全日本マスターズレスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-masters-0112",
+        "wre-2015-masters-0111",
+        "wre-2016-masters-0124",
+        "wre-2017-masters-0122",
+        "wre-2018-masters-0121",
+        "wre-2019-masters-0120",
+        "wre-2020-masters-0119",
+        "wre-2021-masters-0117",
+        "wre-2022-masters-undated",
+        "wre-2023-masters-0122",
+        "wre-2024-masters-0225",
+        "wre-2025-masters-0119",
+        "wre-2026-masters-0117"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "masters-kanazawa",
+      "display_name": "マスターズ・オープン大会・金沢",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-masters-kanazawa-0923"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "meiji-cup",
+      "display_name": "明治杯全日本選抜選手権",
+      "search_aliases": [
+        "明治杯",
+        "明治杯全日本選抜選手権",
+        "全日本選抜選手権",
+        "全日本選抜レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-meiji-cup-0614",
+        "wre-2015-meiji-cup-0619",
+        "wre-2016-meiji-cup-0527",
+        "wre-2017-meiji-cup-0616",
+        "wre-2018-meiji-cup-0614",
+        "wre-2019-meiji-cup-0613",
+        "wre-2020-meiji-cup-0528",
+        "wre-2021-meiji-cup-0527",
+        "wre-2022-meiji-cup-0616",
+        "wre-2023-meiji-cup-0615",
+        "wre-2024-meiji-cup-0523",
+        "wre-2025-meiji-cup-0619",
+        "wre-2026-meiji-cup-0521"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "meiji-qualifier",
+      "display_name": "全日本選抜選手権・予選会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2019-meiji-qualifier-0526",
+        "wre-2020-meiji-qualifier-0510"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "national-team-playoff",
+      "display_name": "日本代表決定プレーオフ",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2018-national-team-playoff-0707",
+        "wre-2019-national-team-playoff-0706",
+        "wre-2019-national-team-playoff-0721",
+        "wre-2020-national-team-playoff-0308",
+        "wre-2021-national-team-playoff-0612",
+        "wre-2023-national-team-playoff-0701",
+        "wre-2023-national-team-playoff-0717",
+        "wre-2024-national-team-playoff-0127"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "other-5bcfed6f",
+      "display_name": "ビーチレスリング日本代表選手選考会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2025-other-5bcfed6f-0511"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "other-bf538b5b",
+      "display_name": "ビーチ・レスリング オープントーナメント",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-other-bf538b5b-1024"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "other-d6636195",
+      "display_name": "第20回 アジア競技大会",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2026-other-d6636195-0930"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "queens-cup",
+      "display_name": "ジュニアクイーンズカップ",
+      "search_aliases": [
+        "ジュニアクイーンズカップ",
+        "ジュニアクイーンズカップレスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-queens-cup-0406",
+        "wre-2015-queens-cup-0404",
+        "wre-2016-queens-cup-0403",
+        "wre-2017-queens-cup-0402",
+        "wre-2018-queens-cup-0401",
+        "wre-2019-queens-cup-0402",
+        "wre-2020-queens-cup-0411",
+        "wre-2021-queens-cup-0410",
+        "wre-2022-queens-cup-0409",
+        "wre-2023-queens-cup-0408",
+        "wre-2024-queens-cup-0413",
+        "wre-2025-queens-cup-0412",
+        "wre-2026-queens-cup-0411"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "regional-関東-qualifier",
+      "display_name": "関東高校選抜・新人・全国高校選抜予選",
+      "search_aliases": [
+        "関東高校選抜大会",
+        "関東高等学校選抜レスリング大会"
+      ],
+      "source_event_ids": [
+        "wre-2024-regional-関東-qualifier-0203"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "regional-関東-summer",
+      "display_name": "関東高校総体・高校選手権",
+      "search_aliases": [
+        "関東高校大会",
+        "関東高等学校レスリング大会"
+      ],
+      "source_event_ids": [
+        "wre-2017-regional-関東-summer-0603",
+        "wre-2021-regional-関東-summer-0605",
+        "wre-2022-regional-関東-summer-0604",
+        "wre-2023-regional-関東-summer-0603",
+        "wre-2024-regional-関東-summer-0601",
+        "wre-2025-regional-関東-summer-0607",
+        "wre-2026-regional-関東-summer-0606"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "shakaijin",
+      "display_name": "全日本社会人選手権",
+      "search_aliases": [
+        "全日本社会人選手権",
+        "全日本社会人レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-shakaijin-0705",
+        "wre-2015-shakaijin-0711",
+        "wre-2016-shakaijin-0702",
+        "wre-2017-shakaijin-0701",
+        "wre-2018-shakaijin-0707",
+        "wre-2019-shakaijin-0706",
+        "wre-2020-shakaijin-0627",
+        "wre-2022-shakaijin-0702",
+        "wre-2023-shakaijin-0701",
+        "wre-2024-shakaijin-0629",
+        "wre-2025-shakaijin-0712",
+        "wre-2026-shakaijin-0711"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "shakaijin-dan",
+      "display_name": "社会人段別選手権",
+      "search_aliases": [
+        "社会人段別選手権"
+      ],
+      "source_event_ids": [
+        "wre-2014-shakaijin-dan-1123",
+        "wre-2015-shakaijin-dan-1122",
+        "wre-2016-shakaijin-dan-1030",
+        "wre-2019-shakaijin-dan-1026",
+        "wre-2020-shakaijin-dan-1024"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "shakaijin-open",
+      "display_name": "全国社会人オープン選手権",
+      "search_aliases": [
+        "全国社会人オープン",
+        "全日本社会人オープン",
+        "全国社会人オープンレスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-shakaijin-open-1122",
+        "wre-2015-shakaijin-open-1122",
+        "wre-2016-shakaijin-open-1030",
+        "wre-2017-shakaijin-open-1022",
+        "wre-2018-shakaijin-open-1117",
+        "wre-2019-shakaijin-open-1026",
+        "wre-2021-shakaijin-open-1030",
+        "wre-2022-shakaijin-open-1029",
+        "wre-2023-shakaijin-open-1021",
+        "wre-2024-shakaijin-open-1102",
+        "wre-2025-shakaijin-open-1101",
+        "wre-2026-shakaijin-open-1031"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "tenno-cup",
+      "display_name": "天皇杯全日本選手権",
+      "search_aliases": [
+        "天皇杯",
+        "天皇杯全日本選手権",
+        "全日本選手権",
+        "全日本レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-tenno-cup-1221",
+        "wre-2015-tenno-cup-1221",
+        "wre-2016-tenno-cup-1221",
+        "wre-2017-tenno-cup-1220",
+        "wre-2018-tenno-cup-1220",
+        "wre-2019-tenno-cup-1219",
+        "wre-2020-tenno-cup-1217",
+        "wre-2021-tenno-cup-1216",
+        "wre-2022-tenno-cup-1222",
+        "wre-2023-tenno-cup-1221",
+        "wre-2024-tenno-cup-1219",
+        "wre-2025-tenno-cup-1218",
+        "wre-2026-tenno-cup-1224"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "u13",
+      "display_name": "U13ジャパンオープン・レスリングトーナメント",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2020-u13-0307",
+        "wre-2021-u13-0306",
+        "wre-2022-u13-0226",
+        "wre-2023-u13-0225",
+        "wre-2024-u13-0302",
+        "wre-2025-u13-0301",
+        "wre-2026-u13-0228"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "u15-selection",
+      "display_name": "U15日本代表選考会・U15全日本選手権",
+      "search_aliases": [
+        "U15全日本選手権",
+        "U15全日本レスリング選手権大会",
+        "U15アジア選手権日本代表選考会"
+      ],
+      "source_event_ids": [
+        "wre-2023-u15-selection-0318",
+        "wre-2024-u15-selection-0316",
+        "wre-2025-u15-selection-0322",
+        "wre-2026-u15-selection-0321"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "u23-selection",
+      "display_name": "U23日本代表選考会・U23全日本選手権",
+      "search_aliases": [
+        "U23全日本選手権",
+        "U23全日本レスリング選手権大会",
+        "U23世界選手権日本代表選考会"
+      ],
+      "source_event_ids": [
+        "wre-2019-u23-selection-0721",
+        "wre-2023-u23-selection-0422",
+        "wre-2024-u23-selection-0317",
+        "wre-2025-u23-selection-0323",
+        "wre-2026-u23-selection-0322"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "university-championship",
+      "display_name": "全日本大学選手権",
+      "search_aliases": [
+        "全日本大学選手権",
+        "全日本大学レスリング選手権大会",
+        "内閣総理大臣杯全日本大学選手権"
+      ],
+      "source_event_ids": [
+        "wre-2014-university-championship-1112",
+        "wre-2015-university-championship-1114",
+        "wre-2016-university-championship-1112",
+        "wre-2017-university-championship-1111",
+        "wre-2018-university-championship-1110",
+        "wre-2019-university-championship-1109",
+        "wre-2020-university-championship-1107",
+        "wre-2021-university-championship-1113",
+        "wre-2022-university-championship-1119",
+        "wre-2023-university-championship-1118",
+        "wre-2024-university-championship-1109",
+        "wre-2025-university-championship-1108",
+        "wre-2026-university-championship-1114"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "university-greco",
+      "display_name": "全日本大学グレコローマン選手権",
+      "search_aliases": [
+        "全日本大学グレコローマン選手権",
+        "全日本大学レスリンググレコローマン選手権",
+        "全日本大学レスリンググレコローマンスタイル選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-university-greco-0925",
+        "wre-2015-university-greco-1014",
+        "wre-2016-university-greco-1022",
+        "wre-2017-university-greco-1021",
+        "wre-2018-university-greco-1018",
+        "wre-2019-university-greco-1017",
+        "wre-2020-university-greco-1015",
+        "wre-2021-university-greco-1009",
+        "wre-2022-university-greco-1019",
+        "wre-2023-university-greco-1018",
+        "wre-2024-university-greco-1023",
+        "wre-2025-university-greco-1018",
+        "wre-2026-university-greco-1023"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "university-selection",
+      "display_name": "世界学生選手権日本代表決定戦",
+      "search_aliases": [],
+      "source_event_ids": [
+        "wre-2014-university-selection-0406"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "west-autumn-league",
+      "display_name": "西日本学生秋季リーグ戦",
+      "search_aliases": [
+        "西日本学生秋季リーグ戦",
+        "西日本学生レスリング秋季リーグ戦"
+      ],
+      "source_event_ids": [
+        "wre-2014-west-autumn-league-1129",
+        "wre-2015-west-autumn-league-1205",
+        "wre-2016-west-autumn-league-1203",
+        "wre-2017-west-autumn-league-1209",
+        "wre-2018-west-autumn-league-1201",
+        "wre-2019-west-autumn-league-1207",
+        "wre-2020-west-autumn-league-1205",
+        "wre-2021-west-autumn-league-1127",
+        "wre-2022-west-autumn-league-1210",
+        "wre-2023-west-autumn-league-1209",
+        "wre-2024-west-autumn-league-1207",
+        "wre-2025-west-autumn-league-1206",
+        "wre-2026-west-autumn-league-1127"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "west-championship",
+      "display_name": "西日本学生選手権",
+      "search_aliases": [
+        "西日本学生選手権",
+        "西日本学生レスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-west-championship-1025",
+        "wre-2015-west-championship-1016",
+        "wre-2016-west-championship-1028",
+        "wre-2017-west-championship-1027",
+        "wre-2018-west-championship-1012",
+        "wre-2019-west-championship-1025",
+        "wre-2020-west-championship-1030",
+        "wre-2021-west-championship-1020",
+        "wre-2022-west-championship-1013",
+        "wre-2023-west-championship-0929",
+        "wre-2024-west-championship-0927",
+        "wre-2025-west-championship-0918",
+        "wre-2026-west-championship-0925"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "west-rookie",
+      "display_name": "西日本学生新人選手権",
+      "search_aliases": [
+        "西日本学生新人選手権",
+        "西日本学生新人戦",
+        "西日本学生レスリング新人選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-west-rookie-0705",
+        "wre-2015-west-rookie-0704",
+        "wre-2016-west-rookie-0702",
+        "wre-2017-west-rookie-0701",
+        "wre-2018-west-rookie-0630",
+        "wre-2019-west-rookie-0629",
+        "wre-2020-west-rookie-1030",
+        "wre-2021-west-rookie-0703",
+        "wre-2022-west-rookie-0625",
+        "wre-2023-west-rookie-0701",
+        "wre-2024-west-rookie-0713",
+        "wre-2025-west-rookie-0705",
+        "wre-2026-west-rookie-0704"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "west-spring-league",
+      "display_name": "西日本学生春季リーグ戦",
+      "search_aliases": [
+        "西日本学生春季リーグ戦",
+        "西日本学生レスリング春季リーグ戦"
+      ],
+      "source_event_ids": [
+        "wre-2014-west-spring-league-0517",
+        "wre-2015-west-spring-league-0530",
+        "wre-2016-west-spring-league-0514",
+        "wre-2017-west-spring-league-0520",
+        "wre-2018-west-spring-league-0519",
+        "wre-2019-west-spring-league-0518",
+        "wre-2020-west-spring-league-0523",
+        "wre-2021-west-spring-league-0515",
+        "wre-2022-west-spring-league-0514",
+        "wre-2023-west-spring-league-0520",
+        "wre-2024-west-spring-league-0511",
+        "wre-2025-west-spring-league-0510",
+        "wre-2026-west-spring-league-0509"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    },
+    {
+      "series_id": "women-open",
+      "display_name": "全日本女子オープン選手権",
+      "search_aliases": [
+        "全日本女子オープン",
+        "全日本女子オープンレスリング選手権大会"
+      ],
+      "source_event_ids": [
+        "wre-2014-women-open-1005",
+        "wre-2015-women-open-1011",
+        "wre-2016-women-open-1002",
+        "wre-2017-women-open-0923",
+        "wre-2018-women-open-1013",
+        "wre-2019-women-open-1019",
+        "wre-2020-women-open-1017",
+        "wre-2021-women-open-1016",
+        "wre-2022-women-open-1015",
+        "wre-2023-women-open-1014",
+        "wre-2024-women-open-1019",
+        "wre-2025-women-open-1011",
+        "wre-2026-women-open-1024"
+      ],
+      "matching_policy": "検索候補の展開用。動画の開催回確定には年・区分・資料を別途照合。"
+    }
+  ],
+  "ambiguous_terms": [
+    {
+      "term": "JOC杯／JOCジュニアオリンピックカップ",
+      "candidates": [
+        "joc-junior",
+        "u15-selection",
+        "u23-selection",
+        "queens-cup"
+      ],
+      "rule": "年齢区分と大会正式名称を確認。冠名だけでは紐付けない。"
+    },
+    {
+      "term": "UNIVAS／UNIVASカップ／三笠宮賜杯／文部科学大臣杯",
+      "rule": "複数大会で使われ得る。正式名称・年・配信内容を確認して候補を決める。"
+    },
+    {
+      "term": "フォーデイズ杯",
+      "candidates": [
+        "women-open",
+        "kids-senbatsu"
+      ],
+      "rule": "冠名だけでは確定しない。"
+    },
+    {
+      "term": "東日本学生選手権大会",
+      "candidates": [
+        "east-spring",
+        "east-autumn"
+      ],
+      "rule": "春季・秋季を確認。公開月だけで判断しない。"
+    },
+    {
+      "term": "東日本学生女子大会",
+      "rule": "春季・秋季大会の女子部門か、女子リーグ戦かを資料で確認する。"
+    },
+    {
+      "term": "全日本大学学生選手権",
+      "candidates": [
+        "intercollegiate",
+        "university-championship",
+        "university-greco"
+      ],
+      "rule": "誤記の可能性がある。自動置換しない。"
+    },
+    {
+      "term": "全国少年少女レスリング大会",
+      "candidates": [
+        "kids",
+        "kids-senbatsu"
+      ],
+      "rule": "選抜大会か通常大会かを確認する。"
+    },
+    {
+      "term": "押立杯",
+      "rule": "関西選手権と吹田市民選手権など、冠名が同じだけの大会を統合しない。"
+    },
+    {
+      "term": "日韓交歓レスリング大会",
+      "candidates": [
+        "japan-korea-highschool"
+      ],
+      "rule": "高校・中学生および日本開催・韓国開催を確認する。"
+    }
+  ],
+  "local_series_merge_candidates": [
+    {
+      "search_group": "日野町の少年少女・日野レスリング選手権",
+      "source_series_ids": [
+        "local-264485",
+        "local-283989"
+      ],
+      "suggested_series_id": "hino-junior",
+      "status": "名称変更前後の統合候補・主催等を確認後に適用"
+    },
+    {
+      "search_group": "堺市レスリング連盟少年少女選手権",
+      "source_series_ids": [
+        "local-263382",
+        "local-282985"
+      ],
+      "suggested_series_id": "sakai-junior",
+      "status": "同一系列候補・開催回の正式名称を確認後に適用"
+    }
+  ],
+  "must_remain_distinct": [
+    [
+      "university-championship",
+      "intercollegiate",
+      "university-greco"
+    ],
+    [
+      "east-spring",
+      "east-autumn",
+      "east-league",
+      "east-women-league"
+    ],
+    [
+      "west-championship",
+      "west-rookie",
+      "west-spring-league",
+      "west-autumn-league"
+    ],
+    [
+      "highschool-senbatsu",
+      "interhigh",
+      "highschool-greco",
+      "regional-関東-qualifier"
+    ],
+    [
+      "juniorhigh",
+      "juniorhigh-senbatsu",
+      "u15-selection"
+    ],
+    [
+      "kids",
+      "kids-senbatsu"
+    ],
+    [
+      "shakaijin",
+      "shakaijin-open",
+      "shakaijin-dan"
+    ]
+  ]
+}
