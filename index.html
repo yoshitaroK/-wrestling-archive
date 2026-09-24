@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>レスリング配信アーカイブ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f4f6;
+  --surface: #ffffff;
+  --surface-2: #ececf0;
+  --ink: #16161a;
+  --ink-soft: #5c5b63;
+  --ink-faint: #8b8a92;
+  --line: #e1e1e6;
+  --accent: #d90f66;
+  --accent-deep: #a30a4d;
+  --accent-tint: #fbe4ee;
+  --grad-a: #6a2ca8;
+  --grad-b: #d90f66;
+}
+[data-theme="dark"] {
+  --bg: #0b0b0e; --surface: #161619; --surface-2: #1f1f24; --ink: #f2f1f4; --ink-soft: #9a99a3;
+  --ink-faint: #6f6e77; --line: #26262c; --accent: #ff2f81; --accent-deep: #ff6ba3;
+  --accent-tint: #33101f; --grad-a: #7b3fd4; --grad-b: #ff2f81;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0b0e; --surface: #161619; --surface-2: #1f1f24; --ink: #f2f1f4; --ink-soft: #9a99a3;
+    --ink-faint: #6f6e77; --line: #26262c; --accent: #ff2f81; --accent-deep: #ff6ba3;
+    --accent-tint: #33101f; --grad-a: #7b3fd4; --grad-b: #ff2f81;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+body {
+  margin: 0; font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--ink);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-family: 'Teko', 'Noto Sans JP', sans-serif; font-weight: 600; }
+
+header.site {
+  position: sticky; top: env(safe-area-inset-top, 0px); background: rgba(var(--bg-rgb,11,11,14), 0.92);
+  background: var(--bg); border-bottom: 1px solid var(--line); z-index: 10; padding: 12px 20px;
+}
+.eyebrow-row { display: flex; align-items: center; justify-content: space-between; max-width: 1080px; margin: 0 auto; gap: 16px; flex-wrap: wrap; }
+.title-group { display: flex; align-items: center; gap: 8px; }
+h1.site-title { font-size: 18px; font-weight: 900; margin: 0; letter-spacing: 0.01em; }
+h1.site-title .accent { color: var(--accent); }
+.stats-line { font-size: 12px; color: var(--ink-faint); }
+.stats-line .num { color: var(--accent); font-size: 15px; }
+
+.hero {
+  position: relative; max-width: 1080px; margin: 18px auto 0; padding: 0 20px;
+}
+.hero-inner {
+  position: relative; border-radius: 14px; overflow: hidden; padding: 34px 26px;
+  background: linear-gradient(120deg, var(--grad-a), var(--grad-b));
+  min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer;
+  border: none; text-align: left; width: 100%; font-family: inherit; color: inherit;
+}
+.hero-rings { position: absolute; top: -30px; right: -30px; opacity: 0.35; }
+.hero-rings circle { fill: none; stroke: #fff; }
+.hero-badge { position: relative; font-size: 11px; color: #fff; opacity: 0.85; margin-bottom: 8px; font-weight: 500; }
+.hero-name { position: relative; font-size: 24px; font-weight: 900; color: #fff; line-height: 1.35; margin-bottom: 10px; max-width: 640px; text-shadow: 0 1px 8px rgba(0,0,0,0.25); }
+.hero-meta { position: relative; font-size: 13px; color: rgba(255,255,255,0.92); display: flex; gap: 14px; align-items: center; }
+.hero-meta .num { color: #fff; font-size: 16px; }
+.hero-cta { position: relative; margin-top: 16px; display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--accent-deep); font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 999px; width: fit-content; }
+
+.control-bar { max-width: 1080px; margin: 20px auto 0; padding: 0 20px; }
+.mode-tabs { display: flex; gap: 0; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; max-width: 360px; background: var(--surface); }
+.mode-tab { flex: 1; padding: 8px 6px; border: none; background: var(--surface); color: var(--ink-soft); font-family: inherit; font-size: 13px; cursor: pointer; }
+.mode-tab + .mode-tab { border-left: 1px solid var(--line); }
+.mode-tab.active { background: var(--accent); color: #fff; font-weight: 700; }
+
+.search-sort-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+input#search {
+  flex: 1; min-width: 200px; padding: 9px 12px; font-size: 14px; font-family: inherit;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+input#search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.sort-row { display: flex; gap: 6px; font-size: 12px; }
+.sort-btn { padding: 5px 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft); border-radius: 999px; cursor: pointer; font-family: inherit; font-size: 12px; white-space: nowrap; }
+.sort-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+main.feed { max-width: 1080px; margin: 24px auto 60px; padding: 0 20px; }
+
+.reco-section { margin-bottom: 30px; }
+.reco-title { font-size: 16px; font-weight: 700; margin: 0 0 12px; }
+.reco-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+.reco-row::-webkit-scrollbar { height: 8px; }
+.reco-row::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+.reco-card {
+  flex: 0 0 auto; width: 152px; height: 214px; scroll-snap-align: start; text-decoration: none; color: inherit;
+  border-radius: 10px; cursor: pointer; display: block; font-family: inherit; position: relative; overflow: hidden;
+  border: 1px solid var(--line);
+}
+.reco-card .poster-bg { position: absolute; inset: 0; }
+.reco-card .poster-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.05) 100%); }
+
+.reco-card .poster-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0) 75%); }
+.reco-card .poster-rank { position: absolute; top: 8px; left: 9px; font-size: 12px; color: rgba(255,255,255,0.85); font-weight: 700; }
+.reco-card .poster-content { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px; }
+.reco-card .reco-name { font-size: 12.5px; font-weight: 700; line-height: 1.45; color: #fff; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.reco-card .reco-meta { font-size: 10.5px; color: rgba(255,255,255,0.8); }
+.reco-card .reco-meta .num { font-size: 12px; color: #fff; }
+.reco-card:hover, .reco-card:focus-visible { transform: translateY(-2px); border-color: var(--accent); }
+
+.catalog-title { font-size: 16px; font-weight: 700; margin: 0 0 12px; }
+ul#tournament-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+li.t-card { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid transparent; border-radius: 8px; overflow: hidden; transition: border-color 0.15s ease; }
+li.t-card.expanded { border-color: var(--accent); border-left-color: var(--accent); }
+
+.t-row-btn {
+  width: 100%; text-align: left; background: none; border: none; padding: 13px 15px; cursor: pointer;
+  font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; text-decoration: none;
+}
+.t-row-btn:hover, .t-row-btn:focus-visible { background: var(--surface-2); }
+.t-main { flex: 1; min-width: 0; }
+.t-name { font-size: 14.5px; font-weight: 500; line-height: 1.4; margin-bottom: 5px; }
+.t-meta { font-size: 12px; color: var(--ink-faint); display: flex; align-items: center; gap: 8px; }
+.t-count-pill { background: var(--accent-tint); color: var(--accent); border-radius: 999px; padding: 1px 9px; display: inline-flex; align-items: baseline; gap: 2px; font-weight: 500; }
+.t-count-pill .num { font-size: 14px; }
+.t-chevron { font-size: 18px; color: var(--ink-faint); transition: transform 0.2s ease; flex-shrink: 0; line-height: 1; font-weight: 300; }
+li.t-card.expanded .t-chevron { transform: rotate(45deg); color: var(--accent); }
+
+.t-videos-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.28s ease; }
+li.t-card.expanded .t-videos-wrap { grid-template-rows: 1fr; }
+.t-videos-inner { overflow: hidden; }
+ul.video-list { list-style: none; margin: 0; padding: 0 14px 12px; border-top: 1px solid var(--line); }
+li.v-row { padding: 12px 2px; display: flex; gap: 14px; align-items: baseline; border-bottom: 1px solid var(--line); }
+li.v-row:last-child { border-bottom: none; }
+.v-date { font-size: 13px; color: var(--accent); min-width: 74px; flex-shrink: 0; font-weight: 500; }
+.v-body { flex: 1; min-width: 0; }
+.v-title { font-size: 14px; line-height: 1.5; margin: 0 0 4px; word-break: break-word; }
+.v-title a { color: var(--ink); text-decoration: none; }
+.v-title a:hover { color: var(--accent); text-decoration: underline; }
+.v-duration { font-size: 12px; color: var(--ink-faint); }
+
+.empty-state { color: var(--ink-faint); font-size: 14px; padding: 40px 10px; text-align: center; line-height: 1.8; }
+
+.unclassified-toggle { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 14px; }
+.unclassified-toggle summary { cursor: pointer; font-size: 13px; color: var(--ink-faint); }
+.unclassified-toggle ul { list-style: none; margin: 10px 0 0; padding: 0; }
+.unclassified-toggle li.v-row { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; padding: 10px 12px; background: var(--surface); }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="eyebrow-row">
+    <div class="title-group">
+      <h1 class="site-title">WRESTLING<span class="accent">ARCHIVE</span></h1>
+    </div>
+    <div class="stats-line"><b class="num" id="stat-videos">0</b>本 ・ <b class="num" id="stat-tournaments">0</b><span id="stat-label">大会</span></div>
+  </div>
+</header>
+
+<div class="hero" id="hero-container"></div>
+
+<div class="control-bar">
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="series">大会名でまとめる</button>
+    <button class="mode-tab" data-mode="occurrence">日程でまとめる</button>
+  </div>
+  <div class="search-sort-row">
+    <input type="text" id="search" placeholder="大会名で検索(例:天皇杯、学生選手権)">
+    <div class="sort-row">
+      <button class="sort-btn active" data-sort="date">新しい順</button>
+      <button class="sort-btn" data-sort="count">配信本数順</button>
+      <button class="sort-btn" data-sort="name">名前順</button>
+    </div>
+  </div>
+</div>
+
+<main class="feed">
+  <div id="reco-container"></div>
+  <div class="catalog-title">すべての大会</div>
+  <ul id="tournament-list"></ul>
+  <details class="unclassified-toggle">
+    <summary>大会名なしの配信(インタビュー・単発企画など) <span id="unclassified-count"></span></summary>
+    <ul id="unclassified-list"></ul>
+  </details>
+</main>
+
+<script>
+(async function(){
+  var DATA;
+  try {
+    var res = await fetch('data.json');
+    DATA = await res.json();
+  } catch (e) {
+    document.getElementById('reco-container').innerHTML = '<p style="color:var(--ink-faint);font-size:14px;">データの読み込みに失敗しました。data.json を確認してください。</p>';
+    return;
+  }
+  var tournamentListEl = document.getElementById('tournament-list');
+  var searchEl = document.getElementById('search');
+  var sortButtons = document.querySelectorAll('.sort-btn');
+  var modeButtons = document.querySelectorAll('.mode-tab');
+  var currentSort = 'date';
+  var currentMode = 'series';
+  var expandedKey = null;
+
+  var STAT_LABELS = { series: '大会', occurrence: '開催回' };
+  var POSTER_PALETTE = [
+    ['#7b3fd4','#d90f66'], ['#0f6c9c','#0fb59c'], ['#c2410c','#d90f66'],
+    ['#1e3a8a','#7b3fd4'], ['#0f7a4f','#0f6c9c'], ['#a30a4d','#7b3fd4'],
+    ['#0f6c9c','#7b3fd4'], ['#c2410c','#a30a4d']
+  ];
+  function hashStr(s){ var h=0; for(var i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) | 0; } return Math.abs(h); }
+  function posterGradient(name){
+    var pair = POSTER_PALETTE[hashStr(name) % POSTER_PALETTE.length];
+    var angle = 100 + (hashStr(name) % 60);
+    return 'linear-gradient(' + angle + 'deg,' + pair[0] + ',' + pair[1] + ')';
+  }
+
+  document.getElementById('stat-videos').textContent = DATA.generated_video_count;
+  function updateStatCount(){
+    var n = currentMode === 'series' ? DATA.tournament_count : DATA.occurrence_count;
+    document.getElementById('stat-tournaments').textContent = n;
+    document.getElementById('stat-label').textContent = STAT_LABELS[currentMode];
+  }
+  updateStatCount();
+
+  function getItems(){ return currentMode === 'series' ? DATA.tournaments : DATA.occurrences; }
+  function displayName(item){ return currentMode === 'occurrence' ? item.label : item.name; }
+  function itemKey(item){ return currentMode + '::' + displayName(item) + '::' + item.date_from; }
+
+  function formatDuration(iso){
+    var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if(!m) return '';
+    var h = parseInt(m[1]||0), mi = parseInt(m[2]||0), s = parseInt(m[3]||0);
+    if(h>0) return h + '時間' + mi + '分';
+    if(mi>0) return mi + '分';
+    return s + '秒';
+  }
+  function formatDate(d){ var p = d.split('-'); return p[0] + '/' + p[1] + '/' + p[2]; }
+  function ytUrl(id){ return 'https://www.youtube.com/watch?v=' + id; }
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function selectItem(t){
+    expandedKey = itemKey(t);
+    location.hash = encodeURIComponent(currentMode) + '/' + encodeURIComponent(displayName(t));
+    renderList(true);
+  }
+
+  function renderHero(){
+    var items = getItems();
+    var container = document.getElementById('hero-container');
+    if(items.length === 0){ container.innerHTML=''; return; }
+    var top = items.slice().sort(function(a,b){ return a.date_to < b.date_to ? 1 : -1; })[0];
+    var name = displayName(top);
+    var heroThumb = (top.videos && top.videos[0] && top.videos[0].thumb) ? top.videos[0].thumb : '';
+    var heroImgHtml = heroThumb ? '<img class="hero-thumb" src="' + heroThumb + '" alt="" onerror="this.remove()">' : '';
+    container.innerHTML =
+      '<button class="hero-inner" id="hero-btn" style="background:' + posterGradient(name) + '">' +
+      heroImgHtml +
+      '<span class="hero-scrim"></span>' +
+      '<svg class="hero-rings" width="220" height="220" viewBox="0 0 220 220" aria-hidden="true">' +
+      '<circle cx="110" cy="110" r="95" stroke-width="1.2"></circle><circle cx="110" cy="110" r="60" stroke-width="1.2"></circle></svg>' +
+      '<div class="hero-badge">最新の配信</div>' +
+      '<div class="hero-name">' + escapeHtml(name) + '</div>' +
+      '<div class="hero-meta"><span><span class="num">' + top.count + '</span>本</span><span>' +
+      formatDate(top.date_from) + (top.date_from!==top.date_to ? ' 〜 ' + formatDate(top.date_to) : '') + '</span></div>' +
+      '<div class="hero-cta">配信一覧を見る</div>' +
+      '</button>';
+    document.getElementById('hero-btn').addEventListener('click', function(){ selectItem(top); });
+  }
+
+  function recoCardHtml(t, rank){
+    var name = displayName(t);
+    var thumb = (t.videos && t.videos[0] && t.videos[0].thumb) ? t.videos[0].thumb : '';
+    var imgHtml = thumb ? '<img class="poster-img" src="' + thumb + '" alt="" loading="lazy" onerror="this.remove()">' : '';
+    return '<span class="poster-bg" style="background:' + posterGradient(name) + '"></span>' +
+      imgHtml +
+      '<span class="poster-scrim"></span>' +
+      (rank ? '<span class="poster-rank">' + rank + '</span>' : '') +
+      '<span class="poster-content"><span class="reco-name">' + escapeHtml(name) + '</span>' +
+      '<span class="reco-meta"><span class="num">' + t.count + '</span>本・' + formatDate(t.date_to) + '</span></span>';
+  }
+
+  function renderRecommend(){
+    var container = document.getElementById('reco-container');
+    var items = getItems();
+    if(items.length === 0){ container.innerHTML = ''; return; }
+
+    var byCount = items.slice().sort(function(a,b){ return b.count - a.count; }).slice(0, 10);
+    var byRecent = items.slice().sort(function(a,b){ return a.date_to < b.date_to ? 1 : -1; }).slice(1, 11);
+
+    function row(title, list, ranked){
+      var html = '<div class="reco-section"><div class="reco-title">' + title + '</div><div class="reco-row">';
+      list.forEach(function(t, i){
+        html += '<a class="reco-card" href="#' + encodeURIComponent(currentMode) + '/' + encodeURIComponent(displayName(t)) + '" data-key="' + escapeHtml(itemKey(t)) + '">' + recoCardHtml(t, ranked ? (i+1) : null) + '</a>';
+      });
+      html += '</div></div>';
+      return html;
+    }
+
+    container.innerHTML = row('配信本数ランキング', byCount, true) + row('新着', byRecent, false);
+
+    container.querySelectorAll('.reco-card').forEach(function(card, idx){
+      var t = (idx < byCount.length) ? byCount[idx] : byRecent[idx - byCount.length];
+      card.addEventListener('click', function(e){
+        e.preventDefault();
+        selectItem(t);
+      });
+    });
+  }
+
+  function sortedTournaments(){
+    var arr = getItems().slice();
+    if(currentSort === 'date') arr.sort(function(a,b){ return a.date_to < b.date_to ? 1 : -1; });
+    else if(currentSort === 'count') arr.sort(function(a,b){ return b.count - a.count; });
+    else if(currentSort === 'name') arr.sort(function(a,b){ return displayName(a).localeCompare(displayName(b), 'ja'); });
+    return arr;
+  }
+
+  function videoListHtml(videos){
+    var html = '<ul class="video-list">';
+    videos.forEach(function(v){
+      html += '<li class="v-row">' +
+        '<div class="v-date num">' + formatDate(v.date) + '</div>' +
+        '<div class="v-body"><p class="v-title"><a href="' + ytUrl(v.id) + '" target="_blank" rel="noopener">' + escapeHtml(v.title) + '</a></p>' +
+        '<div class="v-duration">' + formatDuration(v.duration) + '</div></div></li>';
+    });
+    html += '</ul>';
+    return html;
+  }
+
+  function renderList(scrollToExpanded){
+    var q = searchEl.value.trim();
+    var arr = sortedTournaments();
+    if(q) arr = arr.filter(function(t){ return displayName(t).indexOf(q) !== -1; });
+
+    tournamentListEl.innerHTML = '';
+    if(arr.length === 0){
+      tournamentListEl.innerHTML = '<li style="padding:20px 8px;color:var(--ink-faint);font-size:13px;text-align:center;">該当する大会がありません</li>';
+      return;
+    }
+
+    arr.forEach(function(t){
+      var key = itemKey(t);
+      var isExpanded = (expandedKey === key);
+      var li = document.createElement('li');
+      li.className = 't-card' + (isExpanded ? ' expanded' : '');
+      li.id = 'card-' + key.replace(/[^a-zA-Z0-9]/g, '');
+
+      var header = document.createElement('a');
+      header.className = 't-row-btn';
+      header.href = '#' + encodeURIComponent(currentMode) + '/' + encodeURIComponent(displayName(t));
+      header.innerHTML =
+        '<div class="t-main"><div class="t-name">' + escapeHtml(displayName(t)) + '</div>' +
+        '<div class="t-meta"><span class="t-count-pill"><span class="num">' + t.count + '</span>本</span><span>' +
+        formatDate(t.date_from) + (t.date_from!==t.date_to ? ' 〜 ' + formatDate(t.date_to) : '') +
+        '</span></div></div><div class="t-chevron">+</div>';
+      header.addEventListener('click', function(e){
+        e.preventDefault();
+        if(expandedKey === key){
+          expandedKey = null;
+          history.replaceState(null, '', location.pathname + location.search);
+        } else {
+          expandedKey = key;
+          location.hash = encodeURIComponent(currentMode) + '/' + encodeURIComponent(displayName(t));
+        }
+        renderList(expandedKey === key);
+      });
+
+      var videosWrap = document.createElement('div');
+      videosWrap.className = 't-videos-wrap';
+      var videosInner = document.createElement('div');
+      videosInner.className = 't-videos-inner';
+      if(isExpanded){
+        videosInner.innerHTML = videoListHtml(t.videos);
+      }
+      videosWrap.appendChild(videosInner);
+
+      li.appendChild(header);
+      li.appendChild(videosWrap);
+      tournamentListEl.appendChild(li);
+
+      if(isExpanded && scrollToExpanded){
+        requestAnimationFrame(function(){
+          li.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+    });
+  }
+
+  function renderUnclassified(){
+    var ul = document.getElementById('unclassified-list');
+    document.getElementById('unclassified-count').textContent = '(' + DATA.unclassified.length + '本)';
+    var html = '';
+    DATA.unclassified.forEach(function(v){
+      html += '<li class="v-row">' +
+        '<div class="v-date num">' + formatDate(v.date) + '</div>' +
+        '<div class="v-body"><p class="v-title"><a href="' + ytUrl(v.id) + '" target="_blank" rel="noopener">' + escapeHtml(v.title) + '</a></p>' +
+        '<div class="v-duration">' + formatDuration(v.duration) + '</div></div></li>';
+    });
+    ul.innerHTML = html;
+  }
+
+  function findItemByModeAndName(mode, name){
+    var list = mode === 'series' ? DATA.tournaments : DATA.occurrences;
+    for(var i=0;i<list.length;i++){
+      if((mode === 'occurrence' ? list[i].label : list[i].name) === name) return list[i];
+    }
+    return null;
+  }
+
+  function applyHash(scroll){
+    var hash = location.hash.replace(/^#/, '');
+    if(!hash) return;
+    var parts = hash.split('/');
+    if(parts.length < 2) return;
+    var mode = decodeURIComponent(parts[0]);
+    var name = decodeURIComponent(parts.slice(1).join('/'));
+    if(mode !== 'series' && mode !== 'occurrence') return;
+    var item = findItemByModeAndName(mode, name);
+    if(!item) return;
+    currentMode = mode;
+    modeButtons.forEach(function(b){ b.classList.toggle('active', b.dataset.mode === mode); });
+    updateStatCount();
+    expandedKey = itemKey(item);
+    renderHero();
+    renderRecommend();
+    renderList(scroll);
+  }
+
+  window.addEventListener('hashchange', function(){ applyHash(true); });
+
+  modeButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(btn.classList.contains('active')) return;
+      modeButtons.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentMode = btn.dataset.mode;
+      updateStatCount();
+      expandedKey = null;
+      history.replaceState(null, '', location.pathname + location.search);
+      renderHero();
+      renderRecommend();
+      renderList();
+    });
+  });
+
+  searchEl.addEventListener('input', function(){
+    var hide = !!searchEl.value.trim();
+    document.getElementById('reco-container').style.display = hide ? 'none' : '';
+    document.getElementById('hero-container').style.display = hide ? 'none' : '';
+    renderList();
+  });
+  sortButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      sortButtons.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentSort = btn.dataset.sort;
+      renderList();
+    });
+  });
+
+  renderHero();
+  renderRecommend();
+  renderList();
+  renderUnclassified();
+  applyHash(false);
+})();
+</script>
+</body>
+</html>
