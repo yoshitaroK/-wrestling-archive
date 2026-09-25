@@ -18,7 +18,8 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 | `build_pages.py` | 大会ページ・開催回ページ(`events/`)、大会一覧、`sitemap.xml`・`robots.txt`・`404.html` を自動生成します |
 | `page_slugs.json` | 開催回ページのURL対応表(自動生成。一度決めたURLを変えないための記録。手で編集しない) |
 | `events/`・`assets/` | 自動生成されるページとデザイン(手で編集しない) |
-| `tech_channels.json` | 技術動画として掲載するチャンネルの一覧 |
+| `tech_channels.json` | 技術動画チャンネル(巻っずレスリング・GOLDKIDS など)の一覧。大会の動画は大会ページへ、技術の動画は技術動画ページへ自動で振り分けます |
+| `channel_sort.py` | 技術動画チャンネルの動画を「大会/技術/その他」に振り分けるルール |
 | `tech_categories.json` | 技術動画の区分(タックル・投げ技など)と、自動で振り分けるキーワード |
 | `tech_overrides.json` | 技術動画の手動修正(区分の指定・非表示) |
 | `legacy_map.json` | 以前のURL(`#series/…`・`#occurrence/…`)を新しいページへ案内する対応表 |
@@ -65,3 +66,11 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 - 自動で入った区分が違う場合も、同じ書き方で上書きできます。
 - 載せたくない動画は `{"video_id": "…", "hide": true}` と書きます。
 - よく出てくる言葉なら、`tech_categories.json` の `keywords` に追加すると、今後の動画も自動で振り分けられます。
+
+## 技術動画チャンネルの大会動画
+
+`tech_channels.json` のチャンネルの動画のうち、タイトルに大会名や「〇回戦」「決勝」などがある動画は、Japan Wrestling Channel の配信と同じルールで大会・開催回に照合され、大会ページに表示されます(動画にチャンネル名のラベルが付きます)。
+
+- 開催回の指定・修正は、ほかの動画と同じく `overrides.json` に `event_id` を書きます。
+- 大会ページではなく技術動画ページに載せたいときは `tech_overrides.json` に `category` を、載せたくないときは `hide: true` を書きます。
+- 大会データにない大会は「開催情報を確認中」の大会としてまとめられます(`build_data.py` の `DERIVED_RULES`)。

@@ -119,7 +119,8 @@ def main():
         sys.exit("YOUTUBE_API_KEY が設定されていません")
 
     previous = load("data.json", {})
-    prev_videos = {v["id"]: v for v in previous.get("videos", [])}
+    # Japan Wrestling Channel の動画だけで前回との比較をする(他チャンネルの動画には "ch" が付いている)
+    prev_videos = {v["id"]: v for v in previous.get("videos", []) if not v.get("ch")}
 
     videos = fetch_videos(key)
     if not videos:
@@ -136,18 +137,33 @@ def main():
                            "duration": pv.get("du", ""), "unavailable": True,
                            "scheduled_start": pv.get("ss"), "actual_start": pv.get("as")})
 
+    # 技術動画チャンネル(tech_channels.json)の動画を取得し、大会の動画は大会側の照合に混ぜる
+    previous_tech = previous.get("tech", {"channels": []})
+    tech = fetch_tech_videos(key, previous_tech)
+    from channel_sort import Sorter
+    sorter = Sorter()
+    extra = []
+    for ch in tech.get("channels", []):
+        for tv in ch.get("videos", []):
+            use, _, _ = sorter.judge(tv["id"], tv.get("t", ""))
+            if use == "tournament":
+                extra.append({"video_id": tv["id"], "title": tv.get("t", ""), "published_at": tv.get("p", ""),
+                              "duration": tv.get("du", ""), "live_broadcast_content": "none",
+                              "unavailable": bool(tv.get("unavailable")), "channel": ch["name"]})
+    main_ids = {v["video_id"] for v in videos}
+    extra = [x for x in extra if x["video_id"] not in main_ids]
+
     data, report, _ = build(
-        videos,
+        videos + extra,
         load("master_events.json", None),
         load("series_aliases.json", None),
         load("overrides.json", {}),
         load("legacy_map.json", {}),
-        previous=set(prev_videos) if prev_videos else None,
+        previous=set(prev_videos) | {v["id"] for v in previous.get("videos", []) if v.get("ch")} if prev_videos else None,
     )
     report["unavailable_now"] = [v["video_id"] for v in videos if v.get("unavailable")]
-
-    previous_tech = previous.get("tech", {"channels": []})
-    data["tech"] = fetch_tech_videos(key, previous_tech)
+    report["from_other_channels"] = len(extra)
+    data["tech"] = tech
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))

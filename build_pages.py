@@ -157,7 +157,7 @@ def head(title, desc, path, og_image, jsonld, css):
 
 def footer(as_of):
     return f"""<footer class="wrap">
-<p>このサイトは Japan Wrestling Channel(YouTube)の公開動画を大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
+<p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
 </footer>
@@ -188,6 +188,8 @@ def thumb(vid, w=320, h=180):
 
 def video_row(v, show_basis=False):
     meta = []
+    if v.get("ch"):
+        meta.append(f'<span class="chlabel">{e(v["ch"])}</span>')
     if v.get("dh"):
         meta.append(f'<span class="d">{e(fmt_date(v["dh"]))}</span>')
     if v.get("m"):
@@ -251,11 +253,17 @@ def event_page(ev, ctx):
         verb = "開催予定" if status == "scheduled" else "開催"
         lead_parts.append(f"{fmt_range(ev['start'], ev.get('end'))}{('、' + ev['venue'] + 'で') if ev.get('venue') else 'に'}{verb}。"
                           if not ev.get("derived") else f"動画の配信日は{fmt_range(ev['start'], ev.get('end'))}です(公式の開催日は確認中)。")
-    lead_parts.append(f"Japan Wrestling Channel の配信{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+    others = sorted({v["ch"] for v in vids if v.get("ch")})
+    src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
+    lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+    if others:
+        n_main = sum(1 for v in vids if not v.get("ch"))
+        lead_parts.append(f"Japan Wrestling Channel の配信{n_main}本のほか、{'、'.join(others)}の動画を含みます。" if n_main
+                          else f"いずれも{'、'.join(others)}が公開している動画です。")
     lead = "".join(lead_parts)
 
     title = f"{name} {ev['year']}年 配信動画一覧({len(vids)}本)|{SITE_NAME}"
-    desc = f"{name}({ev['year']}年)の配信動画{len(vids)}本。{counts}。" + (
+    desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + (
         f"{fmt_range(ev['start'], ev.get('end'))}開催" if ev.get("start") and not ev.get("derived") else "") + (
         f"、会場は{ev['venue']}。" if ev.get("venue") and not ev.get("derived") else "。")
     crumbs = [("トップ", "/"), ("大会一覧", "/events/"), (s["name"], spath), (f"{ev['year']}年" + (f"({fmt_date(ev['start'])[5:]})" if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1]) else ""), None)]
@@ -408,7 +416,7 @@ def series_page(s, ctx):
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first_v['id']}/hqdefault.jpg" if first_v else "", jsonld, ctx["css"])
     h += '<main class="wrap page">' + breadcrumb_html(crumbs)
     h += f"<h1>{e(s['name'])}</h1>"
-    lead = f"Japan Wrestling Channel の配信{total}本を開催年ごとに整理しています。" + (f"動画があるのは{span}の{len(with_v)}開催回です。" if with_v else "")
+    lead = f"YouTubeで公開されている配信・動画{total}本を開催年ごとに整理しています。" + (f"動画があるのは{span}の{len(with_v)}開催回です。" if with_v else "")
     if not s.get("master"):
         lead += "この大会の公式の開催日・会場は確認中です。"
     h += f'<p class="lead">{e(lead)}</p>'
@@ -435,60 +443,159 @@ def series_page(s, ctx):
 
 # ---------------------------------------------------------------- 技術動画
 
-def tech_video_row(v, channel_name=None):
+def norm_kw(t):
+    import unicodedata
+    t = unicodedata.normalize("NFKC", str(t or "")).lower()
+    t = "".join(chr(ord(c) + 0x60) if "\u3041" <= c <= "\u3096" else c for c in t)
+    return re.sub(r"\s+", "", t)
+
+
+def load_json(root, name, default):
+    try:
+        with open(os.path.join(root, name), encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return default
+
+
+def classify_tech(tech, root):
+    """技術動画ページに載せる動画(区分付き)と、どこにも載らない動画を分ける。
+    大会と判定された動画は大会ページ側(update_site.py で照合)に出るので、ここでは除く。"""
+    from channel_sort import Sorter
+    sorter = Sorter(root)
+    shown, unclassified, to_tournament = [], [], 0
+    for ch in tech.get("channels", []):
+        for v in ch.get("videos", []):
+            if v.get("unavailable"):
+                continue
+            use, cat, basis = sorter.judge(v["id"], v.get("t", ""))
+            item = dict(v, _ch=ch["name"], _chslug=ch["slug"], cat=cat, cat_basis=basis)
+            if use == "technique":
+                shown.append(item)
+            elif use == "tournament":
+                to_tournament += 1
+            elif use == "other":
+                unclassified.append(item)
+    shown.sort(key=lambda v: v.get("p") or "", reverse=True)
+    unclassified.sort(key=lambda v: v.get("p") or "", reverse=True)
+    return shown, unclassified, to_tournament
+
+
+def tech_video_row(v, cat_names, show_channel=True):
     meta = []
-    if channel_name:
-        meta.append(f'<span class="ch">{e(channel_name)}</span>')
+    if v.get("cat"):
+        meta.append(f'<a class="catlink" href="/technique/{e(v["cat"])}/">{e(cat_names.get(v["cat"], ""))}</a>')
+    if show_channel:
+        meta.append(f'<a class="ch" href="/technique/{e(v["_chslug"])}/">{e(v["_ch"])}</a>')
     if v.get("du"):
         meta.append(f'<span class="tabnum">{e(dur(v["du"]))}</span>')
     meta.append(f'<span>公開日 {e(fmt_date(jst_date(v.get("p"))))}</span>')
-    if v.get("unavailable"):
-        meta.append('<span class="lk unmatched">現在YouTubeで見られません</span>')
     return (f'<li class="v"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{thumb(v["id"])}</a>'
             f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener">{e(v["t"])}</a></div>'
             f'<div class="vm">{"".join(meta)}</div></div></li>')
 
 
-def tech_index_page(tech, ctx):
-    path = "/technique/"
+def tech_list(title, sub, vids, cat_names, show_channel=True, gid=""):
+    if not vids:
+        return ""
+    return (f'<section class="vgroup"{f" id={chr(34)}{gid}{chr(34)}" if gid else ""}><h2 class="vh">{e(title)}<small>{e(sub)}</small></h2>'
+            f'<ul class="vlist">{"".join(tech_video_row(v, cat_names, show_channel) for v in vids)}</ul></section>')
+
+
+def cat_nav(cats, counts, current=None, base="/technique/"):
+    items = [f'<a href="/technique/"{" aria-current=" + chr(34) + "page" + chr(34) if current is None and base == "/technique/" else ""}>すべて<b>{sum(counts.values())}</b></a>']
+    for c in cats:
+        n = counts.get(c["slug"], 0)
+        if not n:
+            continue
+        cur = ' aria-current="page"' if current == c["slug"] else ""
+        items.append(f'<a href="/technique/{e(c["slug"])}/"{cur}>{e(c["name"])}<b>{n}</b></a>')
+    return f'<nav class="catnav" aria-label="区分">{"".join(items)}</nav>'
+
+
+def tech_pages(tech, cats, shown, ctx):
+    cat_names = {c["slug"]: c["name"] for c in cats}
+    counts = defaultdict(int)
+    for v in shown:
+        counts[v["cat"]] += 1
     channels = tech.get("channels", [])
-    all_vids = sorted(
-        [dict(v, _ch=c["name"], _slug=c["slug"]) for c in channels for v in c.get("videos", []) if not v.get("unavailable")],
-        key=lambda v: v.get("p") or "", reverse=True)
-    total = len(all_vids)
-    title = f"技術動画|{SITE_NAME}"
-    desc = f"レスリングクラブによる技術・トレーニング紹介動画をまとめています。現在{len(channels)}チャンネル・{total}本掲載。"
+    pages = []
+
+    # 技術動画トップ
+    path = "/technique/"
     crumbs = [("トップ", "/"), ("技術動画", None)]
+    title = f"技術動画|{SITE_NAME}"
+    desc = ("レスリングクラブが公開している技術・トレーニング動画を、" + "・".join(c["name"] for c in cats if counts.get(c["slug"])) +
+            f"などの区分で探せます。{len(shown)}本掲載。")
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": "技術動画", "url": SITE + path}]}
-    h = head(title, desc, path, "", jsonld, ctx["css"])
+        "@type": "CollectionPage", "name": "技術動画", "url": SITE + path,
+        "hasPart": [{"@type": "WebPage", "name": c["name"], "url": f"{SITE}/technique/{c['slug']}/"} for c in cats if counts.get(c["slug"])]}]}
+    h = head(title, desc, path, f"https://i.ytimg.com/vi/{shown[0]['id']}/hqdefault.jpg" if shown else "", jsonld, ctx["css"])
     h += '<main class="wrap page">' + breadcrumb_html(crumbs) + "<h1>技術動画</h1>"
-    h += (f'<p class="lead">レスリングクラブが公開している、技術やトレーニング方法を紹介する動画をまとめています。'
-          f'大会の試合配信とは別の一覧です。現在{len(channels)}チャンネル・{total}本を掲載しています。</p>')
-    h += '<ul class="chlist">' + "".join(
-        f'<li><a href="/technique/{e(c["slug"])}/"><span class="cn">{e(c["name"])}</span>'
-        f'<span class="cm">{e(c.get("note", ""))}<b class="num">{sum(1 for v in c.get("videos", []) if not v.get("unavailable"))}</b>本</span></a></li>'
-        for c in channels) + "</ul>"
-    h += vgroup("新着", f"{total}本", all_vids[:60], gid="tv")
+    h += (f'<p class="lead">レスリングクラブが公開している、技術やトレーニング方法を紹介する動画です。'
+          f'区分を選ぶと、その技術の動画だけを見られます。現在{len(shown)}本を掲載しています。</p>')
+    h += cat_nav(cats, counts)
+    h += '<ul class="catcards">' + "".join(
+        f'<li><a href="/technique/{e(c["slug"])}/"><span class="cn">{e(c["name"])}</span><span class="cd">{e(c.get("description", ""))}</span>'
+        f'<span class="cc"><b class="num">{counts[c["slug"]]}</b>本</span></a></li>'
+        for c in cats if counts.get(c["slug"])) + "</ul>"
+    h += tech_list("新着", f"公開日の新しい順", shown[:30], cat_names, gid="new")
+    if channels:
+        h += '<section class="section"><h2>チャンネル</h2><ul class="chlist">' + "".join(
+            f'<li><a href="/technique/{e(c["slug"])}/"><span class="cn">{e(c["name"])}</span>'
+            f'<span class="cm">{e(c.get("note", ""))}<b class="num">{sum(1 for v in shown if v["_chslug"] == c["slug"])}</b>本</span></a></li>'
+            for c in channels) + "</ul></section>"
     h += "</main>" + footer(ctx["as_of"])
-    return path, h
+    pages.append((path, h, shown))
 
+    # 区分ごとのページ
+    for c in cats:
+        vids = [v for v in shown if v["cat"] == c["slug"]]
+        if not vids:
+            continue
+        path = f"/technique/{c['slug']}/"
+        crumbs = [("トップ", "/"), ("技術動画", "/technique/"), (c["name"], None)]
+        title = f"{c['name']}の技術動画({len(vids)}本)|{SITE_NAME}"
+        desc = f"レスリングの{c['name']}の技術・練習動画{len(vids)}本。{c.get('description', '')}。"
+        jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs),
+                  {"@type": "CollectionPage", "name": f"{c['name']}の技術動画", "url": SITE + path}]}
+        h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg", jsonld, ctx["css"])
+        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(c['name'])}</h1>"
+        h += f'<p class="lead">{e(c.get("description", ""))}。レスリングクラブが公開している動画{len(vids)}本を、公開日の新しい順に並べています。</p>'
+        h += cat_nav(cats, counts, current=c["slug"])
+        h += tech_list(c["name"], f"{len(vids)}本", vids, cat_names, gid="list")
+        h += "</main>" + footer(ctx["as_of"])
+        pages.append((path, h, vids))
 
-def tech_channel_page(ch, ctx):
-    path = f"/technique/{ch['slug']}/"
-    vids = [v for v in ch.get("videos", []) if not v.get("unavailable")]
-    title = f"{ch['name']} 技術動画一覧({len(vids)}本)|{SITE_NAME}"
-    desc = f"{ch['name']}が公開している技術・トレーニング紹介動画{len(vids)}本の一覧。" + (ch.get("note", "") and f"{ch['note']}。")
-    crumbs = [("トップ", "/"), ("技術動画", "/technique/"), (ch["name"], None)]
-    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs)]}
-    h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg" if vids else "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(ch['name'])}</h1>"
-    if ch.get("note"):
-        h += f'<p class="lead">{e(ch["note"])}</p>'
-    h += f'<p class="lead">Japan Wrestling Channel とは別に掲載している、技術・トレーニング紹介動画{len(vids)}本です。</p>'
-    h += vgroup(ch["name"], f"{len(vids)}本、公開日の新しい順", vids, gid="tc")
-    h += "</main>" + footer(ctx["as_of"])
-    return path, h
+    # チャンネルごとのページ(区分ごとに見出しを分ける)
+    for ch in channels:
+        vids = [v for v in shown if v["_chslug"] == ch["slug"]]
+        path = f"/technique/{ch['slug']}/"
+        crumbs = [("トップ", "/"), ("技術動画", "/technique/"), (ch["name"], None)]
+        title = f"{ch['name']} 技術動画一覧({len(vids)}本)|{SITE_NAME}"
+        desc = f"{ch['name']}が公開している技術・トレーニング動画{len(vids)}本を区分ごとに掲載。" + (f"{ch['note']}。" if ch.get("note") else "")
+        jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs)]}
+        h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg" if vids else "", jsonld, ctx["css"])
+        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(ch['name'])}</h1>"
+        if ch.get("note"):
+            h += f'<p class="lead">{e(ch["note"])}。技術・トレーニング動画{len(vids)}本を区分ごとに並べています。</p>'
+        ch_counts = defaultdict(int)
+        for v in vids:
+            ch_counts[v["cat"]] += 1
+        jump = [f'<a href="#{e(c["slug"])}">{e(c["name"])}<b>{ch_counts[c["slug"]]}</b></a>' for c in cats if ch_counts.get(c["slug"])]
+        if jump:
+            h += f'<nav class="catnav" aria-label="このページ内の区分">{"".join(jump)}</nav>'
+        for c in cats:
+            lst = [v for v in vids if v["cat"] == c["slug"]]
+            h += tech_list(c["name"], f"{len(lst)}本", lst, cat_names, show_channel=False, gid=c["slug"])
+        if not vids:
+            h += '<p class="empty">このチャンネルの動画はまだ区分けされていません。</p>'
+        h += "</main>" + footer(ctx["as_of"])
+        pages.append((path, h, vids))
+
+    slugs_seen = [p for p, _, _ in pages]
+    assert len(slugs_seen) == len(set(slugs_seen)), "技術動画の区分とチャンネルのURLが重なっています(tech_categories.json と tech_channels.json の slug を確認してください)"
+    return [(p, h, max((jst_date(v.get("p")) for v in vs), default=ctx["as_of"])) for p, h, vs in pages]
 
 
 # ---------------------------------------------------------------- 大会一覧・404
@@ -582,10 +689,34 @@ a.yr{text-decoration:none}
 .chlist .cm{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px;white-space:nowrap;flex:0 0 auto}
 .chlist .cm .num{font-size:16px;color:var(--ink);font-family:var(--num)}
 @media (max-width:520px){
+  .page .catcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .page .catcards a{padding:10px 12px;gap:2px}
+  .page .catcards .cn{font-size:14px}
+  .page .catcards .cd{display:none}
+  .page .catcards .cc .num{font-size:18px}
   .chlist a{flex-direction:column;align-items:flex-start;gap:6px}
   .chlist .cm{white-space:normal}
 }
-.v .ch{color:var(--pink-deep)}
+.v .ch{color:var(--ink2);text-decoration:none}
+.v .chlabel{font-size:11px;color:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:0 6px}
+.v .ch:hover{color:var(--pink)}
+.v .catlink{font-size:11px;border:1px solid var(--pink-line);color:var(--pink-deep);border-radius:4px;padding:0 7px;text-decoration:none}
+.v .catlink:hover{border-color:var(--pink)}
+.catnav{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;margin:4px 0 8px;scrollbar-width:thin}
+.catnav a{flex:0 0 auto;display:inline-flex;align-items:baseline;gap:5px;font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--surface)}
+.catnav a b{font-family:var(--num);font-weight:600;font-size:15px;color:var(--ink3)}
+.catnav a:hover{border-color:var(--pink)}
+.catnav a[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.catnav a[aria-current] b{color:#fff}
+.catcards{list-style:none;margin:10px 0 10px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.catcards a{display:flex;flex-direction:column;gap:4px;height:100%;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-top:3px solid var(--pink)}
+.catcards a:hover{border-color:var(--pink)}
+.catcards .cn{font-weight:900;font-size:16px}
+.catcards .cd{font-size:12px;color:var(--ink3);line-height:1.55;flex:1}
+.catcards .cc{font-size:12px;color:var(--ink3)}
+.catcards .cc .num{font-size:20px;color:var(--pink);margin-right:2px}
+.page h2.vh{margin:0 0 8px;font-size:17px;font-weight:900;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.page h2.vh small{font-weight:400;color:var(--ink3);font-size:12px}
 .v .thumb img{width:100%;height:100%}
 @media (max-width:760px){
   .page h1{font-size:22px}
@@ -650,14 +781,23 @@ def build(root=HERE, inline_css=False, only=None):
             lastmod = max((jst_date(v.get("p")) for v in vids), default=data.get("as_of"))
             pages.append((path, doc, lastmod))
     if only is None:
-        os.makedirs(os.path.join(root, "technique"), exist_ok=True)
-        tpath, tdoc = tech_index_page(tech, ctx)
-        tech_lastmod = max((v.get("p") or "" for c in tech.get("channels", []) for v in c.get("videos", [])), default=data.get("as_of"))
-        pages.append((tpath, tdoc, jst_date(tech_lastmod) if "T" in (tech_lastmod or "") else tech_lastmod))
-        for c in tech.get("channels", []):
-            cpath, cdoc = tech_channel_page(c, ctx)
-            lm = max((v.get("p") or "" for v in c.get("videos", [])), default=data.get("as_of"))
-            pages.append((cpath, cdoc, jst_date(lm) if "T" in (lm or "") else lm))
+        tcfg = load_json(root, "tech_categories.json", {"categories": []})
+        cats = tcfg.get("categories", [])
+        shown, unclassified, to_tournament = classify_tech(tech, root)
+        order = {slug: i for i, slug in enumerate(tcfg.get("display_order", []))}
+        cats_view = sorted(cats, key=lambda c: order.get(c["slug"], len(order)))
+        pages.extend(tech_pages(tech, cats_view, shown, ctx))
+        # 区分けできなかった動画はサイトに出さず、build_report.json に一覧を残す
+        rp = os.path.join(root, "build_report.json")
+        report = load_json(root, "build_report.json", {})
+        cnt = defaultdict(int)
+        for v in shown:
+            cnt[v["cat"]] += 1
+        report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
+                          "unclassified_count": len(unclassified),
+                          "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}
+        with open(rp, "w", encoding="utf-8") as f:
+            json.dump(report, f, ensure_ascii=False, indent=1)
 
         def latest(sr):
             return max((x.get("start") or "" for x in events_by_series[sr["id"]] if x.get("n")), default="")
@@ -681,7 +821,10 @@ def build(root=HERE, inline_css=False, only=None):
             f.write("</urlset>\n")
         with open(os.path.join(root, "robots.txt"), "w", encoding="utf-8") as f:
             f.write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    print(f"ページを生成しました: {len(pages)}ページ(開催回 {sum(1 for p in pages if p[0].count('/') == 4)}・大会 {sum(1 for p in pages if p[0].count('/') == 3)})")
+    n_ev = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 4)
+    n_se = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 3)
+    n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
+    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te})")
     return pages
 
 

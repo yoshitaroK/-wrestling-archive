@@ -1,4 +1,4 @@
 {
-  "about": "技術動画の手動修正。ここに書いた内容は自動の振り分けより優先されます。category には tech_categories.json の slug(defense / tackle / throw / ground / stand / physical / drill)を書きます。サイトに載せたくない動画は \"hide\": true にします。",
-  "video_overrides": []
+ "about": "技術動画チャンネルの動画の手動修正。自動の振り分けより優先されます。技術動画ページに載せる: {\"video_id\": \"…\", \"category\": \"tackle\"}(区分は tech_categories.json の slug)。大会ページに移す: {\"video_id\": \"…\", \"use\": \"tournament\"}(どの開催回かを指定するときは overrides.json に event_id を書く)。載せない: {\"video_id\": \"…\", \"hide\": true}。",
+ "video_overrides": []
 }
