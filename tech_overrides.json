@@ -1,0 +1,4 @@
+{
+  "about": "技術動画の手動修正。ここに書いた内容は自動の振り分けより優先されます。category には tech_categories.json の slug(defense / tackle / throw / ground / stand / physical / drill)を書きます。サイトに載せたくない動画は \"hide\": true にします。",
+  "video_overrides": []
+}

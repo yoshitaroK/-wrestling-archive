@@ -18,6 +18,9 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 | `build_pages.py` | 大会ページ・開催回ページ(`events/`)、大会一覧、`sitemap.xml`・`robots.txt`・`404.html` を自動生成します |
 | `page_slugs.json` | 開催回ページのURL対応表(自動生成。一度決めたURLを変えないための記録。手で編集しない) |
 | `events/`・`assets/` | 自動生成されるページとデザイン(手で編集しない) |
+| `tech_channels.json` | 技術動画として掲載するチャンネルの一覧 |
+| `tech_categories.json` | 技術動画の区分(タックル・投げ技など)と、自動で振り分けるキーワード |
+| `tech_overrides.json` | 技術動画の手動修正(区分の指定・非表示) |
 | `legacy_map.json` | 以前のURL(`#series/…`・`#occurrence/…`)を新しいページへ案内する対応表 |
 | `.github/workflows/update.yml` | 毎日の自動更新の設定 |
 
@@ -48,3 +51,17 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 
 `master_events.json` は 2026年9月24日時点の照合用データです。予定(scheduled)の大会は、日付が過ぎても自動で「開催済み」にはなりません。
 実際の結果を確認したうえで `status` を `held` に直してください。
+
+## 技術動画の区分を直す方法
+
+区分けできなかった動画はサイトに表示されません。一覧は `build_report.json` の `tech` → `tech_unclassified` に出ます。
+表示したい動画は `tech_overrides.json` の `video_overrides` に追加します。
+
+```json
+{"video_id": "YouTubeの動画ID", "category": "tackle"}
+```
+
+- `category` は `tackle`(タックル)/ `stand`(組み手・スタンド)/ `throw`(投げ技)/ `ground`(グラウンド)/ `defense`(ディフェンス)/ `physical`(フィジカル・基礎運動)/ `drill`(練習メニュー・ドリル)のどれかです。
+- 自動で入った区分が違う場合も、同じ書き方で上書きできます。
+- 載せたくない動画は `{"video_id": "…", "hide": true}` と書きます。
+- よく出てくる言葉なら、`tech_categories.json` の `keywords` に追加すると、今後の動画も自動で振り分けられます。
