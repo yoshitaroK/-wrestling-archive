@@ -15,6 +15,9 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 | `master_events.json` | 大会の開催回データ(開催日・会場・出典・中止/予定など) |
 | `series_aliases.json` | 大会の系列と検索用の別名、取り違え防止のルール |
 | `overrides.json` | **手動修正**。ここに書いた紐付けは再取得・再ビルドしても必ず優先されます |
+| `build_pages.py` | 大会ページ・開催回ページ(`events/`)、大会一覧、`sitemap.xml`・`robots.txt`・`404.html` を自動生成します |
+| `page_slugs.json` | 開催回ページのURL対応表(自動生成。一度決めたURLを変えないための記録。手で編集しない) |
+| `events/`・`assets/` | 自動生成されるページとデザイン(手で編集しない) |
 | `legacy_map.json` | 以前のURL(`#series/…`・`#occurrence/…`)を新しいページへ案内する対応表 |
 | `.github/workflows/update.yml` | 毎日の自動更新の設定 |
 

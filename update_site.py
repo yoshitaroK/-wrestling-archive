@@ -111,6 +111,10 @@ def main():
     print(f"動画 {report['video_count']} 本 / 照合 {report['link_counts']}")
     print(f"手動修正 {report['overrides_applied']} 件 / 今回取得できなかった動画 {len(report['unavailable_now'])} 本")
 
+    # 大会・開催回ごとのページ(events/)と sitemap.xml を作り直す
+    import build_pages
+    build_pages.build()
+
 
 if __name__ == "__main__":
     main()

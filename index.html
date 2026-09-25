@@ -17,7 +17,14 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#000000">
-<meta name="description" content="Japan Wrestling Channel の配信を、大会名・開催年・日程から探せる非公式アーカイブです。">
+<meta name="description" content="Japan Wrestling Channel のレスリング配信を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
+<link rel="canonical" href="https://japanwrestlingchannel.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="レスリング配信アーカイブ">
+<meta property="og:title" content="レスリング配信アーカイブ">
+<meta property="og:description" content="Japan Wrestling Channel のレスリング配信を、大会名・開催年・日程から探せる非公式アーカイブです。">
+<meta property="og:url" content="https://japanwrestlingchannel.com/">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
@@ -129,6 +136,7 @@ main{padding:10px 0 60px}
 .tag.unlisted{border-color:var(--unl-line);color:var(--unl);background:var(--unl-bg)}
 .sbody{padding:2px 16px 20px;border-top:1px solid var(--line)}
 .aliases{font-size:12px;color:var(--ink3);margin:12px 0 0}
+.pagelink{margin:10px 0 0;font-size:13px}
 
 /* 開催年の年表 */
 .rail{display:flex;overflow-x:auto;padding:16px 2px 8px;margin:4px 0 12px}
@@ -246,6 +254,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 <main class="wrap" id="main"><div class="loading">データを読み込んでいます</div></main>
 
 <footer class="wrap">
+  <p><a href="/events/">大会一覧(すべての大会のページ)</a></p>
   <p>このサイトは Japan Wrestling Channel(YouTube)の公開動画を大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
   <p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>
   <p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>
@@ -267,6 +276,12 @@ if(!DATA){
   try{ var res = await fetch('data.json',{cache:'no-cache'}); DATA = await res.json(); }
   catch(e){ document.getElementById('main').innerHTML = '<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>'; return; }
 }
+
+/* ---------- 大会・開催回ページのURL ---------- */
+var PAGES = {};
+try{ var pr = await fetch('page_slugs.json',{cache:'no-cache'}); if(pr.ok) PAGES = (await pr.json()).events || {}; }catch(e){}
+function eventPage(eid){ return PAGES[eid] ? '/events/'+PAGES[eid]+'/' : ''; }
+function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? '/events/'+sid+'/' : ''; }
 
 /* ---------- 準備 ---------- */
 var TODAY = new Date(); var TODAY_ISO = TODAY.toISOString().slice(0,10);
@@ -337,7 +352,8 @@ function readHash(){
   if(m){
     var name = decodeURIComponent(m[2]), map = (DATA.legacy||{})[m[1]]||{}, hit = map[name];
     var ns = {q:'',y:'',c:'',sty:'',sc:'',all:false,s:'',e:'',sort:'date'};
-    if(hit){ ns.s = hit.s||''; ns.e = hit.e||''; legacyNote = '以前のリンク「'+name+'」を新しいページに移しました。'; }
+    if(hit){ var dest = (hit.e && eventPage(hit.e)) || (!hit.e && hit.s && seriesPage(hit.s)); if(dest){ location.replace(dest); return; }
+      ns.s = hit.s||''; ns.e = hit.e||''; legacyNote = '以前のリンク「'+name+'」を新しいページに移しました。'; }
     else { ns.q = name; legacyNote = '以前のリンク「'+name+'」に対応するページが見つからないため、名前で検索しています。'; }
     st = ns; history.replaceState(null,'',toHash()); return;
   }
@@ -417,7 +433,7 @@ function renderStatus(list){
 function tileEvent(e){
   var vs = (byEvent[e.id]||[]).slice().sort(function(a,b){ return a.k==='match' ? -1 : 1; });
   var first = vs[0]; var s = S[e.series];
-  return '<a class="tile" href="'+esc(linkTo(e.series,e.id))+'">'+ thumb(first?first.id:'', s?s.name:'') +
+  return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ thumb(first?first.id:'', s?s.name:'') +
     '<div class="tt">'+esc(s?s.name:e.name)+'</div><div class="tm"><span class="num">'+e.n+'</span>本 '+e.year+'年 '+fmtShort(e.start)+(e.end&&e.end!==e.start?'〜'+fmtShort(e.end):'')+'</div></a>';
 }
 function linkTo(sid,eid){ var p = new URLSearchParams(); p.set('s',sid); if(eid) p.set('e',eid); return '#'+p.toString(); }
@@ -432,7 +448,7 @@ function renderShelves(){
   var top = past[0];
   if(top){
     var ts = S[top.series], tv = (byEvent[top.id]||[]).filter(function(v){return v.k==='match';})[0] || (byEvent[top.id]||[])[0];
-    h += '<a class="hero" href="'+esc(linkTo(top.series,top.id))+'" style="background:'+grad(ts?ts.name:top.name)+'">'+
+    h += '<a class="hero" href="'+esc(eventPage(top.id)||linkTo(top.series,top.id))+'" style="background:'+grad(ts?ts.name:top.name)+'">'+
       (tv?'<img src="https://i.ytimg.com/vi/'+esc(tv.id)+'/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" onerror="thumbFail(this)">':'')+'<span class="scrim"></span>'+
       '<svg class="rings" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true"><circle cx="120" cy="120" r="104" stroke-width="1.2"/><circle cx="120" cy="120" r="66" stroke-width="1.2"/></svg>'+
       '<div class="badge-l">最近開催された大会</div><div class="hn">'+esc(top.official_name||top.name)+'</div>'+
@@ -448,7 +464,7 @@ function renderShelves(){
   h += '<section class="shelf"><h2>動画が充実している大会<span class="sub">収録本数の多い順</span></h2><div class="row">'+rich.map(function(s){
     var lastE = s.events.filter(function(e){return e.n>0;}).pop(); var fv = lastE && (byEvent[lastE.id]||[])[0];
     var yrs = s.events.filter(function(e){return e.n>0;}).map(function(e){return e.year;});
-    return '<a class="tile" href="'+esc(linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', s.name)+'<div class="tt">'+esc(s.name)+'</div><div class="tm"><span class="num">'+s.n+'</span>本 '+
+    return '<a class="tile" href="'+esc(seriesPage(s.id)||linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', s.name)+'<div class="tt">'+esc(s.name)+'</div><div class="tm"><span class="num">'+s.n+'</span>本 '+
       (yrs.length? Math.min.apply(null,yrs)+'〜'+Math.max.apply(null,yrs)+'年':'')+'</div></a>';
   }).join('')+'</div></section>';
   return h;
@@ -480,6 +496,7 @@ function eventPanel(e){
   var s = S[e.series];
   var title = e.official_name || e.name;
   var h = '<div class="event" id="ev-'+esc(e.id)+'"><h3>'+esc(title)+(e.status!=='held'&&STATUS[e.status]?'<span class="badge '+esc(e.status)+'">'+esc(STATUS[e.status])+'</span>':'')+'</h3>';
+  if(eventPage(e.id)) h += '<p class="pagelink"><a href="'+esc(eventPage(e.id))+'">この開催回のページを開く(共有やブックマークに便利)</a></p>';
   h += '<dl class="facts">';
   h += '<dt>開催年</dt><dd class="tabnum">'+e.year+'年'+(e.fy_label?'('+esc(e.fy_label)+')':'')+'</dd>';
   if(e.sessions && e.sessions.length){
@@ -532,6 +549,7 @@ function seriesBlock(item){
     (item.why?'<span class="why">'+esc(item.why)+'</span>':'')+'</span></span><span class="mark" aria-hidden="true">+</span></button>';
   if(open){
     h += '<div class="sbody" id="sb-'+esc(s.id)+'">';
+    if(seriesPage(s.id)) h += '<p class="pagelink"><a href="'+esc(seriesPage(s.id))+'">'+esc(s.name)+'のページを開く</a></p>';
     if(s.aliases && s.aliases.length) h += '<p class="aliases">この名前でも探せます:'+esc(s.aliases.join('、'))+'</p>';
     if(!s.master) h += '<p class="aliases">照合用の大会データに載っていない大会です。開催日は動画の公開日から推定した参考値で、公式の日程ではありません。</p>';
     var evs = visibleEvents.slice();
