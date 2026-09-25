@@ -52,6 +52,9 @@ button,input,select{font:inherit;color:inherit}
 /* ヘッダー */
 .top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
 .brand{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0}
+.topnav{display:flex;gap:8px}
+.topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
+.topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .brand h1{margin:0;line-height:1}
 .brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
@@ -200,6 +203,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 
 .series,.event,.vgroup{scroll-margin-top:72px}
 @media (max-width:760px){
+  .topnav a{font-size:11px;padding:4px 10px}
   .brand p{font-size:0}
   .brand p .num,.brand p{line-height:1}
   .brand p .num{font-size:16px}
@@ -230,6 +234,7 @@ footer p{margin:0 0 6px;max-width:76ch}
     <div class="brand">
       <h1><a href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><span class="logo-mark" aria-hidden="true">W</span><span class="logo-type">WRESTLING <span class="ac">ARCHIVE</span></span></a></h1>
       <p id="tagline">Japan Wrestling Channel の配信を大会・開催年から探せる非公式アーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>
+      <nav class="topnav"><a href="/events/">大会一覧</a><a href="/technique/">技術動画</a></nav>
     </div>
   </div>
 </header>
@@ -254,7 +259,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 <main class="wrap" id="main"><div class="loading">データを読み込んでいます</div></main>
 
 <footer class="wrap">
-  <p><a href="/events/">大会一覧(すべての大会のページ)</a></p>
+  <p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/technique/">技術動画</a></p>
   <p>このサイトは Japan Wrestling Channel(YouTube)の公開動画を大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
   <p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>
   <p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>

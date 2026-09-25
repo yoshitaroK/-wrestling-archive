@@ -1,0 +1,7 @@
+{
+  "about": "技術・指導動画として掲載するチャンネルの一覧。大会マスターとの照合は行わず、公開日順の一覧としてのみ表示します。追加・削除はこのファイルを編集してください。",
+  "channels": [
+    {"slug": "makidswrestling", "channel_id": "UC_LxIDRw99ZcLnooj9Fbumw", "name": "巻っずレスリング", "note": "新潟市(旧・巻町)のレスリングクラブ。技術・トレーニング紹介が中心"},
+    {"slug": "goldkids_wrestling", "channel_id": "UCA9SaD7rYMe42wtwpX383EQ", "name": "GOLDKIDS WRESTLING", "note": "キッズレスリングクラブ"}
+  ]
+}

@@ -18,6 +18,7 @@ from build_data import build
 
 CHANNEL_HANDLE = "japan_wrestlingchannel"
 API = "https://www.googleapis.com/youtube/v3"
+TECH_CHANNELS_FILE = "tech_channels.json"
 
 
 def get(path, **params):
@@ -29,9 +30,19 @@ def get(path, **params):
     r.raise_for_status()
 
 
-def fetch_videos(key):
-    ch = get("channels", part="contentDetails", forHandle=CHANNEL_HANDLE, key=key)
-    uploads = ch["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+def uploads_playlist(key, channel_id=None, handle=None):
+    kw = {"id": channel_id} if channel_id else {"forHandle": handle}
+    ch = get("channels", part="contentDetails", key=key, **kw)
+    items = ch.get("items") or []
+    if not items:
+        return None
+    return items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
+
+
+def fetch_channel_videos(key, channel_id=None, handle=None):
+    uploads = uploads_playlist(key, channel_id=channel_id, handle=handle)
+    if not uploads:
+        return []
     ids, token = [], None
     while True:
         p = dict(part="contentDetails", playlistId=uploads, maxResults=50, key=key)
@@ -60,6 +71,38 @@ def fetch_videos(key):
             })
         time.sleep(0.2)
     return videos
+
+
+def fetch_videos(key):
+    return fetch_channel_videos(key, handle=CHANNEL_HANDLE)
+
+
+def fetch_tech_videos(key, previous_tech):
+    """大会マスターと照合しない、技術・指導動画チャンネルの一覧を取得する。
+    1チャンネルの取得に失敗しても、他のチャンネルの更新は続ける。"""
+    cfg = load(TECH_CHANNELS_FILE, {"channels": []})
+    prev_by_channel = {c["slug"]: {v["id"]: v for v in c.get("videos", [])} for c in previous_tech.get("channels", [])}
+    out = []
+    for ch in cfg.get("channels", []):
+        slug = ch["slug"]
+        prev = prev_by_channel.get(slug, {})
+        try:
+            raw = fetch_channel_videos(key, channel_id=ch.get("channel_id"), handle=ch.get("handle"))
+        except Exception as ex:
+            print(f"[技術動画] {slug} の取得に失敗したため前回のデータを引き継ぎます: {ex}")
+            out.append({"slug": slug, "name": ch["name"], "note": ch.get("note", ""), "videos": list(prev.values())})
+            continue
+        vids = []
+        got = set()
+        for v in raw:
+            got.add(v["video_id"])
+            vids.append({"id": v["video_id"], "t": v["title"], "p": v["published_at"], "du": v["duration"]})
+        for vid, pv in prev.items():
+            if vid not in got:
+                vids.append(dict(pv, unavailable=True))
+        vids.sort(key=lambda v: v.get("p") or "", reverse=True)
+        out.append({"slug": slug, "name": ch["name"], "note": ch.get("note", ""), "videos": vids})
+    return {"channels": out}
 
 
 def load(path, default):
@@ -102,6 +145,9 @@ def main():
         previous=set(prev_videos) if prev_videos else None,
     )
     report["unavailable_now"] = [v["video_id"] for v in videos if v.get("unavailable")]
+
+    previous_tech = previous.get("tech", {"channels": []})
+    data["tech"] = fetch_tech_videos(key, previous_tech)
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))

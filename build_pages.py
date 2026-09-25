@@ -150,7 +150,7 @@ def head(title, desc, path, og_image, jsonld, css):
 <body>
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="/" aria-label="{SITE_NAME}(トップへ)"><span class="logo-mark" aria-hidden="true">W</span><span class="logo-type">WRESTLING <span class="ac">ARCHIVE</span></span></a>
-<a class="tosearch" href="/">大会を検索</a>
+<nav class="topnav"><a href="/">大会を検索</a><a href="/technique/">技術動画</a></nav>
 </div></div></header>
 """
 
@@ -433,6 +433,64 @@ def series_page(s, ctx):
     return path, h
 
 
+# ---------------------------------------------------------------- 技術動画
+
+def tech_video_row(v, channel_name=None):
+    meta = []
+    if channel_name:
+        meta.append(f'<span class="ch">{e(channel_name)}</span>')
+    if v.get("du"):
+        meta.append(f'<span class="tabnum">{e(dur(v["du"]))}</span>')
+    meta.append(f'<span>公開日 {e(fmt_date(jst_date(v.get("p"))))}</span>')
+    if v.get("unavailable"):
+        meta.append('<span class="lk unmatched">現在YouTubeで見られません</span>')
+    return (f'<li class="v"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{thumb(v["id"])}</a>'
+            f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener">{e(v["t"])}</a></div>'
+            f'<div class="vm">{"".join(meta)}</div></div></li>')
+
+
+def tech_index_page(tech, ctx):
+    path = "/technique/"
+    channels = tech.get("channels", [])
+    all_vids = sorted(
+        [dict(v, _ch=c["name"], _slug=c["slug"]) for c in channels for v in c.get("videos", []) if not v.get("unavailable")],
+        key=lambda v: v.get("p") or "", reverse=True)
+    total = len(all_vids)
+    title = f"技術動画|{SITE_NAME}"
+    desc = f"レスリングクラブによる技術・トレーニング紹介動画をまとめています。現在{len(channels)}チャンネル・{total}本掲載。"
+    crumbs = [("トップ", "/"), ("技術動画", None)]
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
+        "@type": "CollectionPage", "name": "技術動画", "url": SITE + path}]}
+    h = head(title, desc, path, "", jsonld, ctx["css"])
+    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + "<h1>技術動画</h1>"
+    h += (f'<p class="lead">レスリングクラブが公開している、技術やトレーニング方法を紹介する動画をまとめています。'
+          f'大会の試合配信とは別の一覧です。現在{len(channels)}チャンネル・{total}本を掲載しています。</p>')
+    h += '<ul class="chlist">' + "".join(
+        f'<li><a href="/technique/{e(c["slug"])}/"><span class="cn">{e(c["name"])}</span>'
+        f'<span class="cm">{e(c.get("note", ""))}<b class="num">{sum(1 for v in c.get("videos", []) if not v.get("unavailable"))}</b>本</span></a></li>'
+        for c in channels) + "</ul>"
+    h += vgroup("新着", f"{total}本", all_vids[:60], gid="tv")
+    h += "</main>" + footer(ctx["as_of"])
+    return path, h
+
+
+def tech_channel_page(ch, ctx):
+    path = f"/technique/{ch['slug']}/"
+    vids = [v for v in ch.get("videos", []) if not v.get("unavailable")]
+    title = f"{ch['name']} 技術動画一覧({len(vids)}本)|{SITE_NAME}"
+    desc = f"{ch['name']}が公開している技術・トレーニング紹介動画{len(vids)}本の一覧。" + (ch.get("note", "") and f"{ch['note']}。")
+    crumbs = [("トップ", "/"), ("技術動画", "/technique/"), (ch["name"], None)]
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs)]}
+    h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg" if vids else "", jsonld, ctx["css"])
+    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(ch['name'])}</h1>"
+    if ch.get("note"):
+        h += f'<p class="lead">{e(ch["note"])}</p>'
+    h += f'<p class="lead">Japan Wrestling Channel とは別に掲載している、技術・トレーニング紹介動画{len(vids)}本です。</p>'
+    h += vgroup(ch["name"], f"{len(vids)}本、公開日の新しい順", vids, gid="tc")
+    h += "</main>" + footer(ctx["as_of"])
+    return path, h
+
+
 # ---------------------------------------------------------------- 大会一覧・404
 
 def index_page(ctx, series_list):
@@ -476,8 +534,9 @@ def not_found_page(ctx):
 PAGE_CSS = """
 .brand{justify-content:space-between}
 .home{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
-.tosearch{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px}
-.tosearch:hover{border-color:var(--pink);color:var(--pink)}
+.topnav{display:flex;gap:8px}
+.topnav a{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px}
+.topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .page{padding-top:18px}
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
@@ -516,11 +575,23 @@ a.yr{text-decoration:none}
 .slist-static a{grid-template-columns:1fr auto}
 .slist-static .sname{font-weight:700}
 .slist-static .tag{margin-left:4px}
+.chlist{list-style:none;margin:0 0 30px;padding:0;display:flex;flex-direction:column;gap:6px}
+.chlist a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.chlist a:hover{border-color:var(--pink)}
+.chlist .cn{font-weight:700;min-width:0}
+.chlist .cm{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px;white-space:nowrap;flex:0 0 auto}
+.chlist .cm .num{font-size:16px;color:var(--ink);font-family:var(--num)}
+@media (max-width:520px){
+  .chlist a{flex-direction:column;align-items:flex-start;gap:6px}
+  .chlist .cm{white-space:normal}
+}
+.v .ch{color:var(--pink-deep)}
 .v .thumb img{width:100%;height:100%}
 @media (max-width:760px){
   .page h1{font-size:22px}
-  .brand{flex-wrap:nowrap}
-  .tosearch{font-size:12px;padding:4px 10px;white-space:nowrap}
+  .brand{flex-wrap:wrap}
+  .topnav{gap:6px}
+  .topnav a{font-size:11.5px;padding:4px 9px;white-space:nowrap}
   .logo-type{font-size:21px;white-space:nowrap}
   .page .facts{grid-template-columns:max-content 1fr}
   .page .facts dt{margin-top:0}
@@ -540,6 +611,7 @@ def extract_css(index_path):
 def build(root=HERE, inline_css=False, only=None):
     with open(os.path.join(root, "data.json"), encoding="utf-8") as f:
         data = json.load(f)
+    tech = data.get("tech", {"channels": []})
     css_text = extract_css(os.path.join(root, "index.html"))
     os.makedirs(os.path.join(root, "assets"), exist_ok=True)
     with open(os.path.join(root, "assets", "site.css"), "w", encoding="utf-8") as f:
@@ -578,6 +650,15 @@ def build(root=HERE, inline_css=False, only=None):
             lastmod = max((jst_date(v.get("p")) for v in vids), default=data.get("as_of"))
             pages.append((path, doc, lastmod))
     if only is None:
+        os.makedirs(os.path.join(root, "technique"), exist_ok=True)
+        tpath, tdoc = tech_index_page(tech, ctx)
+        tech_lastmod = max((v.get("p") or "" for c in tech.get("channels", []) for v in c.get("videos", [])), default=data.get("as_of"))
+        pages.append((tpath, tdoc, jst_date(tech_lastmod) if "T" in (tech_lastmod or "") else tech_lastmod))
+        for c in tech.get("channels", []):
+            cpath, cdoc = tech_channel_page(c, ctx)
+            lm = max((v.get("p") or "" for v in c.get("videos", [])), default=data.get("as_of"))
+            pages.append((cpath, cdoc, jst_date(lm) if "T" in (lm or "") else lm))
+
         def latest(sr):
             return max((x.get("start") or "" for x in events_by_series[sr["id"]] if x.get("n")), default="")
         listed = sorted([x for x in data["series"] if x.get("n")], key=latest, reverse=True)
