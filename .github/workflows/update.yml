@@ -31,6 +31,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html assets events
+          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html assets technique events
           git diff --cached --quiet || git commit -m "Update data and pages ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git push
