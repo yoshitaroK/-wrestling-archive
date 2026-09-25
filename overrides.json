@@ -1,11 +1,251 @@
 {
-  "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。",
-  "video_overrides": [
-    {"video_id": "rOpJGEOqWIM", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『10月31日(土) Aマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
-    {"video_id": "wFHhXe2dZMs", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『10月31日(土) Bマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
-    {"video_id": "42xYHFkxEt0", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『10月31日(土) Cマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
-    {"video_id": "kcWTx9FUZ60", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『11月1日(土) Aマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
-    {"video_id": "uo4CNIv1o6s", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『11月1日(土) Bマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"},
-    {"video_id": "um3Y3mUuP3E", "event_id": "wre-2026-shakaijin-open-1031", "basis": "タイトルの『11月1日(土) Cマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない", "checked_on": "2026-09-24"}
-  ]
+ "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。",
+ "video_overrides": [
+  {
+   "video_id": "rOpJGEOqWIM",
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "basis": "タイトルの『10月31日(土) Aマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない",
+   "checked_on": "2026-09-24"
+  },
+  {
+   "video_id": "wFHhXe2dZMs",
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "basis": "タイトルの『10月31日(土) Bマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない",
+   "checked_on": "2026-09-24"
+  },
+  {
+   "video_id": "42xYHFkxEt0",
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "basis": "タイトルの『10月31日(土) Cマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない",
+   "checked_on": "2026-09-24"
+  },
+  {
+   "video_id": "kcWTx9FUZ60",
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "basis": "タイトルの『11月1日(土) Aマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない",
+   "checked_on": "2026-09-24"
+  },
+  {
+   "video_id": "uo4CNIv1o6s",
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "basis": "タイトルの『11月1日(土) Bマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない",
+   "checked_on": "2026-09-24"
+  },
+  {
+   "video_id": "um3Y3mUuP3E",
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "basis": "タイトルの『11月1日(土) Cマット・第43回』と日本協会の大会ページ(2026/10/31–11/1予定)が一致。公開日8/8は配信枠の作成日で開催日ではない",
+   "checked_on": "2026-09-24"
+  },
+  {
+   "video_id": "7xsoX8UzofI",
+   "series_id": "east-autumn",
+   "basis": "巻っずレスリングの動画。『秋季新人戦』(日体大2年生)から東日本学生秋季(新人戦)と推定。1995年の開催回データがないため大会のみ指定(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "0Um5T44L9Rg",
+   "series_id": "east-autumn",
+   "basis": "巻っずレスリングの動画。『秋季新人戦』(日体大2年生)から東日本学生秋季(新人戦)と推定。1995年の開催回データがないため大会のみ指定(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "SbIO-SoPhqM",
+   "event_id": "wre-2025-masters-0119",
+   "basis": "巻っずレスリングの動画。投稿者は2026年1月開催の回を『2026』と表記しており、同じ表記で『2025』は2025年開催の回と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "of1Ud_6efyQ",
+   "event_id": "wre-2025-masters-0119",
+   "basis": "巻っずレスリングの動画。投稿者は2026年1月開催の回を『2026』と表記しており、同じ表記で『2025』は2025年開催の回と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "qFLkJ3Syk50",
+   "event_id": "wre-2025-masters-0119",
+   "basis": "巻っずレスリングの動画。投稿者は2026年1月開催の回を『2026』と表記しており、同じ表記で『2025』は2025年開催の回と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "UPt4VgIT8fw",
+   "event_id": "wre-2024-masters-0225",
+   "basis": "巻っずレスリングの動画。投稿者は2026年1月開催の回を『2026』と表記しており、同じ表記で『2024』は2024年開催の回と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "3p1xgsXRQjs",
+   "event_id": "wre-2024-masters-0225",
+   "basis": "巻っずレスリングの動画。投稿者は2026年1月開催の回を『2026』と表記しており、同じ表記で『2024』は2024年開催の回と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "chnzJO7wZs0",
+   "event_id": "wre-2016-masters-0124",
+   "basis": "巻っずレスリングの動画。投稿者は2026年1月開催の回を『2026』と表記しており、同じ表記で『2016』は2016年開催の回と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "NQqOOKou5Fk",
+   "event_id": "wre-2023-kids-senbatsu-0128",
+   "basis": "GOLDKIDS WRESTLING の動画。2022年2月の回は中止の記録があり、公開日2023/2/26の直前に開催された2023年1月の回(2022年度)と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "Ydr_UHGV1Fk",
+   "event_id": "wre-2023-kids-senbatsu-0128",
+   "basis": "GOLDKIDS WRESTLING の動画。2022年2月の回は中止の記録があり、公開日2023/2/26の直前に開催された2023年1月の回(2022年度)と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "r8rnDiG6P0w",
+   "event_id": "wre-2023-kids-senbatsu-0128",
+   "basis": "GOLDKIDS WRESTLING の動画。2022年2月の回は中止の記録があり、公開日2023/2/26の直前に開催された2023年1月の回(2022年度)と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "uy9Y2o8WdaI",
+   "event_id": "wre-2023-kids-senbatsu-0128",
+   "basis": "GOLDKIDS WRESTLING の動画。2022年2月の回は中止の記録があり、公開日2023/2/26の直前に開催された2023年1月の回(2022年度)と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "xkX5_W20WoE",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "5DvtkDPQoI0",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "naqme9tOVqU",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "6tQsct4s2OA",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "EaUqrPS_bJw",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "TCQ23WCrN7g",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "VOsNOxF1R7I",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "_fgVRNv1Sqw",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "aZXB_uXanSc",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "htCbZt7MEZU",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "icKjx0Y1gHw",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "j-19wf8i7-M",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "lTfU2M57b_M",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "us2nUC8ozek",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "vn29JVBPMx0",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "shxHumz-ev8",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "4yBFDysDorY",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "7yEICE5IKVQ",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "8bJ2gH3_e_I",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "PyA_-7PSAus",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "QqXmZxPw0I4",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "fPCJG0k61HU",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "h8vARJa0-Y4",
+   "event_id": "wre-2022-kids-0730",
+   "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
+   "checked_on": "2026-09-26"
+  }
+ ]
 }

@@ -405,7 +405,17 @@ CONFUSABLE = {
 # マスター未収録の大会(動画を削除せず保持するためのグループ)。国内/海外と区分はサイト側の判断。
 DERIVED_RULES = [
     ("x-fujinami-cup", "藤波朱理杯 三重県少年少女レスリング大会", ["少年少女"], "国内", lambda k: "藤波朱理杯" in k),
-    ("x-takatani-cup", "高谷惣亮杯(ゴールドキッズ年末合宿)", ["少年少女"], "国内", lambda k: "高谷惣亮杯" in k or "TAKATANI" in k),
+    ("x-takatani-cup", "高谷惣亮杯(ゴールドキッズ年末合宿)", ["少年少女"], "国内", lambda k: "高谷惣亮杯" in k or "TAKATANI" in k or "年末合宿マッチ" in k),
+    # 技術動画チャンネル(GOLDKIDS・巻っず)の大会動画で見つかった、マスター未収録の大会
+    ("x-chiyoda-kids", "群馬県千代田町少年少女レスリング大会", ["少年少女"], "国内", lambda k: "千代田町" in k),
+    ("x-noda-open", "野田オープン大会", ["少年少女"], "国内", lambda k: "野田オープン" in k),
+    ("x-shinjuku-lions", "新宿ライオンズ杯", ["少年少女"], "国内", lambda k: "新宿ライオンズ杯" in k),
+    ("x-ibaraki-open", "茨城オープン", ["少年少女"], "国内", lambda k: "茨城オープン" in k),
+    ("x-tokyo-team", "東京都団体戦予選", ["少年少女"], "国内", lambda k: "東京都団体戦予選" in k),
+    ("x-kanto-jh-tokyo", "関東中学生選手権 東京代表選考会", ["中学"], "国内", lambda k: "関東中学生東京代表選考会" in k),
+    ("x-maki-kids", "巻キッズレスリング大会", ["少年少女"], "国内", lambda k: "巻キッズ" in k),
+    ("x-veterans-world", "世界ベテランズ選手権(海外)", ["マスターズ"], "海外", lambda k: "ベテランズ" in k),
+    ("x-asian-championships", "アジア選手権(海外)", ["一般"], "海外", lambda k: "アジア選手権" in k and "代表" not in k),
     ("x-suginami", "杉並区区民体育祭・杉並区レスリング大会", ["少年少女"], "国内", lambda k: "杉並区" in k),
     ("x-ibaraki-junior", "茨城ジュニア大会", ["少年少女"], "国内", lambda k: "茨城ジュニア" in k),
     ("x-kanto-kids-yokosuka", "関東少年少女レスリング横須賀大会", ["少年少女"], "国内", lambda k: "関東少年少女" in k),
@@ -630,6 +640,7 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
             "day_label": meta["day_label"],
             "date_hint": None,
             "series": None, "event": None, "link": "unmatched", "basis": "", "cand": [],
+            "channel": raw.get("channel"),
         }
         if raw.get("unavailable"):
             v["state"] = "unavailable"  # 前回まで取得できていたが今回のAPI応答になかった(非公開・削除の可能性)
@@ -862,6 +873,7 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
             "k": v["kind"], "st": v["styles"], "m": v["mat"], "dl": v["day_label"], "dh": v["date_hint"],
             "s": v["series"], "e": v["event"], "l": v["link"], "b": v["basis"], "c": v["cand"],
             "vs": v["state"], "ss": v["scheduled_start"], "as": v["actual_start"],
+            "ch": v.get("channel"),
         }
         out_videos.append({k: val for k, val in ov.items() if val not in (None, [], "")})
 

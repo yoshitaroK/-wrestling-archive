@@ -1,0 +1,4 @@
+{
+ "about": "技術動画チャンネルの動画の手動修正。自動の振り分けより優先されます。技術動画ページに載せる: {\"video_id\": \"…\", \"category\": \"tackle\"}(区分は tech_categories.json の slug)。大会ページに移す: {\"video_id\": \"…\", \"use\": \"tournament\"}(どの開催回かを指定するときは overrides.json に event_id を書く)。載せない: {\"video_id\": \"…\", \"hide\": true}。",
+ "video_overrides": []
+}

@@ -1,0 +1,76 @@
+# レスリング配信アーカイブ
+
+Japan Wrestling Channel の配信を、**大会 → 開催年 → 日程・マット → 動画** の順にたどれる非公式サイトです。
+GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データと照合して `data.json` を更新します。
+
+## ファイル
+
+| ファイル | 役割 |
+|---|---|
+| `index.html` | サイト本体。`data.json` を読み込んで表示します |
+| `data.json` | 自動生成される表示用データ(手で編集しない) |
+| `build_report.json` | 自動生成される照合結果の集計・前回との差分 |
+| `update_site.py` | YouTube から動画情報(配信予定・実際の配信開始日時を含む)を取得し、`data.json` を作ります |
+| `build_data.py` | 動画タイトルと大会データを照合する処理 |
+| `master_events.json` | 大会の開催回データ(開催日・会場・出典・中止/予定など) |
+| `series_aliases.json` | 大会の系列と検索用の別名、取り違え防止のルール |
+| `overrides.json` | **手動修正**。ここに書いた紐付けは再取得・再ビルドしても必ず優先されます |
+| `build_pages.py` | 大会ページ・開催回ページ(`events/`)、大会一覧、`sitemap.xml`・`robots.txt`・`404.html` を自動生成します |
+| `page_slugs.json` | 開催回ページのURL対応表(自動生成。一度決めたURLを変えないための記録。手で編集しない) |
+| `events/`・`assets/` | 自動生成されるページとデザイン(手で編集しない) |
+| `tech_channels.json` | 技術動画チャンネル(巻っずレスリング・GOLDKIDS など)の一覧。大会の動画は大会ページへ、技術の動画は技術動画ページへ自動で振り分けます |
+| `channel_sort.py` | 技術動画チャンネルの動画を「大会/技術/その他」に振り分けるルール |
+| `tech_categories.json` | 技術動画の区分(タックル・投げ技など)と、自動で振り分けるキーワード |
+| `tech_overrides.json` | 技術動画の手動修正(区分の指定・非表示) |
+| `legacy_map.json` | 以前のURL(`#series/…`・`#occurrence/…`)を新しいページへ案内する対応表 |
+| `.github/workflows/update.yml` | 毎日の自動更新の設定 |
+
+## 動画と開催回の対応(照合)の考え方
+
+1. タイトルから大会名を判定します(元のタイトルはそのまま保存・表示します)。
+2. 開催回は「タイトルの日付」→「タイトルの年・年度(と第○回)」→「配信日が開催期間内」の順に決めます。
+   **公開日だけでは決めません。** 過去の大会を後日公開した動画や、事前に作られた配信予定枠があるためです。
+3. 大会名や年が曖昧な動画は「確認待ち」として候補と根拠を表示し、確定はしません。
+4. 大会データに載っていない大会(藤波朱理杯、世界選手権など)の動画も削除せず、「大会データ未収録」として表示します。
+
+画面の各動画には「タイトルで照合」「配信日で照合」「手動で確認済み」「確認待ち」などの根拠が表示されます。
+
+## 手動で紐付けを直す方法
+
+`overrides.json` の `video_overrides` に1件ずつ追加して保存(Commit)します。次回の自動更新から反映されます(すぐ反映したい場合は Actions タブから手動実行)。
+
+```json
+{"video_id": "YouTubeの動画ID", "event_id": "wre-2014-intercollegiate-0826", "basis": "確認した根拠", "checked_on": "2026-09-24"}
+```
+
+- `video_id` は動画URLの `watch?v=` の後ろの11文字です。
+- `event_id` は開催回のIDです。サイトで開催年を選ぶとURLの `e=` の後ろに表示されます。
+- 開催回が分からず大会だけ決めたい場合は `event_id` の代わりに `"series_id": "tenno-cup"` のように書きます。
+- 動画の種類を直したい場合は `"kind": "interview"`(match / interview / announcement / highlight / other)を追加します。
+
+## 大会データの更新
+
+`master_events.json` は 2026年9月24日時点の照合用データです。予定(scheduled)の大会は、日付が過ぎても自動で「開催済み」にはなりません。
+実際の結果を確認したうえで `status` を `held` に直してください。
+
+## 技術動画の区分を直す方法
+
+区分けできなかった動画はサイトに表示されません。一覧は `build_report.json` の `tech` → `tech_unclassified` に出ます。
+表示したい動画は `tech_overrides.json` の `video_overrides` に追加します。
+
+```json
+{"video_id": "YouTubeの動画ID", "category": "tackle"}
+```
+
+- `category` は `tackle`(タックル)/ `stand`(組み手・スタンド)/ `throw`(投げ技)/ `ground`(グラウンド)/ `defense`(ディフェンス)/ `physical`(フィジカル・基礎運動)/ `drill`(練習メニュー・ドリル)のどれかです。
+- 自動で入った区分が違う場合も、同じ書き方で上書きできます。
+- 載せたくない動画は `{"video_id": "…", "hide": true}` と書きます。
+- よく出てくる言葉なら、`tech_categories.json` の `keywords` に追加すると、今後の動画も自動で振り分けられます。
+
+## 技術動画チャンネルの大会動画
+
+`tech_channels.json` のチャンネルの動画のうち、タイトルに大会名や「〇回戦」「決勝」などがある動画は、Japan Wrestling Channel の配信と同じルールで大会・開催回に照合され、大会ページに表示されます(動画にチャンネル名のラベルが付きます)。
+
+- 開催回の指定・修正は、ほかの動画と同じく `overrides.json` に `event_id` を書きます。
+- 大会ページではなく技術動画ページに載せたいときは `tech_overrides.json` に `category` を、載せたくないときは `hide: true` を書きます。
+- 大会データにない大会は「開催情報を確認中」の大会としてまとめられます(`build_data.py` の `DERIVED_RULES`)。

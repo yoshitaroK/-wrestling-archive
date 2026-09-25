@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KWLY01JCWV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KWLY01JCWV');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>レスリング配信アーカイブ</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
+<link rel="canonical" href="https://japanwrestlingchannel.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="レスリング配信アーカイブ">
+<meta property="og:title" content="レスリング配信アーカイブ">
+<meta property="og:description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。">
+<meta property="og:url" content="https://japanwrestlingchannel.com/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#000000; --bg2:#0d0d10; --surface:#16161a; --surface-2:#222228; --ink:#ffffff; --ink2:#b9b8c0; --ink3:#86858e; --line:#2a2a31;
+  --pink:#ff2e7e; --pink-deep:#ff6aa5; --pink-tint:rgba(255,46,126,.16); --pink-line:#5c1f38; --grad-a:#7b3fd4; --grad-b:#ff2e7e;
+  --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
+  --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
+  --font:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  --num:'Teko','Noto Sans JP',sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--pink-deep)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tabnum,.num{font-variant-numeric:tabular-nums}
+.num{font-family:var(--num);font-weight:600;letter-spacing:.01em}
+
+/* ヘッダー */
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0}
+.topnav{display:flex;gap:8px}
+.topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
+.topnav a:hover{border-color:var(--pink);color:var(--pink)}
+.top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.brand h1{margin:0;line-height:1}
+.brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--grad-a),var(--grad-b));display:grid;place-items:center;
+  font-family:var(--num);font-weight:600;font-size:26px;color:#fff;line-height:1;padding-top:4px;box-shadow:0 0 18px rgba(255,46,126,.45)}
+.logo-type{font-family:var(--num);font-weight:600;font-size:30px;letter-spacing:.06em;line-height:1;padding-top:5px}
+.logo-type .ac{color:var(--pink)}
+.brand p{margin:0;color:var(--ink3);font-size:12px}
+.brand p .num{color:var(--pink);font-size:17px}
+
+/* 検索・絞り込み */
+.searchbox{padding:18px 0 4px}
+.searchrow input{width:100%;border:1px solid var(--surface-2);border-radius:10px;padding:13px 16px;font-size:16px;background:var(--surface);color:var(--ink)}
+.searchrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
+.hint{margin:6px 2px 0;font-size:12px;color:var(--ink3)}
+.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:8px;margin-top:12px;align-items:end}
+.filters label{display:flex;flex-direction:column;font-size:11.5px;color:var(--ink2);gap:3px;min-width:0}
+.filters select{border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
+.filters .check{flex-direction:row;align-items:center;gap:8px;padding:8px 2px;font-size:13px;color:var(--ink);white-space:nowrap}
+.filters .check input{width:18px;height:18px;accent-color:var(--pink)}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;font-size:13px}
+.status .count{font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--pink-tint);color:var(--pink-deep);border-radius:999px;padding:2px 10px;font-size:12px}
+.chip button{border:0;background:none;color:inherit;cursor:pointer;padding:0 2px;font-size:14px;line-height:1}
+.clear{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:12px}
+
+main{padding:10px 0 60px}
+
+/* ヒーローバナー */
+.hero{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:340px;border-radius:16px;overflow:hidden;
+  padding:30px 28px;margin:18px 0 30px;text-decoration:none;color:#fff;background:linear-gradient(120deg,var(--grad-a),var(--grad-b))}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.28) 55%,rgba(0,0,0,.05) 100%)}
+.hero .rings{position:absolute;top:-40px;right:-40px;opacity:.35}
+.hero .rings circle{fill:none;stroke:#fff}
+.hero > *:not(img):not(.scrim):not(.rings){position:relative}
+.hero .badge-l{display:inline-block;width:fit-content;font-size:11.5px;font-weight:700;background:var(--pink);color:#fff;border-radius:4px;padding:1px 8px;margin-bottom:10px}
+.hero .hn{font-size:32px;font-weight:900;line-height:1.35;max-width:720px;text-shadow:0 1px 10px rgba(0,0,0,.3)}
+.hero .hm{font-size:13px;opacity:.92;margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+.hero .hm .num{font-size:18px}
+.hero .cta{margin-top:18px;display:inline-block;background:var(--pink);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px;width:fit-content}
+.hero:hover .cta{background:#ff5b99}
+
+/* 横並びの棚 */
+.shelf{margin:0 0 30px}
+.shelf h2,.section h2{font-size:20px;font-weight:900;margin:0 0 14px;letter-spacing:.02em}
+.shelf .sub{font-weight:400;font-size:12px;color:var(--ink3);margin-left:8px}
+.row{display:grid;grid-auto-flow:column;grid-auto-columns:260px;gap:14px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x proximity}
+.tile{scroll-snap-align:start;text-align:left;display:block;min-width:0;color:inherit;text-decoration:none}
+.thumb{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:linear-gradient(120deg,var(--grad-a),var(--grad-b))}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.thumb .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:10px 11px;color:#fff;font-weight:700;font-size:12.5px;line-height:1.4;
+  background:linear-gradient(to top,rgba(0,0,0,.45),rgba(0,0,0,0) 70%)}
+.thumb .rk{position:absolute;top:8px;left:9px;z-index:2;font-family:var(--num);font-size:15px;color:#fff;background:rgba(0,0,0,.45);border-radius:6px;padding:0 7px}
+.tile .tt{font-weight:700;font-size:13.5px;line-height:1.45;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .tm{font-size:12px;color:var(--ink3);margin-top:2px}
+.tile .tm .num{font-size:14px;color:var(--pink)}
+.tile:hover .thumb{outline:2px solid var(--pink);outline-offset:2px}
+.tile:hover .tt{color:var(--pink-deep)}
+
+/* 大会一覧 */
+.listhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.listhead h2{margin:0}
+.listhead select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface);color:var(--ink)}
+.slist{display:flex;flex-direction:column;gap:8px}
+.series{background:var(--surface);border:1px solid var(--line);border-left:3px solid transparent;border-radius:10px;overflow:hidden}
+.series.open{border-color:var(--pink);border-left-color:var(--pink)}
+.shead{width:100%;display:flex;gap:12px;align-items:center;text-align:left;background:none;border:0;padding:14px 16px;cursor:pointer}
+.shead:hover{background:var(--surface-2)}
+.shead .body{flex:1;min-width:0}
+.shead .sthumb{flex:0 0 168px}
+.shead .sthumb .thumb{border-radius:8px}
+.shead .sthumb .ph{font-size:11px}
+.shead .mark{flex:0 0 auto;font-size:22px;line-height:1;color:var(--ink3);font-weight:300;transition:transform .2s ease}
+.series.open .shead .mark{transform:rotate(45deg);color:var(--pink)}
+.sname{display:block;font-size:15.5px;font-weight:700;line-height:1.45;word-break:break-word}
+.smeta{font-size:12px;color:var(--ink3);margin-top:4px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+.smeta .why{color:var(--pink-deep)}
+.pill{display:inline-flex;align-items:baseline;gap:2px;background:var(--pink-tint);color:var(--pink);border-radius:999px;padding:0 9px;font-weight:500}
+.pill .num{font-size:14px}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 6px;color:var(--ink2)}
+.tag.unlisted{border-color:var(--unl-line);color:var(--unl);background:var(--unl-bg)}
+.sbody{padding:2px 16px 20px;border-top:1px solid var(--line)}
+.aliases{font-size:12px;color:var(--ink3);margin:12px 0 0}
+.pagelink{margin:10px 0 0;font-size:13px}
+.chlabel{font-size:11px;color:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:0 6px}
+
+/* 開催年の年表 */
+.rail{display:flex;overflow-x:auto;padding:16px 2px 8px;margin:4px 0 12px}
+.yr{position:relative;flex:0 0 auto;min-width:66px;border:0;padding:0 6px;cursor:pointer;text-align:center;color:var(--ink);
+  background:linear-gradient(var(--pink-line),var(--pink-line)) 0 12px/100% 3px no-repeat}
+.yr .dot{display:block;width:16px;height:16px;margin:6px auto;border-radius:50%;background:var(--pink);border:3px solid var(--surface);box-shadow:0 0 0 2px var(--pink)}
+.yr .y{display:block;font-family:var(--num);font-weight:600;font-size:19px;line-height:1.1}
+.yr .n{display:block;font-size:11px;color:var(--ink3)}
+.yr.none .dot{background:var(--surface);box-shadow:0 0 0 2px var(--line)}
+.yr.cancelled .dot{background:var(--surface);box-shadow:0 0 0 2px var(--st-cancel)}
+.yr.cancelled .y{text-decoration:line-through;color:var(--st-cancel)}
+.yr.scheduled .dot{background:var(--surface);box-shadow:0 0 0 2px var(--st-plan)}
+.yr.unverified .dot{background:var(--unl-line);box-shadow:0 0 0 2px var(--unl)}
+.yr[aria-pressed="true"] .dot{width:24px;height:24px;margin:2px auto;background:linear-gradient(120deg,var(--grad-a),var(--grad-b));box-shadow:0 0 0 3px var(--pink)}
+.yr[aria-pressed="true"] .y{color:var(--pink)}
+
+/* 開催回パネル */
+.event{border-radius:12px;background:var(--bg2);padding:16px 18px;border:1px solid var(--line)}
+.event h3{margin:0 0 4px;font-size:18px;line-height:1.45;font-weight:900}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;border-radius:4px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.badge.cancelled{color:var(--st-cancel);background:var(--st-cancel-bg)}
+.badge.scheduled{color:var(--st-plan);background:var(--st-plan-bg)}
+.badge.postponed{color:var(--st-post);background:var(--st-post-bg)}
+.badge.unverified{color:var(--st-unk);background:var(--st-unk-bg)}
+.facts{display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;margin:10px 0 0;font-size:13px}
+.facts dt{color:var(--ink3)}
+.facts dd{margin:0;min-width:0;word-break:break-word}
+.sessions{margin:0;padding-left:1.2em}
+.notes{margin:12px 0 0;padding:10px 12px;background:var(--surface);border-radius:8px;font-size:12px;color:var(--ink2)}
+.notes p{margin:0}
+.notes p+p{margin-top:4px}
+.sources{margin:0;padding:0;list-style:none}
+.sources li{font-size:12px;word-break:break-all}
+.sources .st{color:var(--ink3);margin-right:6px;word-break:normal}
+
+.vgroup{margin-top:20px}
+.vgroup h4{margin:0 0 8px;font-size:14px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.vgroup h4 small{font-weight:400;color:var(--ink3);font-size:12px}
+.vlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.v{display:grid;grid-template-columns:136px 1fr;gap:14px;padding:8px;border-radius:10px}
+.v:hover{background:var(--surface)}
+.v .thumb{border-radius:8px}
+.v .vt{font-size:14px;line-height:1.5;word-break:break-word}
+.v .vt a{color:var(--ink);text-decoration:none}
+.v .vt a:hover{color:var(--pink);text-decoration:underline}
+.v .vm{font-size:12px;color:var(--ink3);display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;margin-top:3px}
+.v .vm .d{color:var(--pink);font-weight:500}
+.v .basis{font-size:11.5px;color:var(--ink3);margin-top:3px}
+.lk{font-size:10.5px;border-radius:4px;padding:0 6px;border:1px solid var(--line);color:var(--ink2)}
+.lk.manual{border-color:var(--pink-line);color:var(--pink)}
+.lk.candidate,.lk.series_only,.lk.unmatched{border-color:var(--unl-line);color:var(--unl);background:var(--unl-bg)}
+.more{margin-top:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 16px;cursor:pointer;font-size:13px}
+.more:hover{border-color:var(--pink);color:var(--pink)}
+.empty{padding:24px 0;color:var(--ink2)}
+.empty strong{color:var(--ink)}
+details.loose{margin-top:30px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details.loose summary{cursor:pointer;font-weight:700}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:12px;color:var(--ink3)}
+footer p{margin:0 0 6px;max-width:76ch}
+.loading{padding:60px 0;text-align:center;color:var(--ink3)}
+
+.series,.event,.vgroup{scroll-margin-top:72px}
+@media (max-width:760px){
+  .topnav a{font-size:11px;padding:4px 10px}
+  .brand p{font-size:0}
+  .brand p .num,.brand p{line-height:1}
+  .brand p .num{font-size:16px}
+  .brand p::after{content:"本";font-size:12px}
+  .brand p .pc{display:none}
+  .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters .check{grid-column:1/-1}
+  .hero{min-height:200px;padding:22px 20px}
+  .hero .hn{font-size:21px}
+  .row{grid-auto-columns:66%}
+  .sbody{padding:2px 12px 16px}
+  .shead .sthumb{flex-basis:112px}
+  .shead{gap:10px;padding:10px}
+  .logo-type{font-size:24px}
+  .logo-mark{width:28px;height:28px;font-size:21px}
+  .hero{min-height:260px}
+  .event{padding:14px 12px}
+  .v{grid-template-columns:108px 1fr;gap:10px;padding:6px 2px}
+  .facts{grid-template-columns:1fr}
+  .facts dt{margin-top:6px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1><a href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><span class="logo-mark" aria-hidden="true">W</span><span class="logo-type">WRESTLING <span class="ac">ARCHIVE</span></span></a></h1>
+      <p id="tagline">レスリングの配信・動画を大会・開催年から探せる非公式アーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>
+      <nav class="topnav"><a href="/events/">大会一覧</a><a href="/technique/">技術動画</a></nav>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+    <div class="searchbox" role="search">
+      <label for="q" class="sr">大会名・通称・動画タイトルで検索</label>
+      <div class="searchrow">
+        <input id="q" type="search" autocomplete="off" placeholder="大会名や通称で検索(例:天皇杯、インカレ、明治杯)">
+      </div>
+      <p class="hint">通称・略称でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
+      <div class="filters">
+        <label>開催年<select id="f-year"><option value="">すべて</option></select></label>
+        <label>区分<select id="f-cat"><option value="">すべて</option></select></label>
+        <label>スタイル<select id="f-style"><option value="">すべて</option></select></label>
+        <label>国内・海外<select id="f-scope"><option value="">すべて</option></select></label>
+        <label class="check"><input type="checkbox" id="f-all"> 動画のない大会・開催回も表示</label>
+      </div>
+      <div class="status" id="status" aria-live="polite"></div>
+    </div>
+</div>
+
+<main class="wrap" id="main"><div class="loading">データを読み込んでいます</div></main>
+
+<footer class="wrap">
+  <p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/technique/">技術動画</a></p>
+  <p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
+  <p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>
+  <p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>
+  <p id="build-info"></p>
+</footer>
+
+<script>
+window.thumbFail = function(img){
+  var order = ['maxresdefault','hqdefault','mqdefault','sddefault','default'], m = /\/vi\/([^/]+)\/([a-z]+)\.jpg/.exec(img.src);
+  var tried = (img.dataset.tried||'').split(',');
+  if(m){ tried.push(m[2]); var next = order.filter(function(o){ return tried.indexOf(o)<0; })[0];
+    if(next){ img.dataset.tried = tried.join(','); img.src = 'https://i.ytimg.com/vi/'+m[1]+'/'+next+'.jpg'; return; } }
+  img.remove();
+};
+(async function(){
+'use strict';
+var DATA = window.__DATA__;
+if(!DATA){
+  try{ var res = await fetch('data.json',{cache:'no-cache'}); DATA = await res.json(); }
+  catch(e){ document.getElementById('main').innerHTML = '<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>'; return; }
+}
+
+/* ---------- 大会・開催回ページのURL ---------- */
+var PAGES = {};
+try{ var pr = await fetch('page_slugs.json',{cache:'no-cache'}); if(pr.ok) PAGES = (await pr.json()).events || {}; }catch(e){}
+function eventPage(eid){ return PAGES[eid] ? '/events/'+PAGES[eid]+'/' : ''; }
+function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? '/events/'+sid+'/' : ''; }
+
+/* ---------- 準備 ---------- */
+var TODAY = new Date(); var TODAY_ISO = TODAY.toISOString().slice(0,10);
+var S = {}, E = {}, V = DATA.videos;
+DATA.series.forEach(function(s){ S[s.id]=s; s.events=[]; s.videoIds=[]; });
+DATA.events.forEach(function(e){ E[e.id]=e; if(S[e.series]) S[e.series].events.push(e); });
+Object.keys(S).forEach(function(k){ S[k].events.sort(function(a,b){ return (a.start||a.year+'-99') < (b.start||b.year+'-99') ? -1 : 1; }); });
+var byEvent = {}, bySeriesLoose = {}, candByEvent = {}, loose = [];
+V.forEach(function(v){
+  if(v.e){ (byEvent[v.e]=byEvent[v.e]||[]).push(v); }
+  else if(v.s){ (bySeriesLoose[v.s]=bySeriesLoose[v.s]||[]).push(v); }
+  else { loose.push(v); }
+  if(!v.e && v.c){ v.c.forEach(function(c){ (candByEvent[c]=candByEvent[c]||[]).push(v); }); }
+  if(v.s && S[v.s]) S[v.s].videoIds.push(v.id);
+});
+
+function skey(s){
+  s = String(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
+  s = s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
+  s = s.replace(/[\s・･\/／「」『』()（）\[\]【】\u200b-\u200f\u2060\ufeff]/g,'').replace(/レスリング/g,'');
+  return s;
+}
+DATA.series.forEach(function(s){
+  s.keys = [s.name].concat(s.aliases||[]).map(skey);
+  s.evKeys = s.events.map(function(e){ return skey((e.name||'')+' '+(e.official_name||'')); });
+  s.years = {}; s.events.forEach(function(e){ s.years[e.year]=true; });
+  s.latest = s.events.reduce(function(m,e){ return (e.n>0 && (e.start||'')>m) ? e.start : m; }, '');
+});
+V.forEach(function(v){ v.key = skey(v.t); });
+
+var CATS = ['一般','大学','高校','中学','少年少女','年代別','女子','社会人','マスターズ','ビーチ','未確認'];
+var STYLES = ['フリー','グレコ','女子','未確認'];
+var SCOPES = ['国内','海外','未確認'];
+var KIND = {match:'試合', interview:'インタビュー', announcement:'告知・抽選会など', highlight:'ダイジェストなど', other:'その他'};
+var LINK = {manual:'手動で確認済み', matched:'タイトルで照合', livedate:'配信日で照合', derived:'マスター未収録', candidate:'確認待ち', series_only:'開催回未確認', unmatched:'対応未確認'};
+var STATUS = {held:'', cancelled:'中止', postponed:'延期', scheduled:'開催予定', unverified:'日付は動画の公開日から推定'};
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function fmtDate(iso){ if(!iso) return '日付未確認'; var p=iso.slice(0,10).split('-'); return +p[0]+'年'+(+p[1])+'月'+(+p[2])+'日'; }
+function fmtShort(iso){ if(!iso) return ''; var p=iso.slice(0,10).split('-'); return (+p[1])+'/'+(+p[2]); }
+function fmtRange(a,b){ if(!a) return '日付未確認'; if(!b||a===b) return fmtDate(a); var pa=a.split('-'), pb=b.split('-');
+  if(pa[0]===pb[0]) return fmtDate(a)+'〜'+(pa[1]===pb[1] ? (+pb[2])+'日' : (+pb[1])+'月'+(+pb[2])+'日'); return fmtDate(a)+'〜'+fmtDate(b); }
+function jstDate(iso){ if(!iso) return ''; var d=new Date(iso); d=new Date(d.getTime()+9*3600e3); return d.toISOString().slice(0,10); }
+function dur(iso){ var m=/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(iso||''); if(!m) return ''; var h=+(m[1]||0), mi=+(m[2]||0);
+  return h ? h+'時間'+(mi? mi+'分':'') : (mi ? mi+'分' : (m[3]||0)+'秒'); }
+var PALETTE = [['#7b3fd4','#d90f66'],['#0f6c9c','#0fb59c'],['#c2410c','#d90f66'],['#1e3a8a','#7b3fd4'],
+  ['#0f7a4f','#0f6c9c'],['#a30a4d','#7b3fd4'],['#0f6c9c','#7b3fd4'],['#c2410c','#a30a4d']];
+function hashStr(s){ var h=0; s=String(s||''); for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; } return Math.abs(h); }
+function grad(name){ var p = PALETTE[hashStr(name)%PALETTE.length]; return 'linear-gradient('+(100+hashStr(name)%60)+'deg,'+p[0]+','+p[1]+')'; }
+function thumb(id,label,rank){
+  return '<div class="thumb" style="background:'+grad(label||id)+'">'+(rank?'<span class="rk">'+rank+'</span>':'')+
+    (id?'<img src="https://i.ytimg.com/vi/'+esc(id)+'/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="thumbFail(this)">':'')+
+    '<div class="ph">'+esc(label||'')+'</div></div>';
+}
+function seriesThumb(s){
+  var evs = s.events.filter(function(e){return e.n>0;});
+  for(var i=evs.length-1;i>=0;i--){ var vs = byEvent[evs[i].id]||[]; var m = vs.filter(function(v){return v.k==='match';})[0]||vs[0]; if(m) return m.id; }
+  var l = bySeriesLoose[s.id]||[]; return l.length ? l[0].id : '';
+}
+function yt(id){ return 'https://www.youtube.com/watch?v='+encodeURIComponent(id); }
+
+/* ---------- 状態(URLに保存) ---------- */
+var st = {q:'',y:'',c:'',sty:'',sc:'',all:false,s:'',e:'',sort:'date'};
+function readHash(){
+  var h = location.hash.replace(/^#/,'');
+  // 旧リンク(#series/名前・#occurrence/名前)を新しいページへ誘導
+  var m = /^(series|occurrence)\/(.*)$/.exec(h);
+  if(m){
+    var name = decodeURIComponent(m[2]), map = (DATA.legacy||{})[m[1]]||{}, hit = map[name];
+    var ns = {q:'',y:'',c:'',sty:'',sc:'',all:false,s:'',e:'',sort:'date'};
+    if(hit){ var dest = (hit.e && eventPage(hit.e)) || (!hit.e && hit.s && seriesPage(hit.s)); if(dest){ location.replace(dest); return; }
+      ns.s = hit.s||''; ns.e = hit.e||''; legacyNote = '以前のリンク「'+name+'」を新しいページに移しました。'; }
+    else { ns.q = name; legacyNote = '以前のリンク「'+name+'」に対応するページが見つからないため、名前で検索しています。'; }
+    st = ns; history.replaceState(null,'',toHash()); return;
+  }
+  var p = new URLSearchParams(h);
+  st = {q:p.get('q')||'', y:p.get('y')||'', c:p.get('c')||'', sty:p.get('st')||'', sc:p.get('sc')||'',
+        all:p.get('all')==='1', s:p.get('s')||'', e:p.get('e')||'', sort:p.get('o')||'date'};
+}
+function toHash(){
+  var p = new URLSearchParams();
+  if(st.q) p.set('q',st.q); if(st.y) p.set('y',st.y); if(st.c) p.set('c',st.c); if(st.sty) p.set('st',st.sty);
+  if(st.sc) p.set('sc',st.sc); if(st.all) p.set('all','1'); if(st.s) p.set('s',st.s); if(st.e) p.set('e',st.e);
+  if(st.sort && st.sort!=='date') p.set('o',st.sort);
+  var s = p.toString(); return s ? '#'+s : location.pathname+location.search;
+}
+function commit(push){ var h = toHash(); if(push) history.pushState(null,'',h); else history.replaceState(null,'',h); render(); }
+var legacyNote = '';
+
+/* ---------- 絞り込み ---------- */
+function eventVisible(e){ return st.all || e.n>0; }
+function seriesMatch(s){
+  var why = '';
+  if(st.q){
+    var toks = st.q.split(/\s+/).filter(Boolean);
+    for(var i=0;i<toks.length;i++){
+      var t = skey(toks[i]); if(!t) continue;
+      var ok = false;
+      if(/^\d{4}$/.test(t) && s.years[+t]) ok = true;
+      for(var j=0;j<s.keys.length && !ok;j++){ if(s.keys[j].indexOf(t)>=0 || (t.length>=3 && t.indexOf(s.keys[j])>=0 && s.keys[j].length>=3)){ ok=true; if(j>0 && !why) why='「'+(s.aliases[j-1])+'」として一致'; } }
+      for(var k=0;k<s.evKeys.length && !ok;k++){ if(s.evKeys[k].indexOf(t)>=0){ ok=true; if(!why) why='開催回の名称で一致'; } }
+      if(!ok) return null;
+    }
+  }
+  if(st.c && s.groups.indexOf(st.c)<0) return null;
+  if(st.sc && s.scope!==st.sc) return null;
+  if(st.sty && (s.styles||[]).indexOf(st.sty)<0) return null;
+  var evs = s.events.filter(eventVisible);
+  if(st.y) evs = evs.filter(function(e){ return String(e.year)===st.y; });
+  if(!evs.length && !(st.all && !st.y && s.events.length===0)){
+    if(!(s.n>0 && !st.y && (bySeriesLoose[s.id]||[]).length)) return null;
+  }
+  return {why:why};
+}
+function filteredSeries(){
+  var out = [];
+  DATA.series.forEach(function(s){ if(!st.all && !s.n) return; var m = seriesMatch(s); if(m) out.push({s:s, why:m.why}); });
+  out.sort(function(a,b){
+    if(st.sort==='count') return b.s.n - a.s.n;
+    if(st.sort==='name') return a.s.name.localeCompare(b.s.name,'ja');
+    return (b.s.latest||'') < (a.s.latest||'') ? -1 : 1;
+  });
+  return out;
+}
+function styleOk(v){ if(!st.sty) return true; if(st.sty==='未確認') return !(v.st&&v.st.length); return (v.st||[]).indexOf(st.sty)>=0; }
+
+/* ---------- 描画 ---------- */
+function fillSelect(id, values, current, fmt){
+  var el = document.getElementById(id), first = el.options[0].outerHTML;
+  el.innerHTML = first + values.map(function(v){ return '<option value="'+esc(v)+'"'+(String(v)===current?' selected':'')+'>'+esc(fmt?fmt(v):v)+'</option>'; }).join('');
+}
+function renderControls(){
+  var yrs = {}; DATA.events.forEach(function(e){ if(st.all || e.n>0) yrs[e.year]=1; });
+  fillSelect('f-year', Object.keys(yrs).sort().reverse(), st.y, function(y){ return y+'年'; });
+  fillSelect('f-cat', CATS, st.c); fillSelect('f-style', STYLES, st.sty); fillSelect('f-scope', SCOPES, st.sc);
+  document.getElementById('f-all').checked = st.all;
+  var q = document.getElementById('q'); if(document.activeElement!==q) q.value = st.q;
+}
+function renderStatus(list){
+  var chips = [];
+  if(st.q) chips.push(['q','検索:'+st.q]); if(st.y) chips.push(['y',st.y+'年']); if(st.c) chips.push(['c','区分:'+st.c]);
+  if(st.sty) chips.push(['sty','スタイル:'+st.sty]); if(st.sc) chips.push(['sc',st.sc]); if(st.all) chips.push(['all','動画のない大会も表示']);
+  var html = '<span class="count">'+list.length+'件の大会</span>';
+  html += chips.map(function(c){ return '<span class="chip">'+esc(c[1])+'<button type="button" data-drop="'+c[0]+'" aria-label="'+esc(c[1])+'の条件を外す">×</button></span>'; }).join('');
+  if(chips.length) html += '<button type="button" class="clear" id="clear">条件をすべてクリア</button>';
+  if(legacyNote) html += '<span class="chip">'+esc(legacyNote)+'</span>';
+  document.getElementById('status').innerHTML = html;
+}
+function tileEvent(e){
+  var vs = (byEvent[e.id]||[]).slice().sort(function(a,b){ return a.k==='match' ? -1 : 1; });
+  var first = vs[0]; var s = S[e.series];
+  return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ thumb(first?first.id:'', s?s.name:'') +
+    '<div class="tt">'+esc(s?s.name:e.name)+'</div><div class="tm"><span class="num">'+e.n+'</span>本 '+e.year+'年 '+fmtShort(e.start)+(e.end&&e.end!==e.start?'〜'+fmtShort(e.end):'')+'</div></a>';
+}
+function linkTo(sid,eid){ var p = new URLSearchParams(); p.set('s',sid); if(eid) p.set('e',eid); return '#'+p.toString(); }
+function renderShelves(){
+  var past = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start<=TODAY_ISO && e.status!=='cancelled'; })
+    .sort(function(a,b){ return a.start<b.start?1:-1; }).slice(0,12);
+  var future = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start>TODAY_ISO; })
+    .sort(function(a,b){ return a.start<b.start?-1:1; });
+  var recent = V.filter(function(v){ return v.vs!=='unavailable'; }).slice().sort(function(a,b){ return a.p<b.p?1:-1; }).slice(0,12);
+  var rich = DATA.series.filter(function(s){ return s.master && s.n>0; }).sort(function(a,b){ return b.n-a.n; }).slice(0,12);
+  var h = '';
+  var top = past[0];
+  if(top){
+    var ts = S[top.series], tv = (byEvent[top.id]||[]).filter(function(v){return v.k==='match';})[0] || (byEvent[top.id]||[])[0];
+    h += '<a class="hero" href="'+esc(eventPage(top.id)||linkTo(top.series,top.id))+'" style="background:'+grad(ts?ts.name:top.name)+'">'+
+      (tv?'<img src="https://i.ytimg.com/vi/'+esc(tv.id)+'/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" onerror="thumbFail(this)">':'')+'<span class="scrim"></span>'+
+      '<svg class="rings" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true"><circle cx="120" cy="120" r="104" stroke-width="1.2"/><circle cx="120" cy="120" r="66" stroke-width="1.2"/></svg>'+
+      '<div class="badge-l">最近開催された大会</div><div class="hn">'+esc(top.official_name||top.name)+'</div>'+
+      '<div class="hm"><span><span class="num">'+top.n+'</span>本</span><span>'+esc(fmtRange(top.start,top.end))+'</span>'+(top.venue?'<span>'+esc(top.venue)+'</span>':'')+'</div>'+
+      '<span class="cta">配信一覧を見る</span></a>';
+  }
+  if(future.length) h += '<section class="shelf"><h2>これから開催される大会<span class="sub">配信枠が公開されています</span></h2><div class="row">'+future.map(tileEvent).join('')+'</div></section>';
+  h += '<section class="shelf"><h2>最近開催された大会</h2><div class="row">'+past.slice(1).map(tileEvent).join('')+'</div></section>';
+  h += '<section class="shelf"><h2>最近追加した動画<span class="sub">YouTubeへの公開が新しい順</span></h2><div class="row">'+recent.map(function(v){
+    var s = v.s && S[v.s];
+    return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, s?s.name:'')+'<div class="tt">'+esc(v.t)+'</div><div class="tm">'+esc(fmtDate(jstDate(v.p)))+'に公開</div></a>';
+  }).join('')+'</div></section>';
+  h += '<section class="shelf"><h2>動画が充実している大会<span class="sub">収録本数の多い順</span></h2><div class="row">'+rich.map(function(s){
+    var lastE = s.events.filter(function(e){return e.n>0;}).pop(); var fv = lastE && (byEvent[lastE.id]||[])[0];
+    var yrs = s.events.filter(function(e){return e.n>0;}).map(function(e){return e.year;});
+    return '<a class="tile" href="'+esc(seriesPage(s.id)||linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', s.name)+'<div class="tt">'+esc(s.name)+'</div><div class="tm"><span class="num">'+s.n+'</span>本 '+
+      (yrs.length? Math.min.apply(null,yrs)+'〜'+Math.max.apply(null,yrs)+'年':'')+'</div></a>';
+  }).join('')+'</div></section>';
+  return h;
+}
+function videoRow(v, showBasis){
+  var meta = [];
+  if(v.ch) meta.push('<span class="chlabel">'+esc(v.ch)+'</span>');
+  if(v.dh) meta.push('<span class="d tabnum">'+esc(fmtDate(v.dh))+'</span>');
+  if(v.m) meta.push('<span>'+esc(/\d/.test(v.m)?v.m+'マット':v.m+'マット')+'</span>');
+  if(v.st && v.st.length) meta.push('<span>'+esc(v.st.join('・'))+'</span>');
+  if(v.k && v.k!=='match') meta.push('<span>'+esc(KIND[v.k])+'</span>');
+  if(v.du) meta.push('<span class="tabnum">'+esc(dur(v.du))+'</span>');
+  meta.push('<span>公開 '+esc(fmtDate(jstDate(v.p)))+'</span>');
+  if(v.vs==='upcoming') meta.push('<span class="lk">配信予定</span>');
+  if(v.vs==='unavailable') meta.push('<span class="lk unmatched">現在YouTubeで取得できません</span>');
+  meta.push('<span class="lk '+esc(v.l)+'" title="'+esc(v.b||'')+'">'+esc(LINK[v.l]||v.l)+'</span>');
+  return '<li class="v"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">'+thumb(v.id,'')+'</a>'+
+    '<div><div class="vt"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+esc(v.t)+'</a></div>'+
+    '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">根拠:'+esc(v.b)+'</div>':'')+'</div></li>';
+}
+function vgroup(title, sub, vids, showBasis, id){
+  if(!vids.length) return '';
+  var LIMIT = 40, more = vids.length>LIMIT;
+  return '<div class="vgroup"'+(id?' id="'+id+'"':'')+'><h4>'+esc(title)+(sub?'<small>'+esc(sub)+'</small>':'')+'</h4><ul class="vlist">'+
+    vids.slice(0,LIMIT).map(function(v){return videoRow(v,showBasis);}).join('')+'</ul>'+
+    (more?'<button type="button" class="more" data-more="'+esc(id||'')+'">残り'+(vids.length-LIMIT)+'本を表示</button>':'')+'</div>';
+}
+var moreCache = {};
+function eventPanel(e){
+  var s = S[e.series];
+  var title = e.official_name || e.name;
+  var h = '<div class="event" id="ev-'+esc(e.id)+'"><h3>'+esc(title)+(e.status!=='held'&&STATUS[e.status]?'<span class="badge '+esc(e.status)+'">'+esc(STATUS[e.status])+'</span>':'')+'</h3>';
+  if(eventPage(e.id)) h += '<p class="pagelink"><a href="'+esc(eventPage(e.id))+'">この開催回のページを開く(共有やブックマークに便利)</a></p>';
+  h += '<dl class="facts">';
+  h += '<dt>開催年</dt><dd class="tabnum">'+e.year+'年'+(e.fy_label?'('+esc(e.fy_label)+')':'')+'</dd>';
+  if(e.sessions && e.sessions.length){
+    var ss = e.sessions.slice().sort(function(a,b){return a.start_date<b.start_date?-1:1;});
+    h += '<dt>日程</dt><dd><ul class="sessions">'+ss.map(function(x){ return '<li>'+esc(fmtRange(x.start_date,x.end_date))+' '+esc(x.label||'')+(x.venue?'('+esc(x.venue)+')':'')+'</li>'; }).join('')+'</ul></dd>';
+  } else {
+    h += '<dt>'+(e.derived?'配信日':'開催日')+'</dt><dd>'+esc(fmtRange(e.start,e.end))+(e.status==='scheduled'?'(予定)':'')+'</dd>';
+  }
+  if(e.venue && !(e.sessions&&e.sessions.length)) h += '<dt>会場</dt><dd>'+esc(e.venue)+'</dd>';
+  if(e.evidence) h += '<dt>記録の種類</dt><dd>'+esc(e.evidence)+(e.jwf_relationship?'('+esc(e.jwf_relationship)+')':'')+'</dd>';
+  if(e.sources && e.sources.length) h += '<dt>出典</dt><dd><ul class="sources">'+e.sources.map(function(x){ return '<li><span class="st">'+esc(x.type)+'</span><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.url.replace(/^https?:\/\//,''))+'</a></li>'; }).join('')+'</ul></dd>';
+  if(e.group){ var sib = DATA.events.filter(function(x){return x.group===e.group && x.id!==e.id;});
+    if(sib.length) h += '<dt>同時開催</dt><dd>'+sib.map(function(x){ return '<a href="'+esc(linkTo(x.series,x.id))+'">'+esc((S[x.series]||{}).name||x.name)+'('+fmtShort(x.start)+')</a>'; }).join('、')+'</dd>'; }
+  h += '</dl>';
+  var notes = (e.notes||[]).slice();
+  if(e.schedule_history) e.schedule_history.forEach(function(x){ if(x.source_text) notes.push('日程の経緯:'+x.source_text); });
+  if(notes.length) h += '<div class="notes">'+notes.map(function(n){return '<p>'+esc(n)+'</p>';}).join('')+'</div>';
+
+  var vids = (byEvent[e.id]||[]).filter(styleOk);
+  var matches = vids.filter(function(v){return v.k==='match';}), related = vids.filter(function(v){return v.k!=='match';});
+  if(!vids.length && !(candByEvent[e.id]||[]).length){
+    h += '<p class="empty">この開催回に対応づけた動画はまだありません。'+(e.status==='cancelled'?'この大会は中止の記録があります。':'動画が未登録でも、配信がなかったとは限りません。')+'</p>';
+  }
+  // 日付ごと → マット順
+  var byDay = {}; matches.forEach(function(v){ var k = v.dh||''; (byDay[k]=byDay[k]||[]).push(v); });
+  Object.keys(byDay).sort().forEach(function(day){
+    var list = byDay[day].sort(function(a,b){ return (a.m||'~')<(b.m||'~')?-1:((a.m||'~')>(b.m||'~')?1:(a.p<b.p?-1:1)); });
+    var sess = day && e.sessions ? e.sessions.filter(function(x){return x.start_date<=day && day<=x.end_date;})[0] : null;
+    var gid = 'g-'+e.id+'-'+(day||'x'); moreCache[gid]=list;
+    h += vgroup(day ? fmtDate(day) : '競技日の特定できない試合動画', (sess?sess.label+'、':'')+list.length+'本', list, false, gid);
+  });
+  if(related.length){ var rid='r-'+e.id; moreCache[rid]=related; h += vgroup('インタビュー・告知など', related.length+'本', related, false, rid); }
+  var cands = (candByEvent[e.id]||[]).filter(styleOk);
+  if(cands.length){ var cid='c-'+e.id; moreCache[cid]=cands; h += vgroup('確認待ち:この開催回の候補', 'まだ確定していません。根拠を表示しています', cands, true, cid); }
+  if(st.sty) h += '<p class="hint">スタイル「'+esc(st.sty)+'」の動画だけを表示しています。</p>';
+  h += '</div>';
+  return h;
+}
+function seriesBlock(item){
+  var s = item.s, open = st.s===s.id;
+  var visibleEvents = s.events.filter(eventVisible);
+  var yrs = visibleEvents.map(function(e){return e.year;});
+  var span = yrs.length ? (Math.min.apply(null,yrs)===Math.max.apply(null,yrs) ? yrs[0]+'年' : Math.min.apply(null,yrs)+'〜'+Math.max.apply(null,yrs)+'年') : '';
+  var h = '<div class="series'+(open?' open':'')+'" id="s-'+esc(s.id)+'">';
+  h += '<button type="button" class="shead" aria-expanded="'+open+'" aria-controls="sb-'+esc(s.id)+'" data-series="'+esc(s.id)+'"><span class="sthumb" aria-hidden="true">'+thumb(seriesThumb(s), '')+'</span><span class="body">'+
+    '<span class="sname">'+esc(s.name)+'</span><span class="smeta">'+
+    '<span class="pill"><span class="num">'+s.n+'</span>本</span>'+(span?'<span class="tabnum">'+span+'</span>':'')+
+    s.groups.map(function(g){return '<span class="tag">'+esc(g)+'</span>';}).join('')+
+    (s.scope==='海外'?'<span class="tag">海外</span>':'')+(s.master?'':'<span class="tag unlisted">大会データ未収録</span>')+
+    (item.why?'<span class="why">'+esc(item.why)+'</span>':'')+'</span></span><span class="mark" aria-hidden="true">+</span></button>';
+  if(open){
+    h += '<div class="sbody" id="sb-'+esc(s.id)+'">';
+    if(seriesPage(s.id)) h += '<p class="pagelink"><a href="'+esc(seriesPage(s.id))+'">'+esc(s.name)+'のページを開く</a></p>';
+    if(s.aliases && s.aliases.length) h += '<p class="aliases">この名前でも探せます:'+esc(s.aliases.join('、'))+'</p>';
+    if(!s.master) h += '<p class="aliases">照合用の大会データに載っていない大会です。開催日は動画の公開日から推定した参考値で、公式の日程ではありません。</p>';
+    var evs = visibleEvents.slice();
+    if(st.y) evs = evs.filter(function(e){ return String(e.year)===st.y; }).concat([]);
+    var railEvs = visibleEvents;
+    var sel = st.e && E[st.e] && E[st.e].series===s.id ? E[st.e] : null;
+    if(!sel){ var pool = st.y ? evs : railEvs; sel = pool.filter(function(e){return e.n>0;}).pop() || pool[pool.length-1] || null; }
+    if(railEvs.length){
+      var sameYear = {}; railEvs.forEach(function(e){ sameYear[e.year]=(sameYear[e.year]||0)+1; });
+      h += '<div class="rail" role="group" aria-label="開催年を選ぶ">'+railEvs.map(function(e){
+        var cls = e.status==='cancelled'?'cancelled':e.status==='scheduled'?'scheduled':e.derived?'unverified':(e.n>0?'':'none');
+        var label = sameYear[e.year]>1 && e.start ? e.year+'.'+(+e.start.slice(5,7)) : String(e.year);
+        var sr = e.year+'年'+(STATUS[e.status]?'、'+STATUS[e.status]:'')+'、動画'+e.n+'本';
+        return '<button type="button" class="yr '+cls+'" aria-pressed="'+(sel&&sel.id===e.id)+'" data-event="'+esc(e.id)+'" aria-label="'+esc(sr)+'">'+
+          '<span class="dot" aria-hidden="true"></span><span class="y tabnum">'+label+'</span><span class="n tabnum">'+(e.status==='cancelled'?'中止':e.n+'本')+'</span></button>';
+      }).join('')+'</div>';
+    }
+    if(sel) h += eventPanel(sel);
+    var lv = (bySeriesLoose[s.id]||[]).filter(styleOk);
+    if(lv.length){ var lid='l-'+s.id; moreCache[lid]=lv; h += vgroup('開催回が決まっていない動画', 'この大会の動画ですが、どの年の開催回か特定できていません', lv, true, lid); }
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+function videoSearch(){
+  if(!st.q) return '';
+  var toks = st.q.split(/\s+/).map(skey).filter(Boolean); if(!toks.length) return '';
+  var hits = V.filter(function(v){ return toks.every(function(t){return v.key.indexOf(t)>=0;}) && styleOk(v); });
+  if(!hits.length) return '';
+  hits.sort(function(a,b){return a.p<b.p?1:-1;}); moreCache['vs']=hits;
+  return '<section class="section" style="margin-top:34px"><h2>動画タイトルで一致した動画('+hits.length+'本)</h2>'+vgroup('新しい順', '', hits, false, 'vs')+'</section>';
+}
+function looseSection(){
+  var list = loose.filter(styleOk); if(!list.length) return '';
+  moreCache['loose']=list;
+  return '<details class="loose"><summary>大会を特定できていない動画('+list.length+'本)</summary><p class="hint">タイトルに大会名がない動画です。候補がある場合は根拠とともに示しています。</p>'+vgroup('公開日の新しい順','',list.slice().sort(function(a,b){return a.p<b.p?1:-1;}),true,'loose')+'</details>';
+}
+function render(){
+  renderControls();
+  var list = filteredSeries();
+  renderStatus(list);
+  var anyFilter = st.q||st.y||st.c||st.sty||st.sc||st.all;
+  var h = '';
+  if(!anyFilter && !st.s) h += renderShelves();
+  h += '<section class="section"><div class="listhead"><h2>'+(anyFilter?'条件に合う大会':'すべての大会')+'</h2>'+
+    '<label class="hint" style="margin:0">並び順 <select id="sort"><option value="date"'+(st.sort==='date'?' selected':'')+'>最近開催された順</option><option value="count"'+(st.sort==='count'?' selected':'')+'>動画の多い順</option><option value="name"'+(st.sort==='name'?' selected':'')+'>名前順</option></select></label></div>';
+  if(!list.length){
+    h += '<p class="empty"><strong>条件に合う大会はありません。</strong>検索語を短くするか、上の条件を外してください。</p>';
+  } else {
+    // 開いている大会が一覧にない場合(条件で外れた)も表示する
+    if(st.s && S[st.s] && !list.some(function(x){return x.s.id===st.s;})) list.unshift({s:S[st.s], why:'選択中の大会'});
+    h += '<div class="slist">'+list.map(seriesBlock).join('')+'</div>';
+  }
+  h += '</section>';
+  h += videoSearch();
+  if(!st.q && !st.s) h += looseSection();
+  document.getElementById('main').innerHTML = h;
+  document.getElementById('master-asof').textContent = fmtDate(DATA.master_as_of);
+  document.getElementById('stat-v').textContent = V.length;
+  var r = DATA.report||{};
+  document.getElementById('build-info').textContent = 'データ更新:'+fmtDate(DATA.as_of)+'。動画'+(r.video_count||V.length)+'本。';
+  // 年表レールは選択中の年が見える位置までスクロールする
+  Array.prototype.forEach.call(document.querySelectorAll('.rail'), function(r){
+    var b = r.querySelector('.yr[aria-pressed="true"]'); if(b) r.scrollLeft = Math.max(0, b.offsetLeft - r.clientWidth/2 + b.offsetWidth/2);
+  });
+  if(pendingScroll){ var el = document.getElementById(pendingScroll); pendingScroll=''; if(el){ el.scrollIntoView({block:'start'}); var f = el.querySelector('.shead'); if(f) f.focus({preventScroll:true}); } }
+}
+var pendingScroll = '';
+
+/* ---------- 操作 ---------- */
+var qTimer;
+document.getElementById('q').addEventListener('input', function(ev){
+  clearTimeout(qTimer); var val = ev.target.value;
+  qTimer = setTimeout(function(){ st.q = val.trim(); legacyNote=''; commit(false); }, 180);
+});
+document.getElementById('q').addEventListener('keydown', function(ev){ if(ev.key==='Enter'){ clearTimeout(qTimer); st.q = ev.target.value.trim(); commit(true); } });
+[['f-year','y'],['f-cat','c'],['f-style','sty'],['f-scope','sc']].forEach(function(p){
+  document.getElementById(p[0]).addEventListener('change', function(ev){ st[p[1]] = ev.target.value; if(p[1]==='y') st.e=''; commit(true); });
+});
+document.getElementById('f-all').addEventListener('change', function(ev){ st.all = ev.target.checked; commit(true); });
+document.getElementById('home').addEventListener('click', function(ev){ ev.preventDefault(); st = {q:'',y:'',c:'',sty:'',sc:'',all:false,s:'',e:'',sort:'date'}; legacyNote=''; commit(true); window.scrollTo(0,0); });
+document.addEventListener('change', function(ev){ if(ev.target.id==='sort'){ st.sort = ev.target.value; commit(true); } });
+document.addEventListener('click', function(ev){
+  var t = ev.target.closest('[data-series],[data-event],[data-drop],[data-more],#clear,a.tile[href^="#"],.event a[href^="#"]');
+  if(!t) return;
+  if(t.id==='clear'){ st = {q:'',y:'',c:'',sty:'',sc:'',all:false,s:st.s,e:st.e,sort:st.sort}; legacyNote=''; commit(true); return; }
+  if(t.dataset.drop){ var k=t.dataset.drop; if(k==='all') st.all=false; else st[k]=''; if(k==='q') document.getElementById('q').value=''; commit(true); return; }
+  if(t.dataset.more){ var id=t.dataset.more, list=moreCache[id], box=document.getElementById(id);
+    if(list && box){ box.querySelector('.vlist').innerHTML = list.map(function(v){return videoRow(v, id.charAt(0)==='c'||id.charAt(0)==='l'||id==='loose');}).join(''); t.remove(); } return; }
+  if(t.dataset.series){ var sid=t.dataset.series; if(st.s===sid){ st.s=''; st.e=''; } else { st.s=sid; st.e=''; pendingScroll='s-'+sid; } commit(true); return; }
+  if(t.dataset.event){ st.e=t.dataset.event; commit(true); var p=document.getElementById('ev-'+st.e); if(p) p.scrollIntoView({block:'nearest'}); var b=document.querySelector('[data-event="'+CSS.escape(st.e)+'"]'); if(b) b.focus({preventScroll:true}); return; }
+  if(t.tagName==='A'){ ev.preventDefault(); var p2 = new URLSearchParams(t.getAttribute('href').slice(1)); st.s=p2.get('s')||''; st.e=p2.get('e')||''; st.q=''; st.y=''; st.c=''; st.sty=''; st.sc=''; pendingScroll='s-'+st.s; commit(true); }
+});
+window.addEventListener('popstate', function(){ readHash(); render(); });
+
+readHash();
+if(st.s) pendingScroll = 's-'+st.s;
+render();
+})();
+</script>
+</body>
+</html>
