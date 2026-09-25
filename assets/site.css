@@ -110,6 +110,7 @@ main{padding:10px 0 60px}
 .sbody{padding:2px 16px 20px;border-top:1px solid var(--line)}
 .aliases{font-size:12px;color:var(--ink3);margin:12px 0 0}
 .pagelink{margin:10px 0 0;font-size:13px}
+.chlabel{font-size:11px;color:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:0 6px}
 
 /* 開催年の年表 */
 .rail{display:flex;overflow-x:auto;padding:16px 2px 8px;margin:4px 0 12px}
@@ -247,10 +248,34 @@ a.yr{text-decoration:none}
 .chlist .cm{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px;white-space:nowrap;flex:0 0 auto}
 .chlist .cm .num{font-size:16px;color:var(--ink);font-family:var(--num)}
 @media (max-width:520px){
+  .page .catcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .page .catcards a{padding:10px 12px;gap:2px}
+  .page .catcards .cn{font-size:14px}
+  .page .catcards .cd{display:none}
+  .page .catcards .cc .num{font-size:18px}
   .chlist a{flex-direction:column;align-items:flex-start;gap:6px}
   .chlist .cm{white-space:normal}
 }
-.v .ch{color:var(--pink-deep)}
+.v .ch{color:var(--ink2);text-decoration:none}
+.v .chlabel{font-size:11px;color:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:0 6px}
+.v .ch:hover{color:var(--pink)}
+.v .catlink{font-size:11px;border:1px solid var(--pink-line);color:var(--pink-deep);border-radius:4px;padding:0 7px;text-decoration:none}
+.v .catlink:hover{border-color:var(--pink)}
+.catnav{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;margin:4px 0 8px;scrollbar-width:thin}
+.catnav a{flex:0 0 auto;display:inline-flex;align-items:baseline;gap:5px;font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--surface)}
+.catnav a b{font-family:var(--num);font-weight:600;font-size:15px;color:var(--ink3)}
+.catnav a:hover{border-color:var(--pink)}
+.catnav a[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.catnav a[aria-current] b{color:#fff}
+.catcards{list-style:none;margin:10px 0 10px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.catcards a{display:flex;flex-direction:column;gap:4px;height:100%;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-top:3px solid var(--pink)}
+.catcards a:hover{border-color:var(--pink)}
+.catcards .cn{font-weight:900;font-size:16px}
+.catcards .cd{font-size:12px;color:var(--ink3);line-height:1.55;flex:1}
+.catcards .cc{font-size:12px;color:var(--ink3)}
+.catcards .cc .num{font-size:20px;color:var(--pink);margin-right:2px}
+.page h2.vh{margin:0 0 8px;font-size:17px;font-weight:900;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.page h2.vh small{font-weight:400;color:var(--ink3);font-size:12px}
 .v .thumb img{width:100%;height:100%}
 @media (max-width:760px){
   .page h1{font-size:22px}

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://japanwrestlingchannel.com/</loc><lastmod>2026-09-26</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/events/east-autumn/</loc><lastmod>2025-11-29</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/east-autumn/</loc><lastmod>2026-05-06</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/east-autumn/2014/</loc><lastmod>2014-11-29</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/east-autumn/2015/</loc><lastmod>2015-12-02</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/east-autumn/2018/</loc><lastmod>2018-12-04</lastmod></url>
@@ -82,7 +82,7 @@
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2015/</loc><lastmod>2015-12-02</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2016/</loc><lastmod>2016-11-27</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2017/</loc><lastmod>2017-11-27</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2021/</loc><lastmod>2021-11-28</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2021/</loc><lastmod>2021-12-06</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2023/</loc><lastmod>2023-11-26</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2024/</loc><lastmod>2024-12-01</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2025/</loc><lastmod>2025-12-07</lastmod></url>
@@ -93,7 +93,10 @@
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh/2017/</loc><lastmod>2017-06-14</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh/2019/</loc><lastmod>2019-06-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/juniorhigh/2022/</loc><lastmod>2022-06-14</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/events/kids/</loc><lastmod>2019-07-26</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/kids-senbatsu/</loc><lastmod>2023-02-26</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/kids-senbatsu/2023/</loc><lastmod>2023-02-26</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/kids/</loc><lastmod>2022-08-28</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/kids/2022/</loc><lastmod>2022-08-28</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/kokutai/</loc><lastmod>2016-10-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/kokutai/2014/</loc><lastmod>2014-10-22</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/kokutai/2015/</loc><lastmod>2015-10-08</lastmod></url>
@@ -108,6 +111,11 @@
   <url><loc>https://japanwrestlingchannel.com/events/local-282985/2026/</loc><lastmod>2026-02-08</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/local-283989/</loc><lastmod>2026-03-08</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/local-283989/2026/</loc><lastmod>2026-03-08</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/masters/</loc><lastmod>2026-01-26</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/masters/2016/</loc><lastmod>2024-02-24</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/masters/2024/</loc><lastmod>2024-03-03</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/masters/2025/</loc><lastmod>2025-01-22</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/masters/2026/</loc><lastmod>2026-01-26</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/</loc><lastmod>2024-05-27</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2014/</loc><lastmod>2014-07-02</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2015/</loc><lastmod>2022-06-20</lastmod></url>
@@ -116,7 +124,7 @@
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2018/</loc><lastmod>2018-09-21</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2019/</loc><lastmod>2019-06-20</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2021/</loc><lastmod>2021-06-01</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2022/</loc><lastmod>2022-06-23</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2022/</loc><lastmod>2022-06-24</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2023/</loc><lastmod>2023-06-29</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/meiji-cup/2024/</loc><lastmod>2024-05-27</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/national-team-playoff/</loc><lastmod>2023-07-18</lastmod></url>
@@ -155,11 +163,13 @@
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2018/</loc><lastmod>2019-01-02</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2019/</loc><lastmod>2022-06-20</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2020/</loc><lastmod>2021-02-19</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2021/</loc><lastmod>2021-12-20</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2021/</loc><lastmod>2022-06-24</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2022/</loc><lastmod>2023-01-06</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2023/</loc><lastmod>2023-12-23</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2024/</loc><lastmod>2024-12-23</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/tenno-cup/2025/</loc><lastmod>2025-12-23</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/u13/</loc><lastmod>2023-02-26</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/u13/2023/</loc><lastmod>2023-02-26</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/u23-selection/</loc><lastmod>2023-04-22</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/u23-selection/2023/</loc><lastmod>2023-04-22</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/university-championship/</loc><lastmod>2025-11-10</lastmod></url>
@@ -204,10 +214,14 @@
   <url><loc>https://japanwrestlingchannel.com/events/women-open/2016/</loc><lastmod>2016-10-06</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/women-open/2022/</loc><lastmod>2022-10-16</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/women-open/2023/</loc><lastmod>2023-10-16</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-asian-championships/</loc><lastmod>2022-06-24</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-asian-championships/2021/</loc><lastmod>2022-06-24</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-beach-world-series/</loc><lastmod>2023-05-09</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-beach-world-series/2023/</loc><lastmod>2023-05-09</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-bunsugi/</loc><lastmod>2025-08-09</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-bunsugi/2025/</loc><lastmod>2025-08-09</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-chiyoda-kids/</loc><lastmod>2021-12-06</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-chiyoda-kids/2021/</loc><lastmod>2021-12-06</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-combat-asia/</loc><lastmod>2025-06-22</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-combat-asia/2025/</loc><lastmod>2025-06-22</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-east-kids/</loc><lastmod>2026-06-29</lastmod></url>
@@ -223,16 +237,24 @@
   <url><loc>https://japanwrestlingchannel.com/events/x-hyogo-junior/2024/</loc><lastmod>2024-12-22</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-ibaraki-junior/</loc><lastmod>2026-07-04</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-ibaraki-junior/2026/</loc><lastmod>2026-07-04</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-ibaraki-open/</loc><lastmod>2022-07-11</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-ibaraki-open/2022/</loc><lastmod>2022-07-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kansai-camp/</loc><lastmod>2023-03-12</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kansai-camp/2023/</loc><lastmod>2023-03-12</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kanto-hs-league/</loc><lastmod>2025-01-12</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kanto-hs-league/2024/</loc><lastmod>2025-01-12</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-kanto-jh-tokyo/</loc><lastmod>2021-07-11</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-kanto-jh-tokyo/2021/</loc><lastmod>2021-07-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/</loc><lastmod>2026-03-07</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/2023/</loc><lastmod>2023-03-04</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/2025/</loc><lastmod>2025-03-08</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/2026/</loc><lastmod>2026-03-07</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kinki-kids/</loc><lastmod>2022-12-18</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-kinki-kids/2022/</loc><lastmod>2022-12-18</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-maki-kids/</loc><lastmod>2024-05-14</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-maki-kids/2024/</loc><lastmod>2024-05-14</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-noda-open/</loc><lastmod>2022-08-28</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-noda-open/2022/</loc><lastmod>2022-08-28</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-olympics/</loc><lastmod>2024-07-25</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-olympics/2024/</loc><lastmod>2024-07-25</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-oshitate/</loc><lastmod>2024-06-24</lastmod></url>
@@ -243,17 +265,32 @@
   <url><loc>https://japanwrestlingchannel.com/events/x-sakai-junior/</loc><lastmod>2024-02-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-sakai-junior/2023/</loc><lastmod>2023-02-12</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-sakai-junior/2024/</loc><lastmod>2024-02-11</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-shinjuku-lions/</loc><lastmod>2023-02-26</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-shinjuku-lions/2022/</loc><lastmod>2023-02-26</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-suginami/</loc><lastmod>2026-05-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-suginami/2025/</loc><lastmod>2025-06-29</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-suginami/2026/</loc><lastmod>2026-05-11</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-takatani-cup/</loc><lastmod>2025-12-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-takatani-cup/2022/</loc><lastmod>2022-12-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-takatani-cup/2023/</loc><lastmod>2023-12-27</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-takatani-cup/2024/</loc><lastmod>2024-12-29</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-takatani-cup/2025/</loc><lastmod>2025-12-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-tokyo-team/</loc><lastmod>2022-07-11</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-tokyo-team/2022/</loc><lastmod>2022-07-11</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-veterans-world/</loc><lastmod>2024-02-20</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-veterans-world/2018/</loc><lastmod>2024-02-20</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-world-championships/</loc><lastmod>2023-09-24</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-world-championships/2021/</loc><lastmod>2021-10-05</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/events/x-world-championships/2022/</loc><lastmod>2022-09-19</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/events/x-world-championships/2022/</loc><lastmod>2022-09-26</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/events/x-world-championships/2023/</loc><lastmod>2023-09-24</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/technique/</loc><lastmod>2026-07-27</lastmod></url>
-  <url><loc>https://japanwrestlingchannel.com/technique/goldkids_wrestling/</loc><lastmod>2023-12-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/defense/</loc><lastmod>2026-03-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/drill/</loc><lastmod>2024-01-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/goldkids_wrestling/</loc><lastmod>2022-06-14</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/ground/</loc><lastmod>2026-07-27</lastmod></url>
   <url><loc>https://japanwrestlingchannel.com/technique/makidswrestling/</loc><lastmod>2026-07-27</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/physical/</loc><lastmod>2024-04-09</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/stand/</loc><lastmod>2026-07-15</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/tackle/</loc><lastmod>2026-04-13</lastmod></url>
+  <url><loc>https://japanwrestlingchannel.com/technique/throw/</loc><lastmod>2025-04-08</lastmod></url>
 </urlset>
