@@ -9,6 +9,11 @@ on:
 permissions:
   contents: write
 
+# 2つの実行が同時に動いて書き込みがぶつからないように、1つずつ順番に実行する
+concurrency:
+  group: update-archive
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -31,6 +36,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html assets technique events
+          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html assets events technique
           git diff --cached --quiet || git commit -m "Update data and pages ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          # 実行中にファイルがアップロードされていた場合は、その変更を取り込んでから保存する
+          git pull --rebase --autostash
           git push
