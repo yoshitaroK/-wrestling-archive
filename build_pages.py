@@ -116,8 +116,12 @@ THUMB_JS = ("<script>function thumbFail(i){var o=['mqdefault','hqdefault','defau
             "if(m){var n=o[o.indexOf(m[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+m[1]+'/'+n+'.jpg';return;}}i.remove();}</script>")
 
 
+OG_DEFAULT = SITE + "/ogp.png"
+
+
 def head(title, desc, path, og_image, jsonld, css):
     url = SITE + path
+    og_image = og_image or OG_DEFAULT
     return f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -711,6 +715,34 @@ CONTACT_BODY = r"""<main class="wrap page contact">
 """
 
 
+def llms_txt(data, series_list, ctx):
+    """AI(ChatGPT・Claude・Perplexityなど)向けに、サイトの概要と主なページを平文でまとめる"""
+    n_videos = len(data.get("videos", []))
+    lines = [
+        f"# {SITE_NAME}(Japan Wrestling Channel アーカイブ)",
+        "",
+        f"> YouTubeで公開されている日本のレスリング大会の配信・動画{n_videos:,}本を、大会名・開催年・日程ごとに整理した非公式のアーカイブです。"
+        "動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。",
+        "",
+        f"- サイト: {SITE}/",
+        f"- データ更新日: {fmt_date(data.get('as_of'))}",
+        f"- お問い合わせ: {SITE}/contact.html",
+        "",
+        "## 主なページ",
+        f"- [大会一覧]({SITE}/events/): 配信動画のある{len(series_list)}大会の一覧",
+        f"- [技術動画]({SITE}/technique/): レスリングクラブが公開している技術・トレーニング動画を、タックル・投げ技・グラウンドなどの区分で整理",
+        f"- [検索ページ]({SITE}/): 大会名・通称・動画タイトルで検索",
+        "",
+        "## 大会(開催回ごとのページへのリンクを含む)",
+    ]
+    for x in series_list:
+        evs = [v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]
+        yrs = [v["year"] for v in evs]
+        span = (f"{min(yrs)}年" if min(yrs) == max(yrs) else f"{min(yrs)}〜{max(yrs)}年") if yrs else ""
+        lines.append(f"- [{x['name']}]({SITE}/events/{x['id']}/): {span} 動画{x.get('n', 0)}本")
+    return "\n".join(lines) + "\n"
+
+
 def not_found_page(ctx):
     h = head(f"ページが見つかりません|{SITE_NAME}", "お探しのページは見つかりませんでした。", "/404.html", "",
              {"@context": "https://schema.org", "@type": "WebPage", "name": "ページが見つかりません"}, ctx["css"])
@@ -913,6 +945,8 @@ def build(root=HERE, inline_css=False, only=None):
             f.write(not_found_page(ctx))
         with open(os.path.join(root, "contact.html"), "w", encoding="utf-8") as f:
             f.write(contact_page(ctx))
+        with open(os.path.join(root, "llms.txt"), "w", encoding="utf-8") as f:
+            f.write(llms_txt(data, listed, ctx))
     for path, doc, _ in pages:
         d = os.path.join(root, path.strip("/"))
         os.makedirs(d, exist_ok=True)
