@@ -157,6 +157,7 @@ def head(title, desc, path, og_image, jsonld, css):
 
 def footer(as_of):
     return f"""<footer class="wrap">
+<p><a href="/events/">大会一覧</a>・<a href="/technique/">技術動画</a>・<a href="/contact.html">お問い合わせ</a></p>
 <p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -626,6 +627,90 @@ def index_page(ctx, series_list):
     return path, h
 
 
+CONTACT_EMAIL = "kitamura@japanwrestlingchannel.com"
+# Formspree に登録したら発行された ID(例: xabcdefg)をここに入れる。空なら送信時にメールアプリが開く
+FORMSPREE_ID = ""
+
+
+def contact_page(ctx):
+    h = head(f"お問い合わせ|{SITE_NAME}",
+             "レスリング配信アーカイブへのお問い合わせページです。動画の掲載・非表示のご依頼、掲載内容の誤り、サイトの不具合、お仕事のご相談はこちらから。",
+             "/contact.html", "",
+             {"@context": "https://schema.org", "@type": "ContactPage", "name": "お問い合わせ",
+              "url": SITE + "/contact.html"}, ctx["css"])
+    body = CONTACT_BODY.replace("__EMAIL__", CONTACT_EMAIL).replace("__FORMSPREE_ID__", FORMSPREE_ID)
+    return h + body + footer(ctx["as_of"])
+
+
+CONTACT_BODY = r"""<main class="wrap page contact">
+<nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>お問い合わせ</li></ol></nav>
+<h1>お問い合わせ</h1>
+<p class="lead">動画の掲載・非表示のご依頼、掲載内容の誤りのご指摘、サイトの不具合のご報告、お仕事のご相談など、お気軽にお送りください。内容を確認のうえ、ご返信いたします。</p>
+<div class="direct"><span>メールで直接お送りいただくこともできます</span><a href="mailto:__EMAIL__">__EMAIL__</a></div>
+<form id="contact-form" class="cform" novalidate>
+<div class="field"><label for="c-name">お名前<span class="req">必須</span></label>
+<input type="text" id="c-name" name="name" autocomplete="name" required></div>
+<div class="field"><label for="c-email">返信先のメールアドレス<span class="req">必須</span></label>
+<input type="email" id="c-email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required>
+<p class="fhint">全角で入力しても、自動で半角に直ります。</p></div>
+<div class="field"><label for="c-kind">お問い合わせの種類</label>
+<select id="c-kind" name="kind">
+<option>動画の掲載・非表示について</option>
+<option>掲載内容の誤り(大会名・日付など)</option>
+<option>サイトの不具合</option>
+<option>取材・お仕事のご相談</option>
+<option>その他</option>
+</select></div>
+<div class="field"><label for="c-msg">お問い合わせ内容<span class="req">必須</span></label>
+<p class="fhint">動画についてのご依頼は、該当するページのURLか動画のタイトルを添えてください。</p>
+<textarea id="c-msg" name="message" required></textarea></div>
+<input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+<p class="fhint">いただいたお名前・メールアドレスは、お問い合わせへの返信のためだけに使用します。</p>
+<button type="submit" id="c-send">送信する</button>
+<div class="cresult" id="c-result" role="status"></div>
+</form>
+</main>
+<script>
+(function(){
+  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = "__EMAIL__";
+  var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
+      btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
+  function half(s){
+    return s.replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+            .replace(/[\u3000\s]/g, "").replace(/[ー－―‐]/g, "-");
+  }
+  em.addEventListener("compositionstart", function(){ composing = true; });
+  em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
+  em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
+  em.addEventListener("blur", function(){ em.value = half(em.value); });
+  function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var name = form.name.value.trim(), email = half(form.email.value.trim()),
+        kind = form.kind.value, msg = form.message.value.trim();
+    form.email.value = email;
+    if (!name || !email || !msg){ show("ng", "お名前・メールアドレス・お問い合わせ内容を入力してください。"); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ show("ng", "メールアドレスの形式を確認してください。"); return; }
+    if (!FORMSPREE_ID){
+      var body = "お名前: " + name + "\n返信先: " + email + "\n種類: " + kind + "\n\n" + msg;
+      location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("【お問い合わせ】" + kind) + "&body=" + encodeURIComponent(body);
+      show("ok", "メールアプリが開きます。内容を確認して送信してください。開かない場合は " + TO + " へ直接お送りください。");
+      return;
+    }
+    btn.disabled = true; btn.textContent = "送信しています…";
+    fetch("https://formspree.io/f/" + FORMSPREE_ID, {method: "POST", headers: {"Accept": "application/json"}, body: new FormData(form)})
+      .then(function(r){
+        if (r.ok){ form.reset(); show("ok", "送信しました。内容を確認のうえ、ご返信いたします。"); }
+        else { show("ng", "送信できませんでした。時間をおいて再度お試しいただくか、" + TO + " へ直接お送りください。"); }
+      })
+      .catch(function(){ show("ng", "通信に失敗しました。インターネット接続を確認するか、" + TO + " へ直接お送りください。"); })
+      .then(function(){ btn.disabled = false; btn.textContent = "送信する"; });
+  });
+})();
+</script>
+"""
+
+
 def not_found_page(ctx):
     h = head(f"ページが見つかりません|{SITE_NAME}", "お探しのページは見つかりませんでした。", "/404.html", "",
              {"@context": "https://schema.org", "@type": "WebPage", "name": "ページが見つかりません"}, ctx["css"])
@@ -639,6 +724,26 @@ def not_found_page(ctx):
 # ---------------------------------------------------------------- 本体
 
 PAGE_CSS = """
+.contact{padding-bottom:44px}
+.contact .direct{max-width:640px;margin:4px 0 22px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:8px}
+.contact .direct span{display:block;font-size:12px;color:var(--ink3)}
+.contact .direct a{font-size:17px;font-weight:700;text-decoration:none;word-break:break-all}
+.cform{max-width:640px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 22px 24px}
+.cform .field{margin-bottom:18px}
+.cform label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}
+.cform .req{display:inline-block;margin-left:8px;padding:0 7px;border-radius:4px;background:var(--pink);color:#fff;font-size:11px;font-weight:700;vertical-align:1px}
+.cform .fhint{font-size:12px;color:var(--ink3);margin:6px 0}
+.cform input[type=text],.cform input[type=email],.cform select,.cform textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:11px 13px;border:1px solid var(--surface-2);border-radius:10px;background:var(--bg2);color:var(--ink)}
+.cform textarea{min-height:170px;resize:vertical}
+.cform input:focus,.cform select:focus,.cform textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
+.cform button{display:block;width:100%;margin-top:14px;padding:13px;border:0;border-radius:999px;background:var(--pink);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.cform button:hover{background:var(--pink-deep)}
+.cform button:disabled{opacity:.6;cursor:wait}
+.cform .hp{position:absolute;left:-9999px}
+.cresult{display:none;margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px}
+.cresult.ok{display:block;background:#12301f;border:1px solid #2f6b47}
+.cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
+@media (max-width:520px){.cform{padding:18px 14px 20px}}
 .brand{justify-content:space-between}
 .home{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
 .topnav{display:flex;gap:8px}
@@ -806,6 +911,8 @@ def build(root=HERE, inline_css=False, only=None):
         pages.append((path, doc, data.get("as_of")))
         with open(os.path.join(root, "404.html"), "w", encoding="utf-8") as f:
             f.write(not_found_page(ctx))
+        with open(os.path.join(root, "contact.html"), "w", encoding="utf-8") as f:
+            f.write(contact_page(ctx))
     for path, doc, _ in pages:
         d = os.path.join(root, path.strip("/"))
         os.makedirs(d, exist_ok=True)
@@ -814,6 +921,7 @@ def build(root=HERE, inline_css=False, only=None):
 
     if only is None:
         urls = [(f"{SITE}/", data.get("as_of"))] + [(SITE + p, lm) for p, _, lm in sorted(pages)]
+        urls.append((f"{SITE}/contact.html", None))
         with open(os.path.join(root, "sitemap.xml"), "w", encoding="utf-8") as f:
             f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
             for u, lm in urls:
