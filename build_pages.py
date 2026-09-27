@@ -154,7 +154,7 @@ def head(title, desc, path, og_image, jsonld, css):
 <body>
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="/" aria-label="{SITE_NAME}(トップへ)"><span class="logo-mark" aria-hidden="true">W</span><span class="logo-type">WRESTLING <span class="ac">ARCHIVE</span></span></a>
-<nav class="topnav"><a href="/">大会を検索</a><a href="/technique/">技術動画</a></nav>
+<nav class="topnav"><a href="/">大会を検索</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a></nav>
 </div></div></header>
 """
 
