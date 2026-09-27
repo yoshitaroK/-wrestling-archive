@@ -873,7 +873,8 @@ def extract_css(index_path):
     with open(index_path, encoding="utf-8") as f:
         src = f.read()
     m = re.search(r"<style>(.*?)</style>", src, re.S)
-    return (m.group(1) if m else "") + PAGE_CSS
+    import players
+    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS
 
 
 def build(root=HERE, inline_css=False, only=None):
@@ -930,6 +931,12 @@ def build(root=HERE, inline_css=False, only=None):
         cnt = defaultdict(int)
         for v in shown:
             cnt[v["cat"]] += 1
+        # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
+        import players
+        import sys
+        ppages, preport = players.build(root, data, ctx, sys.modules[__name__])
+        pages.extend(ppages)
+        report["players"] = preport
         report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
                           "unclassified_count": len(unclassified),
                           "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}
@@ -966,7 +973,8 @@ def build(root=HERE, inline_css=False, only=None):
     n_ev = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 4)
     n_se = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 3)
     n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
-    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te})")
+    n_pl = sum(1 for p in pages if p[0].startswith("/players/"))
+    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl})")
     return pages
 
 
