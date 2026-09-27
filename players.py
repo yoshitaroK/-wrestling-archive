@@ -25,6 +25,9 @@ import re
 import unicodedata
 from collections import defaultdict
 
+# 選手データがまだ無いあいだ /players/ に出す「準備中」ページの公開予定。空にすると日付なしの「準備中」表示になる
+COMING_SOON = "2026年10月下旬"
+
 PLAYERS_CSV = "players.csv"
 RESULTS_CSV = "player_results.csv"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
@@ -183,7 +186,40 @@ def index_page(players, ctx, bp):
     return path, h
 
 
+def coming_soon_page(ctx, bp):
+    e, SITE, SITE_NAME = bp.e, bp.SITE, bp.SITE_NAME
+    path = "/players/"
+    crumbs = [("トップ", "/"), ("選手検索", None)]
+    when = f"{COMING_SOON}公開予定" if COMING_SOON else "準備中"
+    desc = f"選手名から大会成績と試合動画を探せる「選手検索」を準備しています({when})。"
+    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
+        "@type": "WebPage", "name": "選手検索(準備中)", "url": SITE + path}]}
+    h = bp.head(f"選手検索({when})|{SITE_NAME}", desc, path, "", jsonld, ctx["css"])
+    h += '<main class="wrap page soon">' + bp.breadcrumb_html(crumbs)
+    h += f'<p class="soon-badge">COMING SOON</p><h1>選手検索</h1><p class="soon-when">{e(when)}</p>'
+    h += ('<p class="lead">選手の名前から、その選手の大会成績と試合動画をまとめて探せるようになります。</p>'
+          '<ul class="soon-list">'
+          '<li><b>選手名で検索</b><span>フルネームや別の表記からでも探せます</span></li>'
+          '<li><b>大会成績の一覧</b><span>出場した大会・階級・成績を年ごとに</span></li>'
+          '<li><b>試合動画をまとめて</b><span>その選手が出ている配信動画を一か所に</span></li>'
+          '</ul>'
+          '<p class="soon-note">公開まで、大会ごとの動画は<a href="/events/">大会一覧</a>から、'
+          '技術動画は<a href="/technique/">技術動画</a>からご覧いただけます。</p>')
+    h += "</main>" + bp.footer(ctx["as_of"])
+    return path, h
+
+
 PLAYER_CSS = """
+.soon{padding-bottom:48px}
+.soon .soon-badge{display:inline-block;margin:10px 0 4px;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;
+  letter-spacing:.12em;color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b))}
+.soon h1{margin-top:4px}
+.soon .soon-when{font-size:22px;font-weight:700;color:var(--pink);margin:0 0 10px}
+.soon .soon-list{list-style:none;padding:0;margin:18px 0;display:grid;gap:10px;max-width:640px}
+.soon .soon-list li{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:10px;padding:12px 16px}
+.soon .soon-list b{display:block;font-size:16px}
+.soon .soon-list span{font-size:13px;color:var(--ink3)}
+.soon .soon-note{font-size:14px;color:var(--ink2)}
 .page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
 .rtable{overflow-x:auto;margin:8px 0 22px}
 table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
@@ -198,7 +234,7 @@ def build(root, data, ctx, bp):
     players, report = load(root)
     report["video_links"] = attach_videos(players, data.get("videos", [])) if players else 0
     if not players:
-        return [], report
+        return [(*coming_soon_page(ctx, bp), data.get("as_of"))], report
     pages = [(*player_page(p, ctx, bp), data.get("as_of")) for p in players]
     pages.append((*index_page(players, ctx, bp), data.get("as_of")))
     return pages, report
