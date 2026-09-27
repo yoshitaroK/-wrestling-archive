@@ -308,3 +308,10 @@ a.yr{text-decoration:none}
   .occ a,.occ .off>div{grid-template-columns:56px 1fr auto;gap:10px;padding:10px 12px}
   .occ .oy{font-size:22px}
 }
+
+.page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
+.rtable{overflow-x:auto;margin:8px 0 22px}
+table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+table.results th,table.results td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+table.results th{color:var(--ink3);font-weight:500;font-size:12px}
+table.results td b{color:var(--pink)}

@@ -1,5 +1,5 @@
 {
- "built_at": "2026-09-27T06:16:18+09:00",
+ "built_at": "2026-09-27T10:30:59+09:00",
  "as_of": "2026-09-27",
  "video_count": 3354,
  "raw_count": 3354,
@@ -22,6 +22,14 @@
  "new_since_previous": 0,
  "unavailable_now": [],
  "from_other_channels": 277,
+ "players": {
+  "total": 0,
+  "published": 0,
+  "hidden_minor": 0,
+  "hidden_private": 0,
+  "errors": [],
+  "video_links": 0
+ },
  "tech": {
   "shown": 57,
   "by_category": {
