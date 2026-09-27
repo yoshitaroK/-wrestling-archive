@@ -886,7 +886,10 @@ def build(root=HERE, inline_css=False, only=None):
     os.makedirs(os.path.join(root, "assets"), exist_ok=True)
     with open(os.path.join(root, "assets", "site.css"), "w", encoding="utf-8") as f:
         f.write(css_text)
-    css = f"<style>{css_text}</style>" if inline_css else '<link rel="stylesheet" href="/assets/site.css">'
+    # CSSの中身が変わるたびにURLの末尾(?v=…)も変わるので、ブラウザやCloudflareに古いCSSが残らない
+    import hashlib
+    ver = hashlib.md5(css_text.encode("utf-8")).hexdigest()[:8]
+    css = f"<style>{css_text}</style>" if inline_css else f'<link rel="stylesheet" href="/assets/site.css?v={ver}">'
 
     slugs = assign_slugs(data, os.path.join(root, "page_slugs.json"))
     S = {s["id"]: s for s in data["series"]}
