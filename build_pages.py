@@ -161,7 +161,7 @@ def head(title, desc, path, og_image, jsonld, css):
 
 def footer(as_of):
     return f"""<footer class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a></p>
 <p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -874,7 +874,8 @@ def extract_css(index_path):
         src = f.read()
     m = re.search(r"<style>(.*?)</style>", src, re.S)
     import players
-    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS
+    import calendar_page
+    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS
 
 
 def build(root=HERE, inline_css=False, only=None):
@@ -948,6 +949,9 @@ def build(root=HERE, inline_css=False, only=None):
         listed = sorted([x for x in data["series"] if x.get("n")], key=latest, reverse=True)
         path, doc = index_page(ctx, listed)
         pages.append((path, doc, data.get("as_of")))
+        # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
+        import calendar_page
+        pages.append((*calendar_page.calendar_page(data, ctx, sys.modules[__name__]), data.get("as_of")))
         with open(os.path.join(root, "404.html"), "w", encoding="utf-8") as f:
             f.write(not_found_page(ctx))
         with open(os.path.join(root, "contact.html"), "w", encoding="utf-8") as f:
