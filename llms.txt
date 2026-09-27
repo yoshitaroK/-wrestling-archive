@@ -1,0 +1,80 @@
+# レスリング配信アーカイブ(Japan Wrestling Channel アーカイブ)
+
+> YouTubeで公開されている日本のレスリング大会の配信・動画3,354本を、大会名・開催年・日程ごとに整理した非公式のアーカイブです。動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。
+
+- サイト: https://japanwrestlingchannel.com/
+- データ更新日: 2026年9月27日
+- お問い合わせ: https://japanwrestlingchannel.com/contact.html
+
+## 主なページ
+- [大会一覧](https://japanwrestlingchannel.com/events/): 配信動画のある66大会の一覧
+- [技術動画](https://japanwrestlingchannel.com/technique/): レスリングクラブが公開している技術・トレーニング動画を、タックル・投げ技・グラウンドなどの区分で整理
+- [検索ページ](https://japanwrestlingchannel.com/): 大会名・通称・動画タイトルで検索
+
+## 大会(開催回ごとのページへのリンクを含む)
+- [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
+- [藤波朱理杯 三重県少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-fujinami-cup/): 2025〜2026年 動画14本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/): 2014〜2026年 動画242本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/): 2014〜2026年 動画92本
+- [東日本学生選手権（春季大会）](https://japanwrestlingchannel.com/events/east-spring/): 2014〜2026年 動画155本
+- [全日本社会人選手権](https://japanwrestlingchannel.com/events/shakaijin/): 2022〜2026年 動画30本
+- [茨城ジュニア大会](https://japanwrestlingchannel.com/events/x-ibaraki-junior/): 2026年 動画3本
+- [東日本少年少女レスリング選手権大会](https://japanwrestlingchannel.com/events/x-east-kids/): 2026年 動画6本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/): 2015〜2026年 動画147本
+- [杉並区区民体育祭・杉並区レスリング大会](https://japanwrestlingchannel.com/events/x-suginami/): 2025〜2026年 動画6本
+- [JOC杯全日本ジュニア・U20・U17選手権](https://japanwrestlingchannel.com/events/joc-junior/): 2022〜2026年 動画56本
+- [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/): 2015〜2026年 動画102本
+- [第11回日野レスリング選手権大会](https://japanwrestlingchannel.com/events/local-283989/): 2026年 動画6本
+- [関東少年少女レスリング横須賀大会](https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/): 2023〜2026年 動画6本
+- [堺市レスリング連盟 少年少女レスリング選手権](https://japanwrestlingchannel.com/events/local-282985/): 2026年 動画6本
+- [全日本マスターズ選手権](https://japanwrestlingchannel.com/events/masters/): 2016〜2026年 動画9本
+- [高谷惣亮杯(ゴールドキッズ年末合宿)](https://japanwrestlingchannel.com/events/x-takatani-cup/): 2022〜2025年 動画8本
+- [第24回兵庫県ジュニアレスリングオープン大会](https://japanwrestlingchannel.com/events/local-280653/): 2025年 動画4本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/): 2014〜2025年 動画475本
+- [全国中学選抜・全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/): 2014〜2025年 動画120本
+- [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2025年 動画104本
+- [東日本大学女子リーグ戦](https://japanwrestlingchannel.com/events/east-women-league/): 2024〜2025年 動画3本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2025年 動画118本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2025年 動画92本
+- [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/): 2023〜2025年 動画2本
+- [BUNSUGI International Wrestling Friendly Match](https://japanwrestlingchannel.com/events/x-bunsugi/): 2025年 動画1本
+- [COMBAT WRESTLING ASIA](https://japanwrestlingchannel.com/events/x-combat-asia/): 2025年 動画1本
+- [関東高校総体・高校選手権](https://japanwrestlingchannel.com/events/regional-関東-summer/): 2021〜2025年 動画32本
+- [第10回日野町少年少女大会](https://japanwrestlingchannel.com/events/local-264485/): 2025年 動画6本
+- [第18回堺市レスリング連盟少年少女レスリング選手権大会](https://japanwrestlingchannel.com/events/local-263382/): 2025年 動画6本
+- [関東高校リーグ戦(齋藤つよし杯)](https://japanwrestlingchannel.com/events/x-kanto-hs-league/): 2024年 動画4本
+- [兵庫県ジュニアオープン(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/): 2023〜2024年 動画6本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/): 2014〜2024年 動画85本
+- [押立杯(大会名の確認が必要)](https://japanwrestlingchannel.com/events/x-oshitate/): 2024年 動画2本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/): 2014〜2024年 動画355本
+- [オリンピック(海外)](https://japanwrestlingchannel.com/events/x-olympics/): 2024年 動画12本
+- [巻キッズレスリング大会](https://japanwrestlingchannel.com/events/x-maki-kids/): 2024年 動画1本
+- [日野町少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-hino-junior/): 2023〜2024年 動画12本
+- [世界ベテランズ選手権(海外)](https://japanwrestlingchannel.com/events/x-veterans-world/): 2018年 動画3本
+- [堺市少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-sakai-junior/): 2023〜2024年 動画7本
+- [関東高校選抜・新人・全国高校選抜予選](https://japanwrestlingchannel.com/events/regional-関東-qualifier/): 2024年 動画24本
+- [日韓高校選抜交流・交歓競技会（日本開催・親善試合）](https://japanwrestlingchannel.com/events/japan-korea-highschool/): 2023年 動画1本
+- [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/): 2014〜2023年 動画53本
+- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/): 2021〜2023年 動画37本
+- [日本代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/): 2018〜2023年 動画36本
+- [ビーチレスリング・ワールドシリーズ(海外)](https://japanwrestlingchannel.com/events/x-beach-world-series/): 2023年 動画1本
+- [U23日本代表選考会・U23全日本選手権](https://japanwrestlingchannel.com/events/u23-selection/): 2023年 動画2本
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/): 2016〜2023年 動画41本
+- [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/): 2023年 動画4本
+- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/): 2022年 動画20本
+- [U13ジャパンオープン・レスリングトーナメント](https://japanwrestlingchannel.com/events/u13/): 2023年 動画15本
+- [全国少年少女選抜選手権](https://japanwrestlingchannel.com/events/kids-senbatsu/): 2023年 動画4本
+- [近畿少年少女選手権・兵庫県ジュニアオープン](https://japanwrestlingchannel.com/events/x-kinki-kids/): 2022年 動画4本
+- [野田オープン大会](https://japanwrestlingchannel.com/events/x-noda-open/): 2022年 動画42本
+- [全国少年少女選手権](https://japanwrestlingchannel.com/events/kids/): 2022年 動画25本
+- [茨城オープン](https://japanwrestlingchannel.com/events/x-ibaraki-open/): 2022年 動画17本
+- [東京都団体戦予選](https://japanwrestlingchannel.com/events/x-tokyo-team/): 2022年 動画13本
+- [アジア選手権(海外)](https://japanwrestlingchannel.com/events/x-asian-championships/): 2021年 動画2本
+- [全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/): 2014〜2022年 動画143本
+- [群馬県千代田町少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-chiyoda-kids/): 2021年 動画59本
+- [西日本学生選手権](https://japanwrestlingchannel.com/events/west-championship/): 2014〜2021年 動画41本
+- [関東中学生選手権 東京代表選考会](https://japanwrestlingchannel.com/events/x-kanto-jh-tokyo/): 2021年 動画9本
+- [西日本学生秋季リーグ戦](https://japanwrestlingchannel.com/events/west-autumn-league/): 2014〜2020年 動画20本
+- [国民体育大会・国民スポーツ大会](https://japanwrestlingchannel.com/events/kokutai/): 2014〜2016年 動画57本
+- [西日本学生新人選手権](https://japanwrestlingchannel.com/events/west-rookie/): 2014〜2015年 動画31本
+- [西日本学生春季リーグ戦](https://japanwrestlingchannel.com/events/west-spring-league/): 2015年 動画7本
