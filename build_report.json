@@ -1,6 +1,6 @@
 {
- "built_at": "2026-09-29T06:17:58+09:00",
- "as_of": "2026-09-29",
+ "built_at": "2026-09-30T06:17:41+09:00",
+ "as_of": "2026-09-30",
  "video_count": 3354,
  "raw_count": 3354,
  "duplicate_ids_removed": 0,
@@ -29,6 +29,19 @@
   "hidden_private": 0,
   "errors": [],
   "video_links": 0
+ },
+ "photos": {
+  "entries": 1,
+  "shown": 1,
+  "hidden": 0,
+  "unconfirmed": 0,
+  "pages_with_photos": 1,
+  "by_page": {
+   "/events/interhigh/2024/": 1
+  },
+  "warnings": [],
+  "errors": [],
+  "unlisted_files": []
  },
  "tech": {
   "shown": 57,
@@ -100,18 +113,5 @@
     "channel": "GOLDKIDS WRESTLING"
    }
   ]
- },
- "photos": {
-  "entries": 1,
-  "shown": 1,
-  "hidden": 0,
-  "unconfirmed": 0,
-  "pages_with_photos": 1,
-  "by_page": {
-   "/events/interhigh/2024/": 1
-  },
-  "warnings": [],
-  "errors": [],
-  "unlisted_files": []
  }
 }
