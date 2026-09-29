@@ -23,6 +23,10 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 | `tech_categories.json` | 技術動画の区分(タックル・投げ技など)と、自動で振り分けるキーワード |
 | `tech_overrides.json` | 技術動画の手動修正(区分の指定・非表示) |
 | `legacy_map.json` | 以前のURL(`#series/…`・`#occurrence/…`)を新しいページへ案内する対応表 |
+| `photos/` | 大会ページ・開催回ページに載せる写真(JPG/PNG/WebP)の置き場所 |
+| `photos.json` | **手で編集**。どの写真をどのページに載せるかの設定 |
+| `photo_gallery.py` | 写真の縮小・サムネイル作成とギャラリー表示(`build_pages.py` から使われます) |
+| `assets/photos/` | 自動生成される縮小版の写真(手で編集しない) |
 | `.github/workflows/update.yml` | 毎日の自動更新の設定 |
 
 ## 動画と開催回の対応(照合)の考え方
@@ -74,3 +78,20 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 - 開催回の指定・修正は、ほかの動画と同じく `overrides.json` に `event_id` を書きます。
 - 大会ページではなく技術動画ページに載せたいときは `tech_overrides.json` に `category` を、載せたくないときは `hide: true` を書きます。
 - 大会データにない大会は「開催情報を確認中」の大会としてまとめられます(`build_data.py` の `DERIVED_RULES`)。
+
+## 写真を載せる方法
+
+1. 写真を `photos/` フォルダにアップロードします(JPG / PNG / WebP。ファイル名は半角英数字とハイフン)。
+2. `photos.json` の `photos` の `[ ]` の中に1枚ずつ追加します(2枚目からは前の行の `}` の後ろに `,` を付けます)。
+
+```json
+{"file": "interhigh-2024-01.jpg", "page": "interhigh/2024", "caption": "男子団体 表彰式", "credit": "撮影:山田太郎", "confirmed": true, "hidden": false}
+```
+
+- `page` は載せたいページのURLの `/events/` の後ろです(大会ページなら `interhigh`、開催回ページなら `interhigh/2024`)。URLをそのまま貼っても動きます。
+- `confirmed` が `true` の写真だけ表示されます。**未成年が写っている写真は、掲載してよいか確認してから `true` にしてください。**
+- 一時的に載せたくないときは `hidden` を `true` にします。
+- `credit`(撮影者・提供元)が空だと警告が出ます。
+- 大きい写真は自動で長辺1600pxに縮小され、サムネイルも自動で作られます(撮影場所などの情報は縮小版から取り除かれます)。
+- 結果は `build_report.json` の `photos` に出ます(`errors` にファイル名の間違いやページが見つからない写真が出ます)。
+- `photos/` の元の写真は、表示していなくても誰でも見られます。確認できていない写真はアップロードしないでください。

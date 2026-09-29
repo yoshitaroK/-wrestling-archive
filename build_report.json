@@ -100,5 +100,16 @@
     "channel": "GOLDKIDS WRESTLING"
    }
   ]
+ },
+ "photos": {
+  "entries": 0,
+  "shown": 0,
+  "hidden": 0,
+  "unconfirmed": 0,
+  "pages_with_photos": 0,
+  "by_page": {},
+  "warnings": [],
+  "errors": [],
+  "unlisted_files": []
  }
 }

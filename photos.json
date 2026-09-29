@@ -1,0 +1,6 @@
+{
+ "about": "写真ギャラリーの設定。写真は photos フォルダに入れ、下の photos の [ ] の中に1枚ずつ書きます。書き方は example を参考にしてください(example は表示されません)。",
+ "example": {"file": "interhigh-2024-01.jpg", "page": "interhigh/2024", "caption": "男子団体 表彰式", "credit": "撮影:山田太郎", "confirmed": true, "hidden": false},
+ "photos": [
+ ]
+}
