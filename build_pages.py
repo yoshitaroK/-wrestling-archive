@@ -311,6 +311,7 @@ def event_page(ev, ctx):
 
     # 開催年の年表(ほかの年へのリンク)
     h += year_rail(s, ev["id"], ctx)
+    h += ctx["gallery"](path, f"{name} {ev['year']}年")
 
     # 動画(試合配信は日付→マット順)
     by_day = defaultdict(list)
@@ -439,6 +440,7 @@ def series_page(s, ctx):
         else:
             h += f'<li class="off"><div>{body}</div></li>'
     h += "</ol></section>"
+    h += ctx["gallery"](path, s["name"])
     if loose:
         h += vgroup("開催回を確認中の動画", f"この大会の動画ですが、どの年の開催回か特定できていません({len(loose)}本)", loose, show_basis=True)
     h += f'<p class="tosearch-line"><a href="/#s={e(s["id"])}">スタイルなどで絞り込む(検索ページで開く)</a></p>'
@@ -875,7 +877,8 @@ def extract_css(index_path):
     m = re.search(r"<style>(.*?)</style>", src, re.S)
     import players
     import calendar_page
-    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS
+    import photo_gallery
+    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS
 
 
 def build(root=HERE, inline_css=False, only=None):
@@ -907,8 +910,14 @@ def build(root=HERE, inline_css=False, only=None):
         if not v.get("e"):
             for c in v.get("c") or []:
                 cand[c].append(v)
+    # 写真ギャラリー(photos.json)。写真があるページにだけ表示する
+    import photo_gallery
+    page_paths = {f"/events/{slugs[ev['id']]}/" for ev in data["events"] if ev["id"] in slugs}
+    page_paths |= {f"/events/{s['id']}/" for s in data["series"] if s.get("n")}
+    photos_by_page, photo_report = photo_gallery.load(root, page_paths)
     ctx = dict(S=S, slugs=slugs, by_event=by_event, cand=cand, loose_by_series=loose_by_series,
-               events_by_series=events_by_series, all_events=data["events"], css=css, as_of=data.get("as_of"))
+               events_by_series=events_by_series, all_events=data["events"], css=css, as_of=data.get("as_of"),
+               gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title))
 
     pages = []
     for ev in data["events"]:
@@ -941,6 +950,7 @@ def build(root=HERE, inline_css=False, only=None):
         ppages, preport = players.build(root, data, ctx, sys.modules[__name__])
         pages.extend(ppages)
         report["players"] = preport
+        report["photos"] = photo_report
         report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
                           "unclassified_count": len(unclassified),
                           "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}
@@ -982,6 +992,8 @@ def build(root=HERE, inline_css=False, only=None):
     n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
     n_pl = sum(1 for p in pages if p[0].startswith("/players/"))
     print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl})")
+    print(f"写真: {photo_report['shown']}枚を{photo_report['pages_with_photos']}ページに掲載"
+          f"(非表示 {photo_report['hidden']}・未確認 {photo_report['unconfirmed']}・エラー {len(photo_report['errors'])}・警告 {len(photo_report['warnings'])})")
     return pages
 
 

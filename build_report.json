@@ -100,5 +100,18 @@
     "channel": "GOLDKIDS WRESTLING"
    }
   ]
+ },
+ "photos": {
+  "entries": 1,
+  "shown": 1,
+  "hidden": 0,
+  "unconfirmed": 0,
+  "pages_with_photos": 1,
+  "by_page": {
+   "/events/interhigh/2024/": 1
+  },
+  "warnings": [],
+  "errors": [],
+  "unlisted_files": []
  }
 }

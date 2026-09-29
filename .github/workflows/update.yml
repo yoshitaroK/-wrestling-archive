@@ -25,7 +25,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests Pillow
 
       - name: Fetch latest videos, rebuild data.json and pages
         env:
@@ -36,6 +36,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # 写真の縮小版は assets/photos/ に作られるので assets に含まれる(photos/・photos.json は手で上げるファイルなので不要)
           git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html contact.html llms.txt assets events technique players
           git diff --cached --quiet || git commit -m "Update data and pages ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           # 実行中にファイルがアップロードされていた場合は、その変更を取り込んでから保存する
