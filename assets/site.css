@@ -32,6 +32,8 @@ button,input,select{font:inherit;color:inherit}
   font-family:var(--num);font-weight:600;font-size:26px;color:#fff;line-height:1;padding-top:4px;box-shadow:0 0 18px rgba(255,46,126,.45)}
 .logo-type{font-family:var(--num);font-weight:600;font-size:30px;letter-spacing:.06em;line-height:1;padding-top:5px}
 .logo-type .ac{color:var(--pink)}
+.logo-img{display:block;height:54px;width:auto}
+.logo-img+.logo-type{font-size:22px;padding-top:14px}
 .brand p{margin:0;color:var(--ink3);font-size:12px}
 .brand p .num{color:var(--pink);font-size:17px}
 
@@ -200,6 +202,8 @@ footer p{margin:0 0 6px;max-width:76ch}
   .shead{gap:10px;padding:10px}
   .logo-type{font-size:24px}
   .logo-mark{width:28px;height:28px;font-size:21px}
+  .logo-img{height:44px}
+  .logo-img+.logo-type{font-size:19px;padding-top:11px}
   .hero{min-height:260px}
   .event{padding:14px 12px}
   .v{grid-template-columns:108px 1fr;gap:10px;padding:6px 2px}
