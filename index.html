@@ -12,9 +12,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>レスリング配信アーカイブ</title>
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.ico?v=2" sizes="any">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#000000">
 <meta name="description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
@@ -24,7 +24,7 @@
 <meta property="og:title" content="レスリング配信アーカイブ">
 <meta property="og:description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。">
 <meta property="og:url" content="https://japanwrestlingchannel.com/">
-<meta property="og:image" content="https://japanwrestlingchannel.com/ogp.png">
+<meta property="og:image" content="https://japanwrestlingchannel.com/ogp.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
 {"@type":"WebSite","@id":"https://japanwrestlingchannel.com/#website","name":"レスリング配信アーカイブ","alternateName":"Japan Wrestling Channel アーカイブ","url":"https://japanwrestlingchannel.com/","inLanguage":"ja","description":"Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。"},
@@ -68,6 +68,8 @@ button,input,select{font:inherit;color:inherit}
   font-family:var(--num);font-weight:600;font-size:26px;color:#fff;line-height:1;padding-top:4px;box-shadow:0 0 18px rgba(255,46,126,.45)}
 .logo-type{font-family:var(--num);font-weight:600;font-size:30px;letter-spacing:.06em;line-height:1;padding-top:5px}
 .logo-type .ac{color:var(--pink)}
+.logo-img{display:block;height:54px;width:auto}
+.logo-img+.logo-type{font-size:22px;padding-top:14px}
 .brand p{margin:0;color:var(--ink3);font-size:12px}
 .brand p .num{color:var(--pink);font-size:17px}
 
@@ -236,6 +238,8 @@ footer p{margin:0 0 6px;max-width:76ch}
   .shead{gap:10px;padding:10px}
   .logo-type{font-size:24px}
   .logo-mark{width:28px;height:28px;font-size:21px}
+  .logo-img{height:44px}
+  .logo-img+.logo-type{font-size:19px;padding-top:11px}
   .hero{min-height:260px}
   .event{padding:14px 12px}
   .v{grid-template-columns:108px 1fr;gap:10px;padding:6px 2px}
@@ -249,7 +253,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <h1><a href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><span class="logo-mark" aria-hidden="true">W</span><span class="logo-type">WRESTLING <span class="ac">ARCHIVE</span></span></a></h1>
+      <h1><a href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a></h1>
       <p id="tagline">レスリングの配信・動画を大会・開催年から探せる非公式アーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>
       <nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a></nav>
     </div>

@@ -116,7 +116,7 @@ THUMB_JS = ("<script>function thumbFail(i){var o=['mqdefault','hqdefault','defau
             "if(m){var n=o[o.indexOf(m[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+m[1]+'/'+n+'.jpg';return;}}i.remove();}</script>")
 
 
-OG_DEFAULT = SITE + "/ogp.png"
+OG_DEFAULT = SITE + "/ogp.png?v=2"
 
 
 def head(title, desc, path, og_image, jsonld, css):
@@ -139,9 +139,9 @@ def head(title, desc, path, og_image, jsonld, css):
 <meta property="og:url" content="{e(url)}">
 {f'<meta property="og:image" content="{e(og_image)}">' if og_image else ''}
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,7 +153,7 @@ def head(title, desc, path, og_image, jsonld, css):
 </head>
 <body>
 <header class="top"><div class="wrap"><div class="brand">
-<a class="home" href="/" aria-label="{SITE_NAME}(トップへ)"><span class="logo-mark" aria-hidden="true">W</span><span class="logo-type">WRESTLING <span class="ac">ARCHIVE</span></span></a>
+<a class="home" href="/" aria-label="{SITE_NAME}(トップへ)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
 <nav class="topnav"><a href="/">大会を検索</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a></nav>
 </div></div></header>
 """
