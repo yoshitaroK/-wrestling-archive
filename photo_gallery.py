@@ -240,13 +240,14 @@ PHOTO_CSS = """
 .pgrid a:hover img{transform:scale(1.03)}
 .pcap{margin:6px 2px 0;font-size:12px;line-height:1.5;color:var(--ink2)}
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
-.plb{padding:0;border:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:var(--ink)}
+.plb{padding:0;border:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:#fff}
 .plb::backdrop{background:rgba(0,0,0,.92)}
 .plb figure{margin:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 56px 20px;box-sizing:border-box}
 .plb img{max-width:100%;max-height:calc(100% - 60px);object-fit:contain;border-radius:6px}
-.plb figcaption{max-width:70ch;text-align:center;font-size:14px;color:var(--ink2)}
+.plb figcaption{max-width:70ch;text-align:center;font-size:14px;color:#d8d7de}
+.plb figcaption .pcredit{color:#a9a8b2}
 .plb figcaption .pcredit{margin-top:2px}
-.plb button{position:absolute;border:1px solid var(--line);background:rgba(22,22,26,.85);color:var(--ink);border-radius:999px;width:44px;height:44px;font-size:24px;line-height:1;cursor:pointer}
+.plb button{position:absolute;border:1px solid #3a3a42;background:rgba(22,22,26,.85);color:#fff;border-radius:999px;width:44px;height:44px;font-size:24px;line-height:1;cursor:pointer}
 .plb button:hover{border-color:var(--pink);color:var(--pink)}
 .plb-x{top:10px;right:10px}
 .plb-p{left:8px;top:50%;transform:translateY(-50%)}

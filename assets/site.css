@@ -26,6 +26,18 @@ button,input,select{font:inherit;color:inherit}
 .topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
 .topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+/* 端末がライトモードのときは白ベースで表示する(ダークモードの人には今までどおり黒ベース) */
+@media (prefers-color-scheme: light){
+  :root{
+    color-scheme:light;
+    --bg:#ffffff; --bg2:#f4f4f7; --surface:#f4f4f7; --surface-2:#e6e6eb; --ink:#16161a; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e1e1e7;
+    --pink:#d6135f; --pink-deep:#b8105a; --pink-tint:rgba(214,19,95,.09); --pink-line:#f3b6cc;
+    --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
+    --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
+  }
+  .top{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
+}
+
 .brand h1{margin:0;line-height:1}
 .brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
 .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--grad-a),var(--grad-b));display:grid;place-items:center;
@@ -230,6 +242,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 .cform .hp{position:absolute;left:-9999px}
 .cresult{display:none;margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px}
 .cresult.ok{display:block;background:#12301f;border:1px solid #2f6b47}
+@media (prefers-color-scheme: light){.cresult.ok{background:#e6f4ea;border-color:#9ccfab}}
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
 .brand{justify-content:space-between}
@@ -379,6 +392,11 @@ table.results td b{color:var(--pink)}
 .cal-list .vid .cb{background:var(--pink-tint);color:var(--pink)}
 .cal-list .sch .cb{background:rgba(91,141,239,.16);color:#8fb0ff}
 .cal-list .can .cb{background:#26262c;color:var(--ink3)}
+@media (prefers-color-scheme: light){
+  .cal-grid .wd.sun,.cal-grid .day.sun .dn{color:#c62850}.cal-grid .wd.sat,.cal-grid .day.sat .dn{color:#1d5bbf}
+  .cal-list .sch .cb{background:#e7effa;color:#1d4f91}.cal-list .can .cb{background:#ececf0}
+  .lg.can::before,.dots i.can{background:#9a9aa3}.chip.can{background:#6b6b75}
+}
 .cal-list .can .cn{text-decoration:line-through;color:var(--ink3)}
 .cal-list .cal-empty{display:block;color:var(--ink3);padding:16px 4px}
 @media (max-width:640px){
@@ -398,13 +416,14 @@ table.results td b{color:var(--pink)}
 .pgrid a:hover img{transform:scale(1.03)}
 .pcap{margin:6px 2px 0;font-size:12px;line-height:1.5;color:var(--ink2)}
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
-.plb{padding:0;border:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:var(--ink)}
+.plb{padding:0;border:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:#fff}
 .plb::backdrop{background:rgba(0,0,0,.92)}
 .plb figure{margin:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 56px 20px;box-sizing:border-box}
 .plb img{max-width:100%;max-height:calc(100% - 60px);object-fit:contain;border-radius:6px}
-.plb figcaption{max-width:70ch;text-align:center;font-size:14px;color:var(--ink2)}
+.plb figcaption{max-width:70ch;text-align:center;font-size:14px;color:#d8d7de}
+.plb figcaption .pcredit{color:#a9a8b2}
 .plb figcaption .pcredit{margin-top:2px}
-.plb button{position:absolute;border:1px solid var(--line);background:rgba(22,22,26,.85);color:var(--ink);border-radius:999px;width:44px;height:44px;font-size:24px;line-height:1;cursor:pointer}
+.plb button{position:absolute;border:1px solid #3a3a42;background:rgba(22,22,26,.85);color:#fff;border-radius:999px;width:44px;height:44px;font-size:24px;line-height:1;cursor:pointer}
 .plb button:hover{border-color:var(--pink);color:var(--pink)}
 .plb-x{top:10px;right:10px}
 .plb-p{left:8px;top:50%;transform:translateY(-50%)}
