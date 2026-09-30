@@ -31,17 +31,16 @@
   "video_links": 0
  },
  "photos": {
-  "entries": 1,
-  "shown": 1,
+  "entries": 0,
+  "shown": 0,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 1,
-  "by_page": {
-   "/events/interhigh/2024/": 1
-  },
+  "pages_with_photos": 0,
+  "by_page": {},
   "warnings": [],
   "errors": [],
-  "unlisted_files": []
+  "unlisted_files": [],
+  "from_manifest": 0
  },
  "tech": {
   "shown": 57,

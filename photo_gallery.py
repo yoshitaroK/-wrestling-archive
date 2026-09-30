@@ -17,6 +17,9 @@ photos.json の1件の書き方
 ルール
   - 縮小した写真からは撮影場所(GPS)などの情報を取り除く。元の写真には残るので、アップロード前に消しておく
   - 表示しなくなった写真の縮小版は assets/photos/ から自動で削除する
+  - 縮小版を作ったあとは、photos/ の元の写真を消してよい(assets/photos/manifest.json の記録から縮小版を使い続ける)。
+    元の写真は公開リポジトリの容量を使い、撮影場所などの情報が残ることがあるため
+  - 1ページの写真はファイル名の順に並べ、最初は GALLERY_FIRST 枚だけ表示する(残りは「すべての写真を見る」で表示)
   - Pillow が入っていない環境では新しい写真は作れない(作成済みの縮小版があればそれを使う)
 """
 import hashlib
@@ -32,6 +35,8 @@ OUT_DIR = os.path.join("assets", "photos")
 EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 FULL_SIZE = 1600
 THUMB_SIZE = 480
+GALLERY_FIRST = 12
+MANIFEST = "manifest.json"
 YES = {"true", "yes", "はい", "1", "○", "〇"}
 
 
@@ -106,8 +111,16 @@ def load(root, page_paths):
             report["errors"].append(f"photos.json を読めませんでした(カンマや \" の抜けを確認してください): {ex}")
     report["entries"] = len(entries)
 
+    # 縮小版の記録(元の写真のファイル名 → 縮小版の名前と大きさ)。元の写真を消したあとも縮小版を使うため
+    try:
+        with open(os.path.join(out_dir, MANIFEST), encoding="utf-8") as f:
+            manifest = json.load(f).get("files", {})
+    except (OSError, ValueError):
+        manifest = {}
+    new_manifest = {}
+    report["from_manifest"] = 0
     by_page = defaultdict(list)
-    keep = set()
+    keep = {MANIFEST}
     listed = set()
     seen = set()
     for i, x in enumerate(entries, 1):
@@ -132,7 +145,9 @@ def load(root, page_paths):
             report["errors"].append(f"{label}: JPG・PNG・WebP 以外の形式です")
             continue
         src = os.path.join(src_dir, fn)
-        if not os.path.isfile(src):
+        rec = manifest.get(fn)
+        has_rec = bool(rec) and all(os.path.exists(os.path.join(out_dir, f"{rec['stem']}{sfx}.jpg")) for sfx in ("", "-t"))
+        if not os.path.isfile(src) and not has_rec:
             report["errors"].append(f"{label}: photos フォルダにファイルがありません(大文字・小文字も区別されます)")
             continue
         page = norm_page(x.get("page"))
@@ -148,13 +163,20 @@ def load(root, page_paths):
         if not credit:
             report["warnings"].append(f"{label}: credit(撮影者・提供元)が空です")
 
-        with open(src, "rb") as f:
-            digest = hashlib.sha1(f.read()).hexdigest()[:12]
+        if not os.path.isfile(src):
+            # 元の写真は消してあるので、前に作った縮小版をそのまま使う
+            stem = rec["stem"]
+            fs, ts = rec.get("full_size"), rec.get("thumb_size")
+            report["from_manifest"] += 1
+        else:
+            with open(src, "rb") as f:
+                stem = hashlib.sha1(f.read()).hexdigest()[:12]
         # 中身が変わるとファイル名も変わるので、古い写真がブラウザに残らない
-        stem = digest
         full = os.path.join(out_dir, f"{stem}.jpg")
         thumb = os.path.join(out_dir, f"{stem}-t.jpg")
-        if os.path.exists(full) and os.path.exists(thumb):
+        if not os.path.isfile(src):
+            pass
+        elif os.path.exists(full) and os.path.exists(thumb):
             fs, ts = image_size(full), image_size(thumb)
         else:
             os.makedirs(out_dir, exist_ok=True)
@@ -168,8 +190,9 @@ def load(root, page_paths):
                 continue
             fs, ts = sizes[""], sizes["-t"]
         keep.update({f"{stem}.jpg", f"{stem}-t.jpg"})
+        new_manifest[fn] = {"stem": stem, "full_size": list(fs) if fs else None, "thumb_size": list(ts) if ts else None}
         caption = str(x.get("caption") or "").strip()
-        by_page[ppath].append({"full": f"/{OUT_DIR.replace(os.sep, '/')}/{stem}.jpg",
+        by_page[ppath].append({"file": fn, "full": f"/{OUT_DIR.replace(os.sep, '/')}/{stem}.jpg",
                                "thumb": f"/{OUT_DIR.replace(os.sep, '/')}/{stem}-t.jpg",
                                "fw": fs[0] if fs else None, "fh": fs[1] if fs else None,
                                "tw": ts[0] if ts else None, "th": ts[1] if ts else None,
@@ -181,6 +204,13 @@ def load(root, page_paths):
         for name in os.listdir(out_dir):
             if name not in keep:
                 os.remove(os.path.join(out_dir, name))
+        with open(os.path.join(out_dir, MANIFEST), "w", encoding="utf-8") as f:
+            json.dump({"about": "自動生成。元の写真のファイル名と縮小版の対応(元の写真を消しても縮小版を使い続けるため)。手で編集しない",
+                       "files": dict(sorted(new_manifest.items()))}, f, ensure_ascii=False, indent=1)
+    # 1ページの中はファイル名の順(数字は数として比べる:IMG_2 < IMG_10)
+    nat = lambda n: [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", n)]
+    for lst in by_page.values():
+        lst.sort(key=lambda p: nat(p["file"]))
 
     if os.path.isdir(src_dir):
         report["unlisted_files"] = sorted(n for n in os.listdir(src_dir)
@@ -204,23 +234,34 @@ def gallery_html(photos, e, title):
         return f' width="{w}" height="{h}"' if w and h else ""
 
     items = []
+    rest = len(photos) - GALLERY_FIRST
+    # 全部の写真のクレジットが同じなら、見出しの下に1回だけ出す(拡大表示では写真ごとに出す)
+    credits = {p["credit"] for p in photos}
+    shared = credits.pop() if len(credits) == 1 else ""
     for i, p in enumerate(photos):
         alt = p["caption"] or f"{title}の写真{i + 1}"
-        cap = e(p["caption"]) + (f' <span class="pcredit">{e(p["credit"])}</span>' if p["credit"] else "")
+        credit_html = f'<span class="pcredit">{e(p["credit"])}</span>' if p["credit"] else ""
+        cap = e(p["caption"]) + ((" " + credit_html) if credit_html and not shared else "")
         items.append(
-            f'<li><a href="{e(p["full"])}" data-full="{e(p["full"])}">'
+            f'<li{" hidden" if i >= GALLERY_FIRST else ""}><a href="{e(p["full"])}" data-full="{e(p["full"])}"'
+            f' data-cap="{e(e(p["caption"]) + (" " + credit_html if credit_html else ""))}">'
             f'<img src="{e(p["thumb"])}" alt="{e(alt)}" loading="lazy" decoding="async"{wh(p["tw"], p["th"])}></a>'
             + (f'<p class="pcap">{cap}</p>' if cap else "") + "</li>")
     return (f'<section class="section photos" aria-label="写真"><h2 class="vh">写真 <small>{len(photos)}枚</small></h2>'
-            f'<ul class="pgrid">{"".join(items)}</ul></section>' + LIGHTBOX)
+            + (f'<p class="pcredit-all">{e(shared)}</p>' if shared else "")
+            + f'<ul class="pgrid">{"".join(items)}</ul>'
+            + (f'<button type="button" class="pshow">すべての写真を見る({len(photos)}枚)</button>' if rest > 0 else "")
+            + '</section>' + LIGHTBOX)
 
 
 LIGHTBOX = """<dialog class="plb" aria-label="写真の拡大表示"><figure><img alt=""><figcaption></figcaption></figure>
 <button type="button" class="plb-x" aria-label="閉じる">×</button><button type="button" class="plb-p" aria-label="前の写真">‹</button><button type="button" class="plb-n" aria-label="次の写真">›</button></dialog>
-<script>(function(){var s=document.currentScript,d=s.previousElementSibling,g=d.previousElementSibling;if(!d.showModal)return;
+<script>(function(){var s=document.currentScript,d=s.previousElementSibling,g=d.previousElementSibling,mb=g.querySelector('.pshow');
+if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll('.pgrid li[hidden]'),function(li){li.hidden=false;});mb.remove();});
+if(!d.showModal)return;
 var as=[].slice.call(g.querySelectorAll('.pgrid a')),im=d.querySelector('img'),fc=d.querySelector('figcaption'),i=0,x0=null;
-function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img'),c=a.parentNode.querySelector('.pcap');
-im.src=a.getAttribute('data-full');im.alt=t.alt;fc.innerHTML=c?c.innerHTML:'';d.classList.toggle('one',as.length<2);}
+function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img');
+im.src=a.getAttribute('data-full');im.alt=t.alt;fc.innerHTML=a.getAttribute('data-cap')||'';d.classList.toggle('one',as.length<2);}
 as.forEach(function(a,k){a.addEventListener('click',function(ev){ev.preventDefault();show(k);d.showModal();});});
 d.querySelector('.plb-x').onclick=function(){d.close();};d.querySelector('.plb-p').onclick=function(){show(i-1);};d.querySelector('.plb-n').onclick=function(){show(i+1);};
 d.addEventListener('click',function(ev){if(ev.target===d||ev.target.tagName==='FIGURE')d.close();});
@@ -240,6 +281,10 @@ PHOTO_CSS = """
 .pgrid a:hover img{transform:scale(1.03)}
 .pcap{margin:6px 2px 0;font-size:12px;line-height:1.5;color:var(--ink2)}
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
+.pcredit-all{margin:-4px 0 10px;font-size:12px;color:var(--ink3)}
+.pshow{display:block;margin:12px auto 0;padding:9px 22px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
+.pshow:hover{border-color:var(--pink);color:var(--pink)}
+.pshow:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .plb{padding:0;border:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:#fff}
 .plb::backdrop{background:rgba(0,0,0,.92)}
 .plb figure{margin:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 56px 20px;box-sizing:border-box}
