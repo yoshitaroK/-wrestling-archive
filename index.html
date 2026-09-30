@@ -16,7 +16,8 @@
 <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
 <meta property="og:type" content="website">
@@ -62,6 +63,18 @@ button,input,select{font:inherit;color:inherit}
 .topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
 .topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+/* 端末がライトモードのときは白ベースで表示する(ダークモードの人には今までどおり黒ベース) */
+@media (prefers-color-scheme: light){
+  :root{
+    color-scheme:light;
+    --bg:#ffffff; --bg2:#f4f4f7; --surface:#f4f4f7; --surface-2:#e6e6eb; --ink:#16161a; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e1e1e7;
+    --pink:#d6135f; --pink-deep:#b8105a; --pink-tint:rgba(214,19,95,.09); --pink-line:#f3b6cc;
+    --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
+    --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
+  }
+  .top{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
+}
+
 .brand h1{margin:0;line-height:1}
 .brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
 .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--grad-a),var(--grad-b));display:grid;place-items:center;

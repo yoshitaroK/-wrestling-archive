@@ -142,6 +142,11 @@ CAL_CSS = """
 .cal-list .vid .cb{background:var(--pink-tint);color:var(--pink)}
 .cal-list .sch .cb{background:rgba(91,141,239,.16);color:#8fb0ff}
 .cal-list .can .cb{background:#26262c;color:var(--ink3)}
+@media (prefers-color-scheme: light){
+  .cal-grid .wd.sun,.cal-grid .day.sun .dn{color:#c62850}.cal-grid .wd.sat,.cal-grid .day.sat .dn{color:#1d5bbf}
+  .cal-list .sch .cb{background:#e7effa;color:#1d4f91}.cal-list .can .cb{background:#ececf0}
+  .lg.can::before,.dots i.can{background:#9a9aa3}.chip.can{background:#6b6b75}
+}
 .cal-list .can .cn{text-decoration:line-through;color:var(--ink3)}
 .cal-list .cal-empty{display:block;color:var(--ink3);padding:16px 4px}
 @media (max-width:640px){
