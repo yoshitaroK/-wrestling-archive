@@ -18,11 +18,11 @@
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#000000">
 <script>(function(){var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
-try{t=localStorage.getItem('theme');}catch(e){}
+try{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}catch(e){}
 function set(v){d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#ffffff':'#000000';}
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
-if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){try{if(localStorage.getItem('theme'))return;}catch(x){}set(e.matches?'light':'dark');});
-window.__setTheme=function(v){set(v);try{localStorage.setItem('theme',v);}catch(e){}};})();</script>
+if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){try{if(sessionStorage.getItem('theme'))return;}catch(x){}set(e.matches?'light':'dark');});
+window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catch(e){}};})();</script>
 <meta name="description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
 <meta property="og:type" content="website">

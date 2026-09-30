@@ -145,11 +145,11 @@ def head(title, desc, path, og_image, jsonld, css):
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#000000">
 <script>(function(){{var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
-try{{t=localStorage.getItem('theme');}}catch(e){{}}
+try{{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}}catch(e){{}}
 function set(v){{d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#ffffff':'#000000';}}
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
-if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){{try{{if(localStorage.getItem('theme'))return;}}catch(x){{}}set(e.matches?'light':'dark');}});
-window.__setTheme=function(v){{set(v);try{{localStorage.setItem('theme',v);}}catch(e){{}}}};}})();</script>
+if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){{try{{if(sessionStorage.getItem('theme'))return;}}catch(x){{}}set(e.matches?'light':'dark');}});
+window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}catch(e){{}}}};}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
