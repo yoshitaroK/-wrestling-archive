@@ -26,17 +26,21 @@ button,input,select{font:inherit;color:inherit}
 .topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
 .topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-/* 端末がライトモードのときは白ベースで表示する(ダークモードの人には今までどおり黒ベース) */
-@media (prefers-color-scheme: light){
-  :root{
+/* 白ベース。初めて来た人は端末の設定に合わせ、トップページ右上のボタンで選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
+:root[data-theme="light"]{
     color-scheme:light;
     --bg:#ffffff; --bg2:#f4f4f7; --surface:#f4f4f7; --surface-2:#e6e6eb; --ink:#16161a; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e1e1e7;
     --pink:#d6135f; --pink-deep:#b8105a; --pink-tint:rgba(214,19,95,.09); --pink-line:#f3b6cc;
     --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
     --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
-  }
-  .top{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
 }
+:root[data-theme="light"] .top{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
+.theme-btn{flex:0 0 auto;width:32px;height:32px;display:inline-grid;place-items:center;padding:0;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);cursor:pointer}
+.theme-btn:hover{border-color:var(--pink);color:var(--pink)}
+.theme-btn:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.theme-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .i-moon,:root[data-theme="light"] .theme-btn .i-sun{display:block}
+.theme-btn .i-sun,:root[data-theme="light"] .theme-btn .i-moon{display:none}
 
 .brand h1{margin:0;line-height:1}
 .brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
@@ -204,6 +208,9 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand p .num{font-size:16px}
   .brand p::after{content:"本";font-size:12px}
   .brand p .pc{display:none}
+  .brand p{margin-left:auto}
+  .theme-btn{order:3;width:30px;height:30px}
+  .brand .topnav{order:4;flex-basis:100%}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
@@ -242,7 +249,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 .cform .hp{position:absolute;left:-9999px}
 .cresult{display:none;margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px}
 .cresult.ok{display:block;background:#12301f;border:1px solid #2f6b47}
-@media (prefers-color-scheme: light){.cresult.ok{background:#e6f4ea;border-color:#9ccfab}}
+:root[data-theme="light"] .cresult.ok{background:#e6f4ea;border-color:#9ccfab}
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
 .brand{justify-content:space-between}
@@ -392,11 +399,10 @@ table.results td b{color:var(--pink)}
 .cal-list .vid .cb{background:var(--pink-tint);color:var(--pink)}
 .cal-list .sch .cb{background:rgba(91,141,239,.16);color:#8fb0ff}
 .cal-list .can .cb{background:#26262c;color:var(--ink3)}
-@media (prefers-color-scheme: light){
-  .cal-grid .wd.sun,.cal-grid .day.sun .dn{color:#c62850}.cal-grid .wd.sat,.cal-grid .day.sat .dn{color:#1d5bbf}
-  .cal-list .sch .cb{background:#e7effa;color:#1d4f91}.cal-list .can .cb{background:#ececf0}
-  .lg.can::before,.dots i.can{background:#9a9aa3}.chip.can{background:#6b6b75}
-}
+[data-theme="light"] .cal-grid .wd.sun,[data-theme="light"] .cal-grid .day.sun .dn{color:#c62850}
+[data-theme="light"] .cal-grid .wd.sat,[data-theme="light"] .cal-grid .day.sat .dn{color:#1d5bbf}
+[data-theme="light"] .cal-list .sch .cb{background:#e7effa;color:#1d4f91}[data-theme="light"] .cal-list .can .cb{background:#ececf0}
+[data-theme="light"] .lg.can::before,[data-theme="light"] .dots i.can{background:#9a9aa3}[data-theme="light"] .chip.can{background:#6b6b75}
 .cal-list .can .cn{text-decoration:line-through;color:var(--ink3)}
 .cal-list .cal-empty{display:block;color:var(--ink3);padding:16px 4px}
 @media (max-width:640px){
