@@ -29,6 +29,8 @@ import re
 from collections import defaultdict
 from urllib.parse import unquote
 
+from i18n import L
+
 PHOTOS_DIR = "photos"
 PHOTOS_JSON = "photos.json"
 OUT_DIR = os.path.join("assets", "photos")
@@ -236,26 +238,50 @@ def gallery_html(photos, e, title):
     items = []
     rest = len(photos) - GALLERY_FIRST
     # 全部の写真のクレジットが同じなら、見出しの下に1回だけ出す(拡大表示では写真ごとに出す)
-    credits = {p["credit"] for p in photos}
+    credits = {credit_text(p["credit"]) for p in photos}
     shared = credits.pop() if len(credits) == 1 else ""
     for i, p in enumerate(photos):
-        alt = p["caption"] or f"{title}の写真{i + 1}"
-        credit_html = f'<span class="pcredit">{e(p["credit"])}</span>' if p["credit"] else ""
+        alt = p["caption"] or L(f"{title}の写真{i + 1}", f"{title} – photo {i + 1}")
+        credit = credit_text(p["credit"])
+        credit_html = f'<span class="pcredit">{e(credit)}</span>' if credit else ""
         cap = e(p["caption"]) + ((" " + credit_html) if credit_html and not shared else "")
         items.append(
             f'<li{" hidden" if i >= GALLERY_FIRST else ""}><a href="{e(p["full"])}" data-full="{e(p["full"])}"'
             f' data-cap="{e(e(p["caption"]) + (" " + credit_html if credit_html else ""))}">'
             f'<img src="{e(p["thumb"])}" alt="{e(alt)}" loading="lazy" decoding="async"{wh(p["tw"], p["th"])}></a>'
             + (f'<p class="pcap">{cap}</p>' if cap else "") + "</li>")
-    return (f'<section class="section photos" aria-label="写真"><h2 class="vh">写真 <small>{len(photos)}枚</small></h2>'
+    return (f'<section class="section photos" aria-label="{L("写真", "Photos")}"><h2 class="vh">{L("写真", "Photos")} <small>{L(f"{len(photos)}枚", str(len(photos)))}</small></h2>'
             + (f'<p class="pcredit-all">{e(shared)}</p>' if shared else "")
             + f'<ul class="pgrid">{"".join(items)}</ul>'
-            + (f'<button type="button" class="pshow">すべての写真を見る({len(photos)}枚)</button>' if rest > 0 else "")
-            + '</section>' + LIGHTBOX)
+            + (f'<button type="button" class="pshow">{L(f"すべての写真を見る({len(photos)}枚)", f"Show all photos ({len(photos)})")}</button>' if rest > 0 else "")
+            + '</section>' + L(LIGHTBOX, LIGHTBOX_EN))
+
+
+def credit_text(c):
+    c = (c or "").strip()
+    m = re.match(r"^(撮影|写真|提供)\s*[:：]\s*(.+)$", c)
+    if m:
+        return L(c, {"撮影": "Photo", "写真": "Photo", "提供": "Courtesy of"}[m.group(1)] + ": " + re.sub(r"\s*[(（]", " (", m.group(2)).replace("）", ")"))
+    return c
 
 
 LIGHTBOX = """<dialog class="plb" aria-label="写真の拡大表示"><figure><img alt=""><figcaption></figcaption></figure>
 <button type="button" class="plb-x" aria-label="閉じる">×</button><button type="button" class="plb-p" aria-label="前の写真">‹</button><button type="button" class="plb-n" aria-label="次の写真">›</button></dialog>
+<script>(function(){var s=document.currentScript,d=s.previousElementSibling,g=d.previousElementSibling,mb=g.querySelector('.pshow');
+if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll('.pgrid li[hidden]'),function(li){li.hidden=false;});mb.remove();});
+if(!d.showModal)return;
+var as=[].slice.call(g.querySelectorAll('.pgrid a')),im=d.querySelector('img'),fc=d.querySelector('figcaption'),i=0,x0=null;
+function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img');
+im.src=a.getAttribute('data-full');im.alt=t.alt;fc.innerHTML=a.getAttribute('data-cap')||'';d.classList.toggle('one',as.length<2);}
+as.forEach(function(a,k){a.addEventListener('click',function(ev){ev.preventDefault();show(k);d.showModal();});});
+d.querySelector('.plb-x').onclick=function(){d.close();};d.querySelector('.plb-p').onclick=function(){show(i-1);};d.querySelector('.plb-n').onclick=function(){show(i+1);};
+d.addEventListener('click',function(ev){if(ev.target===d||ev.target.tagName==='FIGURE')d.close();});
+d.addEventListener('keydown',function(ev){if(ev.key==='ArrowLeft')show(i-1);if(ev.key==='ArrowRight')show(i+1);});
+d.addEventListener('touchstart',function(ev){x0=ev.touches[0].clientX;},{passive:true});
+d.addEventListener('touchend',function(ev){if(x0===null)return;var dx=ev.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);});
+d.addEventListener('close',function(){im.removeAttribute('src');});})();</script>"""
+LIGHTBOX_EN = """<dialog class="plb" aria-label="Enlarged photo"><figure><img alt=""><figcaption></figcaption></figure>
+<button type="button" class="plb-x" aria-label="Close">×</button><button type="button" class="plb-p" aria-label="Previous photo">‹</button><button type="button" class="plb-n" aria-label="Next photo">›</button></dialog>
 <script>(function(){var s=document.currentScript,d=s.previousElementSibling,g=d.previousElementSibling,mb=g.querySelector('.pshow');
 if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll('.pgrid li[hidden]'),function(li){li.hidden=false;});mb.remove();});
 if(!d.showModal)return;

@@ -25,8 +25,12 @@ import re
 import unicodedata
 from collections import defaultdict
 
+import i18n
+from i18n import L, U, N
+
 # 選手データがまだ無いあいだ /players/ に出す「準備中」ページの公開予定。空にすると日付なしの「準備中」表示になる
 COMING_SOON = "2026年10月下旬"
+COMING_SOON_EN = "late October 2026"
 
 PLAYERS_CSV = "players.csv"
 RESULTS_CSV = "player_results.csv"
@@ -121,90 +125,110 @@ def result_rows(p, ctx, bp):
         name = r.get("大会名", "")
         eid = r.get("開催回ID", "")
         if eid and eid in slugs:
-            name_html = f'<a href="/events/{e(slugs[eid])}/">{e(name or eid)}</a>'
+            name_html = f'<a href="{U("/events/" + slugs[eid] + "/")}">{e(name or eid)}</a>'
         else:
             name_html = e(name)
         src = r.get("出典URL", "")
-        src_html = f'<a href="{e(src)}" target="_blank" rel="noopener">出典</a>' if src.startswith("http") else ""
-        out.append(f"<tr><td>{e(r.get('開催年', ''))}</td><td>{name_html}</td><td>{e(r.get('スタイル', ''))}</td>"
+        src_html = f'<a href="{e(src)}" target="_blank" rel="noopener">{L("出典", "Source")}</a>' if src.startswith("http") else ""
+        out.append(f"<tr><td>{e(r.get('開催年', ''))}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
                    f"<td>{e(r.get('階級', ''))}</td><td><b>{e(r.get('成績', ''))}</b></td><td>{src_html}</td></tr>")
     return out
 
 
 def player_page(p, ctx, bp):
-    e, SITE, SITE_NAME = bp.e, bp.SITE, bp.SITE_NAME
+    e, SITE = bp.e, bp.SITE
     path = f"/players/{p['id']}/"
-    crumbs = [("トップ", "/"), ("選手", "/players/"), (p["name"], None)]
+    crumbs = [(L("トップ", "Home"), "/"), (L("選手", "Players"), "/players/"), (p["name"], None)]
     nv, nr = len(p["videos"]), len(p["results"])
-    parts = [f"{p['name']}選手"]
-    if p["club"]:
-        parts.append(f"({p['club']})")
-    parts.append(f"の大会成績{nr}件と試合動画{nv}本。" if nr else f"の試合動画{nv}本。")
-    desc = "".join(parts)
-    person = {"@type": "Person", "name": p["name"], "url": SITE + path}
+    if i18n.en():
+        desc = f"{p['name']}{(' (' + p['club'] + ')') if p['club'] else ''}: " + (
+            f"{i18n.plural(nr, 'tournament result')} and {i18n.plural(nv, 'match video')}." if nr else f"{i18n.plural(nv, 'match video')}.")
+    else:
+        parts = [f"{p['name']}選手"]
+        if p["club"]:
+            parts.append(f"({p['club']})")
+        parts.append(f"の大会成績{nr}件と試合動画{nv}本。" if nr else f"の試合動画{nv}本。")
+        desc = "".join(parts)
+    person = {"@type": "Person", "name": p["name"], "url": SITE + U(path)}
     if p["kana"]:
         person["alternateName"] = p["kana"]
     if p["club"]:
         person["affiliation"] = {"@type": "SportsOrganization", "name": p["club"]}
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "ProfilePage", "url": SITE + path, "mainEntity": person}]}
+        "@type": "ProfilePage", "url": SITE + U(path), "mainEntity": person}]}
     og = f"https://i.ytimg.com/vi/{p['videos'][0]['id']}/hqdefault.jpg" if p["videos"] else ""
-    h = bp.head(f"{p['name']} 選手 大会成績・試合動画|{SITE_NAME}", desc, path, og, jsonld, ctx["css"])
+    h = bp.head(L(f"{p['name']} 選手 大会成績・試合動画|{bp.SITE_NAME}", f"{p['name']} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
     h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
     kana = f' <small class="kana">{e(p["kana"])}</small>' if p["kana"] else ""
     h += f'<h1>{e(p["name"])}{kana}</h1>'
     h += f'<p class="lead">{e(desc)}</p>'
     if p["club"]:
-        h += f'<dl class="facts"><dt>所属</dt><dd>{e(p["club"])}</dd></dl>'
+        h += f'<dl class="facts"><dt>{L("所属", "Club / school")}</dt><dd>{e(p["club"])}</dd></dl>'
     rows = result_rows(p, ctx, bp)
     if rows:
-        h += ('<h2>大会成績</h2><div class="rtable"><table class="results"><thead><tr><th>年</th><th>大会</th>'
-              '<th>スタイル</th><th>階級</th><th>成績</th><th></th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
+        h += (f'<h2>{L("大会成績", "Tournament results")}</h2><div class="rtable"><table class="results"><thead><tr><th>{L("年", "Year")}</th><th>{L("大会", "Tournament")}</th>'
+              f'<th>{L("スタイル", "Style")}</th><th>{L("階級", "Weight")}</th><th>{L("成績", "Result")}</th><th></th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
     if p["videos"]:
-        h += bp.vgroup("試合動画", f"{nv}本・タイトルに選手名を含む動画", p["videos"])
+        h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
 
 
 def index_page(players, ctx, bp):
-    e, SITE, SITE_NAME = bp.e, bp.SITE, bp.SITE_NAME
+    e, SITE = bp.e, bp.SITE
     path = "/players/"
-    crumbs = [("トップ", "/"), ("選手", None)]
+    crumbs = [(L("トップ", "Home"), "/"), (L("選手", "Players"), None)]
     ps = sorted(players, key=lambda p: norm(p["kana"] or p["name"]))
-    desc = f"掲載している選手{len(ps)}人の一覧。選手ごとの大会成績と試合動画を見られます。"
+    desc = L(f"掲載している選手{len(ps)}人の一覧。選手ごとの大会成績と試合動画を見られます。",
+             f"{i18n.plural(len(ps), 'player')} listed, each with tournament results and match videos.")
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": "選手一覧", "url": SITE + path,
-        "hasPart": [{"@type": "ProfilePage", "name": p["name"], "url": f"{SITE}/players/{p['id']}/"} for p in ps]}]}
-    h = bp.head(f"選手一覧({len(ps)}人)|{SITE_NAME}", desc, path, "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs) + "<h1>選手一覧</h1>"
+        "@type": "CollectionPage", "name": L("選手一覧", "Players"), "url": SITE + U(path),
+        "hasPart": [{"@type": "ProfilePage", "name": p["name"], "url": SITE + U(f"/players/{p['id']}/")} for p in ps]}]}
+    h = bp.head(L(f"選手一覧({len(ps)}人)|{bp.SITE_NAME}", f"Players ({len(ps)}) | {bp.site_name()}"), desc, path, "", jsonld, ctx["css"])
+    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{L('選手一覧', 'Players')}</h1>"
     h += f'<p class="lead">{e(desc)}</p><ol class="occ slist-static">'
     for p in ps:
         sub = " ".join(x for x in [p["kana"], p["club"]] if x)
-        h += (f'<li><a href="/players/{e(p["id"])}/"><span class="ob"><span class="od sname">{e(p["name"])}</span>'
-              f'<span class="ov">{e(sub)}</span></span><span class="on"><b class="num">{len(p["videos"])}</b>本</span></a></li>')
+        h += (f'<li><a href="{U("/players/" + p["id"] + "/")}"><span class="ob"><span class="od sname">{e(p["name"])}</span>'
+              f'<span class="ov">{e(sub)}</span></span><span class="on"><b class="num">{len(p["videos"])}</b>{L("本", " videos")}</span></a></li>')
     h += "</ol></main>" + bp.footer(ctx["as_of"])
     return path, h
 
 
 def coming_soon_page(ctx, bp):
-    e, SITE, SITE_NAME = bp.e, bp.SITE, bp.SITE_NAME
+    e, SITE = bp.e, bp.SITE
     path = "/players/"
-    crumbs = [("トップ", "/"), ("選手検索", None)]
-    when = f"{COMING_SOON}公開予定" if COMING_SOON else "準備中"
-    desc = f"選手名から大会成績と試合動画を探せる「選手検索」を準備しています({when})。"
+    title = L("選手検索", "Player search")
+    crumbs = [(L("トップ", "Home"), "/"), (title, None)]
+    if i18n.en():
+        when = f"Coming {COMING_SOON_EN}" if COMING_SOON_EN else "In preparation"
+        desc = f"Player search — find a wrestler's tournament results and match videos by name — is in preparation ({when})."
+    else:
+        when = f"{COMING_SOON}公開予定" if COMING_SOON else "準備中"
+        desc = f"選手名から大会成績と試合動画を探せる「選手検索」を準備しています({when})。"
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "WebPage", "name": "選手検索(準備中)", "url": SITE + path}]}
-    h = bp.head(f"選手検索({when})|{SITE_NAME}", desc, path, "", jsonld, ctx["css"])
+        "@type": "WebPage", "name": L("選手検索(準備中)", "Player search (coming soon)"), "url": SITE + U(path)}]}
+    h = bp.head(L(f"選手検索({when})|{bp.SITE_NAME}", f"Player search ({when}) | {bp.site_name()}"), desc, path, "", jsonld, ctx["css"])
     h += '<main class="wrap page soon">' + bp.breadcrumb_html(crumbs)
-    h += f'<p class="soon-badge">COMING SOON</p><h1>選手検索</h1><p class="soon-when">{e(when)}</p>'
-    h += ('<p class="lead">選手の名前から、その選手の大会成績と試合動画をまとめて探せるようになります。</p>'
-          '<ul class="soon-list">'
-          '<li><b>選手名で検索</b><span>フルネームや別の表記からでも探せます</span></li>'
-          '<li><b>大会成績の一覧</b><span>出場した大会・階級・成績を年ごとに</span></li>'
-          '<li><b>試合動画をまとめて</b><span>その選手が出ている配信動画を一か所に</span></li>'
-          '</ul>'
-          '<p class="soon-note">公開まで、大会ごとの動画は<a href="/events/">大会一覧</a>から、'
-          '技術動画は<a href="/technique/">技術動画</a>からご覧いただけます。</p>')
+    h += f'<p class="soon-badge">COMING SOON</p><h1>{title}</h1><p class="soon-when">{e(when)}</p>'
+    if i18n.en():
+        h += ('<p class="lead">You will be able to search for a wrestler by name and see their tournament results and match videos in one place.</p>'
+              '<ul class="soon-list">'
+              '<li><b>Search by name</b><span>Full names and alternative spellings</span></li>'
+              '<li><b>Tournament results</b><span>Tournaments, weight classes and results by year</span></li>'
+              '<li><b>Match videos together</b><span>All streams featuring the wrestler in one place</span></li>'
+              '</ul>'
+              '<p class="soon-note">Until then, browse videos by tournament on the <a href="/en/events/">tournament list</a> '
+              'or see the <a href="/en/technique/">technique videos</a>.</p>')
+    else:
+        h += ('<p class="lead">選手の名前から、その選手の大会成績と試合動画をまとめて探せるようになります。</p>'
+              '<ul class="soon-list">'
+              '<li><b>選手名で検索</b><span>フルネームや別の表記からでも探せます</span></li>'
+              '<li><b>大会成績の一覧</b><span>出場した大会・階級・成績を年ごとに</span></li>'
+              '<li><b>試合動画をまとめて</b><span>その選手が出ている配信動画を一か所に</span></li>'
+              '</ul>'
+              '<p class="soon-note">公開まで、大会ごとの動画は<a href="/events/">大会一覧</a>から、'
+              '技術動画は<a href="/technique/">技術動画</a>からご覧いただけます。</p>')
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
 
