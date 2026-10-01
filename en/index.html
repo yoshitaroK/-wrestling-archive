@@ -68,6 +68,9 @@ button,input,select{font:inherit;color:inherit}
 .topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
 .topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .topnav a.lang{font-weight:700;border-color:var(--pink-line)}
+.vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
+.mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.orig{font-size:12px;color:var(--ink3);margin-top:-4px}
 .top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* 白ベース。初めて来た人は端末の設定に合わせ、トップページ右上のボタンで選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
 :root[data-theme="light"]{
@@ -347,6 +350,10 @@ if(!DATA){
 /* ---------- 大会・開催回ページのURL ---------- */
 var PAGES = {};
 try{ var pr = await fetch('/page_slugs.json',{cache:'no-cache'}); if(pr.ok) PAGES = (await pr.json()).events || {}; }catch(e){}
+// 英語版:動画タイトルなどの機械翻訳(translate_en.py が作る)
+var TR = {};
+if(LANG==='en'){ try{ var trr = await fetch('/translations_en.json',{cache:'no-cache'}); if(trr.ok) TR = (await trr.json()).texts || {}; }catch(e){} }
+function trLine(ja){ var t = LANG==='en' && ja ? TR[String(ja).trim()] : ''; return t ? '<div class="vtr" lang="en">'+esc(t)+' <span class="mt">auto-translated</span></div>' : ''; }
 function eventPage(eid){ return PAGES[eid] ? U('/events/'+PAGES[eid]+'/') : ''; }
 function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? U('/events/'+sid+'/') : ''; }
 
@@ -590,8 +597,8 @@ function videoRow(v, showBasis){
   if(v.vs==='unavailable') meta.push('<span class="lk unmatched">'+L('現在YouTubeで取得できません','Currently unavailable on YouTube')+'</span>');
   meta.push('<span class="lk '+esc(v.l)+'" title="'+esc(v.b||'')+'">'+esc(LINK[v.l]||v.l)+'</span>');
   return '<li class="v"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">'+thumb(v.id,'')+'</a>'+
-    '<div><div class="vt"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+esc(v.t)+'</a></div>'+
-    '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">'+L('根拠:','Basis: ')+'<span'+L('',' lang="ja"')+'>'+esc(v.b)+'</span></div>':'')+'</div></li>';
+    '<div><div class="vt"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener"'+L('',' lang="ja"')+'>'+esc(v.t)+'</a></div>'+trLine(v.t)+
+    '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">'+L('根拠:','Basis: ')+(TR[v.b]&&LANG==='en' ? esc(TR[v.b])+' <span class="mt">auto-translated</span>' : '<span'+L('',' lang="ja"')+'>'+esc(v.b)+'</span>')+'</div>':'')+'</div></li>';
 }
 function vgroup(title, sub, vids, showBasis, id){
   if(!vids.length) return '';
@@ -625,7 +632,11 @@ function eventPanel(e){
   if(e.sources && e.sources.length) more += '<dt>'+L('出典','Sources')+'</dt><dd><ul class="sources">'+e.sources.map(function(x){ return '<li><span class="st">'+esc(N(x.type))+'</span><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.url.replace(/^https?:\/\//,''))+'</a></li>'; }).join('')+'</ul></dd>';
   var notes = (e.notes||[]).slice();
   if(e.schedule_history) e.schedule_history.forEach(function(x){ if(x.source_text) notes.push('日程の経緯:'+x.source_text); });
-  if(notes.length) more += '<dt>'+L('メモ','Notes')+'</dt><dd>'+notes.map(function(n){return '<p'+L('',' lang="ja"')+'>'+esc(n)+'</p>';}).join('')+L('','<p class="hint">Notes are shown in Japanese.</p>')+'</dd>';
+  if(notes.length) more += '<dt>'+L('メモ','Notes')+'</dt><dd>'+notes.map(function(n){
+    if(LANG!=='en') return '<p>'+esc(n)+'</p>';
+    var hist = n.indexOf('日程の経緯:')===0, body = hist ? n.slice(6) : n, t = TR[body];
+    return t ? '<p>'+(hist?'Schedule history: ':'')+esc(t)+' <span class="mt">auto-translated</span></p><p class="orig" lang="ja">'+esc(n)+'</p>' : '<p lang="ja">'+esc(n)+'</p>';
+  }).join('')+'</dd>';
   if(more) h += '<details class="more-info"><summary>'+L('大会情報・出典を詳しく見る','Event details and sources')+'</summary><dl class="facts">'+more+'</dl></details>';
 
   var vids = (byEvent[e.id]||[]).filter(vidOk);

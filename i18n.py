@@ -17,7 +17,9 @@ import re
 NAMES_CSV = "en_names.csv"
 LANG = "ja"
 _names = {}
+_tr = {}
 missing = set()
+TRANSLATIONS = "translations_en.json"
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -71,6 +73,28 @@ def N(ja):
             return fy
         missing.add(ja)
     return ja
+
+
+def load_translations(root):
+    """機械翻訳(translate_en.py が作る translations_en.json)を読む"""
+    import json
+    _tr.clear()
+    try:
+        with open(os.path.join(root, TRANSLATIONS), encoding="utf-8") as f:
+            _tr.update(json.load(f).get("texts", {}))
+    except (OSError, ValueError):
+        pass
+
+
+def T(ja):
+    """英語版のときだけ、機械翻訳を返す(無ければ空文字)"""
+    if LANG != "en" or not ja:
+        return ""
+    return _tr.get(ja.strip(), "")
+
+
+def tr_count():
+    return len(_tr)
 
 
 def names_table():

@@ -17,7 +17,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 import i18n
-from i18n import L, U, N
+from i18n import L, U, N, T
 
 SITE = "https://japanwrestlingchannel.com"
 SITE_NAME = "レスリング配信アーカイブ"
@@ -311,11 +311,20 @@ def video_row(v, show_basis=False):
     ll = link_label()
     if v.get("l") in ll:
         meta.append(f'<span class="lk {e(v["l"])}">{e(ll[v["l"]])}</span>')
-    basis = (f'<div class="basis">{L("根拠:", "Basis: ")}<span{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["b"])}</span></div>'
-             if show_basis and v.get("b") else "")
+    basis = ""
+    if show_basis and v.get("b"):
+        tb = T(v["b"])
+        basis = (f'<div class="basis">{L("根拠:", "Basis: ")}' + (f'{e(tb)} <span class="mt">auto-translated</span>' if tb
+                 else f'<span{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["b"])}</span>') + '</div>')
     return (f'<li class="v"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{thumb(v["id"])}</a>'
             f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener"{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["t"])}</a></div>'
-            f'<div class="vm">{"".join(meta)}</div>{basis}</div></li>')
+            f'{tr_line(v["t"])}<div class="vm">{"".join(meta)}</div>{basis}</div></li>')
+
+
+def tr_line(ja):
+    """英語版:元の日本語タイトルの下に機械翻訳を添える"""
+    t = T(ja)
+    return f'<div class="vtr" lang="en">{e(t)} <span class="mt">auto-translated</span></div>' if t else ""
 
 
 def vgroup(title, sub, vids, show_basis=False, gid=""):
@@ -499,9 +508,17 @@ def info_details(ev):
         if x.get("source_text"):
             notes.append("日程の経緯:" + x["source_text"])
     if notes:
-        # メモの英訳は次の段階(機械翻訳)で入れる。それまでは日本語のまま
-        rows.append(f"<dt>{L('メモ', 'Notes')}</dt><dd>" + "".join(f"<p{L('', ' lang=' + chr(34) + 'ja' + chr(34))}>{e(n)}</p>" for n in notes)
-                    + (f'<p class="hint">{L("", "Notes are shown in Japanese.")}</p>' if i18n.en() else "") + "</dd>")
+        def note_html(n):
+            # 英語版は機械翻訳を出し、元の日本語を小さく添える(訳が無ければ日本語だけ)
+            if not i18n.en():
+                return f"<p>{e(n)}</p>"
+            body = n[len("日程の経緯:"):] if n.startswith("日程の経緯:") else n
+            t = T(body)
+            head_ = "Schedule history: " if body is not n else ""
+            if t:
+                return f'<p>{head_}{e(t)} <span class="mt">auto-translated</span></p><p class="orig" lang="ja">{e(n)}</p>'
+            return f'<p lang="ja">{e(n)}</p>'
+        rows.append(f"<dt>{L('メモ', 'Notes')}</dt><dd>" + "".join(note_html(n) for n in notes) + "</dd>")
     if ev.get("derived"):
         rows.append(f"<dt>{L('開催情報', 'Event details')}</dt><dd>" + L("公式の開催日・会場を確認中です。表示している日付は動画の配信日です。",
                     "Official dates and venue are being confirmed. The dates shown are the video stream dates.") + "</dd>")
@@ -661,7 +678,7 @@ def tech_video_row(v, cat_names, show_channel=True):
     meta.append(f'<span>{L("公開日", "Published")} {e(fmt_date(jst_date(v.get("p"))))}</span>')
     return (f'<li class="v"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{thumb(v["id"])}</a>'
             f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener"{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["t"])}</a></div>'
-            f'<div class="vm">{"".join(meta)}</div></div></li>')
+            f'{tr_line(v["t"])}<div class="vm">{"".join(meta)}</div></div></li>')
 
 
 def tech_list(title, sub, vids, cat_names, show_channel=True, gid=""):
@@ -1167,6 +1184,7 @@ def build(root=HERE, inline_css=False, only=None):
     import sys
     me = sys.modules[__name__]
     i18n.load_names(root)
+    i18n.load_translations(root)
     i18n.missing.clear()
     report = load_json(root, "build_report.json", {}) if only is None else None
 
@@ -1237,7 +1255,7 @@ def build(root=HERE, inline_css=False, only=None):
     en_pages = all_pages[1][1]
 
     if only is None:
-        report["en"] = {"pages": len(en_pages), "names": len(i18n.names_table()),
+        report["en"] = {"pages": len(en_pages), "names": len(i18n.names_table()), "machine_translations": i18n.tr_count(),
                         "missing_names": sorted(i18n.missing)}
         with open(os.path.join(root, "build_report.json"), "w", encoding="utf-8") as f:
             json.dump(report, f, ensure_ascii=False, indent=1)

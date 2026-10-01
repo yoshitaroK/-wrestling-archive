@@ -167,6 +167,13 @@ def main():
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+    # 英語版のための機械翻訳(新しく増えた動画タイトルなどだけを訳す)。失敗してもサイトの更新は続ける
+    try:
+        import translate_en
+        report["translation"] = translate_en.run(".")
+    except Exception as ex:
+        report["translation"] = {"error": str(ex)}
+        print(f"[翻訳] スキップしました: {ex}")
     with open("build_report.json", "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=1)
 
