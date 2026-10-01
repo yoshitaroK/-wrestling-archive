@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-01T06:17:40+09:00",
+ "built_at": "2026-10-01T16:28:47+09:00",
  "as_of": "2026-10-01",
  "video_count": 3354,
  "raw_count": 3354,
@@ -22,6 +22,14 @@
  "new_since_previous": 0,
  "unavailable_now": [],
  "from_other_channels": 277,
+ "translation": {
+  "total": 3713,
+  "translated": 3713,
+  "new": 3713,
+  "pending": 0,
+  "chars_used": 131882,
+  "error": ""
+ },
  "players": {
   "total": 0,
   "published": 0,
@@ -116,7 +124,7 @@
  "en": {
   "pages": 294,
   "names": 326,
-  "machine_translations": 0,
+  "machine_translations": 3713,
   "missing_names": []
  }
 }
