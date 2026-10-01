@@ -30,6 +30,8 @@ jobs:
       - name: Fetch latest videos, rebuild data.json and pages
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          # 英語版の機械翻訳(DeepL)。未登録なら翻訳だけ飛ばす
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
         run: python update_site.py
 
       - name: Commit and push if changed
@@ -37,7 +39,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # 写真の縮小版は assets/photos/ に作られるので assets に含まれる(photos/・photos.json は手で上げるファイルなので不要)
-          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html contact.html llms.txt assets events technique players en
+          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html contact.html llms.txt assets events technique players en translations_en.json
           git diff --cached --quiet || git commit -m "Update data and pages ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           # 実行中にファイルがアップロードされていた場合は、その変更を取り込んでから保存する
           git pull --rebase --autostash
