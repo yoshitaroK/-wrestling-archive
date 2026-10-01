@@ -9,13 +9,14 @@
   gtag('js', new Date());
   gtag('config', 'G-KWLY01JCWV');
 </script>
+<script>(function(){try{if(localStorage.getItem('lang'))return;}catch(x){return;}var u=navigator.userAgent||'';if(/bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|embedly/i.test(u))return;var l=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'']).join(',').toLowerCase();if(!l||/(^|,)ja/.test(l))return;location.replace('/en'+location.pathname+location.search+location.hash);})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>レスリング配信アーカイブ</title>
-<link rel="icon" href="favicon.ico?v=2" sizes="any">
-<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#000000">
 <script>(function(){var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
 try{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}catch(e){}
@@ -25,6 +26,9 @@ if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',fu
 window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catch(e){}};})();</script>
 <meta name="description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
+<link rel="alternate" hreflang="ja" href="https://japanwrestlingchannel.com/">
+<link rel="alternate" hreflang="en" href="https://japanwrestlingchannel.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://japanwrestlingchannel.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="レスリング配信アーカイブ">
 <meta property="og:title" content="レスリング配信アーカイブ">
@@ -67,6 +71,7 @@ button,input,select{font:inherit;color:inherit}
 .topnav{display:flex;gap:8px}
 .topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
 .topnav a:hover{border-color:var(--pink);color:var(--pink)}
+.topnav a.lang{font-weight:700;border-color:var(--pink-line)}
 .top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* 白ベース。初めて来た人は端末の設定に合わせ、トップページ右上のボタンで選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
 :root[data-theme="light"]{
@@ -249,6 +254,7 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand p .num,.brand p{line-height:1}
   .brand p .num{font-size:16px}
   .brand p::after{content:"本";font-size:12px}
+  html[lang="en"] .brand p::after{content:" videos"}
   .brand p .pc{display:none}
   .brand p{margin-left:auto}
   .theme-btn{order:3;width:30px;height:30px}
@@ -280,7 +286,7 @@ footer p{margin:0 0 6px;max-width:76ch}
     <div class="brand">
       <h1><a href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a></h1>
       <p id="tagline">レスリングの配信・動画を大会・開催年から探せる非公式アーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>
-      <nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a></nav>
+      <nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem('lang','en')}catch(x){}this.href=this.getAttribute('href').split('#')[0]+location.hash">EN</a></nav>
       <button type="button" class="theme-btn" id="theme-btn" aria-label="表示色を切り替え"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
     </div>
   </div>
@@ -307,7 +313,7 @@ footer p{margin:0 0 6px;max-width:76ch}
 <main class="wrap" id="main"><div class="loading">データを読み込んでいます</div></main>
 
 <footer class="wrap">
-  <p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a></p>
+  <p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
   <p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
   <p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>
   <p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>
@@ -324,17 +330,28 @@ window.thumbFail = function(img){
 };
 (async function(){
 'use strict';
+/* ---------- 言語(英語版は /en/ に、この index.html をもとに自動で作られる) ---------- */
+var LANG = document.documentElement.lang === 'en' ? 'en' : 'ja';
+function L(j, en){ return LANG === 'en' ? en : j; }
+var EN = window.__EN || {};
+function N(x){ return LANG === 'en' && x && EN[x] ? EN[x] : x; }
+function U(path){ return LANG === 'en' ? '/en' + path : path; }
+var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function plural(n, w, ws){ return n + ' ' + (n === 1 ? w : (ws || w + 's')); }
+function nv(n){ return L(n + '本', plural(n, 'video')); }
+function yl(y){ return L(y + '年', String(y)); }
+function fyEn(s){ var m = /^(令和|平成)(元|\d+)年度$/.exec(s||''); if(!m) return s; var n = m[2]==='元' ? 1 : +m[2]; return 'FY' + ((m[1]==='令和' ? 2018 : 1988) + n); }
 var DATA = window.__DATA__;
 if(!DATA){
-  try{ var res = await fetch('data.json',{cache:'no-cache'}); DATA = await res.json(); }
-  catch(e){ document.getElementById('main').innerHTML = '<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>'; return; }
+  try{ var res = await fetch('/data.json',{cache:'no-cache'}); DATA = await res.json(); }
+  catch(e){ document.getElementById('main').innerHTML = L('<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>', '<p class="empty"><strong>Could not load the data.</strong> Please reload the page.</p>'); return; }
 }
 
 /* ---------- 大会・開催回ページのURL ---------- */
 var PAGES = {};
-try{ var pr = await fetch('page_slugs.json',{cache:'no-cache'}); if(pr.ok) PAGES = (await pr.json()).events || {}; }catch(e){}
-function eventPage(eid){ return PAGES[eid] ? '/events/'+PAGES[eid]+'/' : ''; }
-function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? '/events/'+sid+'/' : ''; }
+try{ var pr = await fetch('/page_slugs.json',{cache:'no-cache'}); if(pr.ok) PAGES = (await pr.json()).events || {}; }catch(e){}
+function eventPage(eid){ return PAGES[eid] ? U('/events/'+PAGES[eid]+'/') : ''; }
+function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? U('/events/'+sid+'/') : ''; }
 
 /* ---------- 準備 ---------- */
 var TODAY = new Date(); var TODAY_ISO = TODAY.toISOString().slice(0,10);
@@ -358,7 +375,9 @@ function skey(s){
   return s;
 }
 DATA.series.forEach(function(s){
-  s.keys = [s.name].concat(s.aliases||[]).map(skey);
+  // 英語名でも探せるように、英語名を別名の最後に足す
+  s.aliases = (s.aliases||[]).slice(); if(EN[s.name] && s.aliases.indexOf(EN[s.name])<0) s.aliases.push(EN[s.name]);
+  s.keys = [s.name].concat(s.aliases).map(skey);
   s.evKeys = s.events.map(function(e){ return skey((e.name||'')+' '+(e.official_name||'')); });
   s.years = {}; s.events.forEach(function(e){ s.years[e.year]=true; });
   s.latest = s.events.reduce(function(m,e){ return (e.n>0 && (e.start||'')>m) ? e.start : m; }, '');
@@ -368,28 +387,35 @@ V.forEach(function(v){ v.key = skey(v.t); });
 var CATS = ['一般','大学','高校','中学','少年少女','年代別','女子','社会人','マスターズ','ビーチ','未確認'];
 var STYLES = ['フリー','グレコ','女子','未確認'];
 var SCOPES = ['国内','海外','未確認'];
-var KIND = {match:'試合', interview:'インタビュー', announcement:'告知・抽選会など', highlight:'ダイジェストなど', other:'その他'};
+var KIND = L({match:'試合', interview:'インタビュー', announcement:'告知・抽選会など', highlight:'ダイジェストなど', other:'その他'},
+             {match:'Match', interview:'Interview', announcement:'Announcement / draw', highlight:'Highlights', other:'Other'});
 // 絞り込み用の動画の種類(1本の動画は必ず1つだけに入るので、内訳の合計は総数と一致する)
-var KINDS = [['match','試合配信'],['interview','インタビュー'],['announcement','告知・抽選会'],['other','その他・未分類']];
+var KINDS = L([['match','試合配信'],['interview','インタビュー'],['announcement','告知・抽選会'],['other','その他・未分類']],
+              [['match','Match streams'],['interview','Interviews'],['announcement','Announcements & draws'],['other','Other / unclassified']]);
 function kindOf(v){ return v.k==='match'||v.k==='interview'||v.k==='announcement' ? v.k : 'other'; }
 function kindLabel(k){ for(var i=0;i<KINDS.length;i++) if(KINDS[i][0]===k) return KINDS[i][1]; return ''; }
 function kindCounts(vids){ var c={}, seen={}; vids.forEach(function(v){ if(seen[v.id]) return; seen[v.id]=1; var k=kindOf(v); c[k]=(c[k]||0)+1; }); return c; }
 function kindText(vids){
   var c = kindCounts(vids), parts = [];
-  parts.push('試合配信'+(c.match||0)+'本');
-  KINDS.slice(1).forEach(function(k){ if(c[k[0]]) parts.push(k[1]+c[k[0]]+'本'); });
-  return parts.join('・');
+  parts.push(L('試合配信'+(c.match||0)+'本', 'Match streams: '+(c.match||0)));
+  KINDS.slice(1).forEach(function(k){ if(c[k[0]]) parts.push(L(k[1]+c[k[0]]+'本', k[1]+': '+c[k[0]])); });
+  return parts.join(L('・', ', '));
 }
-var LINK = {manual:'手動で確認済み', matched:'タイトルで照合', livedate:'配信日で照合', derived:'開催情報を確認中', candidate:'確認待ち', series_only:'開催回を確認中', unmatched:'対応未確認'};
-var STATUS = {held:'', cancelled:'中止', postponed:'延期', scheduled:'開催予定', unverified:'日付は動画の公開日から推定'};
+var LINK = L({manual:'手動で確認済み', matched:'タイトルで照合', livedate:'配信日で照合', derived:'開催情報を確認中', candidate:'確認待ち', series_only:'開催回を確認中', unmatched:'対応未確認'},
+             {manual:'Manually verified', matched:'Matched by title', livedate:'Matched by stream date', derived:'Event details TBC', candidate:'Pending review', series_only:'Edition unconfirmed', unmatched:'Tournament unconfirmed'});
+var STATUS = L({held:'', cancelled:'中止', postponed:'延期', scheduled:'開催予定', unverified:'日付は動画の公開日から推定'},
+               {held:'', cancelled:'Cancelled', postponed:'Postponed', scheduled:'Upcoming', unverified:'Date estimated from publish dates'});
 
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
-function fmtDate(iso){ if(!iso) return '日付未確認'; var p=iso.slice(0,10).split('-'); return +p[0]+'年'+(+p[1])+'月'+(+p[2])+'日'; }
-function fmtShort(iso){ if(!iso) return ''; var p=iso.slice(0,10).split('-'); return (+p[1])+'/'+(+p[2]); }
-function fmtRange(a,b){ if(!a) return '日付未確認'; if(!b||a===b) return fmtDate(a); var pa=a.split('-'), pb=b.split('-');
+function fmtDate(iso){ if(!iso) return L('日付未確認','Date TBC'); var p=iso.slice(0,10).split('-'); return L(+p[0]+'年'+(+p[1])+'月'+(+p[2])+'日', MON[+p[1]-1]+' '+(+p[2])+', '+p[0]); }
+function fmtShort(iso){ if(!iso) return ''; var p=iso.slice(0,10).split('-'); return L((+p[1])+'/'+(+p[2]), MON[+p[1]-1]+' '+(+p[2])); }
+function fmtRange(a,b){ if(!a) return L('日付未確認','Date TBC'); if(!b||a===b) return fmtDate(a); var pa=a.split('-'), pb=b.split('-');
+  if(LANG==='en'){ if(pa[0]!==pb[0]) return fmtDate(a)+' – '+fmtDate(b);
+    return MON[+pa[1]-1]+' '+(+pa[2])+(pa[1]===pb[1] ? '–'+(+pb[2]) : ' – '+MON[+pb[1]-1]+' '+(+pb[2]))+', '+pa[0]; }
   if(pa[0]===pb[0]) return fmtDate(a)+'〜'+(pa[1]===pb[1] ? (+pb[2])+'日' : (+pb[1])+'月'+(+pb[2])+'日'); return fmtDate(a)+'〜'+fmtDate(b); }
 function jstDate(iso){ if(!iso) return ''; var d=new Date(iso); d=new Date(d.getTime()+9*3600e3); return d.toISOString().slice(0,10); }
 function dur(iso){ var m=/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(iso||''); if(!m) return ''; var h=+(m[1]||0), mi=+(m[2]||0);
+  if(LANG==='en') return h ? h+' h'+(mi? ' '+mi+' min':'') : (mi ? mi+' min' : (m[3]||0)+' sec');
   return h ? h+'時間'+(mi? mi+'分':'') : (mi ? mi+'分' : (m[3]||0)+'秒'); }
 var PALETTE = [['#7b3fd4','#d90f66'],['#0f6c9c','#0fb59c'],['#c2410c','#d90f66'],['#1e3a8a','#7b3fd4'],
   ['#0f7a4f','#0f6c9c'],['#a30a4d','#7b3fd4'],['#0f6c9c','#7b3fd4'],['#c2410c','#a30a4d']];
@@ -418,8 +444,8 @@ function readHash(){
     var name = decodeURIComponent(m[2]), map = (DATA.legacy||{})[m[1]]||{}, hit = map[name];
     var ns = blankState();
     if(hit){ var dest = (hit.e && eventPage(hit.e)) || (!hit.e && hit.s && seriesPage(hit.s)); if(dest){ location.replace(dest); return; }
-      ns.s = hit.s||''; ns.e = hit.e||''; legacyNote = '以前のリンク「'+name+'」を新しいページに移しました。'; }
-    else { ns.q = name; legacyNote = '以前のリンク「'+name+'」に対応するページが見つからないため、名前で検索しています。'; }
+      ns.s = hit.s||''; ns.e = hit.e||''; legacyNote = L('以前のリンク「'+name+'」を新しいページに移しました。', 'The old link "'+name+'" now points to the new page.'); }
+    else { ns.q = name; legacyNote = L('以前のリンク「'+name+'」に対応するページが見つからないため、名前で検索しています。', 'No page matches the old link "'+name+'", so we are searching by name.'); }
     st = ns; history.replaceState(null,'',toHash()); return;
   }
   var p = new URLSearchParams(h);
@@ -457,8 +483,8 @@ function seriesMatch(s){
       var t = skey(toks[i]); if(!t) continue;
       var ok = false;
       if(/^\d{4}$/.test(t) && s.years[+t]) ok = true;
-      for(var j=0;j<s.keys.length && !ok;j++){ if(s.keys[j].indexOf(t)>=0 || (t.length>=3 && t.indexOf(s.keys[j])>=0 && s.keys[j].length>=3)){ ok=true; if(j>0 && !why) why='「'+(s.aliases[j-1])+'」として一致'; } }
-      for(var k=0;k<s.evKeys.length && !ok;k++){ if(s.evKeys[k].indexOf(t)>=0){ ok=true; if(!why) why='開催回の名称で一致'; } }
+      for(var j=0;j<s.keys.length && !ok;j++){ if(s.keys[j].indexOf(t)>=0 || (t.length>=3 && t.indexOf(s.keys[j])>=0 && s.keys[j].length>=3)){ ok=true; if(j>0 && !why) why=L('「'+(s.aliases[j-1])+'」として一致', 'Matched as "'+(s.aliases[j-1])+'"'); } }
+      for(var k=0;k<s.evKeys.length && !ok;k++){ if(s.evKeys[k].indexOf(t)>=0){ ok=true; if(!why) why=L('開催回の名称で一致', 'Matched an edition name'); } }
       if(!ok) return null;
     }
   }
@@ -472,7 +498,7 @@ function seriesMatch(s){
     if(!(s.n>0 && !st.y && (bySeriesLoose[s.id]||[]).filter(kindOk).length)) return null;
   }
   var qy = queryYear();
-  if(qy && !st.y && !why){ var hitE = s.events.filter(function(e){ return String(e.year)===qy && eventVisible(e); }); if(hitE.length) why = qy+'年の開催回あり'; }
+  if(qy && !st.y && !why){ var hitE = s.events.filter(function(e){ return String(e.year)===qy && eventVisible(e); }); if(hitE.length) why = L(qy+'年の開催回あり', 'Has a '+qy+' edition'); }
   return {why:why};
 }
 function filteredSeries(){
@@ -480,7 +506,7 @@ function filteredSeries(){
   DATA.series.forEach(function(s){ if(!st.all && !s.n) return; var m = seriesMatch(s); if(m) out.push({s:s, why:m.why}); });
   out.sort(function(a,b){
     if(st.sort==='count') return b.s.n - a.s.n;
-    if(st.sort==='name') return a.s.name.localeCompare(b.s.name,'ja');
+    if(st.sort==='name') return N(a.s.name).localeCompare(N(b.s.name), LANG);
     return (b.s.latest||'') < (a.s.latest||'') ? -1 : 1;
   });
   return out;
@@ -489,12 +515,13 @@ function styleOk(v){ if(!st.sty) return true; if(st.sty==='未確認') return !(
 
 /* ---------- 描画 ---------- */
 function fillSelect(id, values, current, fmt){
+  fmt = fmt || N;
   var el = document.getElementById(id), first = el.options[0].outerHTML;
   el.innerHTML = first + values.map(function(v){ return '<option value="'+esc(v)+'"'+(String(v)===current?' selected':'')+'>'+esc(fmt?fmt(v):v)+'</option>'; }).join('');
 }
 function renderControls(){
   var yrs = {}; DATA.events.forEach(function(e){ if(st.all || e.n>0) yrs[e.year]=1; });
-  fillSelect('f-year', Object.keys(yrs).sort().reverse(), st.y, function(y){ return y+'年'; });
+  fillSelect('f-year', Object.keys(yrs).sort().reverse(), st.y, yl);
   fillSelect('f-cat', CATS, st.c); fillSelect('f-style', STYLES, st.sty); fillSelect('f-scope', SCOPES, st.sc);
   fillSelect('f-kind', KINDS.map(function(k){return k[0];}), st.k, kindLabel);
   document.getElementById('f-all').checked = st.all;
@@ -502,23 +529,23 @@ function renderControls(){
 }
 function renderStatus(list, nVid){
   var chips = [];
-  if(st.q) chips.push(['q','検索:'+st.q]); if(st.y) chips.push(['y',st.y+'年']); if(st.c) chips.push(['c','区分:'+st.c]);
-  if(st.sty) chips.push(['sty','スタイル:'+st.sty]); if(st.sc) chips.push(['sc',st.sc]); if(st.k) chips.push(['k','種類:'+kindLabel(st.k)]);
-  if(st.all) chips.push(['all','動画のない大会も表示']);
-  var html = '<span class="count">大会'+list.length+'件'+(nVid!=null?'・動画'+nVid+'本':'')+'</span>';
-  html += chips.map(function(c){ return '<span class="chip">'+esc(c[1])+'<button type="button" data-drop="'+c[0]+'" aria-label="'+esc(c[1])+'の条件を外す">×</button></span>'; }).join('');
-  if(chips.length) html += '<button type="button" class="clear" id="clear">条件をすべてクリア</button>';
+  if(st.q) chips.push(['q',L('検索:','Search: ')+st.q]); if(st.y) chips.push(['y',yl(st.y)]); if(st.c) chips.push(['c',L('区分:','Category: ')+N(st.c)]);
+  if(st.sty) chips.push(['sty',L('スタイル:','Style: ')+N(st.sty)]); if(st.sc) chips.push(['sc',N(st.sc)]); if(st.k) chips.push(['k',L('種類:','Type: ')+kindLabel(st.k)]);
+  if(st.all) chips.push(['all',L('動画のない大会も表示','Including tournaments without videos')]);
+  var html = '<span class="count">'+L('大会'+list.length+'件'+(nVid!=null?'・動画'+nVid+'本':''), plural(list.length,'tournament')+(nVid!=null?', '+plural(nVid,'video'):''))+'</span>';
+  html += chips.map(function(c){ return '<span class="chip">'+esc(c[1])+'<button type="button" data-drop="'+c[0]+'" aria-label="'+esc(L(c[1]+'の条件を外す','Remove filter: '+c[1]))+'">×</button></span>'; }).join('');
+  if(chips.length) html += '<button type="button" class="clear" id="clear">'+L('条件をすべてクリア','Clear all filters')+'</button>';
   if(legacyNote) html += '<span class="chip">'+esc(legacyNote)+'</span>';
   var cf = yearConflict();
-  if(cf) html += '<div class="conflict" role="alert">検索語の「'+esc(cf)+'」と開催年「'+esc(st.y)+'年」が食い違っています。'+
-    '<button type="button" data-setyear="'+esc(cf)+'">'+esc(cf)+'年にする</button><button type="button" data-drop="y">開催年の指定を外す</button></div>';
+  if(cf) html += '<div class="conflict" role="alert">'+L('検索語の「'+esc(cf)+'」と開催年「'+esc(st.y)+'年」が食い違っています。', 'The year in your search ("'+esc(cf)+'") differs from the selected year ('+esc(st.y)+').')+
+    '<button type="button" data-setyear="'+esc(cf)+'">'+L(esc(cf)+'年にする','Use '+esc(cf))+'</button><button type="button" data-drop="y">'+L('開催年の指定を外す','Clear the year filter')+'</button></div>';
   document.getElementById('status').innerHTML = html;
 }
 function tileEvent(e){
   var vs = (byEvent[e.id]||[]).slice().sort(function(a,b){ return a.k==='match' ? -1 : 1; });
   var first = vs[0]; var s = S[e.series];
   return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ thumb(first?first.id:'', s?s.name:'') +
-    '<div class="tt">'+esc(s?s.name:e.name)+'</div><div class="tm"><span class="num">'+e.n+'</span>本 '+e.year+'年 '+fmtShort(e.start)+(e.end&&e.end!==e.start?'〜'+fmtShort(e.end):'')+'</div></a>';
+    '<div class="tt">'+esc(N(s?s.name:e.name))+'</div><div class="tm"><span class="num">'+e.n+'</span>'+L('本 '+e.year+'年 ',' videos · '+e.year+' · ')+fmtShort(e.start)+(e.end&&e.end!==e.start?L('〜','–')+fmtShort(e.end):'')+'</div></a>';
 }
 function linkTo(sid,eid){ var p = new URLSearchParams(); p.set('s',sid); if(eid) p.set('e',eid); return '#'+p.toString(); }
 function renderShelves(){
@@ -535,79 +562,80 @@ function renderShelves(){
     h += '<a class="hero" href="'+esc(eventPage(top.id)||linkTo(top.series,top.id))+'" style="background:'+grad(ts?ts.name:top.name)+'">'+
       (tv?'<img src="https://i.ytimg.com/vi/'+esc(tv.id)+'/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" onerror="thumbFail(this)">':'')+'<span class="scrim"></span>'+
       '<svg class="rings" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true"><circle cx="120" cy="120" r="104" stroke-width="1.2"/><circle cx="120" cy="120" r="66" stroke-width="1.2"/></svg>'+
-      '<div class="badge-l">最近開催された大会</div><div class="hn">'+esc(top.official_name||top.name)+'</div>'+
-      '<div class="hm"><span><span class="num">'+top.n+'</span>本</span><span>'+esc(fmtRange(top.start,top.end))+'</span>'+(top.venue?'<span>'+esc(top.venue)+'</span>':'')+'</div>'+
-      '<span class="cta">配信一覧を見る</span></a>';
+      '<div class="badge-l">'+L('最近開催された大会','Latest tournament')+'</div><div class="hn">'+esc(L(top.official_name||top.name, N(ts?ts.name:top.name)+' '+top.year))+'</div>'+
+      '<div class="hm"><span><span class="num">'+top.n+'</span>'+L('本',' videos')+'</span><span>'+esc(fmtRange(top.start,top.end))+'</span>'+(top.venue?'<span>'+esc(N(top.venue))+'</span>':'')+'</div>'+
+      '<span class="cta">'+L('配信一覧を見る','Watch the streams')+'</span></a>';
   }
-  if(future.length) h += '<section class="shelf"><h2>これから開催される大会<span class="sub">配信枠が公開されています</span></h2><div class="row">'+future.map(tileEvent).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>最近開催された大会</h2><div class="row">'+past.slice(1).map(tileEvent).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>最近追加した動画<span class="sub">YouTubeへの公開が新しい順</span></h2><div class="row">'+recent.map(function(v){
+  if(future.length) h += '<section class="shelf"><h2>'+L('これから開催される大会','Upcoming tournaments')+'<span class="sub">'+L('配信枠が公開されています','Stream pages are already published')+'</span></h2><div class="row">'+future.map(tileEvent).join('')+'</div></section>';
+  h += '<section class="shelf"><h2>'+L('最近開催された大会','Recent tournaments')+'</h2><div class="row">'+past.slice(1).map(tileEvent).join('')+'</div></section>';
+  h += '<section class="shelf"><h2>'+L('最近追加した動画','Recently added videos')+'<span class="sub">'+L('YouTubeへの公開が新しい順','Newest on YouTube first')+'</span></h2><div class="row">'+recent.map(function(v){
     var s = v.s && S[v.s];
-    return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, s?s.name:'')+'<div class="tt">'+esc(v.t)+'</div><div class="tm">'+esc(fmtDate(jstDate(v.p)))+'に公開</div></a>';
+    return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, s?N(s.name):'')+'<div class="tt"'+L('',' lang="ja"')+'>'+esc(v.t)+'</div><div class="tm">'+L(esc(fmtDate(jstDate(v.p)))+'に公開','Published '+esc(fmtDate(jstDate(v.p))))+'</div></a>';
   }).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>動画が充実している大会<span class="sub">収録本数の多い順</span></h2><div class="row">'+rich.map(function(s){
+  h += '<section class="shelf"><h2>'+L('動画が充実している大会','Tournaments with the most videos')+'<span class="sub">'+L('収録本数の多い順','Most videos first')+'</span></h2><div class="row">'+rich.map(function(s){
     var lastE = s.events.filter(function(e){return e.n>0;}).pop(); var fv = lastE && (byEvent[lastE.id]||[])[0];
     var yrs = s.events.filter(function(e){return e.n>0;}).map(function(e){return e.year;});
-    return '<a class="tile" href="'+esc(seriesPage(s.id)||linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', s.name)+'<div class="tt">'+esc(s.name)+'</div><div class="tm"><span class="num">'+s.n+'</span>本 '+
-      (yrs.length? Math.min.apply(null,yrs)+'〜'+Math.max.apply(null,yrs)+'年':'')+'</div></a>';
+    return '<a class="tile" href="'+esc(seriesPage(s.id)||linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', N(s.name))+'<div class="tt">'+esc(N(s.name))+'</div><div class="tm"><span class="num">'+s.n+'</span>'+L('本 ',' videos · ')+
+      (yrs.length? Math.min.apply(null,yrs)+L('〜','–')+Math.max.apply(null,yrs)+L('年',''):'')+'</div></a>';
   }).join('')+'</div></section>';
   return h;
 }
 function videoRow(v, showBasis){
   var meta = [];
-  if(v.ch) meta.push('<span class="chlabel">'+esc(v.ch)+'</span>');
+  if(v.ch) meta.push('<span class="chlabel">'+esc(N(v.ch))+'</span>');
   if(v.dh) meta.push('<span class="d tabnum">'+esc(fmtDate(v.dh))+'</span>');
-  if(v.m) meta.push('<span>'+esc(/\d/.test(v.m)?v.m+'マット':v.m+'マット')+'</span>');
-  if(v.st && v.st.length) meta.push('<span>'+esc(v.st.join('・'))+'</span>');
+  if(v.m) meta.push('<span>'+esc(L(v.m+'マット','Mat '+v.m))+'</span>');
+  if(v.st && v.st.length) meta.push('<span>'+esc(L(v.st.join('・'), v.st.map(N).join(' / ')))+'</span>');
   if(v.k && v.k!=='match') meta.push('<span>'+esc(KIND[v.k])+'</span>');
   if(v.du) meta.push('<span class="tabnum">'+esc(dur(v.du))+'</span>');
-  meta.push('<span>公開 '+esc(fmtDate(jstDate(v.p)))+'</span>');
-  if(v.vs==='upcoming') meta.push('<span class="lk">配信予定</span>');
-  if(v.vs==='unavailable') meta.push('<span class="lk unmatched">現在YouTubeで取得できません</span>');
+  meta.push('<span>'+L('公開 ','Published ')+esc(fmtDate(jstDate(v.p)))+'</span>');
+  if(v.vs==='upcoming') meta.push('<span class="lk">'+L('配信予定','Scheduled stream')+'</span>');
+  if(v.vs==='unavailable') meta.push('<span class="lk unmatched">'+L('現在YouTubeで取得できません','Currently unavailable on YouTube')+'</span>');
   meta.push('<span class="lk '+esc(v.l)+'" title="'+esc(v.b||'')+'">'+esc(LINK[v.l]||v.l)+'</span>');
   return '<li class="v"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">'+thumb(v.id,'')+'</a>'+
     '<div><div class="vt"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+esc(v.t)+'</a></div>'+
-    '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">根拠:'+esc(v.b)+'</div>':'')+'</div></li>';
+    '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">'+L('根拠:','Basis: ')+'<span'+L('',' lang="ja"')+'>'+esc(v.b)+'</span></div>':'')+'</div></li>';
 }
 function vgroup(title, sub, vids, showBasis, id){
   if(!vids.length) return '';
   var LIMIT = 40, more = vids.length>LIMIT;
   return '<div class="vgroup"'+(id?' id="'+id+'"':'')+'><h4>'+esc(title)+(sub?'<small>'+esc(sub)+'</small>':'')+'</h4><ul class="vlist">'+
     vids.slice(0,LIMIT).map(function(v){return videoRow(v,showBasis);}).join('')+'</ul>'+
-    (more?'<button type="button" class="more" data-more="'+esc(id||'')+'">残り'+(vids.length-LIMIT)+'本を表示</button>':'')+'</div>';
+    (more?'<button type="button" class="more" data-more="'+esc(id||'')+'">'+L('残り'+(vids.length-LIMIT)+'本を表示','Show '+(vids.length-LIMIT)+' more')+'</button>':'')+'</div>';
 }
 var moreCache = {};
 function eventPanel(e){
   var s = S[e.series];
-  var title = e.official_name || e.name;
+  var title = L(e.official_name || e.name, N(s ? s.name : e.name) + ' ' + e.year);
   var h = '<div class="event" id="ev-'+esc(e.id)+'"><h3>'+esc(title)+(e.status!=='held'&&STATUS[e.status]?'<span class="badge '+esc(e.status)+'">'+esc(STATUS[e.status])+'</span>':'')+'</h3>';
-  if(eventPage(e.id)) h += '<p class="pagelink"><a href="'+esc(eventPage(e.id))+'">この開催回のページを開く(共有やブックマークに便利)</a></p>';
+  if(eventPage(e.id)) h += '<p class="pagelink"><a href="'+esc(eventPage(e.id))+'">'+L('この開催回のページを開く(共有やブックマークに便利)','Open the page for this edition (handy for sharing and bookmarks)')+'</a></p>';
   h += '<dl class="facts">';
-  h += '<dt>開催年</dt><dd class="tabnum">'+e.year+'年'+(e.fy_label?'('+esc(e.fy_label)+')':'')+'</dd>';
+  h += '<dt>'+L('開催年','Year')+'</dt><dd class="tabnum">'+yl(e.year)+(e.fy_label?L('(',' (')+esc(L(e.fy_label, fyEn(e.fy_label)))+')':'')+'</dd>';
   if(e.sessions && e.sessions.length){
     var ss = e.sessions.slice().sort(function(a,b){return a.start_date<b.start_date?-1:1;});
-    h += '<dt>日程</dt><dd><ul class="sessions">'+ss.map(function(x){ return '<li>'+esc(fmtRange(x.start_date,x.end_date))+' '+esc(x.label||'')+(x.venue?'('+esc(x.venue)+')':'')+'</li>'; }).join('')+'</ul></dd>';
+    h += '<dt>'+L('日程','Schedule')+'</dt><dd><ul class="sessions">'+ss.map(function(x){ return '<li>'+esc(fmtRange(x.start_date,x.end_date))+' '+esc(N(x.label||''))+(x.venue?L('(',' (')+esc(N(x.venue))+')':'')+'</li>'; }).join('')+'</ul></dd>';
   } else {
-    h += '<dt>'+(e.derived?'配信日':'開催日')+'</dt><dd>'+esc(fmtRange(e.start,e.end))+(e.status==='scheduled'?'(予定)':'')+'</dd>';
+    h += '<dt>'+(e.derived?L('配信日','Stream dates'):L('開催日','Dates'))+'</dt><dd>'+esc(fmtRange(e.start,e.end))+(e.status==='scheduled'?L('(予定)',' (scheduled)'):'')+'</dd>';
   }
-  if(e.venue && !(e.sessions&&e.sessions.length)) h += '<dt>会場</dt><dd>'+esc(e.venue)+'</dd>';
-  h += '<dt>収録</dt><dd>'+esc(kindText(byEvent[e.id]||[]))+'</dd>';
+  if(e.venue && !(e.sessions&&e.sessions.length)) h += '<dt>'+L('会場','Venue')+'</dt><dd>'+esc(N(e.venue))+'</dd>';
+  h += '<dt>'+L('収録','Videos')+'</dt><dd>'+esc(kindText(byEvent[e.id]||[]))+'</dd>';
   if(e.group){ var sib = DATA.events.filter(function(x){return x.group===e.group && x.id!==e.id;});
-    if(sib.length) h += '<dt>同時開催</dt><dd>'+sib.map(function(x){ return '<a href="'+esc(linkTo(x.series,x.id))+'">'+esc((S[x.series]||{}).name||x.name)+'('+fmtShort(x.start)+')</a>'; }).join('、')+'</dd>'; }
+    if(sib.length) h += '<dt>'+L('同時開催','Held together with')+'</dt><dd>'+sib.map(function(x){ return '<a href="'+esc(linkTo(x.series,x.id))+'">'+esc(N((S[x.series]||{}).name||x.name))+L('(',' (')+fmtShort(x.start)+')</a>'; }).join(L('、',', '))+'</dd>'; }
   h += '</dl>';
   // 記録の種類・出典・メモは折りたたむ(削除はしない)
   var more = '';
-  if(e.evidence) more += '<dt>記録の種類</dt><dd>'+esc(e.evidence)+(e.jwf_relationship?'('+esc(e.jwf_relationship)+')':'')+'</dd>';
-  if(e.sources && e.sources.length) more += '<dt>出典</dt><dd><ul class="sources">'+e.sources.map(function(x){ return '<li><span class="st">'+esc(x.type)+'</span><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.url.replace(/^https?:\/\//,''))+'</a></li>'; }).join('')+'</ul></dd>';
+  if(e.evidence) more += '<dt>'+L('記録の種類','Record type')+'</dt><dd>'+esc(N(e.evidence))+(e.jwf_relationship?L('(',' (')+esc(N(e.jwf_relationship))+')':'')+'</dd>';
+  if(e.sources && e.sources.length) more += '<dt>'+L('出典','Sources')+'</dt><dd><ul class="sources">'+e.sources.map(function(x){ return '<li><span class="st">'+esc(N(x.type))+'</span><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.url.replace(/^https?:\/\//,''))+'</a></li>'; }).join('')+'</ul></dd>';
   var notes = (e.notes||[]).slice();
   if(e.schedule_history) e.schedule_history.forEach(function(x){ if(x.source_text) notes.push('日程の経緯:'+x.source_text); });
-  if(notes.length) more += '<dt>メモ</dt><dd>'+notes.map(function(n){return '<p>'+esc(n)+'</p>';}).join('')+'</dd>';
-  if(more) h += '<details class="more-info"><summary>大会情報・出典を詳しく見る</summary><dl class="facts">'+more+'</dl></details>';
+  if(notes.length) more += '<dt>'+L('メモ','Notes')+'</dt><dd>'+notes.map(function(n){return '<p'+L('',' lang="ja"')+'>'+esc(n)+'</p>';}).join('')+L('','<p class="hint">Notes are shown in Japanese.</p>')+'</dd>';
+  if(more) h += '<details class="more-info"><summary>'+L('大会情報・出典を詳しく見る','Event details and sources')+'</summary><dl class="facts">'+more+'</dl></details>';
 
   var vids = (byEvent[e.id]||[]).filter(vidOk);
   var matches = vids.filter(function(v){return v.k==='match';}), related = vids.filter(function(v){return v.k!=='match';});
   if(!vids.length && !(candByEvent[e.id]||[]).length){
-    h += '<p class="empty">この開催回に対応づけた動画はまだありません。'+(e.status==='cancelled'?'この大会は中止の記録があります。':'動画が未登録でも、配信がなかったとは限りません。')+'</p>';
+    h += '<p class="empty">'+L('この開催回に対応づけた動画はまだありません。'+(e.status==='cancelled'?'この大会は中止の記録があります。':'動画が未登録でも、配信がなかったとは限りません。'),
+      'No videos are linked to this edition yet. '+(e.status==='cancelled'?'This tournament is recorded as cancelled.':'That does not necessarily mean it was not streamed.'))+'</p>';
   }
   // 日付ごと → マット順
   var byDay = {}; matches.forEach(function(v){ var k = v.dh||''; (byDay[k]=byDay[k]||[]).push(v); });
@@ -615,13 +643,14 @@ function eventPanel(e){
     var list = byDay[day].sort(function(a,b){ return (a.m||'~')<(b.m||'~')?-1:((a.m||'~')>(b.m||'~')?1:(a.p<b.p?-1:1)); });
     var sess = day && e.sessions ? e.sessions.filter(function(x){return x.start_date<=day && day<=x.end_date;})[0] : null;
     var gid = 'g-'+e.id+'-'+(day||'x'); moreCache[gid]=list;
-    h += vgroup(day ? fmtDate(day) : '競技日の特定できない試合動画', (sess?sess.label+'、':'')+list.length+'本', list, false, gid);
+    h += vgroup(day ? fmtDate(day) : L('競技日の特定できない試合動画','Match videos (day unconfirmed)'), (sess?N(sess.label)+L('、',', '):'')+nv(list.length), list, false, gid);
   });
-  if(related.length){ var rid='r-'+e.id; moreCache[rid]=related; h += vgroup('インタビュー・告知など', related.length+'本', related, false, rid); }
+  if(related.length){ var rid='r-'+e.id; moreCache[rid]=related; h += vgroup(L('インタビュー・告知など','Interviews, announcements and more'), nv(related.length), related, false, rid); }
   var cands = (candByEvent[e.id]||[]).filter(vidOk);
-  if(cands.length){ var cid='c-'+e.id; moreCache[cid]=cands; h += vgroup('確認待ち:この開催回の候補', 'まだ確定していません。根拠を表示しています', cands, true, cid); }
-  if(st.sty || st.k) h += '<p class="hint">'+(st.sty?'スタイル「'+esc(st.sty)+'」':'')+(st.sty&&st.k?'・':'')+(st.k?'種類「'+esc(kindLabel(st.k))+'」':'')+'の動画だけを表示しています。</p>';
-  if((byEvent[e.id]||[]).length && !vids.length) h += '<p class="empty">この開催回には、いまの条件に合う動画がありません。</p>';
+  if(cands.length){ var cid='c-'+e.id; moreCache[cid]=cands; h += vgroup(L('確認待ち:この開催回の候補','Pending review: possible videos for this edition'), L('まだ確定していません。根拠を表示しています','Not confirmed yet; the basis is shown'), cands, true, cid); }
+  if(st.sty || st.k) h += '<p class="hint">'+L((st.sty?'スタイル「'+esc(st.sty)+'」':'')+(st.sty&&st.k?'・':'')+(st.k?'種類「'+esc(kindLabel(st.k))+'」':'')+'の動画だけを表示しています。',
+    'Showing only '+[st.sty?'style "'+esc(N(st.sty))+'"':'', st.k?'type "'+esc(kindLabel(st.k))+'"':''].filter(Boolean).join(' and ')+' videos.')+'</p>';
+  if((byEvent[e.id]||[]).length && !vids.length) h += '<p class="empty">'+L('この開催回には、いまの条件に合う動画がありません。','No videos in this edition match the current filters.')+'</p>';
   h += '</div>';
   return h;
 }
@@ -629,20 +658,21 @@ function seriesBlock(item){
   var s = item.s, open = st.s===s.id;
   var visibleEvents = s.events.filter(eventVisible);
   var yrs = visibleEvents.map(function(e){return e.year;});
-  var span = yrs.length ? (Math.min.apply(null,yrs)===Math.max.apply(null,yrs) ? yrs[0]+'年' : Math.min.apply(null,yrs)+'〜'+Math.max.apply(null,yrs)+'年') : '';
+  var span = yrs.length ? (Math.min.apply(null,yrs)===Math.max.apply(null,yrs) ? yl(yrs[0]) : Math.min.apply(null,yrs)+L('〜','–')+Math.max.apply(null,yrs)+L('年','')) : '';
   var h = '<div class="series'+(open?' open':'')+'" id="s-'+esc(s.id)+'">';
   h += '<button type="button" class="shead" aria-expanded="'+open+'" aria-controls="sb-'+esc(s.id)+'" data-series="'+esc(s.id)+'"><span class="sthumb" aria-hidden="true">'+thumb(seriesThumb(s), '')+'</span><span class="body">'+
-    '<span class="sname">'+esc(s.name)+'</span><span class="smeta">'+
-    '<span class="pill"><span class="num">'+s.n+'</span>本</span>'+(span?'<span class="tabnum">'+span+'</span>':'')+
-    s.groups.map(function(g){return '<span class="tag">'+esc(g)+'</span>';}).join('')+
-    (s.scope==='海外'?'<span class="tag">海外</span>':'')+(s.master?'':'<span class="tag unlisted">開催情報を確認中</span>')+
+    '<span class="sname">'+esc(N(s.name))+'</span><span class="smeta">'+
+    '<span class="pill"><span class="num">'+s.n+'</span>'+L('本',' videos')+'</span>'+(span?'<span class="tabnum">'+span+'</span>':'')+
+    s.groups.map(function(g){return '<span class="tag">'+esc(N(g))+'</span>';}).join('')+
+    (s.scope==='海外'?'<span class="tag">'+L('海外','Overseas')+'</span>':'')+(s.master?'':'<span class="tag unlisted">'+L('開催情報を確認中','Event details TBC')+'</span>')+
     '<span class="kinds">'+esc(kindText(seriesVids(s)))+'</span>'+
     (item.why?'<span class="why">'+esc(item.why)+'</span>':'')+'</span></span><span class="mark" aria-hidden="true">+</span></button>';
   if(open){
     h += '<div class="sbody" id="sb-'+esc(s.id)+'">';
-    if(seriesPage(s.id)) h += '<p class="pagelink"><a href="'+esc(seriesPage(s.id))+'">'+esc(s.name)+'のページを開く</a></p>';
-    if(s.aliases && s.aliases.length) h += '<p class="aliases">この名前でも探せます:'+esc(s.aliases.join('、'))+'</p>';
-    if(!s.master) h += '<p class="aliases">この大会の公式の開催日・会場は確認中です。表示している日付は動画の公開日から推定した参考値です(動画はすべて見られます)。</p>';
+    if(seriesPage(s.id)) h += '<p class="pagelink"><a href="'+esc(seriesPage(s.id))+'">'+L(esc(s.name)+'のページを開く','Open the '+esc(N(s.name))+' page')+'</a></p>';
+    if(LANG==='en'){ if(N(s.name)!==s.name) h += '<p class="aliases">Japanese name: <span lang="ja">'+esc(s.name)+'</span></p>'; }
+    else if(s.aliases && s.aliases.length) h += '<p class="aliases">この名前でも探せます:'+esc(s.aliases.join('、'))+'</p>';
+    if(!s.master) h += '<p class="aliases">'+L('この大会の公式の開催日・会場は確認中です。表示している日付は動画の公開日から推定した参考値です(動画はすべて見られます)。','Official dates and venues for this tournament are being confirmed. Dates shown are estimated from video publish dates (all videos are available).')+'</p>';
     var evs = visibleEvents.slice();
     if(st.y) evs = evs.filter(function(e){ return String(e.year)===st.y; }).concat([]);
     var railEvs = visibleEvents;
@@ -657,17 +687,17 @@ function seriesBlock(item){
     }
     if(railEvs.length){
       var sameYear = {}; railEvs.forEach(function(e){ sameYear[e.year]=(sameYear[e.year]||0)+1; });
-      h += '<div class="rail" role="group" aria-label="開催年を選ぶ">'+railEvs.map(function(e){
+      h += '<div class="rail" role="group" aria-label="'+L('開催年を選ぶ','Choose a year')+'">'+railEvs.map(function(e){
         var cls = e.status==='cancelled'?'cancelled':e.status==='scheduled'?'scheduled':e.derived?'unverified':(e.n>0?'':'none');
         var label = sameYear[e.year]>1 && e.start ? e.year+'.'+(+e.start.slice(5,7)) : String(e.year);
-        var sr = e.year+'年'+(STATUS[e.status]?'、'+STATUS[e.status]:'')+'、動画'+e.n+'本';
+        var sr = L(e.year+'年'+(STATUS[e.status]?'、'+STATUS[e.status]:'')+'、動画'+e.n+'本', e.year+(STATUS[e.status]?', '+STATUS[e.status]:'')+', '+plural(e.n,'video'));
         return '<button type="button" class="yr '+cls+'" aria-pressed="'+(sel&&sel.id===e.id)+'" data-event="'+esc(e.id)+'" aria-label="'+esc(sr)+'">'+
-          '<span class="dot" aria-hidden="true"></span><span class="y tabnum">'+label+'</span><span class="n tabnum">'+(e.status==='cancelled'?'中止':e.n+'本')+'</span></button>';
+          '<span class="dot" aria-hidden="true"></span><span class="y tabnum">'+label+'</span><span class="n tabnum">'+(e.status==='cancelled'?L('中止','Cancelled'):L(e.n+'本', String(e.n)))+'</span></button>';
       }).join('')+'</div>';
     }
     if(sel) h += eventPanel(sel);
     var lv = (bySeriesLoose[s.id]||[]).filter(vidOk);
-    if(lv.length){ var lid='l-'+s.id; moreCache[lid]=lv; h += vgroup('開催回が決まっていない動画', 'この大会の動画ですが、どの年の開催回か特定できていません', lv, true, lid); }
+    if(lv.length){ var lid='l-'+s.id; moreCache[lid]=lv; h += vgroup(L('開催回が決まっていない動画','Videos with unconfirmed edition'), L('この大会の動画ですが、どの年の開催回か特定できていません','From this tournament, but the year is not yet identified'), lv, true, lid); }
     h += '</div>';
   }
   h += '</div>';
@@ -698,14 +728,15 @@ function videoHits(){
 function videoSearch(r, first){
   if(!r.hits.length) return '';
   moreCache['vs']=r.hits;
-  return '<section class="section" style="margin-top:'+(first?'8':'34')+'px"><h2>動画タイトルで一致した動画<small class="hint" style="margin-left:8px">条件に一致 '+r.hits.length+'本</small></h2>'+
-    (r.unknownYear?'<p class="hint">開催年が確定していない動画'+r.unknownYear+'本は、開催年の条件を判定できないため除いています。</p>':'')+
-    vgroup('公開日の新しい順', '', r.hits, false, 'vs')+'</section>';
+  return '<section class="section" style="margin-top:'+(first?'8':'34')+'px"><h2>'+L('動画タイトルで一致した動画','Videos matching the title')+'<small class="hint" style="margin-left:8px">'+L('条件に一致 '+r.hits.length+'本', plural(r.hits.length,'match','matches'))+'</small></h2>'+
+    (r.unknownYear?'<p class="hint">'+L('開催年が確定していない動画'+r.unknownYear+'本は、開催年の条件を判定できないため除いています。', plural(r.unknownYear,'video')+' with an unconfirmed year are excluded because the year filter cannot be applied.')+'</p>':'')+
+    (LANG==='en'?'<p class="hint">Video titles are shown in Japanese as published.</p>':'')+
+    vgroup(L('公開日の新しい順','Newest first'), '', r.hits, false, 'vs')+'</section>';
 }
 function looseSection(){
   var list = loose.filter(vidOk); if(!list.length) return '';
   moreCache['loose']=list;
-  return '<details class="loose"><summary>大会を特定できていない動画('+list.length+'本)</summary><p class="hint">タイトルに大会名がない動画です。候補がある場合は根拠とともに示しています。</p>'+vgroup('公開日の新しい順','',list.slice().sort(function(a,b){return a.p<b.p?1:-1;}),true,'loose')+'</details>';
+  return '<details class="loose"><summary>'+L('大会を特定できていない動画('+list.length+'本)','Videos with no identified tournament ('+list.length+')')+'</summary><p class="hint">'+L('タイトルに大会名がない動画です。候補がある場合は根拠とともに示しています。','Their titles do not name a tournament. Possible matches are shown with the basis.')+'</p>'+vgroup(L('公開日の新しい順','Newest first'),'',list.slice().sort(function(a,b){return a.p<b.p?1:-1;}),true,'loose')+'</details>';
 }
 function render(){
   renderControls();
@@ -718,21 +749,21 @@ function render(){
   // 大会が0件で動画だけ見つかったときは、動画を先に出す
   var videosFirst = !list.length && vr.hits.length && !st.s;
   if(videosFirst){
-    h += '<p class="noser">大会名では一致しませんでしたが、動画タイトルで'+vr.hits.length+'本見つかりました。</p>' + videoSearch(vr, true);
+    h += '<p class="noser">'+L('大会名では一致しませんでしたが、動画タイトルで'+vr.hits.length+'本見つかりました。','No tournament matched, but '+plural(vr.hits.length,'video')+' matched by title.')+'</p>' + videoSearch(vr, true);
     document.getElementById('main').innerHTML = h; afterRender(); return;
   }
   if(!list.length && !st.s){
-    h += '<div class="empty"><p><strong>条件に合う大会・動画はありません。</strong>検索語を短くするか、条件を外してください。</p>'+
-      '<p>いまの条件:'+esc(currentConditions())+'</p><button type="button" class="clear" id="clear">条件をすべてクリア</button></div>';
+    h += '<div class="empty"><p>'+L('<strong>条件に合う大会・動画はありません。</strong>検索語を短くするか、条件を外してください。','<strong>No tournaments or videos match.</strong> Try a shorter search or remove filters. Video titles are in Japanese, so English words only match tournament names.')+'</p>'+
+      '<p>'+L('いまの条件:','Current filters: ')+esc(currentConditions())+'</p><button type="button" class="clear" id="clear">'+L('条件をすべてクリア','Clear all filters')+'</button></div>';
     document.getElementById('main').innerHTML = h; afterRender(); return;
   }
-  h += '<section class="section"><div class="listhead"><h2>'+(anyFilter?'条件に合う大会':'すべての大会')+'</h2>'+
-    '<label class="hint" style="margin:0">並び順 <select id="sort"><option value="date"'+(st.sort==='date'?' selected':'')+'>最近開催された順</option><option value="count"'+(st.sort==='count'?' selected':'')+'>動画の多い順</option><option value="name"'+(st.sort==='name'?' selected':'')+'>名前順</option></select></label></div>';
+  h += '<section class="section"><div class="listhead"><h2>'+(anyFilter?L('条件に合う大会','Matching tournaments'):L('すべての大会','All tournaments'))+'</h2>'+
+    '<label class="hint" style="margin:0">'+L('並び順','Sort')+' <select id="sort"><option value="date"'+(st.sort==='date'?' selected':'')+'>'+L('最近開催された順','Most recent')+'</option><option value="count"'+(st.sort==='count'?' selected':'')+'>'+L('動画の多い順','Most videos')+'</option><option value="name"'+(st.sort==='name'?' selected':'')+'>'+L('名前順','Name')+'</option></select></label></div>';
   if(!list.length){
-    h += '<p class="empty"><strong>条件に合う大会はありません。</strong>検索語を短くするか、上の条件を外してください。</p>';
+    h += '<p class="empty">'+L('<strong>条件に合う大会はありません。</strong>検索語を短くするか、上の条件を外してください。','<strong>No tournaments match.</strong> Try a shorter search or remove filters above.')+'</p>';
   } else {
     // 開いている大会が一覧にない場合(条件で外れた)も表示する
-    if(st.s && S[st.s] && !list.some(function(x){return x.s.id===st.s;})) list.unshift({s:S[st.s], why:'選択中の大会'});
+    if(st.s && S[st.s] && !list.some(function(x){return x.s.id===st.s;})) list.unshift({s:S[st.s], why:L('選択中の大会','Selected tournament')});
     h += '<div class="slist">'+list.map(seriesBlock).join('')+'</div>';
   }
   h += '</section>';
@@ -743,15 +774,15 @@ function render(){
 }
 function currentConditions(){
   var c = [];
-  if(st.q) c.push('検索「'+st.q+'」'); if(st.y) c.push(st.y+'年'); if(st.c) c.push('区分:'+st.c); if(st.sty) c.push('スタイル:'+st.sty);
-  if(st.sc) c.push(st.sc); if(st.k) c.push('種類:'+kindLabel(st.k)); if(st.all) c.push('動画のない大会も表示');
-  return c.join('、') || 'なし';
+  if(st.q) c.push(L('検索「'+st.q+'」','search "'+st.q+'"')); if(st.y) c.push(yl(st.y)); if(st.c) c.push(L('区分:','category: ')+N(st.c)); if(st.sty) c.push(L('スタイル:','style: ')+N(st.sty));
+  if(st.sc) c.push(N(st.sc)); if(st.k) c.push(L('種類:','type: ')+kindLabel(st.k)); if(st.all) c.push(L('動画のない大会も表示','including tournaments without videos'));
+  return c.join(L('、',', ')) || L('なし','none');
 }
 function afterRender(){
   document.getElementById('master-asof').textContent = fmtDate(DATA.master_as_of);
   document.getElementById('stat-v').textContent = V.length;
   var r = DATA.report||{};
-  document.getElementById('build-info').textContent = 'データ更新:'+fmtDate(DATA.as_of)+'。動画'+(r.video_count||V.length)+'本。';
+  document.getElementById('build-info').textContent = L('データ更新:'+fmtDate(DATA.as_of)+'。動画'+(r.video_count||V.length)+'本。', 'Data updated: '+fmtDate(DATA.as_of)+'. '+plural(r.video_count||V.length,'video')+'.');
   // 年表レールは選択中の年が見える位置までスクロールする
   Array.prototype.forEach.call(document.querySelectorAll('.rail'), function(r){
     var b = r.querySelector('.yr[aria-pressed="true"]'); if(b) r.scrollLeft = Math.max(0, b.offsetLeft - r.clientWidth/2 + b.offsetWidth/2);
@@ -789,7 +820,7 @@ window.addEventListener('popstate', function(){ readHash(); render(); });
 // 表示色の切り替え(アイコンは今の状態:白なら☀、黒なら🌙)
 var themeBtn = document.getElementById('theme-btn');
 function themeLabel(){ var light = document.documentElement.getAttribute('data-theme')==='light';
-  themeBtn.setAttribute('aria-label', light ? 'いまはライト表示。ダーク表示に切り替え' : 'いまはダーク表示。ライト表示に切り替え'); themeBtn.title = themeBtn.getAttribute('aria-label'); }
+  themeBtn.setAttribute('aria-label', light ? L('いまはライト表示。ダーク表示に切り替え','Light mode. Switch to dark mode') : L('いまはダーク表示。ライト表示に切り替え','Dark mode. Switch to light mode')); themeBtn.title = themeBtn.getAttribute('aria-label'); }
 themeBtn.addEventListener('click', function(){ window.__setTheme(document.documentElement.getAttribute('data-theme')==='light' ? 'dark' : 'light'); themeLabel(); });
 themeLabel();
 

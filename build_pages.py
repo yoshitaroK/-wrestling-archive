@@ -16,20 +16,52 @@ import re
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
+import i18n
+from i18n import L, U, N
+
 SITE = "https://japanwrestlingchannel.com"
 SITE_NAME = "レスリング配信アーカイブ"
+SITE_NAME_EN = "Japan Wrestling Archive"
 GA_ID = "G-KWLY01JCWV"
 HERE = os.path.dirname(os.path.abspath(__file__))
 JST = timezone(timedelta(hours=9))
 
 KIND_ORDER = ["match", "interview", "announcement", "highlight", "other"]
-KIND_LABEL = {"match": "試合配信", "interview": "インタビュー", "announcement": "告知・抽選会",
-              "highlight": "ダイジェスト", "other": "その他"}
-STATUS_LABEL = {"cancelled": "中止", "postponed": "延期", "scheduled": "開催予定",
-                "unverified": "開催日は動画の公開日からの推定"}
-LINK_LABEL = {"manual": "手動で確認済み", "livedate": "配信日で照合", "candidate": "確認待ち",
-              "series_only": "開催回を確認中", "unmatched": "大会を確認中"}
+_KIND = {"match": ("試合配信", "Match streams"), "interview": ("インタビュー", "Interviews"),
+         "announcement": ("告知・抽選会", "Announcements & draws"), "highlight": ("ダイジェスト", "Highlights"),
+         "other": ("その他", "Other")}
+_STATUS = {"cancelled": ("中止", "Cancelled"), "postponed": ("延期", "Postponed"), "scheduled": ("開催予定", "Upcoming"),
+           "unverified": ("開催日は動画の公開日からの推定", "Date estimated from video publish dates")}
+_LINK = {"manual": ("手動で確認済み", "Manually verified"), "livedate": ("配信日で照合", "Matched by stream date"),
+         "candidate": ("確認待ち", "Pending review"), "series_only": ("開催回を確認中", "Edition unconfirmed"),
+         "unmatched": ("大会を確認中", "Tournament unconfirmed")}
 SCHEMA_STATUS = {"cancelled": "EventCancelled", "postponed": "EventPostponed"}
+
+
+def _pick(table):
+    return {k: L(*v) for k, v in table.items()}
+
+
+def kind_label(k):
+    return L(*_KIND[k])
+
+
+def status_label():
+    return _pick(_STATUS)
+
+
+def link_label():
+    return _pick(_LINK)
+
+
+# 日本語版で使っていた名前(players.py などから参照される)
+KIND_LABEL = {k: v[0] for k, v in _KIND.items()}
+STATUS_LABEL = {k: v[0] for k, v in _STATUS.items()}
+LINK_LABEL = {k: v[0] for k, v in _LINK.items()}
+
+
+def site_name():
+    return L(SITE_NAME, SITE_NAME_EN)
 
 
 def e(s):
@@ -38,21 +70,42 @@ def e(s):
 
 def fmt_date(iso):
     if not iso:
-        return "日付未確認"
+        return L("日付未確認", "Date TBC")
+    if i18n.en():
+        return i18n.en_date(iso)
     y, m, d = iso[:10].split("-")
     return f"{int(y)}年{int(m)}月{int(d)}日"
 
 
 def fmt_range(a, b):
     if not a:
-        return "日付未確認"
+        return L("日付未確認", "Date TBC")
     if not b or a == b:
         return fmt_date(a)
+    if i18n.en():
+        return i18n.en_range(a, b)
     pa, pb = a.split("-"), b.split("-")
     if pa[0] == pb[0]:
         tail = f"{int(pb[2])}日" if pa[1] == pb[1] else f"{int(pb[1])}月{int(pb[2])}日"
         return f"{fmt_date(a)}〜{tail}"
     return f"{fmt_date(a)}〜{fmt_date(b)}"
+
+
+def year_label(y):
+    return L(f"{y}年", str(y))
+
+
+def year_span(yrs, empty=""):
+    if not yrs:
+        return empty
+    a, b = min(yrs), max(yrs)
+    if a == b:
+        return year_label(a)
+    return L(f"{a}〜{b}年", f"{a}–{b}")
+
+
+def n_videos(n):
+    return L(f"{n}本", i18n.plural(n, "video"))
 
 
 def jst_date(iso):
@@ -66,6 +119,10 @@ def dur(iso):
     if not m:
         return ""
     h, mi, se = (int(x or 0) for x in m.groups())
+    if i18n.en():
+        if h:
+            return f"{h} h {mi} min" if mi else f"{h} h"
+        return f"{mi} min" if mi else f"{se} sec"
     if h:
         return f"{h}時間{mi}分" if mi else f"{h}時間"
     return f"{mi}分" if mi else f"{se}秒"
@@ -117,23 +174,46 @@ THUMB_JS = ("<script>function thumbFail(i){var o=['mqdefault','hqdefault','defau
 
 
 OG_DEFAULT = SITE + "/ogp.png?v=2"
+OG_DEFAULT_EN = SITE + "/ogp-en.png?v=1"
+
+# ブラウザが日本語以外で、言語をまだ選んでいない人は英語版へ移す(検索ロボットは移さない)。日本語版のページにだけ入れる
+LANG_REDIRECT_JS = ("<script>(function(){try{if(localStorage.getItem('lang'))return;}catch(x){return;}"
+                    "var u=navigator.userAgent||'';if(/bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|embedly/i.test(u))return;"
+                    "var l=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'']).join(',').toLowerCase();"
+                    "if(!l||/(^|,)ja/.test(l))return;location.replace('/en'+location.pathname+location.search+location.hash);})();</script>")
 
 
-def head(title, desc, path, og_image, jsonld, css):
-    url = SITE + path
-    og_image = og_image or OG_DEFAULT
+def lang_switch(path):
+    """ヘッダーの言語切り替え。押した言語を覚えて、次からは自動で移動しない"""
+    if i18n.en():
+        href, code, label, title = path, "ja", "日本語", "日本語版を表示"
+    else:
+        href, code, label, title = "/en" + path, "en", "EN", "English version"
+    return (f'<a class="lang" href="{e(href)}" hreflang="{code}" lang="{code}" title="{title}" '
+            f'onclick="try{{localStorage.setItem(\'lang\',\'{code}\')}}catch(x){{}}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">{label}</a>')
+
+
+def head(title, desc, path, og_image, jsonld, css, alternates=True):
+    """path は日本語版のパス(/events/…/)。英語版では /en を付けたURLにする"""
+    url = SITE + U(path)
+    og_image = og_image or L(OG_DEFAULT, OG_DEFAULT_EN)
+    alt = (f'<link rel="alternate" hreflang="ja" href="{e(SITE + path)}">\n'
+           f'<link rel="alternate" hreflang="en" href="{e(SITE + "/en" + path)}">\n'
+           f'<link rel="alternate" hreflang="x-default" href="{e(SITE + path)}">\n') if alternates else ""
     return f"""<!DOCTYPE html>
-<html lang="ja">
+<html lang="{L('ja', 'en')}">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{GA_ID}');</script>
+{'' if i18n.en() or not alternates else LANG_REDIRECT_JS}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)}</title>
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{e(url)}">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="{SITE_NAME}">
+{alt}<meta property="og:type" content="website">
+<meta property="og:site_name" content="{e(site_name())}">
+<meta property="og:locale" content="{L('ja_JP', 'en_US')}">
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{e(url)}">
@@ -159,15 +239,25 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 </head>
 <body>
 <header class="top"><div class="wrap"><div class="brand">
-<a class="home" href="/" aria-label="{SITE_NAME}(トップへ)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
-<nav class="topnav"><a href="/">大会を検索</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a></nav>
+<a class="home" href="{U('/')}" aria-label="{e(site_name())}{L('(トップへ)', ' (home)')}"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
+<nav class="topnav"><a href="{U('/')}">{L('大会を検索', 'Search')}</a><a href="{U('/events/calendar/')}">{L('カレンダー', 'Calendar')}</a><a href="{U('/technique/')}">{L('技術動画', 'Technique')}</a>{lang_switch(path) if alternates else ''}</nav>
 </div></div></header>
 """
 
 
 def footer(as_of):
+    if i18n.en():
+        return f"""<footer class="wrap">
+<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/">日本語</a></p>
+<p>An unofficial archive that organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
+<p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
+<p>Data updated: {e(fmt_date(as_of))}</p>
+</footer>
+</body>
+</html>
+"""
     return f"""<footer class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -182,13 +272,13 @@ def breadcrumb_html(items):
     for i, (name, path) in enumerate(items):
         last = i == len(items) - 1
         lis.append(f'<li><span aria-current="page">{e(name)}</span></li>' if last or not path
-                   else f'<li><a href="{e(path)}">{e(name)}</a></li>')
-    return f'<nav class="crumbs" aria-label="現在の位置"><ol>{"".join(lis)}</ol></nav>'
+                   else f'<li><a href="{e(U(path))}">{e(name)}</a></li>')
+    return f'<nav class="crumbs" aria-label="{L("現在の位置", "Breadcrumb")}"><ol>{"".join(lis)}</ol></nav>'
 
 
 def breadcrumb_ld(items):
     return {"@type": "BreadcrumbList", "itemListElement": [
-        {"@type": "ListItem", "position": i + 1, "name": n, **({"item": SITE + p} if p else {})}
+        {"@type": "ListItem", "position": i + 1, "name": n, **({"item": SITE + U(p)} if p else {})}
         for i, (n, p) in enumerate(items)]}
 
 
@@ -197,28 +287,34 @@ def thumb(vid, w=320, h=180):
             f'loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="thumbFail(this)"></div>')
 
 
+def styles_text(st):
+    return L("・".join(st), " / ".join(N(x) for x in st))
+
+
 def video_row(v, show_basis=False):
     meta = []
     if v.get("ch"):
-        meta.append(f'<span class="chlabel">{e(v["ch"])}</span>')
+        meta.append(f'<span class="chlabel">{e(N(v["ch"]))}</span>')
     if v.get("dh"):
         meta.append(f'<span class="d">{e(fmt_date(v["dh"]))}</span>')
     if v.get("m"):
-        meta.append(f'<span>{e(v["m"])}マット</span>')
+        meta.append(f'<span>{e(L(v["m"] + "マット", "Mat " + v["m"]))}</span>')
     if v.get("st"):
-        meta.append(f'<span>{e("・".join(v["st"]))}</span>')
+        meta.append(f'<span>{e(styles_text(v["st"]))}</span>')
     if v.get("du"):
         meta.append(f'<span class="tabnum">{e(dur(v["du"]))}</span>')
-    meta.append(f'<span>公開日 {e(fmt_date(jst_date(v.get("p"))))}</span>')
+    meta.append(f'<span>{L("公開日", "Published")} {e(fmt_date(jst_date(v.get("p"))))}</span>')
     if v.get("vs") == "upcoming":
-        meta.append('<span class="lk">配信予定</span>')
+        meta.append(f'<span class="lk">{L("配信予定", "Scheduled stream")}</span>')
     elif v.get("vs") == "unavailable":
-        meta.append('<span class="lk unmatched">現在YouTubeで見られません</span>')
-    if v.get("l") in LINK_LABEL:
-        meta.append(f'<span class="lk {e(v["l"])}">{e(LINK_LABEL[v["l"]])}</span>')
-    basis = f'<div class="basis">根拠:{e(v["b"])}</div>' if show_basis and v.get("b") else ""
+        meta.append(f'<span class="lk unmatched">{L("現在YouTubeで見られません", "Currently unavailable on YouTube")}</span>')
+    ll = link_label()
+    if v.get("l") in ll:
+        meta.append(f'<span class="lk {e(v["l"])}">{e(ll[v["l"]])}</span>')
+    basis = (f'<div class="basis">{L("根拠:", "Basis: ")}<span{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["b"])}</span></div>'
+             if show_basis and v.get("b") else "")
     return (f'<li class="v"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{thumb(v["id"])}</a>'
-            f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener">{e(v["t"])}</a></div>'
+            f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener"{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["t"])}</a></div>'
             f'<div class="vm">{"".join(meta)}</div>{basis}</div></li>')
 
 
@@ -237,17 +333,28 @@ def kind_counts(vids):
 
 
 def counts_text(vids):
+    if i18n.en():
+        return ", ".join(f"{kind_label(k)}: {n}" for k, n in kind_counts(vids))
     return "・".join(f"{KIND_LABEL[k]}{n}本" for k, n in kind_counts(vids))
 
 
 # ---------------------------------------------------------------- 開催回ページ
+
+def series_name(s):
+    return N(s["name"])
+
+
+def event_name(ev, s):
+    # 英語版は開催回ごとの正式名ではなく、大会名の英語を使う
+    return L(ev.get("official_name") or ev["name"], series_name(s))
+
 
 def event_page(ev, ctx):
     S, slugs, by_event, cand_by_event = ctx["S"], ctx["slugs"], ctx["by_event"], ctx["cand"]
     s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
     path = f"/events/{slugs[ev['id']]}/"
     spath = f"/events/{s['id']}/"
-    name = ev.get("official_name") or ev["name"]
+    name = event_name(ev, s)
     vids = by_event.get(ev["id"], [])
     uniq = {v["id"]: v for v in vids}
     vids = list(uniq.values())
@@ -255,69 +362,95 @@ def event_page(ev, ctx):
     first = (matches or vids or [None])[0]
     counts = counts_text(vids)
     status = ev.get("status")
+    venue = N(ev.get("venue"))
+    others = sorted({N(v["ch"]) for v in vids if v.get("ch")})
+    n_main = sum(1 for v in vids if not v.get("ch"))
+    rng = fmt_range(ev.get("start"), ev.get("end")) if ev.get("start") else ""
 
-    when = "配信日" if ev.get("derived") else "開催日"
     lead_parts = []
-    if status == "cancelled":
-        lead_parts.append(f"{ev['year']}年の{s['name']}は中止の記録があります。")
-    elif ev.get("start"):
-        verb = "開催予定" if status == "scheduled" else "開催"
-        lead_parts.append(f"{fmt_range(ev['start'], ev.get('end'))}{('、' + ev['venue'] + 'で') if ev.get('venue') else 'に'}{verb}。"
-                          if not ev.get("derived") else f"動画の配信日は{fmt_range(ev['start'], ev.get('end'))}です(公式の開催日は確認中)。")
-    others = sorted({v["ch"] for v in vids if v.get("ch")})
-    src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
-    lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
-    if others:
-        n_main = sum(1 for v in vids if not v.get("ch"))
-        lead_parts.append(f"Japan Wrestling Channel の配信{n_main}本のほか、{'、'.join(others)}の動画を含みます。" if n_main
-                          else f"いずれも{'、'.join(others)}が公開している動画です。")
-    lead = "".join(lead_parts)
+    if i18n.en():
+        if status == "cancelled":
+            lead_parts.append(f"The {ev['year']} {series_name(s)} is recorded as cancelled.")
+        elif ev.get("start"):
+            lead_parts.append(f"Video publish dates: {rng} (official dates not yet confirmed)." if ev.get("derived")
+                              else f"{'Scheduled for' if status == 'scheduled' else 'Held on'} {rng}{(' at ' + venue) if venue else ''}.")
+        src = "Japan Wrestling Channel streams" if not others else "YouTube streams and videos"
+        lead_parts.append(f" {i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
+        if others:
+            lead_parts.append(f" Includes {n_main} Japan Wrestling Channel streams plus videos from {', '.join(others)}." if n_main
+                              else f" All videos are published by {', '.join(others)}.")
+    else:
+        if status == "cancelled":
+            lead_parts.append(f"{ev['year']}年の{s['name']}は中止の記録があります。")
+        elif ev.get("start"):
+            verb = "開催予定" if status == "scheduled" else "開催"
+            lead_parts.append(f"{rng}{('、' + ev['venue'] + 'で') if ev.get('venue') else 'に'}{verb}。"
+                              if not ev.get("derived") else f"動画の配信日は{rng}です(公式の開催日は確認中)。")
+        src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
+        lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+        if others:
+            lead_parts.append(f"Japan Wrestling Channel の配信{n_main}本のほか、{'、'.join(others)}の動画を含みます。" if n_main
+                              else f"いずれも{'、'.join(others)}が公開している動画です。")
+    lead = "".join(lead_parts).strip()
 
-    title = f"{name} {ev['year']}年 配信動画一覧({len(vids)}本)|{SITE_NAME}"
-    desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + (
-        f"{fmt_range(ev['start'], ev.get('end'))}開催" if ev.get("start") and not ev.get("derived") else "") + (
-        f"、会場は{ev['venue']}。" if ev.get("venue") and not ev.get("derived") else "。")
-    crumbs = [("トップ", "/"), ("大会一覧", "/events/"), (s["name"], spath), (f"{ev['year']}年" + (f"({fmt_date(ev['start'])[5:]})" if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1]) else ""), None)]
+    if i18n.en():
+        title = f"{name} {ev['year']} – {i18n.plural(len(vids), 'video')} | {site_name()}"
+        desc = f"{name} ({ev['year']}): {i18n.plural(len(vids), 'stream/video', 'streams/videos')}. {counts}." + (
+            f" Held {rng}" if ev.get("start") and not ev.get("derived") else "") + (
+            f" at {venue}." if venue and not ev.get("derived") else "")
+    else:
+        title = f"{name} {ev['year']}年 配信動画一覧({len(vids)}本)|{SITE_NAME}"
+        desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + (
+            f"{rng}開催" if ev.get("start") and not ev.get("derived") else "") + (
+            f"、会場は{ev['venue']}。" if ev.get("venue") and not ev.get("derived") else "。")
+    dated = re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
+    crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (series_name(s), spath),
+              (year_label(ev["year"]) + ((L("(", " (") + (fmt_date(ev['start'])[5:] if not i18n.en() else fmt_date(ev['start']).rsplit(',', 1)[0]) + ")") if dated else ""), None)]
 
     ld = [breadcrumb_ld(crumbs)]
     if not ev.get("derived") and ev.get("start"):
-        se = {"@type": "SportsEvent", "name": f"{name} {ev['year']}", "sport": "Wrestling", "url": SITE + path,
+        se = {"@type": "SportsEvent", "name": f"{name} {ev['year']}", "sport": "Wrestling", "url": SITE + U(path),
               "startDate": ev["start"], "endDate": ev.get("end") or ev["start"],
               "eventStatus": "https://schema.org/" + SCHEMA_STATUS.get(status, "EventScheduled")}
-        if ev.get("venue"):
-            se["location"] = {"@type": "Place", "name": ev["venue"]}
+        if venue:
+            se["location"] = {"@type": "Place", "name": venue}
         ld.append(se)
     jsonld = {"@context": "https://schema.org", "@graph": ld}
 
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first['id']}/hqdefault.jpg" if first else "", jsonld, ctx["css"])
     h += '<main class="wrap page">' + breadcrumb_html(crumbs)
-    badge = f'<span class="badge {e(status)}">{e(STATUS_LABEL[status])}</span>' if status in STATUS_LABEL else ""
-    h += f'<h1>{e(name)} <span class="yr-h">{ev["year"]}年</span>{badge}</h1>'
+    sl = status_label()
+    badge = f'<span class="badge {e(status)}">{e(sl[status])}</span>' if status in sl else ""
+    h += f'<h1>{e(name)} <span class="yr-h">{e(year_label(ev["year"]))}</span>{badge}</h1>'
     h += f'<p class="lead">{e(lead)}</p>'
 
     h += '<dl class="facts">'
     if ev.get("sessions"):
         ss = sorted(ev["sessions"], key=lambda x: x.get("start_date", ""))
-        h += "<dt>日程</dt><dd><ul class=\"sessions\">" + "".join(
-            f"<li>{e(fmt_range(x.get('start_date'), x.get('end_date')))} {e(x.get('label', ''))}{('(' + e(x['venue']) + ')') if x.get('venue') else ''}</li>" for x in ss) + "</ul></dd>"
+        h += f"<dt>{L('日程', 'Schedule')}</dt><dd><ul class=\"sessions\">" + "".join(
+            f"<li>{e(fmt_range(x.get('start_date'), x.get('end_date')))} {e(N(x.get('label', '')))}"
+            f"{(L('(', ' (') + e(N(x['venue'])) + ')') if x.get('venue') else ''}</li>" for x in ss) + "</ul></dd>"
     else:
-        h += f"<dt>{when}</dt><dd>{e(fmt_range(ev.get('start'), ev.get('end')))}{'(予定)' if status == 'scheduled' else ''}</dd>"
-        if ev.get("venue"):
-            h += f"<dt>会場</dt><dd>{e(ev['venue'])}</dd>"
+        when = L("配信日", "Stream dates") if ev.get("derived") else L("開催日", "Dates")
+        h += f"<dt>{when}</dt><dd>{e(fmt_range(ev.get('start'), ev.get('end')))}{L('(予定)', ' (scheduled)') if status == 'scheduled' else ''}</dd>"
+        if venue:
+            h += f"<dt>{L('会場', 'Venue')}</dt><dd>{e(venue)}</dd>"
     if ev.get("fy_label"):
-        h += f"<dt>年度</dt><dd>{e(ev['fy_label'])}</dd>"
-    h += f"<dt>収録</dt><dd>{e(counts)}</dd>"
+        h += f"<dt>{L('年度', 'Fiscal year')}</dt><dd>{e(N(ev['fy_label']))}</dd>"
+    h += f"<dt>{L('収録', 'Videos')}</dt><dd>{e(counts)}</dd>"
     if ev.get("group"):
         sib = [x for x in ctx["all_events"] if x.get("group") == ev["group"] and x["id"] != ev["id"]]
         if sib:
-            h += "<dt>同時開催</dt><dd>" + "、".join(
-                (f'<a href="/events/{e(slugs[x["id"]])}/">{e(S.get(x["series"], {}).get("name") or x["name"])}</a>' if x["id"] in slugs
-                 else e(S.get(x["series"], {}).get("name") or x["name"])) for x in sib) + "</dd>"
+            def sib_name(x):
+                return N(S.get(x["series"], {}).get("name") or x["name"])
+            h += f"<dt>{L('同時開催', 'Held together with')}</dt><dd>" + L("、", ", ").join(
+                (f'<a href="{U("/events/" + slugs[x["id"]] + "/")}">{e(sib_name(x))}</a>' if x["id"] in slugs
+                 else e(sib_name(x))) for x in sib) + "</dd>"
     h += "</dl>"
 
     # 開催年の年表(ほかの年へのリンク)
     h += year_rail(s, ev["id"], ctx)
-    h += ctx["gallery"](path, f"{name} {ev['year']}年")
+    h += ctx["gallery"](path, f"{name} {year_label(ev['year'])}")
 
     # 動画(試合配信は日付→マット順)
     by_day = defaultdict(list)
@@ -326,19 +459,21 @@ def event_page(ev, ctx):
     for day in sorted(by_day):
         lst = sorted(by_day[day], key=lambda v: (v.get("m") or "~", v.get("p") or ""))
         sess = next((x for x in ev.get("sessions") or [] if x.get("start_date", "") <= day <= x.get("end_date", "")), None) if day else None
-        h += vgroup(f"試合配信 {fmt_date(day)}" if day else "試合配信(競技日を確認中)",
-                    f"{(sess['label'] + '、') if sess else ''}{len(lst)}本", lst, gid=f"d-{day}" if day else "d-x")
+        h += vgroup(L(f"試合配信 {fmt_date(day)}", f"Match streams – {fmt_date(day)}") if day else L("試合配信(競技日を確認中)", "Match streams (day unconfirmed)"),
+                    f"{(N(sess['label']) + L('、', ', ')) if sess else ''}{n_videos(len(lst))}", lst, gid=f"d-{day}" if day else "d-x")
     for k in KIND_ORDER[1:]:
         lst = sorted([v for v in vids if (v.get("k") or "other") == k], key=lambda v: v.get("p") or "", reverse=True)
-        h += vgroup(KIND_LABEL[k], f"{len(lst)}本", lst, gid=k)
+        h += vgroup(kind_label(k), n_videos(len(lst)), lst, gid=k)
     cands = [v for v in cand_by_event.get(ev["id"], []) if v["id"] not in uniq]
     if cands:
-        h += ('<details class="more-box"><summary>この開催回の可能性がある動画(確認待ち ' + str(len(cands)) + '本)</summary>'
-              '<p class="hint">大会名や年が曖昧なため、まだこの開催回と確定していない動画です。根拠を表示しています。</p>'
-              + vgroup("確認待ち", f"{len(cands)}本", cands, show_basis=True) + '</details>')
+        h += ('<details class="more-box"><summary>' + L(f"この開催回の可能性がある動画(確認待ち {len(cands)}本)",
+                                                        f"Videos that may belong to this edition (pending review: {len(cands)})") + '</summary>'
+              '<p class="hint">' + L("大会名や年が曖昧なため、まだこの開催回と確定していない動画です。根拠を表示しています。",
+                                     "The tournament name or year in these titles is ambiguous, so they are not yet confirmed for this edition. The basis is shown.") + '</p>'
+              + vgroup(L("確認待ち", "Pending review"), n_videos(len(cands)), cands, show_basis=True) + '</details>')
 
     h += info_details(ev)
-    h += f'<p class="tosearch-line"><a href="/#s={e(s["id"])}&amp;e={e(ev["id"])}">スタイルなどで絞り込む(検索ページで開く)</a></p>'
+    h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}&amp;e={e(ev["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
     h += "</main>" + footer(ctx["as_of"])
     return path, h
 
@@ -346,19 +481,17 @@ def event_page(ev, ctx):
 def source_label(src):
     t = src.get("type") or "出典"
     u = src.get("url", "")
-    if "japan-wrestling.jp" in u and "報告書" in t:
-        return t
-    if "japan-wrestling.jp" in u:
-        return "日本協会の大会ページ" if "報告" not in t else t
-    return t
+    if "japan-wrestling.jp" in u and "報告書" not in t and "報告" not in t:
+        t = "日本協会の大会ページ"
+    return N(t) if t != "出典" else L("出典", "Source")
 
 
 def info_details(ev):
     rows = []
     if ev.get("evidence"):
-        rows.append(f"<dt>記録の種類</dt><dd>{e(ev['evidence'])}{('(' + e(ev['jwf_relationship']) + ')') if ev.get('jwf_relationship') else ''}</dd>")
+        rows.append(f"<dt>{L('記録の種類', 'Record type')}</dt><dd>{e(N(ev['evidence']))}{(L('(', ' (') + e(N(ev['jwf_relationship'])) + ')') if ev.get('jwf_relationship') else ''}</dd>")
     if ev.get("sources"):
-        rows.append("<dt>出典</dt><dd><ul class=\"sources\">" + "".join(
+        rows.append(f"<dt>{L('出典', 'Sources')}</dt><dd><ul class=\"sources\">" + "".join(
             f'<li><a href="{e(x["url"])}" target="_blank" rel="noopener">{e(source_label(x))}</a> <span class="url">{e(re.sub("^https?://", "", x["url"]))}</span></li>'
             for x in ev["sources"]) + "</ul></dd>")
     notes = list(ev.get("notes") or [])
@@ -366,12 +499,15 @@ def info_details(ev):
         if x.get("source_text"):
             notes.append("日程の経緯:" + x["source_text"])
     if notes:
-        rows.append("<dt>メモ</dt><dd>" + "".join(f"<p>{e(n)}</p>" for n in notes) + "</dd>")
+        # メモの英訳は次の段階(機械翻訳)で入れる。それまでは日本語のまま
+        rows.append(f"<dt>{L('メモ', 'Notes')}</dt><dd>" + "".join(f"<p{L('', ' lang=' + chr(34) + 'ja' + chr(34))}>{e(n)}</p>" for n in notes)
+                    + (f'<p class="hint">{L("", "Notes are shown in Japanese.")}</p>' if i18n.en() else "") + "</dd>")
     if ev.get("derived"):
-        rows.append("<dt>開催情報</dt><dd>公式の開催日・会場を確認中です。表示している日付は動画の配信日です。</dd>")
+        rows.append(f"<dt>{L('開催情報', 'Event details')}</dt><dd>" + L("公式の開催日・会場を確認中です。表示している日付は動画の配信日です。",
+                    "Official dates and venue are being confirmed. The dates shown are the video stream dates.") + "</dd>")
     if not rows:
         return ""
-    return '<details class="more-box info"><summary>大会情報・出典を詳しく見る</summary><dl class="facts">' + "".join(rows) + "</dl></details>"
+    return f'<details class="more-box info"><summary>{L("大会情報・出典を詳しく見る", "Event details and sources")}</summary><dl class="facts">' + "".join(rows) + "</dl></details>"
 
 
 def year_rail(s, current_id, ctx):
@@ -385,16 +521,16 @@ def year_rail(s, current_id, ctx):
     for x in evs:
         cls = "cancelled" if x.get("status") == "cancelled" else "scheduled" if x.get("status") == "scheduled" else "unverified" if x.get("derived") else ("" if x.get("n") else "none")
         label = f"{x['year']}.{int(x['start'][5:7])}" if same[x["year"]] > 1 and x.get("start") else str(x["year"])
-        n = "中止" if x.get("status") == "cancelled" else f"{x.get('n', 0)}本"
+        n = L("中止", "Cancelled") if x.get("status") == "cancelled" else L(f"{x.get('n', 0)}本", str(x.get("n", 0)))
         inner = f'<span class="dot" aria-hidden="true"></span><span class="y">{label}</span><span class="n">{n}</span>'
-        sr = f"{x['year']}年、{n}"
+        sr = L(f"{x['year']}年、{n}", f"{x['year']}, {n if x.get('status') == 'cancelled' else i18n.plural(x.get('n', 0), 'video')}")
         if x["id"] == current_id:
-            items.append(f'<span class="yr {cls}" aria-current="page" aria-label="{e(sr)}(表示中)">{inner}</span>')
+            items.append(f'<span class="yr {cls}" aria-current="page" aria-label="{e(sr)}{L("(表示中)", " (current)")}">{inner}</span>')
         elif x["id"] in ctx["slugs"]:
-            items.append(f'<a class="yr {cls}" href="/events/{e(ctx["slugs"][x["id"]])}/" aria-label="{e(sr)}">{inner}</a>')
+            items.append(f'<a class="yr {cls}" href="{U("/events/" + ctx["slugs"][x["id"]] + "/")}" aria-label="{e(sr)}">{inner}</a>')
         else:
-            items.append(f'<span class="yr {cls} off" aria-label="{e(sr)}(動画なし)">{inner}</span>')
-    return (f'<nav class="rail" aria-label="開催年">{"".join(items)}</nav>'
+            items.append(f'<span class="yr {cls} off" aria-label="{e(sr)}{L("(動画なし)", " (no videos)")}">{inner}</span>')
+    return (f'<nav class="rail" aria-label="{L("開催年", "Years")}">{"".join(items)}</nav>'
             '<script>(function(){var r=document.currentScript.previousElementSibling,c=r.querySelector("[aria-current]");'
             'if(c)r.scrollLeft=Math.max(0,c.offsetLeft-r.clientWidth/2+c.offsetWidth/2);})();</script>')
 
@@ -406,9 +542,10 @@ def series_page(s, ctx):
     evs = ctx["events_by_series"].get(s["id"], [])
     with_v = [x for x in evs if x.get("n")]
     years = [x["year"] for x in with_v]
-    span = (f"{min(years)}年" if min(years) == max(years) else f"{min(years)}〜{max(years)}年") if years else ""
+    span = year_span(years)
     loose = sorted(ctx["loose_by_series"].get(s["id"], []), key=lambda v: v.get("p") or "", reverse=True)
     total = s.get("n", 0)
+    name = series_name(s)
     first_v = None
     for x in reversed(with_v):
         vs = ctx["by_event"].get(x["id"], [])
@@ -416,40 +553,59 @@ def series_page(s, ctx):
         if first_v:
             break
 
-    title = f"{s['name']} 配信動画アーカイブ({span}・{total}本)|{SITE_NAME}"
     alias = [a for a in (s.get("aliases") or []) if a != s["name"]]
-    desc = f"{s['name']}の配信動画{total}本を開催年ごとに掲載。{span + '、' if span else ''}{len(with_v)}開催回。" + (f"別名:{'、'.join(alias[:4])}。" if alias else "")
-    crumbs = [("トップ", "/"), ("大会一覧", "/events/"), (s["name"], None)]
+    if i18n.en():
+        title = f"{name} – Video Archive ({span}, {i18n.plural(total, 'video')}) | {site_name()}"
+        desc = f"{i18n.plural(total, 'stream/video', 'streams/videos')} from the {name}, organized by year. {span + ', ' if span else ''}{i18n.plural(len(with_v), 'edition')}." + (
+            f" Japanese name: {s['name']}." if name != s["name"] else "")
+    else:
+        title = f"{s['name']} 配信動画アーカイブ({span}・{total}本)|{SITE_NAME}"
+        desc = f"{s['name']}の配信動画{total}本を開催年ごとに掲載。{span + '、' if span else ''}{len(with_v)}開催回。" + (f"別名:{'、'.join(alias[:4])}。" if alias else "")
+    crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (name, None)]
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": f"{s['name']} 配信動画アーカイブ", "url": SITE + path,
-        "hasPart": [{"@type": "WebPage", "name": f"{s['name']} {x['year']}年", "url": f"{SITE}/events/{ctx['slugs'][x['id']]}/"}
+        "@type": "CollectionPage", "name": L(f"{s['name']} 配信動画アーカイブ", f"{name} video archive"), "url": SITE + U(path),
+        "hasPart": [{"@type": "WebPage", "name": f"{name} {year_label(x['year'])}", "url": SITE + U(f"/events/{ctx['slugs'][x['id']]}/")}
                     for x in with_v if x["id"] in ctx["slugs"]]}]}
 
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first_v['id']}/hqdefault.jpg" if first_v else "", jsonld, ctx["css"])
     h += '<main class="wrap page">' + breadcrumb_html(crumbs)
-    h += f"<h1>{e(s['name'])}</h1>"
-    lead = f"YouTubeで公開されている配信・動画{total}本を開催年ごとに整理しています。" + (f"動画があるのは{span}の{len(with_v)}開催回です。" if with_v else "")
-    if not s.get("master"):
-        lead += "この大会の公式の開催日・会場は確認中です。"
+    h += f"<h1>{e(name)}</h1>"
+    if i18n.en():
+        lead = f"{i18n.plural(total, 'stream/video', 'streams/videos')} published on YouTube, organized by year." + (
+            f" Videos are available for {i18n.plural(len(with_v), 'edition')} ({span})." if with_v else "")
+        if not s.get("master"):
+            lead += " Official dates and venues for this tournament are being confirmed."
+    else:
+        lead = f"YouTubeで公開されている配信・動画{total}本を開催年ごとに整理しています。" + (f"動画があるのは{span}の{len(with_v)}開催回です。" if with_v else "")
+        if not s.get("master"):
+            lead += "この大会の公式の開催日・会場は確認中です。"
     h += f'<p class="lead">{e(lead)}</p>'
-    if alias:
+    if i18n.en():
+        if name != s["name"]:
+            h += f'<p class="aliases">Japanese name: <span lang="ja">{e(s["name"])}</span></p>'
+    elif alias:
         h += f'<p class="aliases">この名前でも探せます:{e("、".join(alias))}</p>'
 
-    h += '<section class="section"><h2>開催年から選ぶ</h2><ol class="occ">'
+    sl = status_label()
+    h += f'<section class="section"><h2>{L("開催年から選ぶ", "Choose a year")}</h2><ol class="occ">'
     for x in reversed(evs):
-        badge = f'<span class="badge {e(x.get("status"))}">{e(STATUS_LABEL[x["status"]])}</span>' if x.get("status") in STATUS_LABEL else ""
-        when = fmt_range(x.get("start"), x.get("end")) if x.get("start") else "日付未確認"
+        badge = f'<span class="badge {e(x.get("status"))}">{e(sl[x["status"]])}</span>' if x.get("status") in sl else ""
+        when = fmt_range(x.get("start"), x.get("end")) if x.get("start") else L("日付未確認", "Date TBC")
+        cnt = (L("<b class=num>" + str(x.get("n")) + "</b>本", "<b class=num>" + str(x.get("n")) + "</b> " + ("video" if x.get("n") == 1 else "videos"))
+               if x.get("n") else L("動画なし", "No videos"))
         body = (f'<span class="oy">{x["year"]}</span><span class="ob"><span class="od">{e(when)}{badge}</span>'
-                f'<span class="ov">{e(x.get("venue") or "")}</span></span><span class="on">{("<b class=num>" + str(x.get("n")) + "</b>本") if x.get("n") else "動画なし"}</span>')
+                f'<span class="ov">{e(N(x.get("venue")) or "")}</span></span><span class="on">{cnt}</span>')
         if x["id"] in ctx["slugs"]:
-            h += f'<li><a href="/events/{e(ctx["slugs"][x["id"]])}/">{body}</a></li>'
+            h += f'<li><a href="{U("/events/" + ctx["slugs"][x["id"]] + "/")}">{body}</a></li>'
         else:
             h += f'<li class="off"><div>{body}</div></li>'
     h += "</ol></section>"
-    h += ctx["gallery"](path, s["name"])
+    h += ctx["gallery"](path, name)
     if loose:
-        h += vgroup("開催回を確認中の動画", f"この大会の動画ですが、どの年の開催回か特定できていません({len(loose)}本)", loose, show_basis=True)
-    h += f'<p class="tosearch-line"><a href="/#s={e(s["id"])}">スタイルなどで絞り込む(検索ページで開く)</a></p>'
+        h += vgroup(L("開催回を確認中の動画", "Videos with unconfirmed edition"),
+                    L(f"この大会の動画ですが、どの年の開催回か特定できていません({len(loose)}本)",
+                      f"Videos from this tournament whose year is not yet identified ({len(loose)})"), loose, show_basis=True)
+    h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
     h += "</main>" + footer(ctx["as_of"])
     return path, h
 
@@ -497,14 +653,14 @@ def classify_tech(tech, root):
 def tech_video_row(v, cat_names, show_channel=True):
     meta = []
     if v.get("cat"):
-        meta.append(f'<a class="catlink" href="/technique/{e(v["cat"])}/">{e(cat_names.get(v["cat"], ""))}</a>')
+        meta.append(f'<a class="catlink" href="{U("/technique/" + v["cat"] + "/")}">{e(N(cat_names.get(v["cat"], "")))}</a>')
     if show_channel:
-        meta.append(f'<a class="ch" href="/technique/{e(v["_chslug"])}/">{e(v["_ch"])}</a>')
+        meta.append(f'<a class="ch" href="{U("/technique/" + v["_chslug"] + "/")}">{e(N(v["_ch"]))}</a>')
     if v.get("du"):
         meta.append(f'<span class="tabnum">{e(dur(v["du"]))}</span>')
-    meta.append(f'<span>公開日 {e(fmt_date(jst_date(v.get("p"))))}</span>')
+    meta.append(f'<span>{L("公開日", "Published")} {e(fmt_date(jst_date(v.get("p"))))}</span>')
     return (f'<li class="v"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{thumb(v["id"])}</a>'
-            f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener">{e(v["t"])}</a></div>'
+            f'<div><div class="vt"><a href="{e(yt(v["id"]))}" target="_blank" rel="noopener"{L("", " lang=" + chr(34) + "ja" + chr(34))}>{e(v["t"])}</a></div>'
             f'<div class="vm">{"".join(meta)}</div></div></li>')
 
 
@@ -516,14 +672,14 @@ def tech_list(title, sub, vids, cat_names, show_channel=True, gid=""):
 
 
 def cat_nav(cats, counts, current=None, base="/technique/"):
-    items = [f'<a href="/technique/"{" aria-current=" + chr(34) + "page" + chr(34) if current is None and base == "/technique/" else ""}>すべて<b>{sum(counts.values())}</b></a>']
+    items = [f'<a href="{U("/technique/")}"{" aria-current=" + chr(34) + "page" + chr(34) if current is None and base == "/technique/" else ""}>{L("すべて", "All")}<b>{sum(counts.values())}</b></a>']
     for c in cats:
         n = counts.get(c["slug"], 0)
         if not n:
             continue
         cur = ' aria-current="page"' if current == c["slug"] else ""
-        items.append(f'<a href="/technique/{e(c["slug"])}/"{cur}>{e(c["name"])}<b>{n}</b></a>')
-    return f'<nav class="catnav" aria-label="区分">{"".join(items)}</nav>'
+        items.append(f'<a href="{U("/technique/" + c["slug"] + "/")}"{cur}>{e(N(c["name"]))}<b>{n}</b></a>')
+    return f'<nav class="catnav" aria-label="{L("区分", "Categories")}">{"".join(items)}</nav>'
 
 
 def tech_pages(tech, cats, shown, ctx):
@@ -533,30 +689,32 @@ def tech_pages(tech, cats, shown, ctx):
         counts[v["cat"]] += 1
     channels = tech.get("channels", [])
     pages = []
+    home, tech_t = L("トップ", "Home"), L("技術動画", "Technique videos")
 
     # 技術動画トップ
     path = "/technique/"
-    crumbs = [("トップ", "/"), ("技術動画", None)]
-    title = f"技術動画|{SITE_NAME}"
-    desc = ("レスリングクラブが公開している技術・トレーニング動画を、" + "・".join(c["name"] for c in cats if counts.get(c["slug"])) +
-            f"などの区分で探せます。{len(shown)}本掲載。")
+    crumbs = [(home, "/"), (tech_t, None)]
+    title = f"{tech_t}{L('|', ' | ')}{site_name()}"
+    cat_list = [N(c["name"]) for c in cats if counts.get(c["slug"])]
+    desc = L("レスリングクラブが公開している技術・トレーニング動画を、" + "・".join(cat_list) + f"などの区分で探せます。{len(shown)}本掲載。",
+             f"Wrestling technique and training videos published by clubs, organized by category ({', '.join(cat_list)}). {i18n.plural(len(shown), 'video')}.")
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": "技術動画", "url": SITE + path,
-        "hasPart": [{"@type": "WebPage", "name": c["name"], "url": f"{SITE}/technique/{c['slug']}/"} for c in cats if counts.get(c["slug"])]}]}
+        "@type": "CollectionPage", "name": tech_t, "url": SITE + U(path),
+        "hasPart": [{"@type": "WebPage", "name": N(c["name"]), "url": SITE + U(f"/technique/{c['slug']}/")} for c in cats if counts.get(c["slug"])]}]}
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{shown[0]['id']}/hqdefault.jpg" if shown else "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + "<h1>技術動画</h1>"
-    h += (f'<p class="lead">レスリングクラブが公開している、技術やトレーニング方法を紹介する動画です。'
-          f'区分を選ぶと、その技術の動画だけを見られます。現在{len(shown)}本を掲載しています。</p>')
+    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(tech_t)}</h1>"
+    h += '<p class="lead">' + e(L(f"レスリングクラブが公開している、技術やトレーニング方法を紹介する動画です。区分を選ぶと、その技術の動画だけを見られます。現在{len(shown)}本を掲載しています。",
+                                  f"Videos from wrestling clubs that teach techniques and training methods. Choose a category to see only those videos. {i18n.plural(len(shown), 'video')} listed. Titles are in Japanese.")) + '</p>'
     h += cat_nav(cats, counts)
     h += '<ul class="catcards">' + "".join(
-        f'<li><a href="/technique/{e(c["slug"])}/"><span class="cn">{e(c["name"])}</span><span class="cd">{e(c.get("description", ""))}</span>'
-        f'<span class="cc"><b class="num">{counts[c["slug"]]}</b>本</span></a></li>'
+        f'<li><a href="{U("/technique/" + c["slug"] + "/")}"><span class="cn">{e(N(c["name"]))}</span><span class="cd">{e(N(c.get("description", "")))}</span>'
+        f'<span class="cc"><b class="num">{counts[c["slug"]]}</b>{L("本", " videos")}</span></a></li>'
         for c in cats if counts.get(c["slug"])) + "</ul>"
-    h += tech_list("新着", f"公開日の新しい順", shown[:30], cat_names, gid="new")
+    h += tech_list(L("新着", "Latest"), L("公開日の新しい順", "Newest first"), shown[:30], cat_names, gid="new")
     if channels:
-        h += '<section class="section"><h2>チャンネル</h2><ul class="chlist">' + "".join(
-            f'<li><a href="/technique/{e(c["slug"])}/"><span class="cn">{e(c["name"])}</span>'
-            f'<span class="cm">{e(c.get("note", ""))}<b class="num">{sum(1 for v in shown if v["_chslug"] == c["slug"])}</b>本</span></a></li>'
+        h += f'<section class="section"><h2>{L("チャンネル", "Channels")}</h2><ul class="chlist">' + "".join(
+            f'<li><a href="{U("/technique/" + c["slug"] + "/")}"><span class="cn">{e(N(c["name"]))}</span>'
+            f'<span class="cm">{e(N(c.get("note", "")))}<b class="num">{sum(1 for v in shown if v["_chslug"] == c["slug"])}</b>{L("本", " videos")}</span></a></li>'
             for c in channels) + "</ul></section>"
     h += "</main>" + footer(ctx["as_of"])
     pages.append((path, h, shown))
@@ -567,16 +725,18 @@ def tech_pages(tech, cats, shown, ctx):
         if not vids:
             continue
         path = f"/technique/{c['slug']}/"
-        crumbs = [("トップ", "/"), ("技術動画", "/technique/"), (c["name"], None)]
-        title = f"{c['name']}の技術動画({len(vids)}本)|{SITE_NAME}"
-        desc = f"レスリングの{c['name']}の技術・練習動画{len(vids)}本。{c.get('description', '')}。"
+        cn, cd = N(c["name"]), N(c.get("description", ""))
+        crumbs = [(home, "/"), (tech_t, "/technique/"), (cn, None)]
+        title = L(f"{cn}の技術動画({len(vids)}本)|{SITE_NAME}", f"{cn} – Technique Videos ({len(vids)}) | {site_name()}")
+        desc = L(f"レスリングの{cn}の技術・練習動画{len(vids)}本。{cd}。", f"{i18n.plural(len(vids), 'wrestling technique video')}: {cn}. {cd}.")
         jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs),
-                  {"@type": "CollectionPage", "name": f"{c['name']}の技術動画", "url": SITE + path}]}
+                  {"@type": "CollectionPage", "name": L(f"{cn}の技術動画", f"{cn} technique videos"), "url": SITE + U(path)}]}
         h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg", jsonld, ctx["css"])
-        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(c['name'])}</h1>"
-        h += f'<p class="lead">{e(c.get("description", ""))}。レスリングクラブが公開している動画{len(vids)}本を、公開日の新しい順に並べています。</p>'
+        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(cn)}</h1>"
+        h += '<p class="lead">' + e(L(f"{cd}。レスリングクラブが公開している動画{len(vids)}本を、公開日の新しい順に並べています。",
+                                      f"{cd}. {i18n.plural(len(vids), 'video')} published by wrestling clubs, newest first.")) + '</p>'
         h += cat_nav(cats, counts, current=c["slug"])
-        h += tech_list(c["name"], f"{len(vids)}本", vids, cat_names, gid="list")
+        h += tech_list(cn, n_videos(len(vids)), vids, cat_names, gid="list")
         h += "</main>" + footer(ctx["as_of"])
         pages.append((path, h, vids))
 
@@ -584,25 +744,28 @@ def tech_pages(tech, cats, shown, ctx):
     for ch in channels:
         vids = [v for v in shown if v["_chslug"] == ch["slug"]]
         path = f"/technique/{ch['slug']}/"
-        crumbs = [("トップ", "/"), ("技術動画", "/technique/"), (ch["name"], None)]
-        title = f"{ch['name']} 技術動画一覧({len(vids)}本)|{SITE_NAME}"
-        desc = f"{ch['name']}が公開している技術・トレーニング動画{len(vids)}本を区分ごとに掲載。" + (f"{ch['note']}。" if ch.get("note") else "")
+        chn, note = N(ch["name"]), N(ch.get("note", ""))
+        crumbs = [(home, "/"), (tech_t, "/technique/"), (chn, None)]
+        title = L(f"{chn} 技術動画一覧({len(vids)}本)|{SITE_NAME}", f"{chn} – Technique Videos ({len(vids)}) | {site_name()}")
+        desc = L(f"{chn}が公開している技術・トレーニング動画{len(vids)}本を区分ごとに掲載。" + (f"{note}。" if note else ""),
+                 f"{i18n.plural(len(vids), 'technique and training video')} published by {chn}, by category." + (f" {note}." if note else ""))
         jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs)]}
         h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg" if vids else "", jsonld, ctx["css"])
-        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(ch['name'])}</h1>"
-        if ch.get("note"):
-            h += f'<p class="lead">{e(ch["note"])}。技術・トレーニング動画{len(vids)}本を区分ごとに並べています。</p>'
+        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(chn)}</h1>"
+        if note:
+            h += '<p class="lead">' + e(L(f"{note}。技術・トレーニング動画{len(vids)}本を区分ごとに並べています。",
+                                          f"{note}. {i18n.plural(len(vids), 'technique and training video')}, by category.")) + '</p>'
         ch_counts = defaultdict(int)
         for v in vids:
             ch_counts[v["cat"]] += 1
-        jump = [f'<a href="#{e(c["slug"])}">{e(c["name"])}<b>{ch_counts[c["slug"]]}</b></a>' for c in cats if ch_counts.get(c["slug"])]
+        jump = [f'<a href="#{e(c["slug"])}">{e(N(c["name"]))}<b>{ch_counts[c["slug"]]}</b></a>' for c in cats if ch_counts.get(c["slug"])]
         if jump:
-            h += f'<nav class="catnav" aria-label="このページ内の区分">{"".join(jump)}</nav>'
+            h += f'<nav class="catnav" aria-label="{L("このページ内の区分", "Categories on this page")}">{"".join(jump)}</nav>'
         for c in cats:
             lst = [v for v in vids if v["cat"] == c["slug"]]
-            h += tech_list(c["name"], f"{len(lst)}本", lst, cat_names, show_channel=False, gid=c["slug"])
+            h += tech_list(N(c["name"]), n_videos(len(lst)), lst, cat_names, show_channel=False, gid=c["slug"])
         if not vids:
-            h += '<p class="empty">このチャンネルの動画はまだ区分けされていません。</p>'
+            h += f'<p class="empty">{L("このチャンネルの動画はまだ区分けされていません。", "Videos from this channel have not been categorized yet.")}</p>'
         h += "</main>" + footer(ctx["as_of"])
         pages.append((path, h, vids))
 
@@ -615,26 +778,27 @@ def tech_pages(tech, cats, shown, ctx):
 
 def index_page(ctx, series_list):
     path = "/events/"
-    crumbs = [("トップ", "/"), ("大会一覧", None)]
+    crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), None)]
     total = sum(x.get("n", 0) for x in series_list)
-    title = f"大会一覧({len(series_list)}大会・{total}本)|{SITE_NAME}"
-    desc = f"Japan Wrestling Channel で配信されたレスリング大会{len(series_list)}大会の一覧。天皇杯全日本選手権、明治杯、インカレ、インターハイなどの配信を開催年ごとに探せます。"
+    title = L(f"大会一覧({len(series_list)}大会・{total}本)|{SITE_NAME}", f"Tournaments ({len(series_list)} tournaments, {total} videos) | {site_name()}")
+    desc = L(f"Japan Wrestling Channel で配信されたレスリング大会{len(series_list)}大会の一覧。天皇杯全日本選手権、明治杯、インカレ、インターハイなどの配信を開催年ごとに探せます。",
+             f"{len(series_list)} Japanese wrestling tournaments streamed by Japan Wrestling Channel and others, including the Emperor's Cup, Meiji Cup, Inter-College and Inter-High. Browse streams by year.")
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": "大会一覧", "url": SITE + path,
-        "hasPart": [{"@type": "WebPage", "name": x["name"], "url": f"{SITE}/events/{x['id']}/"} for x in series_list]}]}
+        "@type": "CollectionPage", "name": L("大会一覧", "Tournaments"), "url": SITE + U(path),
+        "hasPart": [{"@type": "WebPage", "name": N(x["name"]), "url": SITE + U(f"/events/{x['id']}/")} for x in series_list]}]}
     h = head(title, desc, path, "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + "<h1>大会一覧</h1>"
-    h += f'<p class="lead">{e(f"配信動画のある{len(series_list)}大会です。開催日の新しい順に並んでいます。スタイルや開催年での絞り込みは検索ページで行えます。")}</p>'
+    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{L('大会一覧', 'Tournaments')}</h1>"
+    h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。開催日の新しい順に並んでいます。スタイルや開催年での絞り込みは検索ページで行えます。",
+                                  f"{len(series_list)} tournaments with videos, most recent first. Use the search page to filter by style or year.")) + '</p>'
     h += '<ol class="occ slist-static">'
     for x in series_list:
         evs = [v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]
-        yrs = [v["year"] for v in evs]
-        span = (f"{min(yrs)}年" if min(yrs) == max(yrs) else f"{min(yrs)}〜{max(yrs)}年") if yrs else "開催年を確認中"
-        tags = "".join(f'<span class="tag">{e(g)}</span>' for g in x.get("groups") or [])
+        span = year_span([v["year"] for v in evs], L("開催年を確認中", "Years TBC"))
+        tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in x.get("groups") or [])
         if x.get("scope") == "海外":
-            tags += '<span class="tag">海外</span>'
-        h += (f'<li><a href="/events/{e(x["id"])}/"><span class="ob"><span class="od sname">{e(x["name"])}</span>'
-              f'<span class="ov">{e(span)} {tags}</span></span><span class="on"><b class="num">{x.get("n", 0)}</b>本</span></a></li>')
+            tags += f'<span class="tag">{L("海外", "Overseas")}</span>'
+        h += (f'<li><a href="{U("/events/" + x["id"] + "/")}"><span class="ob"><span class="od sname">{e(N(x["name"]))}</span>'
+              f'<span class="ov">{e(span)} {tags}</span></span><span class="on"><b class="num">{x.get("n", 0)}</b>{L("本", " videos")}</span></a></li>')
     h += "</ol></main>" + footer(ctx["as_of"])
     return path, h
 
@@ -645,12 +809,13 @@ FORMSPREE_ID = ""
 
 
 def contact_page(ctx):
-    h = head(f"お問い合わせ|{SITE_NAME}",
-             "レスリング配信アーカイブへのお問い合わせページです。動画の掲載・非表示のご依頼、掲載内容の誤り、サイトの不具合、お仕事のご相談はこちらから。",
+    h = head(L(f"お問い合わせ|{SITE_NAME}", f"Contact | {site_name()}"),
+             L("レスリング配信アーカイブへのお問い合わせページです。動画の掲載・非表示のご依頼、掲載内容の誤り、サイトの不具合、お仕事のご相談はこちらから。",
+               "Contact the Japan Wrestling Archive: requests to list or hide videos, corrections, bug reports and business inquiries."),
              "/contact.html", "",
-             {"@context": "https://schema.org", "@type": "ContactPage", "name": "お問い合わせ",
-              "url": SITE + "/contact.html"}, ctx["css"])
-    body = CONTACT_BODY.replace("__EMAIL__", CONTACT_EMAIL).replace("__FORMSPREE_ID__", FORMSPREE_ID)
+             {"@context": "https://schema.org", "@type": "ContactPage", "name": L("お問い合わせ", "Contact"),
+              "url": SITE + U("/contact.html")}, ctx["css"])
+    body = L(CONTACT_BODY, CONTACT_BODY_EN).replace("__EMAIL__", CONTACT_EMAIL).replace("__FORMSPREE_ID__", FORMSPREE_ID)
     return h + body + footer(ctx["as_of"])
 
 
@@ -722,6 +887,74 @@ CONTACT_BODY = r"""<main class="wrap page contact">
 </script>
 """
 
+CONTACT_BODY_EN = r"""<main class="wrap page contact">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li>Contact</li></ol></nav>
+<h1>Contact</h1>
+<p class="lead">Requests to list or hide videos, corrections, bug reports, business inquiries — feel free to get in touch. We will reply after reviewing your message. English is welcome.</p>
+<div class="direct"><span>You can also email us directly</span><a href="mailto:__EMAIL__">__EMAIL__</a></div>
+<form id="contact-form" class="cform" novalidate>
+<div class="field"><label for="c-name">Name<span class="req">Required</span></label>
+<input type="text" id="c-name" name="name" autocomplete="name" required></div>
+<div class="field"><label for="c-email">Email address for our reply<span class="req">Required</span></label>
+<input type="email" id="c-email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required>
+</div>
+<div class="field"><label for="c-kind">Topic</label>
+<select id="c-kind" name="kind">
+<option>Listing or hiding a video</option>
+<option>Incorrect information (tournament, date, etc.)</option>
+<option>Website problem</option>
+<option>Media or business inquiry</option>
+<option>Other</option>
+</select></div>
+<div class="field"><label for="c-msg">Message<span class="req">Required</span></label>
+<p class="fhint">For requests about a video, please include the page URL or the video title.</p>
+<textarea id="c-msg" name="message" required></textarea></div>
+<input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+<p class="fhint">Your name and email address are used only to reply to your message.</p>
+<button type="submit" id="c-send">Send</button>
+<div class="cresult" id="c-result" role="status"></div>
+</form>
+</main>
+<script>
+(function(){
+  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = "__EMAIL__";
+  var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
+      btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
+  function half(s){
+    return s.replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+            .replace(/[\u3000\s]/g, "").replace(/[ー－―‐]/g, "-");
+  }
+  em.addEventListener("compositionstart", function(){ composing = true; });
+  em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
+  em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
+  em.addEventListener("blur", function(){ em.value = half(em.value); });
+  function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var name = form.name.value.trim(), email = half(form.email.value.trim()),
+        kind = form.kind.value, msg = form.message.value.trim();
+    form.email.value = email;
+    if (!name || !email || !msg){ show("ng", "Please enter your name, email address and message."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ show("ng", "Please check the email address format."); return; }
+    if (!FORMSPREE_ID){
+      var body = "Name: " + name + "\nReply to: " + email + "\nTopic: " + kind + "\n\n" + msg;
+      location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Contact] " + kind) + "&body=" + encodeURIComponent(body);
+      show("ok", "Your email app will open. Please review and send the message. If it does not open, email " + TO + " directly.");
+      return;
+    }
+    btn.disabled = true; btn.textContent = "Sending…";
+    fetch("https://formspree.io/f/" + FORMSPREE_ID, {method: "POST", headers: {"Accept": "application/json"}, body: new FormData(form)})
+      .then(function(r){
+        if (r.ok){ form.reset(); show("ok", "Sent. We will reply after reviewing your message."); }
+        else { show("ng", "Could not send. Please try again later or email " + TO + " directly."); }
+      })
+      .catch(function(){ show("ng", "Network error. Check your connection or email " + TO + " directly."); })
+      .then(function(){ btn.disabled = false; btn.textContent = "Send"; });
+  });
+})();
+</script>
+"""
+
 
 def llms_txt(data, series_list, ctx):
     """AI(ChatGPT・Claude・Perplexityなど)向けに、サイトの概要と主なページを平文でまとめる"""
@@ -752,12 +985,15 @@ def llms_txt(data, series_list, ctx):
 
 
 def not_found_page(ctx):
-    h = head(f"ページが見つかりません|{SITE_NAME}", "お探しのページは見つかりませんでした。", "/404.html", "",
-             {"@context": "https://schema.org", "@type": "WebPage", "name": "ページが見つかりません"}, ctx["css"])
+    h = head(f"ページが見つかりません / Page not found|{SITE_NAME}", "お探しのページは見つかりませんでした。 The page you are looking for was not found.", "/404.html", "",
+             {"@context": "https://schema.org", "@type": "WebPage", "name": "ページが見つかりません"}, ctx["css"], alternates=False)
     h = h.replace('<link rel="canonical" href="https://japanwrestlingchannel.com/404.html">', '<meta name="robots" content="noindex">')
     h += ('<main class="wrap page"><h1>ページが見つかりません</h1>'
           '<p class="lead">URLが変わったか、削除された可能性があります。大会一覧か検索ページから探してください。</p>'
-          '<p><a href="/events/">大会一覧を見る</a> / <a href="/">検索ページへ</a></p></main>' + footer(ctx["as_of"]))
+          '<p><a href="/events/">大会一覧を見る</a> / <a href="/">検索ページへ</a></p>'
+          '<h2 lang="en">Page not found</h2>'
+          '<p class="lead" lang="en">The URL may have changed or the page may have been removed. Try the tournament list or the search page.</p>'
+          '<p lang="en"><a href="/en/events/">Tournaments</a> / <a href="/en/">Search</a></p></main>' + footer(ctx["as_of"]))
     return h
 
 
@@ -926,67 +1162,88 @@ def build(root=HERE, inline_css=False, only=None):
                events_by_series=events_by_series, all_events=data["events"], css=css, as_of=data.get("as_of"),
                gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title))
 
-    pages = []
-    for ev in data["events"]:
-        if ev["id"] in slugs and (only is None or ev["id"] in only):
-            path, doc = event_page(ev, ctx)
-            lastmod = max((jst_date(v.get("p")) for v in by_event.get(ev["id"], [])), default=data.get("as_of"))
-            pages.append((path, doc, lastmod))
-    for s in data["series"]:
-        if s.get("n") and (only is None or s["id"] in only):
-            path, doc = series_page(s, ctx)
-            vids = [v for x in events_by_series[s["id"]] for v in by_event.get(x["id"], [])] + loose_by_series[s["id"]]
-            lastmod = max((jst_date(v.get("p")) for v in vids), default=data.get("as_of"))
-            pages.append((path, doc, lastmod))
+    import players
+    import calendar_page
+    import sys
+    me = sys.modules[__name__]
+    i18n.load_names(root)
+    i18n.missing.clear()
+    report = load_json(root, "build_report.json", {}) if only is None else None
+
+    def latest(sr):
+        return max((x.get("start") or "" for x in events_by_series[sr["id"]] if x.get("n")), default="")
+    listed = sorted([x for x in data["series"] if x.get("n")], key=latest, reverse=True)
+
+    all_pages = []
+    # 日本語版(今までのURL)と英語版(/en/ の下)を同じ処理で作る
+    for lang in ("ja", "en"):
+        i18n.set_lang(lang)
+        pages = []
+        for ev in data["events"]:
+            if ev["id"] in slugs and (only is None or ev["id"] in only):
+                path, doc = event_page(ev, ctx)
+                lastmod = max((jst_date(v.get("p")) for v in by_event.get(ev["id"], [])), default=data.get("as_of"))
+                pages.append((path, doc, lastmod))
+        for s in data["series"]:
+            if s.get("n") and (only is None or s["id"] in only):
+                path, doc = series_page(s, ctx)
+                vids = [v for x in events_by_series[s["id"]] for v in by_event.get(x["id"], [])] + loose_by_series[s["id"]]
+                lastmod = max((jst_date(v.get("p")) for v in vids), default=data.get("as_of"))
+                pages.append((path, doc, lastmod))
+        if only is None:
+            tcfg = load_json(root, "tech_categories.json", {"categories": []})
+            cats = tcfg.get("categories", [])
+            shown, unclassified, to_tournament = classify_tech(tech, root)
+            order = {slug: i for i, slug in enumerate(tcfg.get("display_order", []))}
+            cats_view = sorted(cats, key=lambda c: order.get(c["slug"], len(order)))
+            pages.extend(tech_pages(tech, cats_view, shown, ctx))
+            # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
+            ppages, preport = players.build(root, data, ctx, me)
+            pages.extend(ppages)
+            path, doc = index_page(ctx, listed)
+            pages.append((path, doc, data.get("as_of")))
+            # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
+            pages.append((*calendar_page.calendar_page(data, ctx, me), data.get("as_of")))
+            contact = os.path.join(root, U("/contact.html").lstrip("/"))
+            os.makedirs(os.path.dirname(contact), exist_ok=True)
+            with open(contact, "w", encoding="utf-8") as f:
+                f.write(contact_page(ctx))
+            if lang == "ja":
+                # 区分けできなかった動画はサイトに出さず、build_report.json に一覧を残す
+                cnt = defaultdict(int)
+                for v in shown:
+                    cnt[v["cat"]] += 1
+                report["players"] = preport
+                report["photos"] = photo_report
+                report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
+                                  "unclassified_count": len(unclassified),
+                                  "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}
+                with open(os.path.join(root, "404.html"), "w", encoding="utf-8") as f:
+                    f.write(not_found_page(ctx))
+                with open(os.path.join(root, "llms.txt"), "w", encoding="utf-8") as f:
+                    f.write(llms_txt(data, listed, ctx))
+            else:
+                # 英語版の検索ページ(index.html をもとに作る)
+                import en_index
+                en_index.write(root, data, slugs)
+        for path, doc, _ in pages:
+            d = os.path.join(root, U(path).strip("/"))
+            os.makedirs(d, exist_ok=True)
+            with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
+                f.write(doc)
+        all_pages.append((lang, pages))
+    i18n.set_lang("ja")
+    pages = all_pages[0][1]
+    en_pages = all_pages[1][1]
+
     if only is None:
-        tcfg = load_json(root, "tech_categories.json", {"categories": []})
-        cats = tcfg.get("categories", [])
-        shown, unclassified, to_tournament = classify_tech(tech, root)
-        order = {slug: i for i, slug in enumerate(tcfg.get("display_order", []))}
-        cats_view = sorted(cats, key=lambda c: order.get(c["slug"], len(order)))
-        pages.extend(tech_pages(tech, cats_view, shown, ctx))
-        # 区分けできなかった動画はサイトに出さず、build_report.json に一覧を残す
-        rp = os.path.join(root, "build_report.json")
-        report = load_json(root, "build_report.json", {})
-        cnt = defaultdict(int)
-        for v in shown:
-            cnt[v["cat"]] += 1
-        # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
-        import players
-        import sys
-        ppages, preport = players.build(root, data, ctx, sys.modules[__name__])
-        pages.extend(ppages)
-        report["players"] = preport
-        report["photos"] = photo_report
-        report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
-                          "unclassified_count": len(unclassified),
-                          "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}
-        with open(rp, "w", encoding="utf-8") as f:
+        report["en"] = {"pages": len(en_pages), "names": len(i18n.names_table()),
+                        "missing_names": sorted(i18n.missing)}
+        with open(os.path.join(root, "build_report.json"), "w", encoding="utf-8") as f:
             json.dump(report, f, ensure_ascii=False, indent=1)
-
-        def latest(sr):
-            return max((x.get("start") or "" for x in events_by_series[sr["id"]] if x.get("n")), default="")
-        listed = sorted([x for x in data["series"] if x.get("n")], key=latest, reverse=True)
-        path, doc = index_page(ctx, listed)
-        pages.append((path, doc, data.get("as_of")))
-        # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
-        import calendar_page
-        pages.append((*calendar_page.calendar_page(data, ctx, sys.modules[__name__]), data.get("as_of")))
-        with open(os.path.join(root, "404.html"), "w", encoding="utf-8") as f:
-            f.write(not_found_page(ctx))
-        with open(os.path.join(root, "contact.html"), "w", encoding="utf-8") as f:
-            f.write(contact_page(ctx))
-        with open(os.path.join(root, "llms.txt"), "w", encoding="utf-8") as f:
-            f.write(llms_txt(data, listed, ctx))
-    for path, doc, _ in pages:
-        d = os.path.join(root, path.strip("/"))
-        os.makedirs(d, exist_ok=True)
-        with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
-            f.write(doc)
-
-    if only is None:
-        urls = [(f"{SITE}/", data.get("as_of"))] + [(SITE + p, lm) for p, _, lm in sorted(pages)]
-        urls.append((f"{SITE}/contact.html", None))
+        urls = [(f"{SITE}/", data.get("as_of")), (f"{SITE}/en/", data.get("as_of"))]
+        urls += [(SITE + p, lm) for p, _, lm in sorted(pages)] + [(SITE + "/en" + p, lm) for p, _, lm in sorted(en_pages)]
+        urls += [(f"{SITE}/contact.html", None), (f"{SITE}/en/contact.html", None)]
         with open(os.path.join(root, "sitemap.xml"), "w", encoding="utf-8") as f:
             f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
             for u, lm in urls:
@@ -998,7 +1255,9 @@ def build(root=HERE, inline_css=False, only=None):
     n_se = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 3)
     n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
     n_pl = sum(1 for p in pages if p[0].startswith("/players/"))
-    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl})")
+    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl})+英語版 {len(en_pages)}ページ")
+    if i18n.missing:
+        print(f"[英語版] 英語名が無い名前 {len(i18n.missing)}件(日本語のまま表示): " + "、".join(sorted(i18n.missing)[:10]) + " … en_names.csv に追加してください")
     print(f"写真: {photo_report['shown']}枚を{photo_report['pages_with_photos']}ページに掲載"
           f"(非表示 {photo_report['hidden']}・未確認 {photo_report['unconfirmed']}・エラー {len(photo_report['errors'])}・警告 {len(photo_report['warnings'])})")
     return pages

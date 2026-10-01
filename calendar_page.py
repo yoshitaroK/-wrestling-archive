@@ -13,6 +13,9 @@ import json
 import re
 from datetime import datetime, timedelta, timezone
 
+import i18n
+from i18n import L, U, N
+
 JST = timezone(timedelta(hours=9))
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}")
 
@@ -22,10 +25,13 @@ def entries(data, ctx):
     out = []
     for ev in data["events"]:
         name = ev.get("official_name") or ev.get("name") or ""
+        if i18n.en():
+            # 英語版は開催回の正式名ではなく、大会名の英語を使う
+            name = N(S.get(ev["series"], {}).get("name") or name)
         if ev["id"] in slugs:
-            url, ext = f"/events/{slugs[ev['id']]}/", False
+            url, ext = U(f"/events/{slugs[ev['id']]}/"), False
         elif S.get(ev["series"], {}).get("n"):
-            url, ext = f"/events/{ev['series']}/", False
+            url, ext = U(f"/events/{ev['series']}/"), False
         else:
             src = next((x.get("url") for x in ev.get("sources") or [] if (x.get("url") or "").startswith("http")), "")
             url, ext = src, bool(src)
@@ -34,12 +40,12 @@ def entries(data, ctx):
         sessions = [x for x in ev.get("sessions") or [] if DATE_RE.match(x.get("start_date") or "")]
         if sessions:
             for x in sessions:
-                label = x.get("label") or ""
-                out.append(dict(base, n=f"{name} {label}".strip(), s=x["start_date"][:10],
-                                e=(x.get("end_date") or x["start_date"])[:10], v=x.get("venue") or ev.get("venue") or ""))
+                label = N(x.get("label") or "")
+                out.append(dict(base, n=(f"{name} {label}" if not i18n.en() else (label or name)).strip(), s=x["start_date"][:10],
+                                e=(x.get("end_date") or x["start_date"])[:10], v=N(x.get("venue") or ev.get("venue") or "")))
         elif DATE_RE.match(ev.get("start") or ""):
             out.append(dict(base, n=name, s=ev["start"][:10], e=(ev.get("end") or ev["start"])[:10],
-                            v=ev.get("venue") or ""))
+                            v=N(ev.get("venue") or "")))
     out.sort(key=lambda x: (x["s"], x["n"]))
     return out
 
@@ -48,43 +54,57 @@ def fmt_md(s, e):
     a = f"{int(s[5:7])}/{int(s[8:10])}"
     if e and e != s:
         b = f"{int(e[5:7])}/{int(e[8:10])}" if e[:7] != s[:7] else f"{int(e[8:10])}"
-        return f"{a}〜{b}"
+        return f"{a}{L('〜', '–')}{b}"
     return a
 
 
+# カレンダーの画面に出す文字(JavaScript に渡す)
+JS_TEXT = {
+    "ja": {"ym": "{y}年{m}月", "wd": ["日", "月", "火", "水", "木", "金", "土"], "more": "ほか{n}件", "cell": "{m}月{d}日 大会{n}件",
+           "day": "{m}月{d}日の大会", "month": "この月の大会({n}件)", "can": "中止", "vid": "動画あり", "sch": "予定",
+           "derived": "(配信日)", "noday": "この日の大会はありません。", "nomonth": "この月に登録されている大会はありません。", "dash": "〜"},
+    "en": {"ym": "{M} {y}", "wd": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], "more": "+{n} more", "cell": "{M} {d}: {n} tournaments",
+           "day": "Tournaments on {M} {d}", "month": "Tournaments this month ({n})", "can": "Cancelled", "vid": "Videos", "sch": "Scheduled",
+           "derived": " (stream dates)", "noday": "No tournaments on this day.", "nomonth": "No tournaments listed for this month.", "dash": "–"},
+}
+
+
 def calendar_page(data, ctx, bp):
-    e, SITE, SITE_NAME = bp.e, bp.SITE, bp.SITE_NAME
+    e, SITE = bp.e, bp.SITE
     path = "/events/calendar/"
-    crumbs = [("トップ", "/"), ("大会一覧", "/events/"), ("大会カレンダー", None)]
+    cal_t = L("大会カレンダー", "Tournament calendar")
+    crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (cal_t, None)]
     items = entries(data, ctx)
     today = datetime.now(JST).strftime("%Y-%m-%d")
     soon = [x for x in items if x["e"] >= today][:40]
-    desc = "レスリング大会の開催予定と過去の大会をカレンダーで確認できます。大会を選ぶと、その大会の配信動画ページへ移動します。"
+    desc = L("レスリング大会の開催予定と過去の大会をカレンダーで確認できます。大会を選ぶと、その大会の配信動画ページへ移動します。",
+             "Upcoming and past Japanese wrestling tournaments on a calendar. Choose a tournament to open its video page.")
     ld_events = [{"@type": "SportsEvent", "name": x["n"], "startDate": x["s"], "endDate": x["e"],
                   **({"location": {"@type": "Place", "name": x["v"]}} if x["v"] else {}),
                   **({"url": SITE + x["u"]} if x["u"] and not x["x"] else {})}
                  for x in soon if not x["d"] and x["st"] != "cancelled"][:20]
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs),
-              {"@type": "CollectionPage", "name": "大会カレンダー", "url": SITE + path, "hasPart": ld_events}]}
-    h = bp.head(f"大会カレンダー|{SITE_NAME}", desc, path, "", jsonld, ctx["css"])
+              {"@type": "CollectionPage", "name": cal_t, "url": SITE + U(path), "hasPart": ld_events}]}
+    h = bp.head(f"{cal_t}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
     h += '<main class="wrap page cal">' + bp.breadcrumb_html(crumbs)
-    h += f'<h1>大会カレンダー</h1><p class="lead">{e(desc)}</p>'
-    h += ('<div class="cal-bar"><button type="button" class="cal-nav" id="cal-prev" aria-label="前の月">‹</button>'
+    h += f'<h1>{cal_t}</h1><p class="lead">{e(desc)}</p>'
+    h += (f'<div class="cal-bar"><button type="button" class="cal-nav" id="cal-prev" aria-label="{L("前の月", "Previous month")}">‹</button>'
           '<h2 id="cal-title" aria-live="polite"></h2>'
-          '<button type="button" class="cal-nav" id="cal-next" aria-label="次の月">›</button>'
-          '<button type="button" class="cal-today" id="cal-today">今月</button></div>'
-          '<p class="cal-legend"><span class="lg vid">動画あり</span><span class="lg sch">開催予定・動画なし</span>'
-          '<span class="lg can">中止</span></p>'
+          f'<button type="button" class="cal-nav" id="cal-next" aria-label="{L("次の月", "Next month")}">›</button>'
+          f'<button type="button" class="cal-today" id="cal-today">{L("今月", "This month")}</button></div>'
+          f'<p class="cal-legend"><span class="lg vid">{L("動画あり", "Videos available")}</span><span class="lg sch">{L("開催予定・動画なし", "Scheduled / no videos")}</span>'
+          f'<span class="lg can">{L("中止", "Cancelled")}</span></p>'
           '<div class="cal-grid" id="cal-grid" role="grid"></div>'
-          '<div class="cal-listhead"><h2 id="cal-listtitle">この月の大会</h2>'
-          '<button type="button" class="cal-all" id="cal-all" hidden>月の大会をすべて表示</button></div>')
+          f'<div class="cal-listhead"><h2 id="cal-listtitle">{L("この月の大会", "Tournaments this month")}</h2>'
+          f'<button type="button" class="cal-all" id="cal-all" hidden>{L("月の大会をすべて表示", "Show the whole month")}</button></div>')
     # JavaScriptが動かない環境・検索エンジン向けに、これからの大会を最初から書いておく
     h += '<ol class="cal-list" id="cal-list">'
     for x in soon:
         h += list_item(x, e)
     if not soon:
-        h += '<li class="cal-empty">登録されている予定の大会はありません。</li>'
+        h += f'<li class="cal-empty">{L("登録されている予定の大会はありません。", "No upcoming tournaments are listed.")}</li>'
     h += "</ol></main>"
+    h += "<script>var CAL_T=" + json.dumps(JS_TEXT[i18n.LANG], ensure_ascii=False) + ";</script>"
     h += "<script>var CAL_EVENTS=" + json.dumps(items, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";</script>"
     h += CAL_JS + bp.footer(ctx["as_of"])
     return path, h
@@ -92,12 +112,12 @@ def calendar_page(data, ctx, bp):
 
 def list_item(x, e):
     cls = "can" if x["st"] == "cancelled" else ("vid" if x["vid"] else "sch")
-    badge = {"can": "中止", "vid": "動画あり", "sch": "予定"}[cls]
+    badge = JS_TEXT[i18n.LANG][cls]
     name = e(x["n"])
     if x["u"]:
         tgt = ' target="_blank" rel="noopener"' if x["x"] else ""
         name = f'<a href="{e(x["u"])}"{tgt}>{name}{" ↗" if x["x"] else ""}</a>'
-    note = "(配信日)" if x["d"] else ""
+    note = JS_TEXT[i18n.LANG]["derived"] if x["d"] else ""
     return (f'<li class="{cls}"><span class="cd">{e(fmt_md(x["s"], x["e"]))}{note}</span>'
             f'<span class="cn">{name}<small>{e(x["v"])}</small></span><span class="cb">{badge}</span></li>')
 
@@ -159,7 +179,8 @@ CAL_CSS = """
 
 CAL_JS = r"""<script>
 (function(){
-  var EV = window.CAL_EVENTS || [];
+  var EV = window.CAL_EVENTS || [], T = window.CAL_T, MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function t(k, o){ return T[k].replace(/\{(\w)\}/g, function(_, x){ return x === "M" ? MON[o.m - 1] : o[x]; }); }
   var grid = document.getElementById("cal-grid"), title = document.getElementById("cal-title"),
       list = document.getElementById("cal-list"), ltitle = document.getElementById("cal-listtitle"),
       allBtn = document.getElementById("cal-all");
@@ -171,7 +192,7 @@ CAL_JS = r"""<script>
   function kind(x){ return x.st === "cancelled" ? "can" : (x.vid ? "vid" : "sch"); }
   function md(s, e){
     var a = (+s.slice(5,7)) + "/" + (+s.slice(8,10));
-    if (e && e !== s) a += "〜" + (e.slice(0,7) !== s.slice(0,7) ? (+e.slice(5,7)) + "/" : "") + (+e.slice(8,10));
+    if (e && e !== s) a += T.dash + (e.slice(0,7) !== s.slice(0,7) ? (+e.slice(5,7)) + "/" : "") + (+e.slice(8,10));
     return a;
   }
   function link(x, inner){
@@ -181,9 +202,9 @@ CAL_JS = r"""<script>
   function onDay(d){ return EV.filter(function(x){ return x.s <= d && d <= x.e; }); }
   function render(){
     var y = cur.getFullYear(), m = cur.getMonth();
-    title.textContent = y + "年" + (m + 1) + "月";
+    title.textContent = t("ym", {y: y, m: m + 1});
     history.replaceState(null, "", "#" + y + "-" + pad(m + 1));
-    var html = "", wd = ["日","月","火","水","木","金","土"];
+    var html = "", wd = T.wd;
     for (var i = 0; i < 7; i++) html += '<div class="wd' + (i === 0 ? " sun" : i === 6 ? " sat" : "") + '">' + wd[i] + '</div>';
     var first = new Date(y, m, 1), start = new Date(y, m, 1 - first.getDay());
     var weeks = Math.ceil((first.getDay() + new Date(y, m + 1, 0).getDate()) / 7);
@@ -196,9 +217,9 @@ CAL_JS = r"""<script>
         return x.u ? '<a class="chip ' + kind(x) + '" href="' + esc(x.u) + '"' + (x.x ? ' target="_blank" rel="noopener"' : '') + ' title="' + esc(x.n) + '">' + esc(x.n) + '</a>'
                    : '<span class="chip ' + kind(x) + '" title="' + esc(x.n) + '">' + esc(x.n) + '</span>';
       }).join("");
-      if (evs.length > 3) chips += '<span class="cal-more">ほか' + (evs.length - 3) + '件</span>';
+      if (evs.length > 3) chips += '<span class="cal-more">' + t("more", {n: evs.length - 3}) + '</span>';
       var dots = '<span class="dots">' + evs.slice(0, 4).map(function(x){ return '<i class="' + kind(x) + '"></i>'; }).join("") + '</span>';
-      html += '<div class="' + cls + '" data-d="' + ds + '"' + (out ? "" : ' role="gridcell" tabindex="0" aria-label="' + (d.getMonth() + 1) + '月' + d.getDate() + '日 大会' + evs.length + '件"') + '><span class="dn">' + d.getDate() + '</span>' + chips + dots + '</div>';
+      html += '<div class="' + cls + '" data-d="' + ds + '"' + (out ? "" : ' role="gridcell" tabindex="0" aria-label="' + t("cell", {m: d.getMonth() + 1, d: d.getDate(), n: evs.length}) + '"') + '><span class="dn">' + d.getDate() + '</span>' + chips + dots + '</div>';
     }
     grid.innerHTML = html;
     renderList();
@@ -206,13 +227,13 @@ CAL_JS = r"""<script>
   function renderList(){
     var y = cur.getFullYear(), m = cur.getMonth(), from = y + "-" + pad(m + 1) + "-01", to = y + "-" + pad(m + 1) + "-31";
     var evs = sel ? onDay(sel) : EV.filter(function(x){ return x.s <= to && x.e >= from; });
-    ltitle.textContent = sel ? (+sel.slice(5,7)) + "月" + (+sel.slice(8,10)) + "日の大会" : "この月の大会(" + evs.length + "件)";
+    ltitle.textContent = sel ? t("day", {m: +sel.slice(5,7), d: +sel.slice(8,10)}) : t("month", {n: evs.length});
     allBtn.hidden = !sel;
     list.innerHTML = evs.length ? evs.map(function(x){
-      var k = kind(x), badge = {can:"中止", vid:"動画あり", sch:"予定"}[k];
-      return '<li class="' + k + '"><span class="cd">' + md(x.s, x.e) + (x.d ? "(配信日)" : "") + '</span><span class="cn">' +
+      var k = kind(x), badge = T[k];
+      return '<li class="' + k + '"><span class="cd">' + md(x.s, x.e) + (x.d ? T.derived : "") + '</span><span class="cn">' +
              link(x, esc(x.n)) + '<small>' + esc(x.v) + '</small></span><span class="cb">' + badge + '</span></li>';
-    }).join("") : '<li class="cal-empty">' + (sel ? "この日の大会はありません。" : "この月に登録されている大会はありません。") + '</li>';
+    }).join("") : '<li class="cal-empty">' + (sel ? T.noday : T.nomonth) + '</li>';
   }
   grid.addEventListener("click", function(ev){
     if (ev.target.closest("a")) return;
