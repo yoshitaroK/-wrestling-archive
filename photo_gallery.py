@@ -19,7 +19,10 @@ photos.json の1件の書き方
   - 表示しなくなった写真の縮小版は assets/photos/ から自動で削除する
   - 縮小版を作ったあとは、photos/ の元の写真を消してよい(assets/photos/manifest.json の記録から縮小版を使い続ける)。
     元の写真は公開リポジトリの容量を使い、撮影場所などの情報が残ることがあるため
-  - 1ページの写真はファイル名の順に並べ、最初は GALLERY_FIRST 枚だけ表示する(残りは「すべての写真を見る」で表示)
+  - 1ページの写真はファイル名の順に並べ、最初は GALLERY_FIRST 枚だけ表示する(残りは「もっと見る」で表示)
+  - photos.json の albums に書いたページには、ギャラリーの下に外部アルバム(Google フォトなど)へのボタンを出す
+      "albums": [{"page": "intercollegiate/2026", "url": "https://photos.app.goo.gl/…", "count": "1000"}]
+    (アルバムを公開してよいか、撮影者に確認してから書く)
   - Pillow が入っていない環境では新しい写真は作れない(作成済みの縮小版があればそれを使う)
 """
 import hashlib
@@ -93,6 +96,24 @@ def image_size(path):
         return None
 
 
+ALBUMS = {}
+
+
+def load_albums(cfg, page_paths, report):
+    """外部アルバムへのリンク(albums)を読む"""
+    ALBUMS.clear()
+    for i, a in enumerate((cfg.get("albums") or []) if isinstance(cfg, dict) else [], 1):
+        url = str((a or {}).get("url") or "").strip()
+        page = norm_page((a or {}).get("page"))
+        if not url.startswith("https://"):
+            report["errors"].append(f"albums {i}件目: url は https:// で始まるアドレスを書いてください")
+        elif f"/events/{page}/" not in page_paths:
+            report["errors"].append(f"albums {i}件目: page「{a.get('page') or ''}」のページが見つかりません")
+        else:
+            ALBUMS[f"/events/{page}/"] = {"url": url, "count": str(a.get("count") or "").strip()}
+    report["albums"] = len(ALBUMS)
+
+
 def load(root, page_paths):
     """photos.json を読んで {ページのパス: [写真]} とレポートを返す。
     page_paths は作られるページの "/events/…/" の集合"""
@@ -112,6 +133,7 @@ def load(root, page_paths):
             json_broken = True
             report["errors"].append(f"photos.json を読めませんでした(カンマや \" の抜けを確認してください): {ex}")
     report["entries"] = len(entries)
+    load_albums(cfg if not json_broken and os.path.exists(path) else {}, page_paths, report)
 
     # 縮小版の記録(元の写真のファイル名 → 縮小版の名前と大きさ)。元の写真を消したあとも縮小版を使うため
     try:
@@ -227,10 +249,20 @@ def load(root, page_paths):
     return dict(by_page), report
 
 
-def gallery_html(photos, e, title):
-    """写真があるページだけギャラリーを出す。無いときは空文字"""
-    if not photos:
+def album_html(album, e):
+    if not album:
         return ""
+    n = album["count"]
+    label = L(f"アルバムですべての写真を見る{('(' + n + '枚)') if n else ''}", f"See all photos in the album{(' (' + n + ' photos)') if n else ''}")
+    return f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
+
+
+def gallery_html(photos, e, title, path=None):
+    """写真があるページだけギャラリーを出す。無いときは空文字(外部アルバムだけ設定されていればボタンだけ出す)"""
+    album = ALBUMS.get(path)
+    if not photos:
+        return (f'<section class="section photos" aria-label="{L("写真", "Photos")}"><h2 class="vh">{L("写真", "Photos")}</h2>'
+                + album_html(album, e) + '</section>') if album else ""
 
     def wh(w, h):
         return f' width="{w}" height="{h}"' if w and h else ""
@@ -253,7 +285,8 @@ def gallery_html(photos, e, title):
     return (f'<section class="section photos" aria-label="{L("写真", "Photos")}"><h2 class="vh">{L("写真", "Photos")} <small>{L(f"{len(photos)}枚", str(len(photos)))}</small></h2>'
             + (f'<p class="pcredit-all">{e(shared)}</p>' if shared else "")
             + f'<ul class="pgrid">{"".join(items)}</ul>'
-            + (f'<button type="button" class="pshow">{L(f"すべての写真を見る({len(photos)}枚)", f"Show all photos ({len(photos)})")}</button>' if rest > 0 else "")
+            + (f'<button type="button" class="pshow">{L(f"もっと見る(残り{rest}枚)", f"Show {rest} more photos")}</button>' if rest > 0 else "")
+            + album_html(album, e)
             + '</section>' + L(LIGHTBOX, LIGHTBOX_EN))
 
 
@@ -307,6 +340,8 @@ PHOTO_CSS = """
 .pgrid a:hover img{transform:scale(1.03)}
 .pcap{margin:6px 2px 0;font-size:12px;line-height:1.5;color:var(--ink2)}
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
+.palbum{display:block;width:max-content;max-width:100%;margin:12px auto 0;padding:9px 22px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
+.palbum:hover{border-color:var(--pink)}
 .pcredit-all{margin:-4px 0 10px;font-size:12px;color:var(--ink3)}
 .pshow{display:block;margin:12px auto 0;padding:9px 22px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
 .pshow:hover{border-color:var(--pink);color:var(--pink)}
