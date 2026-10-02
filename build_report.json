@@ -39,16 +39,19 @@
   "video_links": 0
  },
  "photos": {
-  "entries": 0,
-  "shown": 0,
+  "entries": 31,
+  "shown": 31,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 0,
-  "by_page": {},
+  "pages_with_photos": 1,
+  "by_page": {
+   "/events/intercollegiate/2026/": 31
+  },
   "warnings": [],
   "errors": [],
   "unlisted_files": [],
-  "from_manifest": 0
+  "albums": 0,
+  "from_manifest": 31
  },
  "tech": {
   "shown": 57,

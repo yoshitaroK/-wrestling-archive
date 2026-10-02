@@ -1177,7 +1177,7 @@ def build(root=HERE, inline_css=False, only=None):
     photos_by_page, photo_report = photo_gallery.load(root, page_paths)
     ctx = dict(S=S, slugs=slugs, by_event=by_event, cand=cand, loose_by_series=loose_by_series,
                events_by_series=events_by_series, all_events=data["events"], css=css, as_of=data.get("as_of"),
-               gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title))
+               gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title, path))
 
     import players
     import calendar_page

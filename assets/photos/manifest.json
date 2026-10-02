@@ -1,4 +1,346 @@
 {
  "about": "自動生成。元の写真のファイル名と縮小版の対応(元の写真を消しても縮小版を使い続けるため)。手で編集しない",
- "files": {}
+ "files": {
+  "intercollegiate-2026-dsc00014.jpg": {
+   "stem": "79f66dfe139f",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00043.jpg": {
+   "stem": "ee00dba33ade",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00249.jpg": {
+   "stem": "4e5266134e86",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00289.jpg": {
+   "stem": "eb1c31a5753a",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00312.jpg": {
+   "stem": "3ab842b68ec5",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00313.jpg": {
+   "stem": "25795e18d2aa",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00372.jpg": {
+   "stem": "08203929e069",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00392.jpg": {
+   "stem": "19ce87c0685b",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00489.jpg": {
+   "stem": "1930a58b6012",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00541.jpg": {
+   "stem": "c70af681be08",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00578.jpg": {
+   "stem": "5a8f921b8bde",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00743.jpg": {
+   "stem": "2d860ba77f41",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00752.jpg": {
+   "stem": "9d9a8a83b321",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00763.jpg": {
+   "stem": "4802126bd96c",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00787.jpg": {
+   "stem": "8fa55d8eef59",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00790.jpg": {
+   "stem": "d2124a82d253",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00811.jpg": {
+   "stem": "4e8294b8be35",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00823.jpg": {
+   "stem": "295ee0cee25f",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00884.jpg": {
+   "stem": "cd145fdd50dd",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc00947.jpg": {
+   "stem": "8688c964f4d0",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc01006.jpg": {
+   "stem": "604bb6bffcd4",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc01076.jpg": {
+   "stem": "d17c7625b0fa",
+   "full_size": [
+    1600,
+    1202
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09048.jpg": {
+   "stem": "fc8d198ff03c",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09235.jpg": {
+   "stem": "c5abdc9559f9",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09423.jpg": {
+   "stem": "3a84a43ff8e1",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09456.jpg": {
+   "stem": "1664ab5e0ea5",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09509.jpg": {
+   "stem": "8b40c276030a",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09557.jpg": {
+   "stem": "1b32df72ed49",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09608.jpg": {
+   "stem": "3efdb95e20e8",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09831.jpg": {
+   "stem": "5777ffd9ea4e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "intercollegiate-2026-dsc09944.jpg": {
+   "stem": "7493f2a762a8",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  }
+ }
 }
