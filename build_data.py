@@ -814,6 +814,10 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
     # ------------------------------------------------------------------
     counts_by_event = Counter(v["event"] for v in videos if v["event"])
     out_events = []
+    links_by_event = defaultdict(list)
+    for o in overrides.get("event_links", []):
+        if o.get("event_id") and str(o.get("url", "")).startswith(("https://", "http://")):
+            links_by_event[o["event_id"]].append({"url": o["url"], "label": o.get("label") or "大会公式サイト"})
     for e in events:
         sd = d(e["start_date"])
         oe = {
@@ -828,6 +832,7 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
             "sessions": e.get("sessions"), "notes": [display_note(n) for n in e.get("notes", [])] or None,
             "group": e.get("event_group_id"),
             "schedule_history": e.get("schedule_history"),
+            "links": links_by_event.get(e["id"]),
             "n": counts_by_event.get(e["id"], 0),
         }
         out_events.append({k: v for k, v in oe.items() if v not in (None, [], "")})

@@ -39,6 +39,16 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 
 画面の各動画には「タイトルで照合」「配信日で照合」「手動で確認済み」「確認待ち」などの根拠が表示されます。
 
+## 大会の公式サイトへのリンクを付ける方法
+
+`overrides.json` の `event_links` に1件ずつ追加します。開催回ページの上のほうに「大会公式サイト ↗」のボタンが出ます(英語版は「Official tournament website ↗」)。
+
+```json
+{"event_id": "wre-2026-shakaijin-open-1031", "url": "https://…", "label": "大会公式サイト", "checked_on": "2026-10-03"}
+```
+
+- `event_id` は master_events.json の開催回ID です。`label` を省略すると「大会公式サイト」になります。
+
 ## 手動で紐付けを直す方法
 
 `overrides.json` の `video_overrides` に1件ずつ追加して保存(Commit)します。次回の自動更新から反映されます(すぐ反映したい場合は Actions タブから手動実行)。
