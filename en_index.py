@@ -30,9 +30,9 @@ PAIRS = [
     ('aria-label="レスリング配信アーカイブ(トップへ)"', 'aria-label="Japan Wrestling Archive (home)"'),
     ('<p id="tagline">レスリングの配信・動画を大会・開催年から探せる非公式アーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>',
      '<p id="tagline">Unofficial archive of Japanese wrestling streams by tournament and year · <b class="num" id="stat-v"></b><span class="pc"> videos</span></p>'),
-    ('<nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a>'
+    ('<nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a href="/photos/">写真</a>'
      '<a class="lang" href="/en/" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem(\'lang\',\'en\')}catch(x){}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">EN</a></nav>',
-     '<nav class="topnav"><a href="/en/events/">Tournaments</a><a href="/en/events/calendar/">Calendar</a><a href="/en/technique/">Technique</a>'
+     '<nav class="topnav"><a href="/en/events/">Tournaments</a><a href="/en/events/calendar/">Calendar</a><a href="/en/technique/">Technique</a><a href="/en/photos/">Photos</a>'
      '<a class="lang" href="/" hreflang="ja" lang="ja" title="日本語版を表示" onclick="try{localStorage.setItem(\'lang\',\'ja\')}catch(x){}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">日本語</a></nav>'),
     ('aria-label="表示色を切り替え"', 'aria-label="Switch color theme"'),
     ('<label for="q" class="sr">大会名・通称・動画タイトルで検索</label>', '<label for="q" class="sr">Search by tournament name or video title</label>'),
@@ -46,8 +46,8 @@ PAIRS = [
     ('<label>動画の種類<select id="f-kind"><option value="">すべて</option></select></label>', '<label>Video type<select id="f-kind"><option value="">All</option></select></label>'),
     ('<label class="check"><input type="checkbox" id="f-all"> 動画のない大会・開催回も表示</label>', '<label class="check"><input type="checkbox" id="f-all"> Include tournaments without videos</label>'),
     ('<div class="loading">データを読み込んでいます</div>', '<div class="loading">Loading data…</div>'),
-    ('<p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>',
-     '<p><a href="/en/events/">Tournaments (all tournament pages)</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/" hreflang="ja" lang="ja">日本語</a></p>'),
+    ('<p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>',
+     '<p><a href="/en/events/">Tournaments (all tournament pages)</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/" hreflang="ja" lang="ja">日本語</a></p>'),
     ('<p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>',
      '<p>An unofficial archive that organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>'),
     ('<p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>',

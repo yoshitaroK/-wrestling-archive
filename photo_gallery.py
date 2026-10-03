@@ -32,7 +32,8 @@ import re
 from collections import defaultdict
 from urllib.parse import unquote
 
-from i18n import L
+import i18n
+from i18n import L, U
 
 PHOTOS_DIR = "photos"
 PHOTOS_JSON = "photos.json"
@@ -257,8 +258,9 @@ def album_html(album, e):
     return f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
 
 
-def gallery_html(photos, e, title, path=None):
-    """写真があるページだけギャラリーを出す。無いときは空文字(外部アルバムだけ設定されていればボタンだけ出す)"""
+def gallery_html(photos, e, title, path=None, more=None):
+    """写真があるページだけギャラリーを出す。無いときは空文字(外部アルバムだけ設定されていればボタンだけ出す)。
+    more は写真ページのURL(大会ページから写真ページへのボタン)"""
     album = ALBUMS.get(path)
     if not photos:
         return (f'<section class="section photos" aria-label="{L("写真", "Photos")}"><h2 class="vh">{L("写真", "Photos")}</h2>'
@@ -286,6 +288,7 @@ def gallery_html(photos, e, title, path=None):
             + (f'<p class="pcredit-all">{e(shared)}</p>' if shared else "")
             + f'<ul class="pgrid">{"".join(items)}</ul>'
             + (f'<button type="button" class="pshow">{L(f"もっと見る(残り{rest}枚)", f"Show {rest} more photos")}</button>' if rest > 0 else "")
+            + (f'<a class="palbum pmore" href="{e(more)}">{L("写真ページで見る", "Open the photo page")} →</a>' if more else "")
             + album_html(album, e)
             + '</section>' + L(LIGHTBOX, LIGHTBOX_EN))
 
@@ -364,4 +367,130 @@ PHOTO_CSS = """
   .plb figure{padding:56px 8px 16px}
   .plb-p,.plb-n{top:auto;bottom:12px;transform:none}
 }
+"""
+
+
+# ---------------------------------------------------------------- 写真ページ(/photos/)
+
+def photo_path(events_path):
+    """大会ページのURL(/events/intercollegiate/2026/)に対応する写真ページのURL(/photos/intercollegiate/2026/)"""
+    return "/photos/" + events_path[len("/events/"):]
+
+
+def photo_targets(ctx, bp):
+    """写真があるページごとに、名前・開催日・会場・並び順を調べる"""
+    out = {}
+    for ev in ctx["all_events"]:
+        if ev["id"] in ctx["slugs"]:
+            s = ctx["S"].get(ev["series"], {"id": ev["series"], "name": ev["name"]})
+            out[f"/events/{ctx['slugs'][ev['id']]}/"] = {
+                "series": bp.series_name(s), "full": bp.event_name(ev, s), "year": ev["year"], "start": ev.get("start"),
+                "end": ev.get("end"), "venue": ev.get("venue") if not ev.get("derived") else None,
+                "sort": ev.get("start") or f"{ev['year']}-99"}
+    for s in ctx["S"].values():
+        evs = ctx["events_by_series"].get(s["id"], [])
+        out[f"/events/{s['id']}/"] = {"series": bp.series_name(s), "full": bp.series_name(s), "year": None, "start": None, "end": None,
+                                      "venue": None, "sort": max((x.get("start") or "" for x in evs), default="")}
+    return out
+
+
+def photo_pages(ctx, photos_by_page, bp):
+    """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
+    e, N = bp.e, bp.N
+    info = photo_targets(ctx, bp)
+    paths = sorted((p for p in photos_by_page if p in info), key=lambda p: info[p]["sort"], reverse=True)
+    home, photos_t = L("トップ", "Home"), L("写真", "Photos")
+    total = sum(len(photos_by_page[p]) for p in paths)
+    pages = []
+
+    def label(p):
+        x = info[p]
+        return x["series"] + ((" " + bp.year_label(x["year"])) if x["year"] else "")
+
+    def shared_credit(lst):
+        cs = {credit_text(x["credit"]) for x in lst}
+        return cs.pop() if len(cs) == 1 else ""
+
+    # 写真トップ
+    path = "/photos/"
+    crumbs = [(home, "/"), (photos_t, None)]
+    title = f"{photos_t}{L('|', ' | ')}{bp.site_name()}"
+    desc = L(f"レスリング大会で撮影された写真を大会ごとに見られます。{len(paths)}大会・{total}枚を掲載。",
+             f"Photos taken at Japanese wrestling tournaments, organized by tournament. {i18n.plural(len(paths), 'tournament')}, {i18n_plural(total)}.")
+    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
+        "@type": "CollectionPage", "name": photos_t, "url": bp.SITE + U(path),
+        "hasPart": [{"@type": "ImageGallery", "name": label(p), "url": bp.SITE + U(photo_path(p))} for p in paths]}]}
+    cover = photos_by_page[paths[0]][0] if paths else None
+    h = bp.head(title, desc, path, (bp.SITE + cover["full"]) if cover else "", jsonld, ctx["css"])
+    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{e(photos_t)}</h1>"
+    h += '<p class="lead">' + e(L(f"レスリング大会で撮影された写真です。大会を選ぶと、その大会の写真をまとめて見られます。写真は撮影者の許可を得て掲載しています。現在{len(paths)}大会・{total}枚。",
+                                  f"Photos taken at wrestling tournaments. Choose a tournament to see all of its photos. Photos are published with the photographers' permission. {i18n.plural(len(paths), 'tournament')}, {i18n_plural(total)}.")) + "</p>"
+    if paths:
+        h += '<ul class="pcards">'
+        for p in paths:
+            lst, x = photos_by_page[p], info[p]
+            c = lst[0]
+            wh = f' width="{c["tw"]}" height="{c["th"]}"' if c.get("tw") and c.get("th") else ""
+            sub = " · ".join(t for t in [bp.fmt_range(x["start"], x["end"]) if x["start"] else "", L(f"{len(lst)}枚", i18n_plural(len(lst)))] if t)
+            cr = shared_credit(lst)
+            h += (f'<li><a href="{e(U(photo_path(p)))}"><span class="pc-img"><img src="{e(c["thumb"])}" alt="" loading="lazy" decoding="async"{wh}></span>'
+                  f'<span class="pc-t">{e(label(p))}</span><span class="pc-s">{e(sub)}</span>'
+                  + (f'<span class="pc-c">{e(cr)}</span>' if cr else "") + "</a></li>")
+        h += "</ul>"
+    else:
+        h += f'<p class="empty">{L("まだ写真はありません。", "No photos yet.")}</p>'
+    h += "</main>" + bp.footer(ctx["as_of"])
+    pages.append((path, h, ctx["as_of"]))
+
+    # 大会ごとの写真ページ
+    for p in paths:
+        lst, x = photos_by_page[p], info[p]
+        path = photo_path(p)
+        name = label(p)
+        crumbs = [(home, "/"), (photos_t, "/photos/"), (name, None)]
+        cr = shared_credit(lst)
+        title = L(f"{name}の写真({len(lst)}枚)|{bp.SITE_NAME}", f"{name} – Photos ({len(lst)}) | {bp.site_name()}")
+        when = bp.fmt_range(x["start"], x["end"]) if x["start"] else ""
+        venue = N(x["venue"]) if x["venue"] else ""
+        desc = L(f"{x['full']}" + (f"({when}" + (f"・{venue}" if venue else "") + ")" if when else "") + f"の写真{len(lst)}枚。" + (f"{cr}。" if cr else ""),
+                 f"{len(lst)} photos from the {name}" + (f" ({when}" + (f", {venue}" if venue else "") + ")" if when else "") + "." + (f" {cr}." if cr else ""))
+        jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
+            "@type": "ImageGallery", "name": L(f"{name}の写真", f"{name} photos"), "url": bp.SITE + U(path),
+            "associatedMedia": [dict({"@type": "ImageObject", "contentUrl": bp.SITE + ph["full"], "thumbnailUrl": bp.SITE + ph["thumb"]},
+                                     **({"creditText": credit_text(ph["credit"])} if ph["credit"] else {}),
+                                     **({"caption": ph["caption"]} if ph["caption"] else {})) for ph in lst]}]}
+        h = bp.head(title, desc, path, bp.SITE + lst[0]["full"], jsonld, ctx["css"])
+        h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
+        h += f'<h1>{e(x["series"])} <span class="yr-h">{e(bp.year_label(x["year"]) if x["year"] else "")}</span><span class="badge ph">{photos_t}</span></h1>'
+        lead = L((f"{when}" + (f"、{venue}で" if venue else "に") + "開催。" if when else "") + f"写真{len(lst)}枚を掲載しています。",
+                 (f"Held {when}" + (f" at {venue}" if venue else "") + ". " if when else "") + f"{i18n_plural(len(lst))}.")
+        h += f'<p class="lead">{e(lead)}</p>'
+        back = (f'<p class="elinks"><a class="elink" href="{e(U(p))}">'
+                f'{L("この大会の動画・大会情報を見る", "Videos and details for this tournament")} →</a></p>')
+        h += back
+        h += gallery_html(lst, e, name, p)
+        h += back.replace('class="elinks"', 'class="elinks pback"')
+        h += "</main>" + bp.footer(ctx["as_of"])
+        pages.append((path, h, ctx["as_of"]))
+    return pages
+
+
+def i18n_plural(n):
+    return f"{n} photo" if n == 1 else f"{n} photos"
+
+
+PHOTO_CSS += """
+.pcards{list-style:none;margin:18px 0 32px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.pcards li{margin:0;min-width:0}
+.pcards a{display:flex;flex-direction:column;gap:3px;height:100%;padding:0 0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);text-decoration:none;overflow:hidden}
+.pcards a:hover,.pcards a:focus-visible{border-color:var(--pink);outline:none}
+.pc-img{display:block;aspect-ratio:4/3;overflow:hidden;margin-bottom:8px;background:var(--surface)}
+.pc-img img{display:block;width:100%;height:100%;object-fit:cover}
+.pc-t,.pc-s,.pc-c{padding:0 12px}
+.pc-t{font-weight:700;font-size:15px;line-height:1.4}
+.pc-s{font-size:12.5px;color:var(--ink2)}
+.pc-c{font-size:11.5px;color:var(--ink3)}
+.badge.ph{background:var(--pink-line);color:var(--pink)}
+.pback{margin:22px 0 32px;justify-content:center}
+.pmark{margin-left:6px;font-size:.9em;text-decoration:none}
 """

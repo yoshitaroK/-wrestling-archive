@@ -9,6 +9,7 @@
 ## 主なページ
 - [大会一覧](https://japanwrestlingchannel.com/events/): 配信動画のある66大会の一覧
 - [技術動画](https://japanwrestlingchannel.com/technique/): レスリングクラブが公開している技術・トレーニング動画を、タックル・投げ技・グラウンドなどの区分で整理
+- [写真](https://japanwrestlingchannel.com/photos/): 大会で撮影された写真(撮影者の許可を得て掲載)を大会ごとに掲載
 - [検索ページ](https://japanwrestlingchannel.com/): 大会名・通称・動画タイトルで検索
 
 ## 大会(開催回ごとのページへのリンクを含む)
