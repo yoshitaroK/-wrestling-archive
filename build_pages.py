@@ -456,6 +456,12 @@ def event_page(ev, ctx):
                 (f'<a href="{U("/events/" + slugs[x["id"]] + "/")}">{e(sib_name(x))}</a>' if x["id"] in slugs
                  else e(sib_name(x))) for x in sib) + "</dd>"
     h += "</dl>"
+    # 大会の公式サイトなど(overrides.json の event_links)
+    if ev.get("links"):
+        h += '<p class="elinks">' + "".join(
+            f'<a class="elink" href="{e(x["url"])}" target="_blank" rel="noopener">'
+            f'{e(L(x["label"], "Official tournament website") if x["label"] == "大会公式サイト" else N(x["label"]))} ↗</a>'
+            for x in ev["links"]) + "</p>"
 
     # 開催年の年表(ほかの年へのリンク)
     h += year_rail(s, ev["id"], ctx)
@@ -1064,6 +1070,9 @@ a.yr{text-decoration:none}
 .more-box .facts{margin-top:12px}
 .sources .url{display:block;color:var(--ink3);font-size:11px}
 .sources li+li{margin-top:6px}
+.elinks{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.elink{display:inline-block;padding:8px 18px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
+.elink:hover{border-color:var(--pink)}
 .tosearch-line{margin:26px 0 0;font-size:13px}
 .page .section{margin-top:24px}
 .page .aliases{margin:0 0 6px}

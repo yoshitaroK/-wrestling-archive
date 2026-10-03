@@ -1,5 +1,5 @@
 {
- "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。",
+ "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。 大会の公式サイトなどへのリンクは event_links に、event_id(開催回ID)・url・label(省略すると「大会公式サイト」)を書きます。",
  "video_overrides": [
   {
    "video_id": "rOpJGEOqWIM",
@@ -246,6 +246,14 @@
    "event_id": "wre-2022-kids-0730",
    "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
    "checked_on": "2026-09-26"
+  }
+ ],
+ "event_links": [
+  {
+   "event_id": "wre-2026-shakaijin-open-1031",
+   "url": "https://jwfcssite.wixsite.com/open2026",
+   "label": "大会公式サイト",
+   "checked_on": "2026-10-03"
   }
  ]
 }
