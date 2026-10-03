@@ -240,7 +240,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 <body>
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="{U('/')}" aria-label="{e(site_name())}{L('(トップへ)', ' (home)')}"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
-<nav class="topnav"><a href="{U('/')}">{L('大会を検索', 'Search')}</a><a href="{U('/events/calendar/')}">{L('カレンダー', 'Calendar')}</a><a href="{U('/technique/')}">{L('技術動画', 'Technique')}</a>{lang_switch(path) if alternates else ''}</nav>
+<nav class="topnav"><a href="{U('/')}">{L('大会を検索', 'Search')}</a><a href="{U('/events/calendar/')}">{L('カレンダー', 'Calendar')}</a><a href="{U('/technique/')}">{L('技術動画', 'Technique')}</a><a href="{U('/photos/')}">{L('写真', 'Photos')}</a>{lang_switch(path) if alternates else ''}</nav>
 </div></div></header>
 """
 
@@ -248,7 +248,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 def footer(as_of):
     if i18n.en():
         return f"""<footer class="wrap">
-<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/">日本語</a></p>
+<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/">日本語</a></p>
 <p>An unofficial archive that organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
@@ -257,7 +257,7 @@ def footer(as_of):
 </html>
 """
     return f"""<footer class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -348,6 +348,11 @@ def counts_text(vids):
 
 
 # ---------------------------------------------------------------- 開催回ページ
+
+def photo_mark():
+    t = L("写真あり", "Has photos")
+    return f'<span class="pmark" role="img" aria-label="{t}" title="{t}">📷</span>'
+
 
 def series_name(s):
     return N(s["name"])
@@ -616,6 +621,8 @@ def series_page(s, ctx):
         when = fmt_range(x.get("start"), x.get("end")) if x.get("start") else L("日付未確認", "Date TBC")
         cnt = (L("<b class=num>" + str(x.get("n")) + "</b>本", "<b class=num>" + str(x.get("n")) + "</b> " + ("video" if x.get("n") == 1 else "videos"))
                if x.get("n") else L("動画なし", "No videos"))
+        if x["id"] in ctx["slugs"] and f'/events/{ctx["slugs"][x["id"]]}/' in ctx["photo_paths"]:
+            badge += photo_mark()
         body = (f'<span class="oy">{x["year"]}</span><span class="ob"><span class="od">{e(when)}{badge}</span>'
                 f'<span class="ov">{e(N(x.get("venue")) or "")}</span></span><span class="on">{cnt}</span>')
         if x["id"] in ctx["slugs"]:
@@ -820,7 +827,9 @@ def index_page(ctx, series_list):
         tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in x.get("groups") or [])
         if x.get("scope") == "海外":
             tags += f'<span class="tag">{L("海外", "Overseas")}</span>'
-        h += (f'<li><a href="{U("/events/" + x["id"] + "/")}"><span class="ob"><span class="od sname">{e(N(x["name"]))}</span>'
+        has_photo = f'/events/{x["id"]}/' in ctx["photo_paths"] or any(
+            f'/events/{ctx["slugs"][v["id"]]}/' in ctx["photo_paths"] for v in ctx["events_by_series"].get(x["id"], []) if v["id"] in ctx["slugs"])
+        h += (f'<li><a href="{U("/events/" + x["id"] + "/")}"><span class="ob"><span class="od sname">{e(N(x["name"]))}{photo_mark() if has_photo else ""}</span>'
               f'<span class="ov">{e(span)} {tags}</span></span><span class="on"><b class="num">{x.get("n", 0)}</b>{L("本", " videos")}</span></a></li>')
     h += "</ol></main>" + footer(ctx["as_of"])
     return path, h
@@ -995,6 +1004,7 @@ def llms_txt(data, series_list, ctx):
         "## 主なページ",
         f"- [大会一覧]({SITE}/events/): 配信動画のある{len(series_list)}大会の一覧",
         f"- [技術動画]({SITE}/technique/): レスリングクラブが公開している技術・トレーニング動画を、タックル・投げ技・グラウンドなどの区分で整理",
+        f"- [写真]({SITE}/photos/): 大会で撮影された写真(撮影者の許可を得て掲載)を大会ごとに掲載",
         f"- [検索ページ]({SITE}/): 大会名・通称・動画タイトルで検索",
         "",
         "## 大会(開催回ごとのページへのリンクを含む)",
@@ -1186,7 +1196,9 @@ def build(root=HERE, inline_css=False, only=None):
     photos_by_page, photo_report = photo_gallery.load(root, page_paths)
     ctx = dict(S=S, slugs=slugs, by_event=by_event, cand=cand, loose_by_series=loose_by_series,
                events_by_series=events_by_series, all_events=data["events"], css=css, as_of=data.get("as_of"),
-               gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title, path))
+               gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title, path,
+                                                                     U(photo_gallery.photo_path(path)) if photos_by_page.get(path) else None),
+               photo_paths=set(photos_by_page))
 
     import players
     import calendar_page
@@ -1224,6 +1236,8 @@ def build(root=HERE, inline_css=False, only=None):
             order = {slug: i for i, slug in enumerate(tcfg.get("display_order", []))}
             cats_view = sorted(cats, key=lambda c: order.get(c["slug"], len(order)))
             pages.extend(tech_pages(tech, cats_view, shown, ctx))
+            # 写真ページ(/photos/)。photos.json に写真があるページの分だけ作る
+            pages.extend(photo_gallery.photo_pages(ctx, photos_by_page, me))
             # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
             ppages, preport = players.build(root, data, ctx, me)
             pages.extend(ppages)
@@ -1282,7 +1296,8 @@ def build(root=HERE, inline_css=False, only=None):
     n_se = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 3)
     n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
     n_pl = sum(1 for p in pages if p[0].startswith("/players/"))
-    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl})+英語版 {len(en_pages)}ページ")
+    n_ph = sum(1 for p in pages if p[0].startswith("/photos/"))
+    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl}・写真 {n_ph})+英語版 {len(en_pages)}ページ")
     if i18n.missing:
         print(f"[英語版] 英語名が無い名前 {len(i18n.missing)}件(日本語のまま表示): " + "、".join(sorted(i18n.missing)[:10]) + " … en_names.csv に追加してください")
     print(f"写真: {photo_report['shown']}枚を{photo_report['pages_with_photos']}ページに掲載"
