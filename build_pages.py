@@ -189,9 +189,25 @@ def lang_switch(path):
     if i18n.en():
         href, code, label, title = path, "ja", "日本語", "日本語版を表示"
     else:
-        href, code, label, title = "/en" + path, "en", "EN", "English version"
+        href, code, label, title = "/en" + path, "en", "English", "English version"
     return (f'<a class="lang" href="{e(href)}" hreflang="{code}" lang="{code}" title="{title}" '
             f'onclick="try{{localStorage.setItem(\'lang\',\'{code}\')}}catch(x){{}}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">{label}</a>')
+
+
+def official_bar(lang_link=""):
+    """ヘッダーの上の細い帯(公式サイトであることと、言語の切り替え)"""
+    return (f'<div class="official"><div class="wrap"><span class="official-t">{L("Japan Wrestling Channel 公式サイト", "Official site of Japan Wrestling Channel")}</span>'
+            f'{lang_link}</div></div>')
+
+
+NAV = [("/", "大会を検索", "Search"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos")]
+
+
+def nav_links(path):
+    """上のメニュー。今いるページの項目に下線を引く(aria-current)"""
+    cur = "/events/calendar/" if path.startswith("/events/calendar/") else next((p for p, _, _ in NAV[1:] if path.startswith(p)), "")
+    here = ' aria-current="page"'
+    return "".join(f'<a href="{U(p)}"{here if p == cur else ""}>{L(ja, en)}</a>' for p, ja, en in NAV)
 
 
 def head(title, desc, path, og_image, jsonld, css, alternates=True):
@@ -224,10 +240,10 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#07111f">
 <script>(function(){{var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
 try{{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}}catch(e){{}}
-function set(v){{d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#ffffff':'#000000';}}
+function set(v){{d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#0d1f3c':'#07111f';}}
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
 if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){{try{{if(sessionStorage.getItem('theme'))return;}}catch(x){{}}set(e.matches?'light':'dark');}});
 window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}catch(e){{}}}};}})();</script>
@@ -239,30 +255,31 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 {THUMB_JS}
 </head>
 <body>
+{official_bar(lang_switch(path) if alternates else '')}
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="{U('/')}" aria-label="{e(site_name())}{L('(トップへ)', ' (home)')}"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
-<nav class="topnav"><a href="{U('/')}">{L('大会を検索', 'Search')}</a><a href="{U('/events/calendar/')}">{L('カレンダー', 'Calendar')}</a><a href="{U('/technique/')}">{L('技術動画', 'Technique')}</a><a href="{U('/photos/')}">{L('写真', 'Photos')}</a>{lang_switch(path) if alternates else ''}</nav>
+<nav class="topnav" aria-label="{L('メニュー', 'Menu')}">{nav_links(path)}</nav>
 </div></div></header>
 """
 
 
 def footer(as_of):
     if i18n.en():
-        return f"""<footer class="wrap">
+        return f"""<footer class="site-foot"><div class="wrap">
 <p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/">日本語</a></p>
 <p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
-</footer>
+</div></footer>
 </body>
 </html>
 """
-    return f"""<footer class="wrap">
+    return f"""<footer class="site-foot"><div class="wrap">
 <p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
-</footer>
+</div></footer>
 </body>
 </html>
 """
@@ -1067,11 +1084,6 @@ PAGE_CSS = """
 :root[data-theme="light"] .cresult.ok{background:#e6f4ea;border-color:#9ccfab}
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
-.brand{justify-content:space-between}
-.home{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
-.topnav{display:flex;gap:8px}
-.topnav a{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px}
-.topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .page{padding-top:18px}
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
@@ -1151,9 +1163,6 @@ a.yr{text-decoration:none}
 .v .thumb img{width:100%;height:100%}
 @media (max-width:760px){
   .page h1{font-size:22px}
-  .brand{flex-wrap:wrap}
-  .topnav{gap:6px}
-  .topnav a{font-size:11.5px;padding:4px 9px;white-space:nowrap}
   .logo-type{font-size:21px;white-space:nowrap}
   .page .facts{grid-template-columns:max-content 1fr}
   .page .facts dt{margin-top:0}
@@ -1232,6 +1241,7 @@ def build(root=HERE, inline_css=False, only=None):
     listed = sorted([x for x in data["series"] if x.get("n")], key=latest, reverse=True)
 
     all_pages = []
+    hero = {}
     # 日本語版(今までのURL)と英語版(/en/ の下)を同じ処理で作る
     for lang in ("ja", "en"):
         i18n.set_lang(lang)
@@ -1256,6 +1266,7 @@ def build(root=HERE, inline_css=False, only=None):
             pages.extend(tech_pages(tech, cats_view, shown, ctx))
             # 写真ページ(/photos/)。photos.json に写真があるページの分だけ作る
             pages.extend(photo_gallery.photo_pages(ctx, photos_by_page, me))
+            hero[lang] = photo_gallery.hero_items(ctx, photos_by_page, me)
             # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
             ppages, preport = players.build(root, data, ctx, me)
             pages.extend(ppages)
@@ -1292,6 +1303,8 @@ def build(root=HERE, inline_css=False, only=None):
                 f.write(doc)
         all_pages.append((lang, pages))
     i18n.set_lang("ja")
+    if only is None:
+        photo_gallery.write_hero(root, hero)
     pages = all_pages[0][1]
     en_pages = all_pages[1][1]
 

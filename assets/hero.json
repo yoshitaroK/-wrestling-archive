@@ -1,0 +1,97 @@
+{
+ "about": "自動生成。トップページの写真(photo_gallery.py の HERO_PHOTOS)。手で編集しない",
+ "ja": [
+  {
+   "src": "/assets/photos/04916cd56b75.jpg",
+   "srcset": "/assets/photos/04916cd56b75-t.jpg 480w, /assets/photos/04916cd56b75.jpg 1600w",
+   "w": 1600,
+   "h": 1200,
+   "href": "/photos/x-asian-championships/",
+   "label": "アジア選手権(海外) 2026年",
+   "credit": "撮影:Kotone NARIKUNI(@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/47a9fe0d3482.jpg",
+   "srcset": "/assets/photos/47a9fe0d3482-t.jpg 480w, /assets/photos/47a9fe0d3482.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/photos/x-asian-championships/",
+   "label": "アジア選手権(海外) 2026年",
+   "credit": "撮影:Kotone NARIKUNI(@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/3ab842b68ec5.jpg",
+   "srcset": "/assets/photos/3ab842b68ec5-t.jpg 480w, /assets/photos/3ab842b68ec5.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/photos/intercollegiate/2026/",
+   "label": "全日本学生選手権（インカレ） 2026年",
+   "credit": "撮影:Kotone NARIKUNI(@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/c9c94905f206.jpg",
+   "srcset": "/assets/photos/c9c94905f206-t.jpg 480w, /assets/photos/c9c94905f206.jpg 1600w",
+   "w": 1600,
+   "h": 1200,
+   "href": "/photos/meiji-cup/2026/",
+   "label": "明治杯全日本選抜選手権 2026年",
+   "credit": "撮影:Kotone NARIKUNI(@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/61d86d1537b8.jpg",
+   "srcset": "/assets/photos/61d86d1537b8-t.jpg 480w, /assets/photos/61d86d1537b8.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/photos/shakaijin/2026/",
+   "label": "全日本社会人選手権 2026年",
+   "credit": "撮影:Kotone NARIKUNI(@__kotograph__)"
+  }
+ ],
+ "en": [
+  {
+   "src": "/assets/photos/04916cd56b75.jpg",
+   "srcset": "/assets/photos/04916cd56b75-t.jpg 480w, /assets/photos/04916cd56b75.jpg 1600w",
+   "w": 1600,
+   "h": 1200,
+   "href": "/en/photos/x-asian-championships/",
+   "label": "Asian Championships (overseas) 2026",
+   "credit": "Photo: Kotone NARIKUNI (@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/47a9fe0d3482.jpg",
+   "srcset": "/assets/photos/47a9fe0d3482-t.jpg 480w, /assets/photos/47a9fe0d3482.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/en/photos/x-asian-championships/",
+   "label": "Asian Championships (overseas) 2026",
+   "credit": "Photo: Kotone NARIKUNI (@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/3ab842b68ec5.jpg",
+   "srcset": "/assets/photos/3ab842b68ec5-t.jpg 480w, /assets/photos/3ab842b68ec5.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/en/photos/intercollegiate/2026/",
+   "label": "All Japan Intercollegiate Championships (Inter-College) 2026",
+   "credit": "Photo: Kotone NARIKUNI (@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/c9c94905f206.jpg",
+   "srcset": "/assets/photos/c9c94905f206-t.jpg 480w, /assets/photos/c9c94905f206.jpg 1600w",
+   "w": 1600,
+   "h": 1200,
+   "href": "/en/photos/meiji-cup/2026/",
+   "label": "Meiji Cup All Japan Invitational Championships 2026",
+   "credit": "Photo: Kotone NARIKUNI (@__kotograph__)"
+  },
+  {
+   "src": "/assets/photos/61d86d1537b8.jpg",
+   "srcset": "/assets/photos/61d86d1537b8-t.jpg 480w, /assets/photos/61d86d1537b8.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/en/photos/shakaijin/2026/",
+   "label": "All Japan Working Adults Championships 2026",
+   "credit": "Photo: Kotone NARIKUNI (@__kotograph__)"
+  }
+ ]
+}

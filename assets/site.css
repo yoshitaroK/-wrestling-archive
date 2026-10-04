@@ -2,7 +2,9 @@
 :root{
   color-scheme:dark;
   --bg:#000000; --bg2:#0d0d10; --surface:#16161a; --surface-2:#222228; --ink:#ffffff; --ink2:#b9b8c0; --ink3:#86858e; --line:#2a2a31;
-  --pink:#ff2e7e; --pink-deep:#ff6aa5; --pink-tint:rgba(255,46,126,.16); --pink-line:#5c1f38; --grad-a:#7b3fd4; --grad-b:#ff2e7e;
+  /* 紺と赤のテーマ。--pink は名前だけ前のままで、中身はアクセントの赤 */
+  --pink:#ff4458; --pink-deep:#ff8591; --pink-tint:rgba(255,68,88,.16); --pink-line:#5e2128; --grad-a:#13294b; --grad-b:#2b4f8a;
+  --navy:#0c1d38; --navy-2:#07111f; --on-navy:#ffffff; --on-navy-2:#c3cde0; --brand-pink:#ff2e7e;
   --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
   --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
   --font:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
@@ -20,45 +22,69 @@ button,input,select{font:inherit;color:inherit}
 .num{font-family:var(--num);font-weight:600;letter-spacing:.01em}
 
 /* ヘッダー */
-.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
-.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0}
-.topnav{display:flex;gap:8px}
-.topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
-.topnav a:hover{border-color:var(--pink);color:var(--pink)}
-.topnav a.lang{font-weight:700;border-color:var(--pink-line)}
+.brand{display:flex;align-items:center;gap:8px 28px;flex-wrap:wrap;padding:10px 0 0}
+/* 公式サイトの帯とヘッダー(紺の帯)。白テーマ・黒テーマのどちらでも紺にする */
+.official{background:var(--navy-2);color:var(--on-navy-2);font-size:12px;line-height:1.4}
+.official .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:32px}
+.official-t{display:flex;align-items:center;gap:8px;min-width:0}
+.official-t::before{content:"";flex:0 0 auto;width:4px;height:14px;border-radius:1px;background:var(--pink)}
+.official a.lang{flex:0 0 auto;color:#fff;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,.4);border-radius:4px;padding:1px 10px;font-size:12px}
+.official a.lang:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:var(--on-navy);border-bottom:3px solid var(--pink)}
+.home{display:flex;align-items:center;gap:10px;color:var(--on-navy);text-decoration:none;padding-bottom:10px}
+.topnav{display:flex;gap:26px;margin-left:auto;align-self:stretch;align-items:stretch}
+.topnav a{display:flex;align-items:center;font-size:14px;font-weight:700;color:var(--on-navy);text-decoration:none;white-space:nowrap;padding:8px 0 10px;border-bottom:3px solid transparent}
+.topnav a:hover{border-bottom-color:rgba(255,255,255,.5)}
+.topnav a[aria-current]{border-bottom-color:#fff}
+.topnav a:focus-visible,.home:focus-visible,.official a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.brand .theme-btn{align-self:center;margin-bottom:10px}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
 .mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .orig{font-size:12px;color:var(--ink3);margin-top:-4px}
-.top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* 白ベース。初めて来た人は端末の設定に合わせ、トップページ右上のボタンで選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
 :root[data-theme="light"]{
     color-scheme:light;
     --bg:#ffffff; --bg2:#f4f4f7; --surface:#f4f4f7; --surface-2:#e6e6eb; --ink:#16161a; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e1e1e7;
-    --pink:#d6135f; --pink-deep:#b8105a; --pink-tint:rgba(214,19,95,.09); --pink-line:#f3b6cc;
+    --pink:#c8102e; --pink-deep:#a50d26; --pink-tint:rgba(200,16,46,.08); --pink-line:#f0bcc4;
+    --navy:#13294b; --navy-2:#0d1f3c;
     --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
     --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
 }
-:root[data-theme="light"] .top{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
-.theme-btn{flex:0 0 auto;width:32px;height:32px;display:inline-grid;place-items:center;padding:0;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);cursor:pointer}
-.theme-btn:hover{border-color:var(--pink);color:var(--pink)}
-.theme-btn:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.theme-btn{flex:0 0 auto;width:32px;height:32px;display:inline-grid;place-items:center;padding:0;border:1px solid rgba(255,255,255,.4);border-radius:999px;background:transparent;color:var(--on-navy);cursor:pointer}
+.theme-btn:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.theme-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .theme-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .theme-btn .i-moon,:root[data-theme="light"] .theme-btn .i-sun{display:block}
 .theme-btn .i-sun,:root[data-theme="light"] .theme-btn .i-moon{display:none}
 
-.brand h1{margin:0;line-height:1}
-.brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
 .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--grad-a),var(--grad-b));display:grid;place-items:center;
   font-family:var(--num);font-weight:600;font-size:26px;color:#fff;line-height:1;padding-top:4px;box-shadow:0 0 18px rgba(255,46,126,.45)}
 .logo-type{font-family:var(--num);font-weight:600;font-size:30px;letter-spacing:.06em;line-height:1;padding-top:5px}
-.logo-type .ac{color:var(--pink)}
+.logo-type .ac{color:var(--brand-pink)}
 .logo-img{display:block;height:54px;width:auto}
 .logo-img+.logo-type{font-size:22px;padding-top:14px}
-.brand p{margin:0;color:var(--ink3);font-size:12px}
-.brand p .num{color:var(--pink);font-size:17px}
+
+/* トップの大きな写真と検索欄。写真は assets/hero.json(photo_gallery.py の HERO_PHOTOS)から開くたびに1枚選ぶ */
+.jhero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--navy),#1f3f73);color:#fff}
+.jhero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:0;transition:opacity .5s ease}
+.jhero-img.on{opacity:1}
+.jhero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,17,31,.88) 0%,rgba(7,17,31,.6) 50%,rgba(7,17,31,.25) 100%)}
+.jhero-in{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:440px;padding-top:56px;padding-bottom:64px}
+.jhero h1{margin:0 0 10px;font-size:42px;font-weight:900;line-height:1.25;letter-spacing:.02em;max-width:16em;text-shadow:0 2px 16px rgba(0,0,0,.35)}
+.jlead{margin:0 0 22px;font-size:15px;color:#e4e9f3;max-width:56em}
+.jlead .num{color:#fff;font-size:21px;margin:0 2px}
+.jhero .searchrow{max-width:700px}
+.jhero .searchrow input{border:0;border-radius:6px;padding:15px 18px;font-size:17px;background:#fff;color:#16161a;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.jhero .searchrow input::placeholder{color:#6b6b75}
+.jhero .searchrow input:focus{outline:none;box-shadow:0 0 0 4px var(--pink),0 8px 28px rgba(0,0,0,.35)}
+.jhero .hint{color:#d3dbea;margin-top:8px}
+.jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:3px 9px;text-decoration:none}
+.jcredit:hover{text-decoration:underline}
+.jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.jcredit[hidden]{display:none}
 
 /* 検索・絞り込み */
-.searchbox{padding:18px 0 4px}
+.searchbox{padding:14px 0 4px}
 .searchrow input{width:100%;border:1px solid var(--surface-2);border-radius:10px;padding:13px 16px;font-size:16px;background:var(--surface);color:var(--ink)}
 .searchrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
 .hint{margin:6px 2px 0;font-size:12px;color:var(--ink3)}
@@ -98,7 +124,7 @@ main{padding:10px 0 60px}
 .hero .hm{font-size:13px;opacity:.92;margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
 .hero .hm .num{font-size:18px}
 .hero .cta{margin-top:18px;display:inline-block;background:var(--pink);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px;width:fit-content}
-.hero:hover .cta{background:#ff5b99}
+.hero:hover .cta{filter:brightness(1.12)}
 
 /* 横並びの棚 */
 .shelf{margin:0 0 30px}
@@ -200,25 +226,34 @@ main{padding:10px 0 60px}
 .empty strong{color:var(--ink)}
 details.loose{margin-top:30px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
 details.loose summary{cursor:pointer;font-weight:700}
-footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:12px;color:var(--ink3)}
+footer{font-size:12px}
 footer p{margin:0 0 6px;max-width:76ch}
+.site-foot{background:var(--navy-2);color:var(--on-navy-2);border-top:3px solid var(--pink);margin-top:20px}
+.site-foot .wrap{padding-top:28px;padding-bottom:44px}
+.site-foot a{color:#fff;text-underline-offset:3px}
+.site-foot p:first-child{font-size:14px;font-weight:700;color:var(--on-navy-2);margin-bottom:16px;line-height:2}
 .loading{padding:60px 0;text-align:center;color:var(--ink3)}
 
 .series,.event,.vgroup{scroll-margin-top:72px}
 @media (max-width:760px){
-  .topnav a{font-size:11px;padding:4px 10px}
-  .brand p{font-size:0}
-  .brand p .num,.brand p{line-height:1}
-  .brand p .num{font-size:16px}
-  .brand p::after{content:"本";font-size:12px}
-  html[lang="en"] .brand p::after{content:" videos"}
-  .brand p .pc{display:none}
-  .brand p{margin-left:auto}
-  .theme-btn{order:3;width:30px;height:30px}
-  .brand .topnav{order:4;flex-basis:100%}
+  .official-t{font-size:11px}
+  .brand{gap:0 12px;padding-top:8px}
+  .home{padding-bottom:6px}
+  .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
+  .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:22px;overflow-x:auto;scrollbar-width:none;padding-top:2px}
+  .brand .topnav::-webkit-scrollbar{display:none}
+  .topnav a{font-size:13.5px;padding:6px 0 8px}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
+  .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
+  .jhero h1{font-size:24px;margin-bottom:6px}
+  .jlead{font-size:12.5px;margin-bottom:14px}
+  .jlead .num{font-size:17px}
+  .jhero .searchrow input{padding:13px 14px;font-size:16px}
+  .jhero .hint{font-size:11.5px}
+  .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px)}
+  .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
   .row{grid-auto-columns:66%}
   .sbody{padding:2px 12px 16px}
@@ -257,11 +292,6 @@ footer p{margin:0 0 6px;max-width:76ch}
 :root[data-theme="light"] .cresult.ok{background:#e6f4ea;border-color:#9ccfab}
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
-.brand{justify-content:space-between}
-.home{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
-.topnav{display:flex;gap:8px}
-.topnav a{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px}
-.topnav a:hover{border-color:var(--pink);color:var(--pink)}
 .page{padding-top:18px}
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
@@ -341,9 +371,6 @@ a.yr{text-decoration:none}
 .v .thumb img{width:100%;height:100%}
 @media (max-width:760px){
   .page h1{font-size:22px}
-  .brand{flex-wrap:wrap}
-  .topnav{gap:6px}
-  .topnav a{font-size:11.5px;padding:4px 9px;white-space:nowrap}
   .logo-type{font-size:21px;white-space:nowrap}
   .page .facts{grid-template-columns:max-content 1fr}
   .page .facts dt{margin-top:0}
