@@ -164,7 +164,8 @@ def assign_slugs(data, slug_path):
 
 
 def page_worthy(ev):
-    return ev.get("n", 0) > 0
+    # 配信動画がある開催回のほか、写真・アルバム(photos.json)がある開催回もページを作る
+    return ev.get("n", 0) > 0 or bool(ev.get("_photo_page"))
 
 
 # ---------------------------------------------------------------- 共通パーツ
@@ -389,7 +390,10 @@ def event_page(ev, ctx):
             lead_parts.append(f"Video publish dates: {rng} (official dates not yet confirmed)." if ev.get("derived")
                               else f"{'Scheduled for' if status == 'scheduled' else 'Held on'} {rng}{(' at ' + venue) if venue else ''}.")
         src = "Japan Wrestling Channel streams" if not others else "YouTube streams and videos"
-        lead_parts.append(f" {i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
+        if vids:
+            lead_parts.append(f" {i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
+        else:
+            lead_parts.append(" No videos for this edition yet. See the photos below.")
         if others:
             lead_parts.append(f" Includes {n_main} Japan Wrestling Channel streams plus videos from {', '.join(others)}." if n_main
                               else f" All videos are published by {', '.join(others)}.")
@@ -401,7 +405,10 @@ def event_page(ev, ctx):
             lead_parts.append(f"{rng}{('、' + ev['venue'] + 'で') if ev.get('venue') else 'に'}{verb}。"
                               if not ev.get("derived") else f"動画の配信日は{rng}です(公式の開催日は確認中)。")
         src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
-        lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+        if vids:
+            lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+        else:
+            lead_parts.append("この開催回の配信動画はまだありません。下の「写真」から写真を見られます。")
         if others:
             lead_parts.append(f"Japan Wrestling Channel の配信{n_main}本のほか、{'、'.join(others)}の動画を含みます。" if n_main
                               else f"いずれも{'、'.join(others)}が公開している動画です。")
@@ -412,11 +419,17 @@ def event_page(ev, ctx):
         desc = f"{name} ({ev['year']}): {i18n.plural(len(vids), 'stream/video', 'streams/videos')}. {counts}." + (
             f" Held {rng}" if ev.get("start") and not ev.get("derived") else "") + (
             f" at {venue}." if venue and not ev.get("derived") else "")
+        if not vids:
+            title = f"{name} {ev['year']} – Photos | {site_name()}"
+            desc = f"{name} ({ev['year']}): photos." + (f" Held {rng}" if ev.get("start") else "") + (f" at {venue}." if venue else "")
     else:
         title = f"{name} {ev['year']}年 配信動画一覧({len(vids)}本)|{SITE_NAME}"
         desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + (
             f"{rng}開催" if ev.get("start") and not ev.get("derived") else "") + (
             f"、会場は{ev['venue']}。" if ev.get("venue") and not ev.get("derived") else "。")
+        if not vids:
+            title = f"{name} {ev['year']}年 写真|{SITE_NAME}"
+            desc = f"{name}({ev['year']}年)の写真。" + (f"{rng}開催" if ev.get("start") else "") + (f"、会場は{ev['venue']}。" if ev.get("venue") else "。")
     dated = re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (series_name(s), spath),
               (year_label(ev["year"]) + ((L("(", " (") + (fmt_date(ev['start'])[5:] if not i18n.en() else fmt_date(ev['start']).rsplit(',', 1)[0]) + ")") if dated else ""), None)]
@@ -451,7 +464,7 @@ def event_page(ev, ctx):
             h += f"<dt>{L('会場', 'Venue')}</dt><dd>{e(venue)}</dd>"
     if ev.get("fy_label"):
         h += f"<dt>{L('年度', 'Fiscal year')}</dt><dd>{e(N(ev['fy_label']))}</dd>"
-    h += f"<dt>{L('収録', 'Videos')}</dt><dd>{e(counts)}</dd>"
+    h += f"<dt>{L('収録', 'Videos')}</dt><dd>{e(counts or L('配信動画なし', 'No videos yet'))}</dd>"
     if ev.get("group"):
         sib = [x for x in ctx["all_events"] if x.get("group") == ev["group"] and x["id"] != ev["id"]]
         if sib:
@@ -1173,6 +1186,11 @@ def build(root=HERE, inline_css=False, only=None):
     ver = hashlib.md5(css_text.encode("utf-8")).hexdigest()[:8]
     css = f"<style>{css_text}</style>" if inline_css else f'<link rel="stylesheet" href="/assets/site.css?v={ver}">'
 
+    import photo_gallery
+    wanted = photo_gallery.wanted_pages(root)
+    for ev in data["events"]:
+        if f"{ev['series']}/{ev['year']}" in wanted:
+            ev["_photo_page"] = True
     slugs = assign_slugs(data, os.path.join(root, "page_slugs.json"))
     S = {s["id"]: s for s in data["series"]}
     events_by_series = defaultdict(list)
@@ -1198,7 +1216,7 @@ def build(root=HERE, inline_css=False, only=None):
                events_by_series=events_by_series, all_events=data["events"], css=css, as_of=data.get("as_of"),
                gallery=lambda path, title: photo_gallery.gallery_html(photos_by_page.get(path), e, title, path,
                                                                      U(photo_gallery.photo_path(path)) if photos_by_page.get(path) else None),
-               photo_paths=set(photos_by_page))
+               photo_paths=set(photos_by_page) | set(photo_gallery.ALBUMS))
 
     import players
     import calendar_page

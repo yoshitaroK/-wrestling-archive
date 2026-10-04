@@ -50,7 +50,7 @@
   "warnings": [],
   "errors": [],
   "unlisted_files": [],
-  "albums": 1,
+  "albums": 10,
   "from_manifest": 31
  },
  "tech": {
@@ -125,7 +125,7 @@
   ]
  },
  "en": {
-  "pages": 296,
+  "pages": 298,
   "names": 326,
   "machine_translations": 3713,
   "missing_names": []

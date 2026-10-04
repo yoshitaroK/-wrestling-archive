@@ -23,6 +23,8 @@ photos.json の1件の書き方
   - photos.json の albums に書いたページには、ギャラリーの下に外部アルバム(Google フォトなど)へのボタンを出す
       "albums": [{"page": "intercollegiate/2026", "url": "https://photos.app.goo.gl/…", "count": "1000"}]
     (アルバムを公開してよいか、撮影者に確認してから書く)
+    1ページに複数書ける。year を書くとボタンが「2026年の写真をアルバムで見る」になる。credit を書くとボタンの下に出す
+  - 配信動画が無い開催回でも、写真・アルバムがあれば開催回ページを作る(wanted_pages)
   - Pillow が入っていない環境では新しい写真は作れない(作成済みの縮小版があればそれを使う)
 """
 import hashlib
@@ -100,9 +102,25 @@ def image_size(path):
 ALBUMS = {}
 
 
+def wanted_pages(root):
+    """photos.json の写真・アルバムが指している開催回("interhigh/2026" の形)。
+    配信動画が無い開催回でも、写真やアルバムがあればページを作るために使う"""
+    try:
+        with open(os.path.join(root, PHOTOS_JSON), encoding="utf-8-sig") as f:
+            cfg = json.load(f)
+    except (OSError, ValueError):
+        return set()
+    if not isinstance(cfg, dict):
+        return set()
+    items = [x for x in cfg.get("photos") or [] if isinstance(x, dict) and flag(x.get("confirmed")) and not flag(x.get("hidden"))]
+    items += [a for a in cfg.get("albums") or [] if isinstance(a, dict)]
+    return {norm_page(x.get("page")) for x in items if "/" in norm_page(x.get("page"))}
+
+
 def load_albums(cfg, page_paths, report):
-    """外部アルバムへのリンク(albums)を読む"""
+    """外部アルバムへのリンク(albums)を読む。1ページに複数のアルバムを書ける"""
     ALBUMS.clear()
+    n = 0
     for i, a in enumerate((cfg.get("albums") or []) if isinstance(cfg, dict) else [], 1):
         url = str((a or {}).get("url") or "").strip()
         page = norm_page((a or {}).get("page"))
@@ -111,8 +129,11 @@ def load_albums(cfg, page_paths, report):
         elif f"/events/{page}/" not in page_paths:
             report["errors"].append(f"albums {i}件目: page「{a.get('page') or ''}」のページが見つかりません")
         else:
-            ALBUMS[f"/events/{page}/"] = {"url": url, "count": str(a.get("count") or "").strip()}
-    report["albums"] = len(ALBUMS)
+            ALBUMS.setdefault(f"/events/{page}/", []).append({
+                "url": url, "count": str(a.get("count") or "").strip(), "year": str(a.get("year") or "").strip(),
+                "credit": str(a.get("credit") or "").strip()})
+            n += 1
+    report["albums"] = n
 
 
 def load(root, page_paths):
@@ -250,12 +271,18 @@ def load(root, page_paths):
     return dict(by_page), report
 
 
-def album_html(album, e):
-    if not album:
-        return ""
-    n = album["count"]
-    label = L(f"アルバムですべての写真を見る{('(' + n + '枚)') if n else ''}", f"See all photos in the album{(' (' + n + ' photos)') if n else ''}")
-    return f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
+def album_html(albums, e):
+    """外部アルバムへのボタン。year があれば「2026年の写真(アルバム)」、無ければ「アルバムですべての写真を見る」"""
+    out = []
+    for album in albums or []:
+        n, y = album["count"], album["year"]
+        cnt = L(f"({n}枚)", f" ({n} photos)") if n else ""
+        label = (L(f"{y}年の写真をアルバムで見る", f"See {y} photos in the album") if y
+                 else L("アルバムですべての写真を見る", "See all photos in the album")) + cnt
+        cr = credit_text(album["credit"])
+        out.append(f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
+                   + (f'<p class="palbum-c">{e(cr)}</p>' if cr else ""))
+    return "".join(out)
 
 
 def gallery_html(photos, e, title, path=None, more=None):
@@ -345,6 +372,7 @@ PHOTO_CSS = """
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
 .palbum{display:block;width:max-content;max-width:100%;margin:12px auto 0;padding:9px 22px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .palbum:hover{border-color:var(--pink)}
+.palbum-c{margin:4px 0 0;text-align:center;font-size:11.5px;color:var(--ink3)}
 .pcredit-all{margin:-4px 0 10px;font-size:12px;color:var(--ink3)}
 .pshow{display:block;margin:12px auto 0;padding:9px 22px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
 .pshow:hover{border-color:var(--pink);color:var(--pink)}
