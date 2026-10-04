@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-04T11:48:32+09:00",
- "as_of": "2026-10-04",
+ "built_at": "2026-10-05T06:34:51+09:00",
+ "as_of": "2026-10-05",
  "video_count": 3354,
  "raw_count": 3354,
  "duplicate_ids_removed": 0,
@@ -23,11 +23,11 @@
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
-  "total": 3713,
-  "translated": 3713,
-  "new": 0,
+  "total": 3714,
+  "translated": 3714,
+  "new": 1,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 14,
   "error": ""
  },
  "players": {
@@ -63,10 +63,10 @@
   "from_manifest": 301
  },
  "tech": {
-  "shown": 57,
+  "shown": 58,
   "by_category": {
+   "stand": 8,
    "ground": 5,
-   "stand": 7,
    "tackle": 14,
    "defense": 4,
    "throw": 3,
@@ -136,7 +136,7 @@
  "en": {
   "pages": 307,
   "names": 326,
-  "machine_translations": 3713,
+  "machine_translations": 3714,
   "missing_names": []
  }
 }
