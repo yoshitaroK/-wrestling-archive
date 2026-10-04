@@ -39,16 +39,20 @@
   "video_links": 0
  },
  "photos": {
-  "entries": 181,
-  "shown": 181,
+  "entries": 301,
+  "shown": 301,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 6,
+  "pages_with_photos": 10,
   "by_page": {
    "/events/east-league/2026/": 30,
    "/events/east-spring/2026/": 30,
+   "/events/highschool-greco/2026/": 30,
    "/events/intercollegiate/2026/": 31,
+   "/events/interhigh/2026/": 30,
+   "/events/joc-junior/2026/": 30,
    "/events/meiji-cup/2026/": 30,
+   "/events/regional-関東-qualifier/": 30,
    "/events/shakaijin/2026/": 30,
    "/events/x-asian-championships/": 30
   },
@@ -56,7 +60,7 @@
   "errors": [],
   "unlisted_files": [],
   "albums": 12,
-  "from_manifest": 181
+  "from_manifest": 301
  },
  "tech": {
   "shown": 57,
@@ -130,7 +134,7 @@
   ]
  },
  "en": {
-  "pages": 303,
+  "pages": 307,
   "names": 326,
   "machine_translations": 3713,
   "missing_names": []
