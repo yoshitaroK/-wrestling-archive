@@ -12,24 +12,24 @@ import os
 import i18n
 
 SITE = "https://japanwrestlingchannel.com"
-DESC = ("An unofficial archive of Japanese wrestling streams and videos from Japan Wrestling Channel and others, "
+DESC = ("The official Japan Wrestling Channel archive of Japanese wrestling streams and videos (from Japan Wrestling Channel and others), "
         "searchable by tournament, year and day. Emperor's Cup, Meiji Cup, Inter-College, Inter-High and more.")
 
 PAIRS = [
     ('<html lang="ja">', '<html lang="en">'),
     ('<title>レスリング配信アーカイブ</title>', '<title>Japan Wrestling Archive – Japanese wrestling streams by tournament</title>'),
-    ('<meta name="description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">',
+    ('<meta name="description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">',
      f'<meta name="description" content="{DESC}">'),
     ('<link rel="canonical" href="https://japanwrestlingchannel.com/">', '<link rel="canonical" href="https://japanwrestlingchannel.com/en/">'),
     ('<meta property="og:site_name" content="レスリング配信アーカイブ">', '<meta property="og:site_name" content="Japan Wrestling Archive">\n<meta property="og:locale" content="en_US">'),
     ('<meta property="og:title" content="レスリング配信アーカイブ">', '<meta property="og:title" content="Japan Wrestling Archive">'),
-    ('<meta property="og:description" content="Japan Wrestling Channel などのレスリング配信・動画を、大会名・開催年・日程から探せる非公式アーカイブです。">',
+    ('<meta property="og:description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。">',
      f'<meta property="og:description" content="{DESC}">'),
     ('<meta property="og:url" content="https://japanwrestlingchannel.com/">', '<meta property="og:url" content="https://japanwrestlingchannel.com/en/">'),
     ('<meta property="og:image" content="https://japanwrestlingchannel.com/ogp.png?v=2">', '<meta property="og:image" content="https://japanwrestlingchannel.com/ogp-en.png?v=1">'),
     ('aria-label="レスリング配信アーカイブ(トップへ)"', 'aria-label="Japan Wrestling Archive (home)"'),
-    ('<p id="tagline">レスリングの配信・動画を大会・開催年から探せる非公式アーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>',
-     '<p id="tagline">Unofficial archive of Japanese wrestling streams by tournament and year · <b class="num" id="stat-v"></b><span class="pc"> videos</span></p>'),
+    ('<p id="tagline">Japan Wrestling Channel 公式 · レスリングの配信・動画を大会・開催年から探せるアーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>',
+     '<p id="tagline">Official Japan Wrestling Channel archive of wrestling streams by tournament and year · <b class="num" id="stat-v"></b><span class="pc"> videos</span></p>'),
     ('<nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a href="/photos/">写真</a>'
      '<a class="lang" href="/en/" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem(\'lang\',\'en\')}catch(x){}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">EN</a></nav>',
      '<nav class="topnav"><a href="/en/events/">Tournaments</a><a href="/en/events/calendar/">Calendar</a><a href="/en/technique/">Technique</a><a href="/en/photos/">Photos</a>'
@@ -48,8 +48,8 @@ PAIRS = [
     ('<div class="loading">データを読み込んでいます</div>', '<div class="loading">Loading data…</div>'),
     ('<p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>',
      '<p><a href="/en/events/">Tournaments (all tournament pages)</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/" hreflang="ja" lang="ja">日本語</a></p>'),
-    ('<p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>',
-     '<p>An unofficial archive that organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>'),
+    ('<p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>',
+     '<p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>'),
     ('<p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>',
      '<p>Dates, venues and sources come from our tournament reference data (as of <span id="master-asof"></span>). Source types (JWF event pages, annual reports, records from the former JWF site, specialist media, etc.) are shown for each edition. Organizer relationships are shown only where documented. English names of tournaments and venues are our own translations.</p>'),
     ('<p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>',

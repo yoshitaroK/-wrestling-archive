@@ -10,6 +10,7 @@ photos.json の1件の書き方
    "caption": "決勝の表彰式", "credit": "撮影:山田太郎", "confirmed": true, "hidden": false}
 
   - page は大会ページまたは開催回ページのURLの /events/ の後ろ(例: "interhigh" や "interhigh/2024")
+  - 大会ページに載せる写真は "year": "2026" を書くと、写真ページで「2026年」として表示・並べる
   - confirmed が true の写真だけ表示する(未成年が写っている場合は、掲載してよいか確認してから true にする)
   - hidden を true にすると一時的に表示しない
   - credit(撮影者・提供元)が空のときはビルド時に警告を出す
@@ -23,6 +24,8 @@ photos.json の1件の書き方
   - photos.json の albums に書いたページには、ギャラリーの下に外部アルバム(Google フォトなど)へのボタンを出す
       "albums": [{"page": "intercollegiate/2026", "url": "https://photos.app.goo.gl/…", "count": "1000"}]
     (アルバムを公開してよいか、撮影者に確認してから書く)
+    1ページに複数書ける。year を書くとボタンが「2026年の写真をアルバムで見る」になる。credit を書くとボタンの下に出す
+  - 配信動画が無い開催回でも、写真・アルバムがあれば開催回ページを作る(wanted_pages)
   - Pillow が入っていない環境では新しい写真は作れない(作成済みの縮小版があればそれを使う)
 """
 import hashlib
@@ -100,9 +103,25 @@ def image_size(path):
 ALBUMS = {}
 
 
+def wanted_pages(root):
+    """photos.json の写真・アルバムが指している開催回("interhigh/2026" の形)。
+    配信動画が無い開催回でも、写真やアルバムがあればページを作るために使う"""
+    try:
+        with open(os.path.join(root, PHOTOS_JSON), encoding="utf-8-sig") as f:
+            cfg = json.load(f)
+    except (OSError, ValueError):
+        return set()
+    if not isinstance(cfg, dict):
+        return set()
+    items = [x for x in cfg.get("photos") or [] if isinstance(x, dict) and flag(x.get("confirmed")) and not flag(x.get("hidden"))]
+    items += [a for a in cfg.get("albums") or [] if isinstance(a, dict)]
+    return {norm_page(x.get("page")) for x in items if "/" in norm_page(x.get("page"))}
+
+
 def load_albums(cfg, page_paths, report):
-    """外部アルバムへのリンク(albums)を読む"""
+    """外部アルバムへのリンク(albums)を読む。1ページに複数のアルバムを書ける"""
     ALBUMS.clear()
+    n = 0
     for i, a in enumerate((cfg.get("albums") or []) if isinstance(cfg, dict) else [], 1):
         url = str((a or {}).get("url") or "").strip()
         page = norm_page((a or {}).get("page"))
@@ -111,8 +130,11 @@ def load_albums(cfg, page_paths, report):
         elif f"/events/{page}/" not in page_paths:
             report["errors"].append(f"albums {i}件目: page「{a.get('page') or ''}」のページが見つかりません")
         else:
-            ALBUMS[f"/events/{page}/"] = {"url": url, "count": str(a.get("count") or "").strip()}
-    report["albums"] = len(ALBUMS)
+            ALBUMS.setdefault(f"/events/{page}/", []).append({
+                "url": url, "count": str(a.get("count") or "").strip(), "year": str(a.get("year") or "").strip(),
+                "credit": str(a.get("credit") or "").strip()})
+            n += 1
+    report["albums"] = n
 
 
 def load(root, page_paths):
@@ -221,7 +243,7 @@ def load(root, page_paths):
                                "thumb": f"/{OUT_DIR.replace(os.sep, '/')}/{stem}-t.jpg",
                                "fw": fs[0] if fs else None, "fh": fs[1] if fs else None,
                                "tw": ts[0] if ts else None, "th": ts[1] if ts else None,
-                               "caption": caption, "credit": credit})
+                               "caption": caption, "credit": credit, "year": str(x.get("year") or "").strip()})
 
     # 表示しなくなった写真(hidden・未確認・設定から削除)の縮小版を消して、サイトから見えないようにする。
     # photos.json が読めなかったときは、直すまでのあいだ消さずに残す
@@ -250,12 +272,18 @@ def load(root, page_paths):
     return dict(by_page), report
 
 
-def album_html(album, e):
-    if not album:
-        return ""
-    n = album["count"]
-    label = L(f"アルバムですべての写真を見る{('(' + n + '枚)') if n else ''}", f"See all photos in the album{(' (' + n + ' photos)') if n else ''}")
-    return f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
+def album_html(albums, e):
+    """外部アルバムへのボタン。year があれば「2026年の写真(アルバム)」、無ければ「アルバムですべての写真を見る」"""
+    out = []
+    for album in albums or []:
+        n, y = album["count"], album["year"]
+        cnt = L(f"({n}枚)", f" ({n} photos)") if n else ""
+        label = (L(f"{y}年の写真をアルバムで見る", f"See {y} photos in the album") if y
+                 else L("アルバムですべての写真を見る", "See all photos in the album")) + cnt
+        cr = credit_text(album["credit"])
+        out.append(f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
+                   + (f'<p class="palbum-c">{e(cr)}</p>' if cr else ""))
+    return "".join(out)
 
 
 def gallery_html(photos, e, title, path=None, more=None):
@@ -345,6 +373,7 @@ PHOTO_CSS = """
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
 .palbum{display:block;width:max-content;max-width:100%;margin:12px auto 0;padding:9px 22px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .palbum:hover{border-color:var(--pink)}
+.palbum-c{margin:4px 0 0;text-align:center;font-size:11.5px;color:var(--ink3)}
 .pcredit-all{margin:-4px 0 10px;font-size:12px;color:var(--ink3)}
 .pshow{display:block;margin:12px auto 0;padding:9px 22px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
 .pshow:hover{border-color:var(--pink);color:var(--pink)}
@@ -398,6 +427,12 @@ def photo_pages(ctx, photos_by_page, bp):
     """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
     e, N = bp.e, bp.N
     info = photo_targets(ctx, bp)
+    for p, lst in photos_by_page.items():
+        # 大会ページ(年なし)に載せた写真は、photos.json の year を開催年として扱う
+        yrs = {x["year"] for x in lst if x.get("year")}
+        if p in info and info[p]["year"] is None and len(yrs) == 1:
+            y = yrs.pop()
+            info[p] = dict(info[p], year=y, sort=f"{y}-99")
     paths = sorted((p for p in photos_by_page if p in info), key=lambda p: info[p]["sort"], reverse=True)
     home, photos_t = L("トップ", "Home"), L("写真", "Photos")
     total = sum(len(photos_by_page[p]) for p in paths)
