@@ -210,6 +210,15 @@ def nav_links(path):
     return "".join(f'<a href="{U(p)}"{here if p == cur else ""}>{L(ja, en)}</a>' for p, ja, en in NAV)
 
 
+def header_search():
+    """どのページにもある検索欄。送るとトップページ(大会の検索)に移り、入れた言葉で検索する"""
+    label = L("大会名・通称で検索", "Search tournaments")
+    return (f'<form class="hsearch" role="search" action="{U("/")}" method="get" '
+            f'onsubmit="var v=this.q.value.trim();if(!v){{event.preventDefault();this.q.focus();return;}}event.preventDefault();location.href=this.action+\'#q=\'+encodeURIComponent(v)">'
+            f'<label class="sr" for="hq">{label}</label><input id="hq" name="q" type="search" autocomplete="off" placeholder="{label}">'
+            f'<button type="submit" aria-label="{L("検索", "Search")}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button></form>')
+
+
 def head(title, desc, path, og_image, jsonld, css, alternates=True):
     """path は日本語版のパス(/events/…/)。英語版では /en を付けたURLにする"""
     url = SITE + U(path)
@@ -259,6 +268,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="{U('/')}" aria-label="{e(site_name())}{L('(トップへ)', ' (home)')}"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
 <nav class="topnav" aria-label="{L('メニュー', 'Menu')}">{nav_links(path)}</nav>
+{header_search()}
 </div></div></header>
 """
 

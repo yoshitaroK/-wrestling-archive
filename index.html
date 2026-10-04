@@ -84,6 +84,15 @@ button,input,select{font:inherit;color:inherit}
 .topnav a[aria-current]{border-bottom-color:#fff}
 .topnav a:focus-visible,.home:focus-visible,.official a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .brand .theme-btn{align-self:center;margin-bottom:10px}
+/* どのページにもあるヘッダーの検索欄(トップページは写真の上の大きな検索欄を使う) */
+.hsearch{display:flex;align-self:center;margin-bottom:10px;width:230px;background:#fff;border-radius:6px;overflow:hidden}
+.hsearch input{flex:1;min-width:0;border:0;background:transparent;color:#16161a;font-size:14px;padding:8px 4px 8px 12px}
+.hsearch input::placeholder{color:#6b6b75}
+.hsearch input:focus{outline:none}
+.hsearch:focus-within{box-shadow:0 0 0 3px var(--pink)}
+.hsearch button{flex:0 0 auto;width:38px;border:0;background:var(--pink);color:#fff;cursor:pointer;display:grid;place-items:center}
+.hsearch button:hover{filter:brightness(1.12)}
+.hsearch svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
 .mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .orig{font-size:12px;color:var(--ink3);margin-top:-4px}
@@ -289,6 +298,9 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:22px;overflow-x:auto;scrollbar-width:none;padding-top:2px}
   .brand .topnav::-webkit-scrollbar{display:none}
   .topnav a{font-size:13.5px;padding:6px 0 8px}
+  .hsearch{order:5;width:100%;margin:2px 0 10px}
+  .top{position:static}
+  .hsearch input{font-size:16px;padding:9px 4px 9px 12px}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
@@ -502,6 +514,8 @@ function blankState(){ return {q:'',y:'',c:'',sty:'',sc:'',k:'',all:false,s:'',e
 var st = blankState();
 function readHash(){
   var h = location.hash.replace(/^#/,'');
+  var sq = !h && new URLSearchParams(location.search).get('q');
+  if(sq){ h = 'q='+encodeURIComponent(sq); history.replaceState(null,'',location.pathname+'#'+h); }
   // 旧リンク(#series/名前・#occurrence/名前)を新しいページへ誘導
   var m = /^(series|occurrence)\/(.*)$/.exec(h);
   if(m){
