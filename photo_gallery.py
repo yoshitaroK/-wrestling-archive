@@ -423,6 +423,41 @@ def photo_targets(ctx, bp):
     return out
 
 
+# トップページの一番上に大きく出す写真(開くたびにこの中から1枚を選ぶ)。
+# 大人の選手が写っている、掲載を確認ずみ(confirmed:true)の横長の写真だけを書く。高校生など未成年の写真は書かない。
+# photos.json で hidden にしたり消したりした写真は、自動でトップに出なくなる
+HERO_PHOTOS = [
+    "asian-championships-2026-11.jpg",
+    "asian-championships-2026-29.jpg",
+    "intercollegiate-2026-dsc00312.jpg",
+    "meiji-cup-2026-06.jpg",
+    "shakaijin-2026-29.jpg",
+]
+HERO_JSON = os.path.join("assets", "hero.json")
+
+
+def hero_items(ctx, photos_by_page, bp):
+    """トップの写真の候補(今の言語の分)。[{src, srcset, w, h, href, label, credit}]"""
+    info = photo_targets(ctx, bp)
+    out = []
+    for p, lst in photos_by_page.items():
+        for x in lst:
+            if x["file"] not in HERO_PHOTOS or not x.get("fw"):
+                continue
+            t = info.get(p) or {}
+            yr = t.get("year") or x.get("year")
+            label = (t.get("series") or "") + ((" " + bp.year_label(yr)) if t and yr else "")
+            out.append({"file": x["file"], "src": x["full"], "srcset": f'{x["thumb"]} {x["tw"]}w, {x["full"]} {x["fw"]}w',
+                        "w": x["fw"], "h": x["fh"], "href": U(photo_path(p)), "label": label, "credit": credit_text(x["credit"])})
+    out.sort(key=lambda h: HERO_PHOTOS.index(h.pop("file")))
+    return out
+
+
+def write_hero(root, hero):
+    with open(os.path.join(root, HERO_JSON), "w", encoding="utf-8") as f:
+        json.dump({"about": "自動生成。トップページの写真(photo_gallery.py の HERO_PHOTOS)。手で編集しない", **hero}, f, ensure_ascii=False, indent=1)
+
+
 def photo_pages(ctx, photos_by_page, bp):
     """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
     e, N = bp.e, bp.N

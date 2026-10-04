@@ -17,10 +17,10 @@
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#07111f">
 <script>(function(){var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
 try{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}catch(e){}
-function set(v){d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#ffffff':'#000000';}
+function set(v){d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#0d1f3c':'#07111f';}
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
 if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){try{if(sessionStorage.getItem('theme'))return;}catch(x){}set(e.matches?'light':'dark');});
 window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catch(e){}};})();</script>
@@ -48,7 +48,9 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 :root{
   color-scheme:dark;
   --bg:#000000; --bg2:#0d0d10; --surface:#16161a; --surface-2:#222228; --ink:#ffffff; --ink2:#b9b8c0; --ink3:#86858e; --line:#2a2a31;
-  --pink:#ff2e7e; --pink-deep:#ff6aa5; --pink-tint:rgba(255,46,126,.16); --pink-line:#5c1f38; --grad-a:#7b3fd4; --grad-b:#ff2e7e;
+  /* 紺と赤のテーマ。--pink は名前だけ前のままで、中身はアクセントの赤 */
+  --pink:#ff4458; --pink-deep:#ff8591; --pink-tint:rgba(255,68,88,.16); --pink-line:#5e2128; --grad-a:#13294b; --grad-b:#2b4f8a;
+  --navy:#0c1d38; --navy-2:#07111f; --on-navy:#ffffff; --on-navy-2:#c3cde0; --brand-pink:#ff2e7e;
   --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
   --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
   --font:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
@@ -66,45 +68,69 @@ button,input,select{font:inherit;color:inherit}
 .num{font-family:var(--num);font-weight:600;letter-spacing:.01em}
 
 /* ヘッダー */
-.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
-.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0}
-.topnav{display:flex;gap:8px}
-.topnav a{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap}
-.topnav a:hover{border-color:var(--pink);color:var(--pink)}
-.topnav a.lang{font-weight:700;border-color:var(--pink-line)}
+.brand{display:flex;align-items:center;gap:8px 28px;flex-wrap:wrap;padding:10px 0 0}
+/* 公式サイトの帯とヘッダー(紺の帯)。白テーマ・黒テーマのどちらでも紺にする */
+.official{background:var(--navy-2);color:var(--on-navy-2);font-size:12px;line-height:1.4}
+.official .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:32px}
+.official-t{display:flex;align-items:center;gap:8px;min-width:0}
+.official-t::before{content:"";flex:0 0 auto;width:4px;height:14px;border-radius:1px;background:var(--pink)}
+.official a.lang{flex:0 0 auto;color:#fff;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,.4);border-radius:4px;padding:1px 10px;font-size:12px}
+.official a.lang:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:var(--on-navy);border-bottom:3px solid var(--pink)}
+.home{display:flex;align-items:center;gap:10px;color:var(--on-navy);text-decoration:none;padding-bottom:10px}
+.topnav{display:flex;gap:26px;margin-left:auto;align-self:stretch;align-items:stretch}
+.topnav a{display:flex;align-items:center;font-size:14px;font-weight:700;color:var(--on-navy);text-decoration:none;white-space:nowrap;padding:8px 0 10px;border-bottom:3px solid transparent}
+.topnav a:hover{border-bottom-color:rgba(255,255,255,.5)}
+.topnav a[aria-current]{border-bottom-color:#fff}
+.topnav a:focus-visible,.home:focus-visible,.official a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.brand .theme-btn{align-self:center;margin-bottom:10px}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
 .mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .orig{font-size:12px;color:var(--ink3);margin-top:-4px}
-.top{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* 白ベース。初めて来た人は端末の設定に合わせ、トップページ右上のボタンで選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
 :root[data-theme="light"]{
     color-scheme:light;
     --bg:#ffffff; --bg2:#f4f4f7; --surface:#f4f4f7; --surface-2:#e6e6eb; --ink:#16161a; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e1e1e7;
-    --pink:#d6135f; --pink-deep:#b8105a; --pink-tint:rgba(214,19,95,.09); --pink-line:#f3b6cc;
+    --pink:#c8102e; --pink-deep:#a50d26; --pink-tint:rgba(200,16,46,.08); --pink-line:#f0bcc4;
+    --navy:#13294b; --navy-2:#0d1f3c;
     --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
     --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
 }
-:root[data-theme="light"] .top{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
-.theme-btn{flex:0 0 auto;width:32px;height:32px;display:inline-grid;place-items:center;padding:0;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);cursor:pointer}
-.theme-btn:hover{border-color:var(--pink);color:var(--pink)}
-.theme-btn:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.theme-btn{flex:0 0 auto;width:32px;height:32px;display:inline-grid;place-items:center;padding:0;border:1px solid rgba(255,255,255,.4);border-radius:999px;background:transparent;color:var(--on-navy);cursor:pointer}
+.theme-btn:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.theme-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .theme-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .theme-btn .i-moon,:root[data-theme="light"] .theme-btn .i-sun{display:block}
 .theme-btn .i-sun,:root[data-theme="light"] .theme-btn .i-moon{display:none}
 
-.brand h1{margin:0;line-height:1}
-.brand h1 a{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
 .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--grad-a),var(--grad-b));display:grid;place-items:center;
   font-family:var(--num);font-weight:600;font-size:26px;color:#fff;line-height:1;padding-top:4px;box-shadow:0 0 18px rgba(255,46,126,.45)}
 .logo-type{font-family:var(--num);font-weight:600;font-size:30px;letter-spacing:.06em;line-height:1;padding-top:5px}
-.logo-type .ac{color:var(--pink)}
+.logo-type .ac{color:var(--brand-pink)}
 .logo-img{display:block;height:54px;width:auto}
 .logo-img+.logo-type{font-size:22px;padding-top:14px}
-.brand p{margin:0;color:var(--ink3);font-size:12px}
-.brand p .num{color:var(--pink);font-size:17px}
+
+/* トップの大きな写真と検索欄。写真は assets/hero.json(photo_gallery.py の HERO_PHOTOS)から開くたびに1枚選ぶ */
+.jhero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--navy),#1f3f73);color:#fff}
+.jhero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:0;transition:opacity .5s ease}
+.jhero-img.on{opacity:1}
+.jhero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,17,31,.88) 0%,rgba(7,17,31,.6) 50%,rgba(7,17,31,.25) 100%)}
+.jhero-in{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:440px;padding-top:56px;padding-bottom:64px}
+.jhero h1{margin:0 0 10px;font-size:42px;font-weight:900;line-height:1.25;letter-spacing:.02em;max-width:16em;text-shadow:0 2px 16px rgba(0,0,0,.35)}
+.jlead{margin:0 0 22px;font-size:15px;color:#e4e9f3;max-width:56em}
+.jlead .num{color:#fff;font-size:21px;margin:0 2px}
+.jhero .searchrow{max-width:700px}
+.jhero .searchrow input{border:0;border-radius:6px;padding:15px 18px;font-size:17px;background:#fff;color:#16161a;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.jhero .searchrow input::placeholder{color:#6b6b75}
+.jhero .searchrow input:focus{outline:none;box-shadow:0 0 0 4px var(--pink),0 8px 28px rgba(0,0,0,.35)}
+.jhero .hint{color:#d3dbea;margin-top:8px}
+.jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:3px 9px;text-decoration:none}
+.jcredit:hover{text-decoration:underline}
+.jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.jcredit[hidden]{display:none}
 
 /* 検索・絞り込み */
-.searchbox{padding:18px 0 4px}
+.searchbox{padding:14px 0 4px}
 .searchrow input{width:100%;border:1px solid var(--surface-2);border-radius:10px;padding:13px 16px;font-size:16px;background:var(--surface);color:var(--ink)}
 .searchrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
 .hint{margin:6px 2px 0;font-size:12px;color:var(--ink3)}
@@ -144,7 +170,7 @@ main{padding:10px 0 60px}
 .hero .hm{font-size:13px;opacity:.92;margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
 .hero .hm .num{font-size:18px}
 .hero .cta{margin-top:18px;display:inline-block;background:var(--pink);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px;width:fit-content}
-.hero:hover .cta{background:#ff5b99}
+.hero:hover .cta{filter:brightness(1.12)}
 
 /* 横並びの棚 */
 .shelf{margin:0 0 30px}
@@ -246,25 +272,34 @@ main{padding:10px 0 60px}
 .empty strong{color:var(--ink)}
 details.loose{margin-top:30px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
 details.loose summary{cursor:pointer;font-weight:700}
-footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:12px;color:var(--ink3)}
+footer{font-size:12px}
 footer p{margin:0 0 6px;max-width:76ch}
+.site-foot{background:var(--navy-2);color:var(--on-navy-2);border-top:3px solid var(--pink);margin-top:20px}
+.site-foot .wrap{padding-top:28px;padding-bottom:44px}
+.site-foot a{color:#fff;text-underline-offset:3px}
+.site-foot p:first-child{font-size:14px;font-weight:700;color:var(--on-navy-2);margin-bottom:16px;line-height:2}
 .loading{padding:60px 0;text-align:center;color:var(--ink3)}
 
 .series,.event,.vgroup{scroll-margin-top:72px}
 @media (max-width:760px){
-  .topnav a{font-size:11px;padding:4px 10px}
-  .brand p{font-size:0}
-  .brand p .num,.brand p{line-height:1}
-  .brand p .num{font-size:16px}
-  .brand p::after{content:"本";font-size:12px}
-  html[lang="en"] .brand p::after{content:" videos"}
-  .brand p .pc{display:none}
-  .brand p{margin-left:auto}
-  .theme-btn{order:3;width:30px;height:30px}
-  .brand .topnav{order:4;flex-basis:100%}
+  .official-t{font-size:11px}
+  .brand{gap:0 12px;padding-top:8px}
+  .home{padding-bottom:6px}
+  .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
+  .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:22px;overflow-x:auto;scrollbar-width:none;padding-top:2px}
+  .brand .topnav::-webkit-scrollbar{display:none}
+  .topnav a{font-size:13.5px;padding:6px 0 8px}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
+  .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
+  .jhero h1{font-size:24px;margin-bottom:6px}
+  .jlead{font-size:12.5px;margin-bottom:14px}
+  .jlead .num{font-size:17px}
+  .jhero .searchrow input{padding:13px 14px;font-size:16px}
+  .jhero .hint{font-size:11.5px}
+  .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px)}
+  .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
   .row{grid-auto-columns:66%}
   .sbody{padding:2px 12px 16px}
@@ -284,23 +319,45 @@ footer p{margin:0 0 6px;max-width:76ch}
 </style>
 </head>
 <body>
+<div class="official"><div class="wrap"><span class="official-t">Japan Wrestling Channel 公式サイト</span><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem('lang','en')}catch(x){}this.href=this.getAttribute('href').split('#')[0]+location.hash">English</a></div></div>
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <h1><a href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a></h1>
-      <p id="tagline">Japan Wrestling Channel 公式 · レスリングの配信・動画を大会・開催年から探せるアーカイブ <b class="num" id="stat-v"></b><span class="pc">本</span></p>
-      <nav class="topnav"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a href="/photos/">写真</a><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem('lang','en')}catch(x){}this.href=this.getAttribute('href').split('#')[0]+location.hash">EN</a></nav>
+      <a class="home" href="#" id="home" aria-label="レスリング配信アーカイブ(トップへ)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
+      <nav class="topnav" aria-label="メニュー"><a href="/events/">大会一覧</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a href="/photos/">写真</a></nav>
       <button type="button" class="theme-btn" id="theme-btn" aria-label="表示色を切り替え"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
     </div>
   </div>
 </header>
-<div class="wrap">
-    <div class="searchbox" role="search">
+<section class="jhero" aria-labelledby="jhero-h">
+  <img class="jhero-img" id="jhero-img" alt="" decoding="async">
+  <div class="jhero-scrim"></div>
+  <div class="wrap jhero-in">
+    <h1 id="jhero-h">レスリング配信アーカイブ</h1>
+    <p class="jlead" id="tagline">Japan Wrestling Channel 公式 · レスリングの配信・動画を、大会名・開催年・日程から探せます。収録<b class="num" id="stat-v"></b>本</p>
+    <div class="searchrow" role="search">
       <label for="q" class="sr">大会名・通称・動画タイトルで検索</label>
-      <div class="searchrow">
-        <input id="q" type="search" autocomplete="off" placeholder="大会名や通称で検索(例:天皇杯、インカレ、明治杯)">
-      </div>
-      <p class="hint">通称・略称でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
+      <input id="q" type="search" autocomplete="off" placeholder="大会名や通称で検索(例:天皇杯、インカレ、明治杯)">
+    </div>
+    <p class="hint">通称・略称でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
+  </div>
+  <a class="jcredit" id="jhero-credit" hidden></a>
+</section>
+<script>(function(){
+// トップの写真:開くたびに候補から1枚を選ぶ(写真を押すと、その大会の写真ページへ)
+var en=document.documentElement.lang==='en';
+fetch('/assets/hero.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+  var list=d&&d[en?'en':'ja']; if(!list||!list.length) return;
+  var h=list[Math.floor(Math.random()*list.length)], img=document.getElementById('jhero-img'), a=document.getElementById('jhero-credit');
+  img.onload=function(){img.classList.add('on');};
+  img.sizes='100vw'; img.srcset=h.srcset; img.src=h.src; if(h.w&&h.h){img.width=h.w;img.height=h.h;}
+  a.href=h.href; a.textContent=h.credit; a.title=h.label;
+  if(h.label){var s=document.createElement('span'); s.className='jl'; s.textContent=(en?'Photo from '+h.label:h.label+'の写真')+' · '; a.insertBefore(s,a.firstChild);}
+  a.hidden=false;
+}).catch(function(){});
+})();</script>
+<div class="wrap">
+    <div class="searchbox" role="group" aria-label="絞り込み">
       <div class="filters">
         <label>開催年<select id="f-year"><option value="">すべて</option></select></label>
         <label>区分<select id="f-cat"><option value="">すべて</option></select></label>
@@ -315,13 +372,13 @@ footer p{margin:0 0 6px;max-width:76ch}
 
 <main class="wrap" id="main"><div class="loading">データを読み込んでいます</div></main>
 
-<footer class="wrap">
+<footer class="site-foot"><div class="wrap">
   <p><a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
   <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
   <p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>
   <p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>
   <p id="build-info"></p>
-</footer>
+</div></footer>
 
 <script>
 window.thumbFail = function(img){
@@ -424,8 +481,8 @@ function jstDate(iso){ if(!iso) return ''; var d=new Date(iso); d=new Date(d.get
 function dur(iso){ var m=/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(iso||''); if(!m) return ''; var h=+(m[1]||0), mi=+(m[2]||0);
   if(LANG==='en') return h ? h+' h'+(mi? ' '+mi+' min':'') : (mi ? mi+' min' : (m[3]||0)+' sec');
   return h ? h+'時間'+(mi? mi+'分':'') : (mi ? mi+'分' : (m[3]||0)+'秒'); }
-var PALETTE = [['#7b3fd4','#d90f66'],['#0f6c9c','#0fb59c'],['#c2410c','#d90f66'],['#1e3a8a','#7b3fd4'],
-  ['#0f7a4f','#0f6c9c'],['#a30a4d','#7b3fd4'],['#0f6c9c','#7b3fd4'],['#c2410c','#a30a4d']];
+var PALETTE = [['#13294b','#2b4f8a'],['#13294b','#b31b34'],['#0e1f3a','#3a5f9a'],['#8a1426','#13294b'],
+  ['#1d3966','#4a6fa8'],['#a3172f','#2b4f8a'],['#0c1d38','#1f4e8c'],['#6e1020','#c8102e']];
 function hashStr(s){ var h=0; s=String(s||''); for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; } return Math.abs(h); }
 function grad(name){ var p = PALETTE[hashStr(name)%PALETTE.length]; return 'linear-gradient('+(100+hashStr(name)%60)+'deg,'+p[0]+','+p[1]+')'; }
 function thumb(id,label,rank){
