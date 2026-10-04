@@ -250,7 +250,7 @@ def footer(as_of):
     if i18n.en():
         return f"""<footer class="wrap">
 <p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/">日本語</a></p>
-<p>An unofficial archive that organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
+<p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
 </footer>
@@ -259,7 +259,7 @@ def footer(as_of):
 """
     return f"""<footer class="wrap">
 <p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
-<p>このサイトは Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理した非公式のアーカイブです。動画はすべて YouTube で再生されます。</p>
+<p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
 </footer>
@@ -1007,7 +1007,7 @@ def llms_txt(data, series_list, ctx):
     lines = [
         f"# {SITE_NAME}(Japan Wrestling Channel アーカイブ)",
         "",
-        f"> YouTubeで公開されている日本のレスリング大会の配信・動画{n_videos:,}本を、大会名・開催年・日程ごとに整理した非公式のアーカイブです。"
+        f"> YouTubeで公開されている日本のレスリング大会の配信・動画{n_videos:,}本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。"
         "動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。",
         "",
         f"- サイト: {SITE}/",

@@ -1,6 +1,6 @@
 # レスリング配信アーカイブ
 
-Japan Wrestling Channel の配信を、**大会 → 開催年 → 日程・マット → 動画** の順にたどれる非公式サイトです。
+Japan Wrestling Channel の配信を、**大会 → 開催年 → 日程・マット → 動画** の順にたどれる Japan Wrestling Channel 公式サイトです。
 GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データと照合して `data.json` を更新します。
 
 ## ファイル
