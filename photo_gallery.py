@@ -10,6 +10,7 @@ photos.json の1件の書き方
    "caption": "決勝の表彰式", "credit": "撮影:山田太郎", "confirmed": true, "hidden": false}
 
   - page は大会ページまたは開催回ページのURLの /events/ の後ろ(例: "interhigh" や "interhigh/2024")
+  - 大会ページに載せる写真は "year": "2026" を書くと、写真ページで「2026年」として表示・並べる
   - confirmed が true の写真だけ表示する(未成年が写っている場合は、掲載してよいか確認してから true にする)
   - hidden を true にすると一時的に表示しない
   - credit(撮影者・提供元)が空のときはビルド時に警告を出す
@@ -242,7 +243,7 @@ def load(root, page_paths):
                                "thumb": f"/{OUT_DIR.replace(os.sep, '/')}/{stem}-t.jpg",
                                "fw": fs[0] if fs else None, "fh": fs[1] if fs else None,
                                "tw": ts[0] if ts else None, "th": ts[1] if ts else None,
-                               "caption": caption, "credit": credit})
+                               "caption": caption, "credit": credit, "year": str(x.get("year") or "").strip()})
 
     # 表示しなくなった写真(hidden・未確認・設定から削除)の縮小版を消して、サイトから見えないようにする。
     # photos.json が読めなかったときは、直すまでのあいだ消さずに残す
@@ -426,6 +427,12 @@ def photo_pages(ctx, photos_by_page, bp):
     """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
     e, N = bp.e, bp.N
     info = photo_targets(ctx, bp)
+    for p, lst in photos_by_page.items():
+        # 大会ページ(年なし)に載せた写真は、photos.json の year を開催年として扱う
+        yrs = {x["year"] for x in lst if x.get("year")}
+        if p in info and info[p]["year"] is None and len(yrs) == 1:
+            y = yrs.pop()
+            info[p] = dict(info[p], year=y, sort=f"{y}-99")
     paths = sorted((p for p in photos_by_page if p in info), key=lambda p: info[p]["sort"], reverse=True)
     home, photos_t = L("トップ", "Home"), L("写真", "Photos")
     total = sum(len(photos_by_page[p]) for p in paths)

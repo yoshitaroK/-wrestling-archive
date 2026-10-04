@@ -1,6 +1,996 @@
 {
  "about": "自動生成。元の写真のファイル名と縮小版の対応(元の写真を消しても縮小版を使い続けるため)。手で編集しない",
  "files": {
+  "asian-championships-2026-01.jpg": {
+   "stem": "68e2f731c37a",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-02.jpg": {
+   "stem": "8ee8a43e7422",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-03.jpg": {
+   "stem": "6d21d79b1fc1",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-04.jpg": {
+   "stem": "9a7e3cd15fc7",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-05.jpg": {
+   "stem": "5712a76420d3",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-06.jpg": {
+   "stem": "f8fdec97d89d",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-07.jpg": {
+   "stem": "58901eaeb636",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-08.jpg": {
+   "stem": "e44683014b16",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-09.jpg": {
+   "stem": "db7c57037cac",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-10.jpg": {
+   "stem": "6b77fbfe07bb",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-11.jpg": {
+   "stem": "04916cd56b75",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-12.jpg": {
+   "stem": "b77bd5929336",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-13.jpg": {
+   "stem": "4a6cdf14af17",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-14.jpg": {
+   "stem": "3e3d409c4f3c",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-15.jpg": {
+   "stem": "b092894a0497",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-16.jpg": {
+   "stem": "efdf79d52691",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-17.jpg": {
+   "stem": "1cb5a1b45d84",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-18.jpg": {
+   "stem": "471b708283d5",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-19.jpg": {
+   "stem": "159a9b0bca23",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-20.jpg": {
+   "stem": "7b668692f541",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-21.jpg": {
+   "stem": "0c89e9a14719",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-22.jpg": {
+   "stem": "678745d459a2",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-23.jpg": {
+   "stem": "d846414777a5",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-24.jpg": {
+   "stem": "267a07a43093",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-25.jpg": {
+   "stem": "5e8463daa860",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-26.jpg": {
+   "stem": "c04193692b6a",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-27.jpg": {
+   "stem": "f9b4d69630bf",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-28.jpg": {
+   "stem": "f12582c472dc",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "asian-championships-2026-29.jpg": {
+   "stem": "47a9fe0d3482",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "asian-championships-2026-30.jpg": {
+   "stem": "ea8016ad996c",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-01.jpg": {
+   "stem": "ce952a42e7d1",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-02.jpg": {
+   "stem": "9fc677147ee3",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-03.jpg": {
+   "stem": "7c90116362b4",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-04.jpg": {
+   "stem": "153c430ed9ec",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-05.jpg": {
+   "stem": "0b3f2573316e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-06.jpg": {
+   "stem": "35f77b88ea09",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-07.jpg": {
+   "stem": "3c80b94a56d1",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-08.jpg": {
+   "stem": "410afa7c6d41",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-09.jpg": {
+   "stem": "970fe59be20c",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-10.jpg": {
+   "stem": "cc4cd3186b22",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-11.jpg": {
+   "stem": "c68bd7cda402",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-12.jpg": {
+   "stem": "d3c4eaaa0d70",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-13.jpg": {
+   "stem": "371b7fee007d",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-14.jpg": {
+   "stem": "173ef1f43116",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-15.jpg": {
+   "stem": "015f0484926c",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-16.jpg": {
+   "stem": "f8369e44790d",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-17.jpg": {
+   "stem": "6b4f59ccbd51",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-18.jpg": {
+   "stem": "0148e969e972",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-19.jpg": {
+   "stem": "6e8d55249acd",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-20.jpg": {
+   "stem": "b08dbe1bee2b",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "east-league-2026-21.jpg": {
+   "stem": "a05e53d04eca",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-22.jpg": {
+   "stem": "be78a8b67c94",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-23.jpg": {
+   "stem": "d83441e6af16",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-24.jpg": {
+   "stem": "5fb95d0a8f71",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-25.jpg": {
+   "stem": "f86e3a2fb7e4",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-26.jpg": {
+   "stem": "553850a455f7",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-27.jpg": {
+   "stem": "1dd97782b602",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-28.jpg": {
+   "stem": "84952bdb5ce0",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-29.jpg": {
+   "stem": "7b2fce608320",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-league-2026-30.jpg": {
+   "stem": "2a067c100e68",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-01.jpg": {
+   "stem": "5625506c5298",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-02.jpg": {
+   "stem": "eee14c179ea8",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-03.jpg": {
+   "stem": "f1fb51f22d2e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-04.jpg": {
+   "stem": "3df3d078f049",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-05.jpg": {
+   "stem": "8647f8b99f8d",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-06.jpg": {
+   "stem": "520c6107def0",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "east-spring-2026-07.jpg": {
+   "stem": "40db9dfc1c08",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-08.jpg": {
+   "stem": "891d5dc68a4e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-09.jpg": {
+   "stem": "395ab82ec22c",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-10.jpg": {
+   "stem": "28235063e951",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-11.jpg": {
+   "stem": "58b532331bb3",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-12.jpg": {
+   "stem": "8f16a8fe70fa",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-13.jpg": {
+   "stem": "7dddd842cd10",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-14.jpg": {
+   "stem": "2ec84c4163c0",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-15.jpg": {
+   "stem": "15163eb34231",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "east-spring-2026-16.jpg": {
+   "stem": "28d77bdffdca",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-17.jpg": {
+   "stem": "6c8dc91acb78",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-18.jpg": {
+   "stem": "441cf65e4554",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-19.jpg": {
+   "stem": "f81ae9379f1b",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-20.jpg": {
+   "stem": "36580f0b22d6",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-21.jpg": {
+   "stem": "e44f8e0c3c7d",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-22.jpg": {
+   "stem": "2082e553b55e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-23.jpg": {
+   "stem": "b673aa0b1def",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-24.jpg": {
+   "stem": "2d7e6b158dba",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-25.jpg": {
+   "stem": "19d0a4c203e9",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-26.jpg": {
+   "stem": "dfdd039a70a8",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-27.jpg": {
+   "stem": "dafa744805fb",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-28.jpg": {
+   "stem": "7878f3d168b2",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "east-spring-2026-29.jpg": {
+   "stem": "bf0534b561d7",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "east-spring-2026-30.jpg": {
+   "stem": "152804829c4c",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
   "intercollegiate-2026-dsc00014.jpg": {
    "stem": "79f66dfe139f",
    "full_size": [
@@ -333,6 +1323,666 @@
   },
   "intercollegiate-2026-dsc09944.jpg": {
    "stem": "7493f2a762a8",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-01.jpg": {
+   "stem": "0ef83e29e6d8",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-02.jpg": {
+   "stem": "2031d3bc9473",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-03.jpg": {
+   "stem": "74a000ac4ea1",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-04.jpg": {
+   "stem": "e74e182223ba",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-05.jpg": {
+   "stem": "c1500417b60b",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-06.jpg": {
+   "stem": "c9c94905f206",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-07.jpg": {
+   "stem": "7eda79f1c76e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-08.jpg": {
+   "stem": "fb139d05bb03",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-09.jpg": {
+   "stem": "524a986f2f32",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-10.jpg": {
+   "stem": "a94012991f20",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-11.jpg": {
+   "stem": "65aa98f269a1",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-12.jpg": {
+   "stem": "760db3b22e38",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-13.jpg": {
+   "stem": "5965d60e4731",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-14.jpg": {
+   "stem": "b341f0cd358e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-15.jpg": {
+   "stem": "ea6567107827",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-16.jpg": {
+   "stem": "d0191faba706",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-17.jpg": {
+   "stem": "56a990a6409b",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-18.jpg": {
+   "stem": "0e0a9df7acbc",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-19.jpg": {
+   "stem": "7fa61fea4adc",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-20.jpg": {
+   "stem": "6d4dd2fff07b",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-21.jpg": {
+   "stem": "3c94bdb89b99",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-22.jpg": {
+   "stem": "cf6802cdb4d7",
+   "full_size": [
+    1200,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-23.jpg": {
+   "stem": "b4914bb73123",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-24.jpg": {
+   "stem": "eb37ed8dc28e",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-25.jpg": {
+   "stem": "bdbfca0af15e",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-26.jpg": {
+   "stem": "a59f968ffcfb",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-27.jpg": {
+   "stem": "8672bb2de1cf",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-28.jpg": {
+   "stem": "c437343e407f",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "meiji-cup-2026-29.jpg": {
+   "stem": "fe23c88335a6",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "meiji-cup-2026-30.jpg": {
+   "stem": "6a3be7e9bf34",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "shakaijin-2026-01.jpg": {
+   "stem": "4a8a3ffa82c6",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-02.jpg": {
+   "stem": "0d89b7ed1478",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-03.jpg": {
+   "stem": "527919af5d9d",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-04.jpg": {
+   "stem": "90cda7c4c183",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "shakaijin-2026-05.jpg": {
+   "stem": "087b87b824ba",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-06.jpg": {
+   "stem": "e41b8999d660",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "shakaijin-2026-07.jpg": {
+   "stem": "5881517b887f",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-08.jpg": {
+   "stem": "0429035a97d7",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-09.jpg": {
+   "stem": "1a3828258818",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-10.jpg": {
+   "stem": "cdd05d44ea33",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-11.jpg": {
+   "stem": "1edcb9b0c23d",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-12.jpg": {
+   "stem": "abfa3990f4aa",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-13.jpg": {
+   "stem": "4cb284a4a4c7",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-14.jpg": {
+   "stem": "12f64d383ff6",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-15.jpg": {
+   "stem": "fd489db46680",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "shakaijin-2026-16.jpg": {
+   "stem": "ea56ad8bb79e",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-17.jpg": {
+   "stem": "2aa4be925fa2",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-18.jpg": {
+   "stem": "8760472312af",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-19.jpg": {
+   "stem": "bdf59a6e3410",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-20.jpg": {
+   "stem": "b63d1f78c879",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-21.jpg": {
+   "stem": "47291942a5a5",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-22.jpg": {
+   "stem": "e7a59c5ee104",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-23.jpg": {
+   "stem": "12b3ce7dc4ef",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-24.jpg": {
+   "stem": "428495d2bc62",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-25.jpg": {
+   "stem": "b93959213db0",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-26.jpg": {
+   "stem": "96d38880a9c5",
+   "full_size": [
+    1201,
+    1600
+   ],
+   "thumb_size": [
+    360,
+    480
+   ]
+  },
+  "shakaijin-2026-27.jpg": {
+   "stem": "d8ad2220c7e0",
+   "full_size": [
+    1600,
+    1200
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-28.jpg": {
+   "stem": "3fe549a6bea3",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-29.jpg": {
+   "stem": "61d86d1537b8",
+   "full_size": [
+    1600,
+    1201
+   ],
+   "thumb_size": [
+    480,
+    360
+   ]
+  },
+  "shakaijin-2026-30.jpg": {
+   "stem": "9b4fded7d265",
    "full_size": [
     1600,
     1201

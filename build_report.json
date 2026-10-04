@@ -39,19 +39,24 @@
   "video_links": 0
  },
  "photos": {
-  "entries": 31,
-  "shown": 31,
+  "entries": 181,
+  "shown": 181,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 1,
+  "pages_with_photos": 6,
   "by_page": {
-   "/events/intercollegiate/2026/": 31
+   "/events/east-league/2026/": 30,
+   "/events/east-spring/2026/": 30,
+   "/events/intercollegiate/2026/": 31,
+   "/events/meiji-cup/2026/": 30,
+   "/events/shakaijin/2026/": 30,
+   "/events/x-asian-championships/": 30
   },
   "warnings": [],
   "errors": [],
   "unlisted_files": [],
   "albums": 12,
-  "from_manifest": 31
+  "from_manifest": 181
  },
  "tech": {
   "shown": 57,
@@ -125,7 +130,7 @@
   ]
  },
  "en": {
-  "pages": 298,
+  "pages": 303,
   "names": 326,
   "machine_translations": 3713,
   "missing_names": []
