@@ -27,9 +27,9 @@ def part(s):
     jp = re.sub(r"[A-Za-z]+", "", s)
     r = "".join(x["hepburn"] for x in _k.convert(jp)) if jp else ""
     r = r.replace("'", "")
-    r = re.sub(r"ou(?!e)", "o", r)
+    r = re.sub(r"ou(?!e$)", "o", r)
     r = re.sub(r"uu", "u", r)
-    r = re.sub(r"oo(?=[^aeiou]|$)", "o", r)
+    r = re.sub(r"^oo", "o", r)
     out = [w for w in [r] + lat if w]
     return " ".join(w[:1].upper() + w[1:].lower() for w in out)
 

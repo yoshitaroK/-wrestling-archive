@@ -31,8 +31,8 @@
   "error": ""
  },
  "players": {
-  "total": 754,
-  "published": 732,
+  "total": 761,
+  "published": 739,
   "hidden_minor": 0,
   "hidden_private": 22,
   "errors": [],
@@ -134,8 +134,8 @@
   ]
  },
  "en": {
-  "pages": 1039,
-  "names": 464,
+  "pages": 1046,
+  "names": 474,
   "machine_translations": 3714,
   "missing_names": []
  }

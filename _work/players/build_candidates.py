@@ -15,7 +15,9 @@ res, minor = [], 0
 for x in idx:
     for u in x["winners"]:
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
-        for r in parsewin.parse(fn):
+        rows = (parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]})
+                if x.get("rotated") else parsewin.parse(fn))
+        for r in rows:
             nm = re.sub(r"\s+", " ", r["name"]).strip()
             if BAD.search(nm) or not re.search(r"[一-龥ぁ-んァ-ヶ]", nm):
                 continue

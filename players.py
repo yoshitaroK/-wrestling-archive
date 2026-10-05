@@ -18,7 +18,7 @@
   - 動画との結びつけは、動画タイトルに氏名(または別表記)が含まれるかで自動判定する。
     3文字未満の名前は誤判定が多いので自動判定しない
   - 開催回IDを入れると、成績から開催回ページへリンクする。開催回ページには「入賞者」の欄が出る
-  - 英語版の選手名は「ローマ字」(例: Kenichiro FUMITA)。「ローマ字確認」が「はい」でない人は
+  - 英語版の選手名は「ローマ字」(例: Kenichiro FUMITA)。「ローマ字確認」が「はい」でなく「ふりがな」も無い人は
     機械で作った綴りなので、英語版で「Name romanized automatically」と添える
   - 掲載の取りやめの連絡が来たら、その人の「公開」を「いいえ」にする
 """
@@ -208,7 +208,8 @@ def player_page(p, ctx, bp):
     h = bp.head(L(f"{name} 選手 大会成績・試合動画|{bp.SITE_NAME}", f"{name} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
     h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
     if i18n.en():
-        sub = "" if p["roman_ok"] or not p["roman"] else ' <small class="kana">Name romanized automatically</small>'
+        # 読みがな(大会のエントリーリスト)が分かっている人は、その読みからローマ字にしているので注記を出さない
+        sub = "" if p["roman_ok"] or p["kana"] or not p["roman"] else ' <small class="kana">Name romanized automatically</small>'
     else:
         jsub = p["kana"] or (p["roman"] if p["roman_ok"] else "")
         sub = f' <small class="kana">{e(jsub)}</small>' if jsub else ""
@@ -264,7 +265,8 @@ def index_page(players, ctx, bp):
     h += "</div>"
     h += '<p class="hint">' + L("日本レスリング協会が公開している、大人の大会(天皇杯・明治杯・全日本社会人・大学の大会など)の入賞者一覧から作っています。",
                                 "Compiled from the medalist lists the Japan Wrestling Federation publishes for senior tournaments (Emperor's Cup, Meiji Cup, university championships and more).")
-    h += L("英語版の選手名は、確認できた人を除き機械でローマ字にしています。", " Player names are romanized automatically unless confirmed.") + "</p>"
+    h += L("英語版の選手名は、大会のエントリーリストの読みがなからローマ字にしています。読みがなが分からない人は、漢字から機械で読みを推測しています。",
+           " Player names are romanized from the readings in official entry lists; where no reading is available, they are romanized automatically.") + "</p>"
     h += optout_note(listing=True)
     h += PLAYER_SEARCH_JS.replace("__ALL__", L("全{n}人", "{n} players")).replace("__HIT__", L("{n}人が見つかりました", "{n} found")).replace("__NONE__", L("見つかりませんでした", "No players found"))
     h += "</main>" + bp.footer(ctx["as_of"])

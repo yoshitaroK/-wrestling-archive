@@ -134,3 +134,34 @@ def parse(pdf):
 if __name__ == "__main__":
     for x in parse(sys.argv[1]):
         print(x)
+
+
+def parse_rotated(pdf, pages, six=()):
+    """RESULT BOOK の「スタイル別入賞者一覧」(横向きのページ。階級が列・順位が行)から取り出す。
+    pages は 1 から数えたページ番号。six は「5位(6位)」が6位を意味する (スタイル, 階級)"""
+    res = []
+    allp = words(pdf)
+    for no in pages:
+        ws = allp[no - 1]
+        text = "".join(w["t"] for w in ws)
+        style = "フリースタイル" if "フリースタイル" in text else "グレコローマン" if "グレコ" in text else "女子"
+        labels = [w for w in ws if re.fullmatch(r"\d位(\(\d位\))?", w["t"]) and w["x0"] < 211]
+        weights = [w for w in ws if re.fullmatch(r"\d{2,3}kg", w["t"]) and w["y0"] > 700]
+        for wt in weights:
+            cells = {}
+            for w in ws:
+                if w["y0"] > 700 or w["x0"] < wt["x0"] - 1 or w["x0"] > wt["x0"] + 31 or w in labels:
+                    continue
+                cy = (w["y0"] + w["y1"]) / 2
+                lab = min(labels, key=lambda l: abs((l["y0"] + l["y1"]) / 2 - cy))
+                kind = "name" if w["x0"] <= wt["x0"] + 15 else "org"
+                cells.setdefault(id(lab), {"lab": lab, "name": [], "org": []})[kind].append(w)
+            for c in cells.values():
+                if not c["name"]:
+                    continue
+                pl = c["lab"]["t"]
+                place = "6" if "(6位)" in pl and (style, wt["t"]) in six else pl[0]
+                name = " ".join(w["t"] for w in sorted(c["name"], key=lambda w: -w["y0"]))
+                org = "".join(w["t"] for w in sorted(c["org"], key=lambda w: -w["y0"]))
+                res.append(dict(div="", style=style, weight=wt["t"], place=place, name=name, org=org))
+    return res
