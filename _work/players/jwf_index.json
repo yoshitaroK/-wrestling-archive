@@ -211,9 +211,33 @@
   "year": 2025,
   "name": "令和7年度 天皇杯全日本レスリング選手権大会",
   "page": "https://www.japan-wrestling.jp/competition/2025/6288",
-  "winners": [],
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/01/訂正版_2025-EMPEROR-Cup_RESULT-BOOK.pdf"
+  ],
   "n_weight_pdfs": 30,
-  "files": []
+  "files": [],
+  "rotated": {
+   "pages": [
+    7,
+    8,
+    9
+   ],
+   "six": [
+    [
+     "フリースタイル",
+     "97kg"
+    ],
+    [
+     "女子",
+     "62kg"
+    ]
+   ]
+  },
+  "entry_lists": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/12/R7_天皇杯_フリースタイルレスリングエントリーリスト.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/12/R7_天皇杯_グレコローマンレスリングエントリーリスト.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/12/R7_天皇杯_女子レスリングエントリーリスト.pdf"
+  ]
  },
  {
   "event": "wre-2026-west-spring-league-0509",
