@@ -80,6 +80,8 @@ def key(name):
     """「Rei HIGUCHI」「TAKATANI Sohsuke」→ ('HIGUCHI', 'REI') の形にそろえる"""
     parts = name.split()
     fam = [w for w in parts if w.isupper() and len(w) > 1]
+    if len(fam) == len(parts) > 1:
+        fam = parts[-1:]  # 「HARUTO YABE」のように全部大文字のときは、最後を姓とする
     giv = [w for w in parts if w not in fam]
     k = (" ".join(fam).upper(), " ".join(giv).upper())
     return tuple(re.sub(r"OH(?=[^AEIOU]|$)", "O", s) for s in k)

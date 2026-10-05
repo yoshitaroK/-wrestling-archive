@@ -413,6 +413,11 @@ a.yr{text-decoration:none}
 .olys .oly{display:inline-flex;align-items:center;gap:7px;padding:4px 14px 4px 10px;border-radius:999px;font-size:13px;font-weight:700;
   color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink)}
 .olys .oly::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pink);flex:0 0 auto}
+/* 世界選手権・U23 は白抜き(オリンピックを目立たせる)。紺の枠は黒テーマで見えにくいので、テーマごとに色が変わる --st-plan を使う */
+.olys .oly.wc{color:var(--ink);background:transparent;border:1.5px solid var(--st-plan)}
+.olys .oly.wc::before{background:var(--st-plan)}
+#plist .olym{display:inline-block;vertical-align:2px;margin-left:6px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;line-height:18px;
+  color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink);white-space:nowrap}
 .psearch{margin:8px 0 6px}
 .psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}
