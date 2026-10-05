@@ -391,6 +391,12 @@ def event_name(ev, s):
     return L(ev.get("official_name") or ev["name"], series_name(s))
 
 
+# overrides.json の event_links の label の英語。ここにない label は en_names.csv の英語名を使う
+LINK_LABELS_EN = {"大会公式サイト": "Official tournament website", "結果": "Results", "大会結果": "Results",
+                  "結果(速報)": "Live results", "組み合わせ": "Brackets", "要項": "Entry guidelines"}
+JWF_COMPETITION = re.compile(r"^https://www\.japan-wrestling\.jp/competition/\d{4}/\d+")
+
+
 def event_page(ev, ctx):
     S, slugs, by_event, cand_by_event = ctx["S"], ctx["slugs"], ctx["by_event"], ctx["cand"]
     s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
@@ -501,12 +507,18 @@ def event_page(ev, ctx):
                 (f'<a href="{U("/events/" + slugs[x["id"]] + "/")}">{e(sib_name(x))}</a>' if x["id"] in slugs
                  else e(sib_name(x))) for x in sib) + "</dd>"
     h += "</dl>"
-    # 大会の公式サイトなど(overrides.json の event_links)
-    if ev.get("links"):
+    # 大会の公式サイト・結果など(overrides.json の event_links)と、日本レスリング協会の大会ページ(結果が載る)
+    links = [(x["url"], (LINK_LABELS_EN[x["label"]] if x["label"] in LINK_LABELS_EN else N(x["label"])) if i18n.en() else x["label"])
+             for x in ev.get("links") or []]
+    jwf = next((x["url"] for x in ev.get("sources") or [] if JWF_COMPETITION.match(x.get("url") or "")), "")
+    if jwf and jwf not in {u for u, _ in links}:
+        import calendar_page
+        done = (ev.get("end") or ev.get("start") or "9999") < calendar_page.today_jst() and status != "cancelled"
+        links.append((jwf, L("結果を見る(日本レスリング協会)", "Results (Japan Wrestling Federation)") if done
+                      else L("大会情報(日本レスリング協会)", "Tournament info (Japan Wrestling Federation)")))
+    if links:
         h += '<p class="elinks">' + "".join(
-            f'<a class="elink" href="{e(x["url"])}" target="_blank" rel="noopener">'
-            f'{e(L(x["label"], "Official tournament website") if x["label"] == "大会公式サイト" else N(x["label"]))} ↗</a>'
-            for x in ev["links"]) + "</p>"
+            f'<a class="elink" href="{e(u)}" target="_blank" rel="noopener">{e(t)} ↗</a>' for u, t in links) + "</p>"
     # これから開催される大会は「カレンダーに追加」
     import calendar_page
     if (ev.get("start") and not ev.get("derived") and status not in ("cancelled", "postponed")
