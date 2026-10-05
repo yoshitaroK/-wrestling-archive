@@ -24,6 +24,7 @@ function set(v){d.setAttribute('data-theme',v);var c=document.querySelector('met
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
 if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){try{if(sessionStorage.getItem('theme'))return;}catch(x){}set(e.matches?'light':'dark');});
 window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catch(e){}};})();</script>
+<script>(function(){try{if(location.hash||location.search||sessionStorage.getItem('intro'))return;sessionStorage.setItem('intro','1');}catch(e){return;}if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.documentElement.classList.add('intro');})();</script>
 <meta name="description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
 <link rel="alternate" hreflang="ja" href="https://japanwrestlingchannel.com/">
@@ -327,7 +328,15 @@ footer p{margin:0 0 6px;max-width:76ch}
   .facts{grid-template-columns:1fr}
   .facts dt{margin-top:6px}
 }
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* 入口の演出(トップページ・ブラウザを開いて最初の1回だけ。html に intro が付いたときだけ動く) */
+@keyframes jh-zoom{from{transform:scale(1.12)}to{transform:scale(1)}}
+@keyframes jh-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+html.intro .jhero-img.on{animation:jh-zoom 7s cubic-bezier(.2,.6,.2,1) both}
+html.intro .jhero h1{animation:jh-rise .7s .1s cubic-bezier(.2,.7,.2,1) both}
+html.intro .jlead{animation:jh-rise .7s .3s cubic-bezier(.2,.7,.2,1) both}
+html.intro .jhero .searchrow{animation:jh-rise .7s .5s cubic-bezier(.2,.7,.2,1) both}
+html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -862,7 +871,13 @@ function currentConditions(){
 }
 function afterRender(){
   document.getElementById('master-asof').textContent = fmtDate(DATA.master_as_of);
-  document.getElementById('stat-v').textContent = V.length;
+  var sv = document.getElementById('stat-v');
+  // 入口の演出:収録本数を 0 から数え上げる(最初の1回だけ)
+  if(document.documentElement.classList.contains('intro') && !sv.dataset.done && window.requestAnimationFrame){
+    sv.dataset.done = '1'; var n = V.length, t0 = 0;
+    var step = function(t){ if(!t0) t0 = t; var k = Math.min(1, (t - t0) / 1400); sv.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if(k < 1) requestAnimationFrame(step); };
+    sv.textContent = '0'; requestAnimationFrame(step);
+  } else if(!sv.dataset.done) sv.textContent = V.length;
   var r = DATA.report||{};
   document.getElementById('build-info').textContent = L('データ更新:'+fmtDate(DATA.as_of)+'。動画'+(r.video_count||V.length)+'本。', 'Data updated: '+fmtDate(DATA.as_of)+'. '+plural(r.video_count||V.length,'video')+'.');
   // 年表レールは選択中の年が見える位置までスクロールする
