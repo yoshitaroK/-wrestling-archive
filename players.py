@@ -464,7 +464,23 @@ def prepare(root, data, ctx):
                 winners[r["開催回ID"]].append((p, r))
     ctx["players"], ctx["winners"] = players, winners
     ctx["events_by_id"] = {ev["id"]: ev for ev in data.get("events", [])}
+    write_search_index(root, players)
     return report
+
+
+def write_search_index(root, players):
+    """トップページの検索欄で選手も探せるように、公開している選手の一覧を assets/players.json に書く。
+    n=氏名 k=日本語版で名前の下に出す読み r=ローマ字 c=所属 ce=所属の英語名(無ければ空。英語版に日本語を出さないため)
+    o=オリンピック代表 m=大会成績の件数(多い人から並べる)"""
+    import json
+    rows = []
+    for p in sorted(players, key=lambda p: (-len(p["results"]), norm(p["roman"] or p["name"]))):
+        rows.append({"id": p["id"], "n": p["name"], "k": p["kana"] or (p["roman"] if p["roman_ok"] else ""), "r": p["roman"],
+                     "c": p["club"], "ce": i18n._names.get(p["club"], ""),
+                     "o": 1 if any(r.get("大会名", "") in OLYMPICS for r in p["results"]) else 0, "m": len(p["results"])})
+    os.makedirs(os.path.join(root, "assets"), exist_ok=True)
+    with open(os.path.join(root, "assets", "players.json"), "w", encoding="utf-8") as f:
+        json.dump(rows, f, ensure_ascii=False, separators=(",", ":"))
 
 
 def build(root, data, ctx, bp):

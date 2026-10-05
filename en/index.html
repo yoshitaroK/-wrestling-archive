@@ -156,6 +156,15 @@ button,input,select{font:inherit;color:inherit}
 .kinds{font-size:11.5px;color:var(--ink2)}
 .kinds b{font-weight:500;color:var(--ink)}
 .noser{margin:4px 0 0;font-size:12.5px;color:var(--ink3)}
+/* トップの検索で一致した選手 */
+.psec{margin-bottom:26px}
+.pcards{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.pcards a{display:flex;flex-direction:column;gap:2px;height:100%;box-sizing:border-box;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);text-decoration:none}
+.pcards a:hover{border-color:var(--pink)}
+.pcards .pn{font-weight:700;font-size:15px}
+.pcards .pk,.pcards .pcl{font-size:12.5px;color:var(--ink3)}
+.pcards .olym{display:inline-block;vertical-align:2px;margin-left:4px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;line-height:18px;
+  color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink);white-space:nowrap}
 details.more-info{margin:8px 0 4px;font-size:13px}
 details.more-info summary{cursor:pointer;color:var(--ink2);font-size:12.5px}
 details.more-info .facts{margin-top:8px}
@@ -353,10 +362,10 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
     <h1 id="jhero-h">Japan Wrestling Archive</h1>
     <p class="jlead" id="tagline">Official Japan Wrestling Channel archive · Find wrestling streams and videos by tournament, year and day. <b class="num" id="stat-v"></b> videos</p>
     <div class="searchrow" role="search">
-      <label for="q" class="sr">Search by tournament name or video title</label>
-      <input id="q" type="search" autocomplete="off" placeholder="Search tournaments (e.g. Emperor's Cup, Inter-High, 2022)">
+      <label for="q" class="sr">Search by tournament name, player name or video title</label>
+      <input id="q" type="search" autocomplete="off" placeholder="Search tournaments or players (e.g. Emperor's Cup, Fumita)">
     </div>
-    <p class="hint">Search English or Japanese tournament names. Separate words with spaces to narrow down (e.g. Emperor 2022). Video titles are in Japanese.</p>
+    <p class="hint">Search tournament names (English or Japanese) or player names. Separate words with spaces to narrow down (e.g. Emperor 2022). Video titles are in Japanese.</p>
   </div>
   <a class="jcredit" id="jhero-credit" hidden></a>
 </section>
@@ -453,6 +462,7 @@ V.forEach(function(v){
 function skey(s){
   s = String(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
   s = s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
+  s = s.replace(/[髙﨑德]/g,function(c){return {'髙':'高','﨑':'崎','德':'徳'}[c];}); // 名前の異体字は普通の字として探す
   s = s.replace(/[\s・･\/／「」『』()（）\[\]【】\u200b-\u200f\u2060\ufeff]/g,'').replace(/レスリング/g,'');
   return s;
 }
@@ -611,12 +621,12 @@ function renderControls(){
   document.getElementById('f-all').checked = st.all;
   var q = document.getElementById('q'); if(document.activeElement!==q) q.value = st.q;
 }
-function renderStatus(list, nVid){
+function renderStatus(list, nVid, nPl){
   var chips = [];
   if(st.q) chips.push(['q',L('検索:','Search: ')+st.q]); if(st.y) chips.push(['y',yl(st.y)]); if(st.c) chips.push(['c',L('区分:','Category: ')+N(st.c)]);
   if(st.sty) chips.push(['sty',L('スタイル:','Style: ')+N(st.sty)]); if(st.sc) chips.push(['sc',N(st.sc)]); if(st.k) chips.push(['k',L('種類:','Type: ')+kindLabel(st.k)]);
   if(st.all) chips.push(['all',L('動画のない大会も表示','Including tournaments without videos')]);
-  var html = '<span class="count">'+L('大会'+list.length+'件'+(nVid!=null?'・動画'+nVid+'本':''), plural(list.length,'tournament')+(nVid!=null?', '+plural(nVid,'video'):''))+'</span>';
+  var html = '<span class="count">'+L((nPl?'選手'+nPl+'人・':'')+'大会'+list.length+'件'+(nVid!=null?'・動画'+nVid+'本':''), (nPl?plural(nPl,'player')+', ':'')+plural(list.length,'tournament')+(nVid!=null?', '+plural(nVid,'video'):''))+'</span>';
   html += chips.map(function(c){ return '<span class="chip">'+esc(c[1])+'<button type="button" data-drop="'+c[0]+'" aria-label="'+esc(L(c[1]+'の条件を外す','Remove filter: '+c[1]))+'">×</button></span>'; }).join('');
   if(chips.length) html += '<button type="button" class="clear" id="clear">'+L('条件をすべてクリア','Clear all filters')+'</button>';
   if(legacyNote) html += '<span class="chip">'+esc(legacyNote)+'</span>';
@@ -821,6 +831,32 @@ function videoSearch(r, first){
     (LANG==='en'?'<p class="hint">Video titles are shown in Japanese as published.</p>':'')+
     vgroup(L('公開日の新しい順','Newest first'), '', r.hits, false, 'vs')+'</section>';
 }
+/* ---------- 選手(選手ページの一覧 assets/players.json。検索語が入ったときだけ読む) ---------- */
+var PL = null, plLoading = false;
+function loadPlayers(){
+  if(PL || plLoading) return; plLoading = true;
+  fetch('/assets/players.json',{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : []; }).then(function(d){
+    PL = (d||[]).map(function(p){ p.key = skey([p.n,p.k,p.r,p.c,p.ce].join(' ')); return p; });
+    if(st.q) render();
+  }).catch(function(){ PL = []; });
+}
+function playerHits(){
+  if(!st.q) return [];
+  if(!PL){ loadPlayers(); return []; }
+  var toks = st.q.split(/\s+/).map(skey).filter(Boolean); if(!toks.length) return [];
+  return PL.filter(function(p){ return toks.every(function(t){ return p.key.indexOf(t)>=0; }); });
+}
+function playerSection(ps){
+  if(!ps.length) return '';
+  var MAX = 12;
+  return '<section class="section psec"><h2>'+L('選手','Players')+'<small class="hint" style="margin-left:8px">'+L(ps.length+'人', plural(ps.length,'player'))+'</small></h2><ul class="pcards">'+
+    ps.slice(0,MAX).map(function(p){
+      var nm = LANG==='en' ? (p.r||p.n) : p.n, sub = LANG==='en' ? '' : p.k, club = LANG==='en' ? p.ce : p.c;
+      return '<li><a href="'+U('/players/'+p.id+'/')+'"><span class="pn">'+esc(nm)+(p.o?' <span class="olym">'+L('オリンピック代表','Olympian')+'</span>':'')+'</span>'+
+        (sub?'<span class="pk">'+esc(sub)+'</span>':'')+(club?'<span class="pcl">'+esc(club)+'</span>':'')+'</a></li>';
+    }).join('')+'</ul>'+
+    (ps.length>MAX?'<p class="hint"><a href="'+U('/players/')+'#q='+encodeURIComponent(st.q)+'">'+L('ほかの'+(ps.length-MAX)+'人も選手一覧で見る','See '+(ps.length-MAX)+' more in the player list')+'</a></p>':'')+'</section>';
+}
 function looseSection(){
   var list = loose.filter(vidOk); if(!list.length) return '';
   moreCache['loose']=list;
@@ -830,16 +866,20 @@ function render(){
   renderControls();
   var list = filteredSeries();
   var vr = videoHits();
-  renderStatus(list, st.q && (vr.hits.length || !list.length) ? vr.hits.length : null);
+  // 選手名で一致した選手は、大会より上に出す
+  var ph = st.s ? [] : playerHits();
+  renderStatus(list, st.q && (vr.hits.length || !list.length) ? vr.hits.length : null, ph.length);
   var anyFilter = st.q||st.y||st.c||st.sty||st.sc||st.k||st.all;
   var h = '';
   if(!anyFilter && !st.s) h += renderShelves();
+  h += playerSection(ph);
   // 大会が0件で動画だけ見つかったときは、動画を先に出す
   var videosFirst = !list.length && vr.hits.length && !st.s;
   if(videosFirst){
     h += '<p class="noser">'+L('大会名では一致しませんでしたが、動画タイトルで'+vr.hits.length+'本見つかりました。','No tournament matched, but '+plural(vr.hits.length,'video')+' matched by title.')+'</p>' + videoSearch(vr, true);
     document.getElementById('main').innerHTML = h; afterRender(); return;
   }
+  if(!list.length && !st.s && ph.length){ document.getElementById('main').innerHTML = h; afterRender(); return; }
   if(!list.length && !st.s){
     h += '<div class="empty"><p>'+L('<strong>条件に合う大会・動画はありません。</strong>検索語を短くするか、条件を外してください。','<strong>No tournaments or videos match.</strong> Try a shorter search or remove filters. Video titles are in Japanese, so English words only match tournament names.')+'</p>'+
       '<p>'+L('いまの条件:','Current filters: ')+esc(currentConditions())+'</p><button type="button" class="clear" id="clear">'+L('条件をすべてクリア','Clear all filters')+'</button></div>';

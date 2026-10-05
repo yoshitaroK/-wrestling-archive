@@ -200,7 +200,7 @@ def official_bar(lang_link=""):
             f'{lang_link}</div></div>')
 
 
-NAV = [("/", "大会を検索", "Search"), ("/players/", "選手検索", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos")]
+NAV = [("/", "大会を検索", "Search"), ("/players/", "選手", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos")]
 
 
 def nav_links(path):
@@ -212,7 +212,7 @@ def nav_links(path):
 
 def header_search():
     """どのページにもある検索欄。送るとトップページ(大会の検索)に移り、入れた言葉で検索する"""
-    label = L("大会名・通称で検索", "Search tournaments")
+    label = L("大会名・選手名で検索", "Search tournaments & players")
     return (f'<form class="hsearch" role="search" action="{U("/")}" method="get" '
             f'onsubmit="var v=this.q.value.trim();if(!v){{event.preventDefault();this.q.focus();return;}}event.preventDefault();location.href=this.action+\'#q=\'+encodeURIComponent(v)">'
             f'<label class="sr" for="hq">{label}</label><input id="hq" name="q" type="search" autocomplete="off" placeholder="{label}">'
