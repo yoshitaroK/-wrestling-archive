@@ -1,0 +1,434 @@
+[
+ {
+  "event": "wre-2024-meiji-cup-0523",
+  "series": "meiji-cup",
+  "year": 2024,
+  "name": "令和6年度 明治杯全日本選抜レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/580",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranFS-1.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranGR-1.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranWW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/03791cd62a.pdf",
+   "jwf/6306f3973a.pdf",
+   "jwf/f579828b25.pdf"
+  ]
+ },
+ {
+  "event": "wre-2024-shakaijin-0629",
+  "series": "shakaijin",
+  "year": 2024,
+  "name": "第71回 全日本社会人レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/1384",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2024-intercollegiate-0823",
+  "series": "intercollegiate",
+  "year": 2024,
+  "name": "文部科学大臣杯 令和6年度全日本学生レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/1426",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2024-university-greco-1023",
+  "series": "university-greco",
+  "year": 2024,
+  "name": "文部科学大臣杯 令和6年度全日本大学レスリンググレコローマンレスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/1435",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2024-tenno-cup-1219",
+  "series": "tenno-cup",
+  "year": 2024,
+  "name": "令和6年度 天皇杯全日本レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/594",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/04/令和6年度天皇杯_フリースタイル階級別入賞者一覧.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/04/令和6年度天皇杯_グレコローマン階級別入賞者一覧.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/04/令和6年度天皇杯_女子階級別入賞者一覧.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/6602c97886.pdf",
+   "jwf/54c399fdd9.pdf",
+   "jwf/7169ad2fca.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-west-spring-league-0510",
+  "series": "west-spring-league",
+  "year": 2025,
+  "name": "令和7年度 西日本学生春季リーグ戦",
+  "page": "https://www.japan-wrestling.jp/competition/2025/2921",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2025-east-league-0526",
+  "series": "east-league",
+  "year": 2025,
+  "name": "東京都知事杯 令和7年度 東日本学生レスリングリーグ戦",
+  "page": "https://www.japan-wrestling.jp/competition/2025/4000",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2025-meiji-cup-0619",
+  "series": "meiji-cup",
+  "year": 2025,
+  "name": "令和7年度 明治杯全日本選抜レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/3772",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/06/【入賞者一覧】令和７年度明治杯全日本選抜レスリング選手権大会.pdf"
+  ],
+  "n_weight_pdfs": 60,
+  "files": [
+   "jwf/081d7d1a25.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-east-spring-0709",
+  "series": "east-spring",
+  "year": 2025,
+  "name": "令和7年度 東日本学生レスリング選手権大会(春季大会)",
+  "page": "https://www.japan-wrestling.jp/competition/2025/4623",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/07/令和7年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_WW・新GR.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/07/令和7年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_新FA・FB.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/07/令和7年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_選手権F・G.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/98728c1835.pdf",
+   "jwf/fc9394e80e.pdf",
+   "jwf/d14e852486.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-shakaijin-0712",
+  "series": "shakaijin",
+  "year": 2025,
+  "name": "第72回 全日本社会人レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/4634",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/07/第72回社会人記録（優勝者一覧・個人賞）.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/599849a945.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-intercollegiate-0821",
+  "series": "intercollegiate",
+  "year": 2025,
+  "name": "文部科学大臣杯 令和7年度 全日本学生レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/5058",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/08/文部科学大臣杯-UNIVAS-CUP-令和７年度全日本学生レスリング選手権大会-入賞者一覧（8位まで）-FS.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/08/文部科学大臣杯-UNIVAS-CUP-令和７年度全日本学生レスリング選手権大会-入賞者一覧（8位まで）_GR.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/08/文部科学大臣杯-UNIVAS-CUP-令和７年度全日本学生レスリング選手権大会-入賞者一覧（8位まで）_WW.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/08/文部科学大臣杯-UNIVAS-CUP-令和７年度全日本学生レスリング選手権大会-入賞者一覧（個人賞）.pdf"
+  ],
+  "n_weight_pdfs": 27,
+  "files": [
+   "jwf/573502d675.pdf",
+   "jwf/d64de1d86a.pdf",
+   "jwf/97e60f5f64.pdf",
+   "jwf/da540adbe3.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-university-greco-1018",
+  "series": "university-greco",
+  "year": 2025,
+  "name": "文部科学大臣杯 令和7年度 全日本大学レスリンググレコローマンレスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/5495",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/10/文部科学大臣杯-令和7年度全日本大学グレコローマンスタイル選手権大会-入賞者一覧（8位まで）.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/774919d689.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-university-championship-1108",
+  "series": "university-championship",
+  "year": 2025,
+  "name": "第51回内閣総理大臣杯 令和7年度全日本大学レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/2911",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/11/2025.内閣_入賞者一覧（再修正版）.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/ed8048c07a.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-east-autumn-1127",
+  "series": "east-autumn",
+  "year": 2025,
+  "name": "令和7年度 東日本学生レスリング選手権大会(秋季大会)",
+  "page": "https://www.japan-wrestling.jp/competition/2025/2943",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/12/令和7年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_選FS・GR.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/12/令和7年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_新FS・GR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/21dbeb560f.pdf",
+   "jwf/5b170d730a.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-west-autumn-league-1206",
+  "series": "west-autumn-league",
+  "year": 2025,
+  "name": "令和7年度西日本学生レスリング秋季リーグ戦",
+  "page": "https://www.japan-wrestling.jp/competition/2025/6449",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2025-tenno-cup-1218",
+  "series": "tenno-cup",
+  "year": 2025,
+  "name": "令和7年度 天皇杯全日本レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/6288",
+  "winners": [],
+  "n_weight_pdfs": 30,
+  "files": []
+ },
+ {
+  "event": "wre-2026-west-spring-league-0509",
+  "series": "west-spring-league",
+  "year": 2026,
+  "name": "令和8年度 西日本学生春季リーグ戦",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7491",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-meiji-cup-0521",
+  "series": "meiji-cup",
+  "year": 2026,
+  "name": "令和8年度 明治杯全日本選抜レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7451",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/05/スタイル別入賞者.pdf"
+  ],
+  "n_weight_pdfs": 60,
+  "files": [
+   "jwf/f1aa0b7393.pdf"
+  ]
+ },
+ {
+  "event": "wre-2026-east-league-0616",
+  "series": "east-league",
+  "year": 2026,
+  "name": "東京都知事杯 令和8年度 東日本学生レスリングリーグ戦",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7501",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-west-rookie-0704",
+  "series": "west-rookie",
+  "year": 2026,
+  "name": "令和8年度 西日本学生レスリング新人選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7505",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-shakaijin-0711",
+  "series": "shakaijin",
+  "year": 2026,
+  "name": "第73回 全日本社会人レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7507",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-east-spring-0713",
+  "series": "east-spring",
+  "year": 2026,
+  "name": "令和8年度 東日本学生レスリング選手権大会(春季大会)",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7509",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/07/令和8年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_新FA・FB.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/07/令和8年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_WW・新GR.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/07/令和8年度東日本学生レスリング選手権大会（春季大会）入賞者一覧_選FS・GR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/9f887ac44a.pdf",
+   "jwf/c765f107cc.pdf",
+   "jwf/0c316d11d4.pdf"
+  ]
+ },
+ {
+  "event": "wre-2026-intercollegiate-0820",
+  "series": "intercollegiate",
+  "year": 2026,
+  "name": "文部科学大臣杯 UNIVAS CUP 令和8年度 全日本学生レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7522",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/08/文部科学大臣杯-UNIVAS-CUP-令和８年度全日本学生レスリング選手権大会-入賞者一覧（8位まで）.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/08/文部科学大臣杯-UNIVAS-CUP-令和８年度全日本学生レスリング選手権大会-GR入賞者一覧（8位まで）.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/08/文部科学大臣杯-UNIVAS-CUP-令和８年度全日本学生レスリング選手権大会-WW入賞者一覧（8位まで）.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/08/文部科学大臣杯-UNIVAS-CUP-令和８年度全日本学生レスリング選手権大会-入賞者一覧（個人賞）.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/8e66667b08.pdf",
+   "jwf/d1cc2fd9a9.pdf",
+   "jwf/72be963106.pdf",
+   "jwf/792d8e85f1.pdf"
+  ]
+ },
+ {
+  "event": "wre-2026-west-championship-0925",
+  "series": "west-championship",
+  "year": 2026,
+  "name": "令和8年度 西日本学生レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7526",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-other-d6636195-0930",
+  "series": "other-d6636195",
+  "year": 2026,
+  "name": "第20回 アジア競技大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7528",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-university-greco-1023",
+  "series": "university-greco",
+  "year": 2026,
+  "name": "文部科学大臣杯 令和8年度 全日本大学レスリンググレコローマンレスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7537",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-shakaijin-open-1031",
+  "series": "shakaijin-open",
+  "year": 2026,
+  "name": "第43回全国社会人オープンレスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7543",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-university-championship-1114",
+  "series": "university-championship",
+  "year": 2026,
+  "name": "第52回内閣総理大臣杯 令和8年度全日本大学レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7547",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-east-autumn-1123",
+  "series": "east-autumn",
+  "year": 2026,
+  "name": "令和8年度 東日本学生レスリング選手権大会(秋季大会)",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7549",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-tenno-cup-1224",
+  "series": "tenno-cup",
+  "year": 2026,
+  "name": "令和8年度 天皇杯全日本レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7553",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2024-shakaijin-open-1102",
+  "series": "shakaijin-open",
+  "year": 2024,
+  "name": "第41回全国社会人オープンレスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/1442",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2024-university-championship-1109",
+  "series": "university-championship",
+  "year": 2024,
+  "name": "第50回内閣総理大臣杯 令和6年度全日本大学レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2024/592",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/nyusho_ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [
+   "jwf/7332950e27.pdf"
+  ]
+ },
+ {
+  "event": "wre-2025-west-rookie-0705",
+  "series": "west-rookie",
+  "year": 2025,
+  "name": "令和7年度 西日本学生レスリング新人選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/2925",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2025-west-championship-0918",
+  "series": "west-championship",
+  "year": 2025,
+  "name": "令和7年度 西日本学生レスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/competition/2025/2929",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ },
+ {
+  "event": "wre-2026-west-autumn-league-1127",
+  "series": "west-autumn-league",
+  "year": 2026,
+  "name": "令和8年度西日本学生レスリング秋季リーグ戦",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7551",
+  "winners": [],
+  "n_weight_pdfs": 0,
+  "files": []
+ }
+]
