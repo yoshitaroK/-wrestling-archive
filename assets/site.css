@@ -409,6 +409,10 @@ a.yr{text-decoration:none}
 .soon .soon-list span{font-size:13px;color:var(--ink3)}
 .soon .soon-note{font-size:14px;color:var(--ink2)}
 .page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
+.olys{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 12px}
+.olys .oly{display:inline-flex;align-items:center;gap:7px;padding:4px 14px 4px 10px;border-radius:999px;font-size:13px;font-weight:700;
+  color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink)}
+.olys .oly::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pink);flex:0 0 auto}
 .psearch{margin:8px 0 6px}
 .psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}

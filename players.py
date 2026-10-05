@@ -21,6 +21,8 @@
   - 英語版の選手名は「ローマ字」(例: Kenichiro FUMITA)。「ローマ字確認」が「はい」でなく「ふりがな」も無い人は
     機械で作った綴りなので、英語版で「Name romanized automatically」と添える
   - 掲載の取りやめの連絡が来たら、その人の「公開」を「いいえ」にする
+  - オリンピックの成績は大会名を「オリンピック(パリ)」のようにする(下の OLYMPICS)。名前の下に「パリ 2024 オリンピック代表」の印が出る。
+    成績は世界レスリング連合(UWW)の結果から _work/players/olympic_results.py で足す
 """
 import csv
 import os
@@ -39,6 +41,11 @@ PLAYERS_CSV = "players.csv"
 RESULTS_CSV = "player_results.csv"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
+# オリンピックの大会名(player_results.csv)→ 名前の下の印(日本語・英語)と英語の大会名。新しい大会を上に足す
+OLYMPICS = {
+    "オリンピック(パリ)": ("パリ 2024 オリンピック代表", "Paris 2024 Olympian", "Olympic Games Paris 2024"),
+    "オリンピック(東京 2020)": ("東京 2020 オリンピック代表", "Tokyo 2020 Olympian", "Olympic Games Tokyo 2020"),
+}
 
 
 def read_csv(path):
@@ -143,6 +150,9 @@ def weight_key(w):
 
 def tournament_name(r, ctx, bp):
     """成績の大会名。英語版は開催回ページの英語名"""
+    oly = OLYMPICS.get(r.get("大会名", ""))
+    if oly:
+        return L(r["大会名"], oly[2])
     ev = ctx["events_by_id"].get(r.get("開催回ID", ""))
     if i18n.en() and ev:
         return bp.event_name(ev, ctx["S"].get(ev["series"], {"id": ev["series"], "name": ev["name"]}))
@@ -166,6 +176,12 @@ def result_rows(p, ctx, bp):
         out.append(f"<tr><td>{e(r.get('開催年', ''))}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
                    f"<td>{e(r.get('階級', ''))}</td><td><b>{e(rank(r.get('成績', '')))}</b></td><td>{src_html}</td></tr>")
     return out
+
+
+def olympic_badges(p):
+    """名前の下の「パリ 2024 オリンピック代表」の印(新しい大会から)"""
+    names = {r.get("大会名", "") for r in p["results"]}
+    return "".join(f'<span class="oly">{L(ja, en)}</span>' for k, (ja, en, _) in OLYMPICS.items() if k in names)
 
 
 def optout_note(listing=False):
@@ -214,6 +230,9 @@ def player_page(p, ctx, bp):
         jsub = p["kana"] or (p["roman"] if p["roman_ok"] else "")
         sub = f' <small class="kana">{e(jsub)}</small>' if jsub else ""
     h += f'<h1>{e(name)}{sub}</h1>'
+    badges = olympic_badges(p)
+    if badges:
+        h += f'<p class="olys">{badges}</p>'
     h += f'<p class="lead">{e(desc)}</p>'
     if club:
         h += f'<dl class="facts"><dt>{L("所属", "Club / school")}</dt><dd>{e(club)}</dd></dl>'
@@ -222,7 +241,11 @@ def player_page(p, ctx, bp):
         h += (f'<h2>{L("大会成績", "Tournament results")}</h2><div class="rtable"><table class="results"><thead><tr><th>{L("年", "Year")}</th><th>{L("大会", "Tournament")}</th>'
               f'<th>{L("スタイル", "Style")}</th><th>{L("階級", "Weight")}</th><th>{L("成績", "Result")}</th><th></th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
         h += '<p class="hint">' + L("成績は日本レスリング協会が公開している入賞者一覧から作っています。所属は大会のときのものです。",
-                                    "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.") + "</p>"
+                                    "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.")
+        if badges:
+            h += L("オリンピックの成績は世界レスリング連合(UWW)の公式結果によります。",
+                   " Olympic results are from the official results of United World Wrestling (UWW).")
+        h += "</p>"
     if p["videos"]:
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
     h += optout_note()
@@ -316,10 +339,16 @@ def winners_html(ev, ctx, bp):
             rows += f"<tr><th>{e(w)}</th><td>{''.join(cells)}</td></tr>"
         body += f'<h3>{e(N(st))}</h3><div class="rtable"><table class="winners"><tbody>{rows}</tbody></table></div>'
     n = len({p["id"] for p, _ in lst})
-    return (f'<details class="more-box winners-box"><summary>{L(f"入賞者({n}人)", "Medalists (" + i18n.plural(n, "player") + ")")}</summary>'
-            '<p class="hint">' + L("日本レスリング協会の入賞者一覧から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
-                                   "From the Japan Wrestling Federation medalist list. Select a name to open the player page. Some players are not listed.") + "</p>"
-            + body + "</details>")
+    if any(r.get("大会名", "") in OLYMPICS for _, r in lst):
+        # オリンピックは入賞していない人も載せるので「日本代表」とする
+        summary = L(f"日本代表の成績({n}人)", "Team Japan results (" + i18n.plural(n, "player") + ")")
+        hint = L("世界レスリング連合(UWW)の公式結果から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
+                 "From the official results of United World Wrestling (UWW). Select a name to open the player page. Some players are not listed.")
+    else:
+        summary = L(f"入賞者({n}人)", "Medalists (" + i18n.plural(n, "player") + ")")
+        hint = L("日本レスリング協会の入賞者一覧から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
+                 "From the Japan Wrestling Federation medalist list. Select a name to open the player page. Some players are not listed.")
+    return (f'<details class="more-box winners-box"><summary>{summary}</summary><p class="hint">{hint}</p>' + body + "</details>")
 
 
 def coming_soon_page(ctx, bp):
@@ -372,6 +401,10 @@ PLAYER_CSS = """
 .soon .soon-list span{font-size:13px;color:var(--ink3)}
 .soon .soon-note{font-size:14px;color:var(--ink2)}
 .page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
+.olys{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 12px}
+.olys .oly{display:inline-flex;align-items:center;gap:7px;padding:4px 14px 4px 10px;border-radius:999px;font-size:13px;font-weight:700;
+  color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink)}
+.olys .oly::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pink);flex:0 0 auto}
 .psearch{margin:8px 0 6px}
 .psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}

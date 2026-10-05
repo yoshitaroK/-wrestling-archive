@@ -14,6 +14,7 @@
   「クラブ・教室だけ(年齢を確認)」「階級の幅が大きい」の人は「いいえ」のまま
 - 新しい大会を足して「クラブ・教室だけ」「階級の幅が大きい」のメモが付いた人は、前の players.csv で公開でも「いいえ」に戻す
 - すでに players.csv があるときは、運営者が変えた「公開」「未成年」「ローマ字」「ローマ字確認」をそのまま残す
+- player_results.csv にある「オリンピック(…)」の行(olympic_results.py で足したもの)は、作り直しても残す
 """
 import csv
 import os
@@ -103,9 +104,11 @@ def main():
         w = csv.DictWriter(f, fieldnames=COLS)
         w.writeheader()
         w.writerows(out)
+    # オリンピックの成績は候補の表に無いので、前の player_results.csv から持ってくる
+    olympics = [r for r in read(os.path.join(ROOT, "player_results.csv")) if r.get("大会名", "").startswith("オリンピック(")]
     seen = set()
     rows = []
-    for r in results:
+    for r in results + olympics:
         r = dict(r, 選手ID=merged.get(r["選手ID"], r["選手ID"]))
         key = tuple(r.values())
         if key not in seen:

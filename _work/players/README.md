@@ -23,6 +23,7 @@
 | `make_romaji.py` | 英語版の選手名(ローマ字)の下書き `romaji_auto.csv` を機械で作る(pykakasi が必要。毎日の自動更新では使わない) |
 | `romaji_fix.tsv` | 機械のローマ字を直したもの。3列目が「はい」の人は、公の英語表記と一致を確かめた人 |
 | `kana_entries.py` | 大会のエントリーリスト(jwf_index.json の entry_lists)から読みがなを取り出して `kana_entries.csv` を作る。英語名はこの読みから作る |
+| `olympic_results.py` | オリンピック(パリ 2024・東京 2020)の成績を UWW の結果の冊子から取り、player_results.csv に足す |
 | `make_players_csv.py` | 上の表から、リポジトリの一番上の `players.csv` / `player_results.csv` を作る。運営者が変えた「公開」「未成年」「ローマ字」「ローマ字確認」は残す |
 
 作り直すとき:`python3 fetch_pdfs.py` → `python3 build_candidates.py` → `python3 kana_entries.py` → `python3 make_romaji.py` → `python3 make_players_csv.py`
@@ -47,10 +48,16 @@
 2. 「公開=いいえ」の22人(クラブ・教室だけ=年齢の確認が必要/階級の幅が大きい=別の人かもしれない)を確かめ、確かめた人から「はい」にする
 3. 取れなかった大会(明治杯 2025・全日本大学 2024 など)を足すか決める。ほかの大会のエントリーリストも足すと、読みがなの分かる人が増える
 
-## オリンピックの成績を足す(3回目の /grill-me で決定・まだ作っていない)
+## オリンピックの成績(3回目の /grill-me で決定)
 - 対象:パリ 2024 と東京 2020。選手ページに載っている選手だけ
-- 出典:公式サイト olympics.com の結果(協会のパリ五輪のページは olympics.com へ移るだけ)。
-  作業環境のネットワーク設定で `olympics.com` と `www.olympics.com` を許可してから始める(記憶で成績を書かない)
-- 見せ方:大会成績の表に1行足す(例:「2024 オリンピック(パリ) グレコローマン 60kg 1位」)。
-  あわせて、名前の下に「パリ 2024 オリンピック代表」のような目立つ印をつける(日本語・英語)
-- 成績は player_results.csv に足す。パリ 2024 はサイトの開催回ページ(x-olympics-2024-05-23)にリンクする
+- 出典:世界レスリング連合(UWW)の公式結果の冊子(PDF)。uww.org の大会ページ(`/events/paris-2024`・`/events/tokyo-2020`)の「Results」
+  - はじめは olympics.com の予定だったが、olympics.com は作業環境からの接続を受け付けなかった(許可しても中身が返らない)ので、運営者が UWW に変えた
+  - 作業環境のネットワーク設定で `uww.org` と `cdn.uww.org` を許可している
+  - 東京 2020 は、ドーピング違反の処分を反映した更新版の冊子を使う
+- 見せ方:大会成績の表に1行(例:「2024 オリンピック(パリ) グレコローマン 60kg 1位」)。名前の下に「パリ 2024 オリンピック代表」の印(英語版は「Paris 2024 Olympian」)
+- 成績は player_results.csv に足す。大会名は「オリンピック(パリ)」「オリンピック(東京 2020)」。東京 2020 の開催年は実際に開かれた 2021
+- パリ 2024 はサイトの開催回ページ(x-olympics-2024-05-23)にリンクする。その開催回ページには「日本代表の成績」の欄が出る。東京 2020 は開催回ページが無いのでリンクなし
+- 足し方:`python3 olympic_results.py`(PDF を `uww/` に取り、各階級の Ranking の表から JPN の選手を取って、players.csv の「ローマ字」で結びつける)
+- `make_players_csv.py` で作り直しても、player_results.csv の「オリンピック(…)」の行は残る
+- players.csv にいないので足していない人:(UWW の表記のまま)パリ 2024 の Tsugumi SAKURAI、東京 2020 の TAKAHASHI Yuki・OTOGURO Takuto・OTOGURO Keisuke・Shohei YABIKU・Mayu SHIDOCHI MUKAIDA・Risako KINJO・KAWAI Yukako・DOSHO Sara・MINAGAWA Hiroe
+  (選手ページは協会の入賞者一覧から作っているので、最近の国内大会に出ていない人はいない)
