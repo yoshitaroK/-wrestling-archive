@@ -292,9 +292,9 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand{gap:0 12px;padding-top:8px}
   .home{padding-bottom:6px}
   .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
-  .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:22px;overflow-x:auto;scrollbar-width:none;padding-top:2px}
-  .brand .topnav::-webkit-scrollbar{display:none}
-  .topnav a{font-size:13.5px;padding:6px 0 8px}
+  /* 項目が5つになったので、狭い画面では横にはみ出さず2行に折り返す */
+  .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:0 14px;flex-wrap:wrap;padding-top:2px}
+  .topnav a{font-size:13px;padding:6px 0 8px}
   .hsearch{order:5;width:100%;margin:2px 0 10px}
   .top{position:static}
   .hsearch input{font-size:16px;padding:9px 4px 9px 12px}
@@ -341,7 +341,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
   <div class="wrap">
     <div class="brand">
       <a class="home" href="#" id="home" aria-label="Japan Wrestling Archive (home)"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
-      <nav class="topnav" aria-label="Menu"><a href="/en/events/">Tournaments</a><a href="/en/events/calendar/">Calendar</a><a href="/en/technique/">Technique</a><a href="/en/photos/">Photos</a></nav>
+      <nav class="topnav" aria-label="Menu"><a href="/en/events/">Tournaments</a><a href="/en/players/">Players</a><a href="/en/events/calendar/">Calendar</a><a href="/en/technique/">Technique</a><a href="/en/photos/">Photos</a></nav>
       <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch color theme"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
     </div>
   </div>

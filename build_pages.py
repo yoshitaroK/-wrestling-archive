@@ -200,7 +200,7 @@ def official_bar(lang_link=""):
             f'{lang_link}</div></div>')
 
 
-NAV = [("/", "大会を検索", "Search"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos")]
+NAV = [("/", "大会を検索", "Search"), ("/players/", "選手検索", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos")]
 
 
 def nav_links(path):
