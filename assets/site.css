@@ -113,6 +113,15 @@ button,input,select{font:inherit;color:inherit}
 .kinds{font-size:11.5px;color:var(--ink2)}
 .kinds b{font-weight:500;color:var(--ink)}
 .noser{margin:4px 0 0;font-size:12.5px;color:var(--ink3)}
+/* トップの検索で一致した選手 */
+.psec{margin-bottom:26px}
+.pcards{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.pcards a{display:flex;flex-direction:column;gap:2px;height:100%;box-sizing:border-box;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);text-decoration:none}
+.pcards a:hover{border-color:var(--pink)}
+.pcards .pn{font-weight:700;font-size:15px}
+.pcards .pk,.pcards .pcl{font-size:12.5px;color:var(--ink3)}
+.pcards .olym{display:inline-block;vertical-align:2px;margin-left:4px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;line-height:18px;
+  color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink);white-space:nowrap}
 details.more-info{margin:8px 0 4px;font-size:13px}
 details.more-info summary{cursor:pointer;color:var(--ink2);font-size:12.5px}
 details.more-info .facts{margin-top:8px}
