@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-05T06:34:51+09:00",
- "as_of": "2026-10-05",
+ "built_at": "2026-10-06T06:32:55+09:00",
+ "as_of": "2026-10-06",
  "video_count": 3354,
  "raw_count": 3354,
  "duplicate_ids_removed": 0,
@@ -25,9 +25,9 @@
  "translation": {
   "total": 3714,
   "translated": 3714,
-  "new": 1,
+  "new": 0,
   "pending": 0,
-  "chars_used": 14,
+  "chars_used": 0,
   "error": ""
  },
  "players": {
