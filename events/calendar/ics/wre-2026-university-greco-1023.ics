@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-university-greco-1023@japanwrestlingchannel.com
+DTSTAMP:20261023T000000Z
+DTSTART;VALUE=DATE:20261023
+DTEND;VALUE=DATE:20261025
+SUMMARY:文部科学大臣杯 令和8年度 全日本大学レスリング
+ グレコローマンレスリング選手権大会
+LOCATION:東京・駒沢オリンピック公園総合運動場体育館
+URL:https://japanwrestlingchannel.com/events/university-greco/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/university-greco/
+END:VEVENT
+END:VCALENDAR

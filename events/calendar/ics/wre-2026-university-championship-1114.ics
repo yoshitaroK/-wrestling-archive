@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-university-championship-1114@japanwrestlingchannel.com
+DTSTAMP:20261114T000000Z
+DTSTART;VALUE=DATE:20261114
+DTEND;VALUE=DATE:20261116
+SUMMARY:第52回内閣総理大臣杯 令和8年度全日本大学レスリ
+ ング選手権大会
+LOCATION:大阪
+URL:https://japanwrestlingchannel.com/events/university-championship/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/university-championship/
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-university-greco-1023@japanwrestlingchannel.com
+DTSTAMP:20261023T000000Z
+DTSTART;VALUE=DATE:20261023
+DTEND;VALUE=DATE:20261025
+SUMMARY:All Japan University Greco-Roman Championships
+LOCATION:Komazawa Olympic Park Gymnasium\, Tokyo
+URL:https://japanwrestlingchannel.com/en/events/university-greco/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/university-greco/
+END:VEVENT
+END:VCALENDAR

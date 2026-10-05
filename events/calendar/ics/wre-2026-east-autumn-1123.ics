@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-east-autumn-1123@japanwrestlingchannel.com
+DTSTAMP:20261123T000000Z
+DTSTART;VALUE=DATE:20261123
+DTEND;VALUE=DATE:20261126
+SUMMARY:令和8年度 東日本学生レスリング選手権大会(秋季
+ 大会)
+LOCATION:東京・駒沢オリンピック公園総合運動場体育館
+URL:https://japanwrestlingchannel.com/events/east-autumn/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/east-autumn/
+END:VEVENT
+END:VCALENDAR

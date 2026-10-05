@@ -9,14 +9,69 @@ master_events.json(data.json の events)に入っている大会を月ごとの�
   4. どれもない                         → リンクなし(名前だけ表示)
 events/ フォルダの中に作るので、自動更新の保存対象(update.yml)を変える必要はない。
 """
+import hashlib
 import json
 import re
+from urllib.parse import urlencode
 from datetime import datetime, timedelta, timezone
 
 import i18n
 from i18n import L, U, N
 
 JST = timezone(timedelta(hours=9))
+SITE = "https://japanwrestlingchannel.com"
+ICS_DIR = "/events/calendar/ics/"   # 「カレンダーに追加」用のファイル(.ics)を置く場所。ビルドのたびに作り直す
+
+
+def today_jst():
+    return datetime.now(JST).strftime("%Y-%m-%d")
+
+
+def ics_text(s):
+    return str(s or "").replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+
+
+def ics_fold(line):
+    """iCalendar の決まりで、1行を75バイト以内に折り返す"""
+    out, cur = [], b""
+    for ch in line:
+        b = ch.encode("utf-8")
+        if len(cur) + len(b) > (75 if not out else 74):
+            out.append(cur.decode("utf-8"))
+            cur = b""
+        cur += b
+    out.append(cur.decode("utf-8"))
+    return "\r\n ".join(out)
+
+
+def add_to_calendar(key, name, start, end, venue, url, ctx):
+    """これから開催される大会の「カレンダーに追加」。Google カレンダーのURLと .ics ファイルのURLを返し、
+    .ics の中身は ctx["ics"] に入れておく(build_pages.build() がまとめて書き出す)"""
+    end1 = (datetime.strptime(end or start, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y%m%d")
+    s0 = start.replace("-", "")
+    page = (SITE + url) if url.startswith("/") else url
+    detail = (L("大会の情報と配信:", "Tournament info and streams: ") + page) if page else ""
+    gc = "https://calendar.google.com/calendar/render?" + urlencode(
+        {"action": "TEMPLATE", "text": name, "dates": f"{s0}/{end1}", "location": venue or "", "details": detail})
+    k = re.sub(r"[^a-z0-9-]", "", key.lower())
+    if k != key.lower():
+        k += "-" + hashlib.md5(key.encode("utf-8")).hexdigest()[:6]
+    ic = U(ICS_DIR + k + ".ics")
+    lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Japan Wrestling Channel//Archive//" + L("JA", "EN"), "CALSCALE:GREGORIAN",
+             "METHOD:PUBLISH", "BEGIN:VEVENT", f"UID:{k}@japanwrestlingchannel.com", f"DTSTAMP:{s0}T000000Z",
+             f"DTSTART;VALUE=DATE:{s0}", f"DTEND;VALUE=DATE:{end1}", "SUMMARY:" + ics_text(name)]
+    if venue:
+        lines.append("LOCATION:" + ics_text(venue))
+    if page:
+        lines += ["URL:" + page, "DESCRIPTION:" + ics_text(detail)]
+    lines += ["END:VEVENT", "END:VCALENDAR"]
+    ctx.setdefault("ics", {})[ic] = "\r\n".join(ics_fold(x) for x in lines) + "\r\n"
+    return gc, ic
+
+
+def add_buttons_html(gc, ic, e, cls="elink"):
+    return (f'<a class="{cls} addcal" href="{e(gc)}" target="_blank" rel="noopener">{L("Google カレンダーに追加", "Add to Google Calendar")} ↗</a>'
+            f'<a class="{cls} addcal" href="{e(ic)}" download>{L("iPhone・Outlook などに追加(.ics)", "Add to Apple / Outlook (.ics)")}</a>')
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}")
 
 
@@ -39,13 +94,20 @@ def entries(data, ctx):
                 "d": bool(ev.get("derived"))}
         sessions = [x for x in ev.get("sessions") or [] if DATE_RE.match(x.get("start_date") or "")]
         if sessions:
-            for x in sessions:
+            for i, x in enumerate(sessions, 1):
+                base["k"] = f"{ev['id']}-{i}"
                 label = N(x.get("label") or "")
                 out.append(dict(base, n=(f"{name} {label}" if not i18n.en() else (label or name)).strip(), s=x["start_date"][:10],
                                 e=(x.get("end_date") or x["start_date"])[:10], v=N(x.get("venue") or ev.get("venue") or "")))
         elif DATE_RE.match(ev.get("start") or ""):
+            base["k"] = ev["id"]
             out.append(dict(base, n=name, s=ev["start"][:10], e=(ev.get("end") or ev["start"])[:10],
                             v=N(ev.get("venue") or "")))
+    today = today_jst()
+    for x in out:
+        if x["e"] >= today and x["st"] not in ("cancelled", "postponed") and not x["d"]:
+            x["gc"], x["ic"] = add_to_calendar(x["k"], x["n"], x["s"], x["e"], x["v"], x["u"], ctx)
+        x.pop("k")
     out.sort(key=lambda x: (x["s"], x["n"]))
     return out
 
@@ -62,10 +124,12 @@ def fmt_md(s, e):
 JS_TEXT = {
     "ja": {"ym": "{y}年{m}月", "wd": ["日", "月", "火", "水", "木", "金", "土"], "more": "ほか{n}件", "cell": "{m}月{d}日 大会{n}件",
            "day": "{m}月{d}日の大会", "month": "この月の大会({n}件)", "can": "中止", "vid": "動画あり", "sch": "予定",
-           "derived": "(配信日)", "noday": "この日の大会はありません。", "nomonth": "この月に登録されている大会はありません。", "dash": "〜"},
+           "derived": "(配信日)", "noday": "この日の大会はありません。", "nomonth": "この月に登録されている大会はありません。", "dash": "〜",
+           "gc": "＋ Google カレンダー", "ic": "＋ iPhone・Outlook など"},
     "en": {"ym": "{M} {y}", "wd": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], "more": "+{n} more", "cell": "{M} {d}: {n} tournaments",
            "day": "Tournaments on {M} {d}", "month": "Tournaments this month ({n})", "can": "Cancelled", "vid": "Videos", "sch": "Scheduled",
-           "derived": " (stream dates)", "noday": "No tournaments on this day.", "nomonth": "No tournaments listed for this month.", "dash": "–"},
+           "derived": " (stream dates)", "noday": "No tournaments on this day.", "nomonth": "No tournaments listed for this month.", "dash": "–",
+           "gc": "+ Google Calendar", "ic": "+ Apple / Outlook"},
 }
 
 
@@ -118,8 +182,11 @@ def list_item(x, e):
         tgt = ' target="_blank" rel="noopener"' if x["x"] else ""
         name = f'<a href="{e(x["u"])}"{tgt}>{name}{" ↗" if x["x"] else ""}</a>'
     note = JS_TEXT[i18n.LANG]["derived"] if x["d"] else ""
+    T = JS_TEXT[i18n.LANG]
+    add = (f'<span class="addc"><a href="{e(x["gc"])}" target="_blank" rel="noopener">{T["gc"]}</a>'
+           f'<a href="{e(x["ic"])}" download>{T["ic"]}</a></span>') if x.get("gc") else ""
     return (f'<li class="{cls}"><span class="cd">{e(fmt_md(x["s"], x["e"]))}{note}</span>'
-            f'<span class="cn">{name}<small>{e(x["v"])}</small></span><span class="cb">{badge}</span></li>')
+            f'<span class="cn">{name}<small>{e(x["v"])}</small>{add}</span><span class="cb">{badge}</span></li>')
 
 
 CAL_CSS = """
@@ -168,6 +235,9 @@ CAL_CSS = """
 [data-theme="light"] .lg.can::before,[data-theme="light"] .dots i.can{background:#9a9aa3}[data-theme="light"] .chip.can{background:#6b6b75}
 .cal-list .can .cn{text-decoration:line-through;color:var(--ink3)}
 .cal-list .cal-empty{display:block;color:var(--ink3);padding:16px 4px}
+.cal-list .addc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cal-list .addc a{font-size:12px;font-weight:700;color:var(--pink);border:1px solid var(--pink-line);border-radius:999px;padding:2px 10px;text-decoration:none}
+.cal-list .addc a:hover{border-color:var(--pink)}
 @media (max-width:640px){
   .cal-grid .day{min-height:54px;align-items:center}
   .cal-grid .chip,.cal-grid .cal-more{display:none}
@@ -232,7 +302,9 @@ CAL_JS = r"""<script>
     list.innerHTML = evs.length ? evs.map(function(x){
       var k = kind(x), badge = T[k];
       return '<li class="' + k + '"><span class="cd">' + md(x.s, x.e) + (x.d ? T.derived : "") + '</span><span class="cn">' +
-             link(x, esc(x.n)) + '<small>' + esc(x.v) + '</small></span><span class="cb">' + badge + '</span></li>';
+             link(x, esc(x.n)) + '<small>' + esc(x.v) + '</small>' +
+             (x.gc ? '<span class="addc"><a href="' + esc(x.gc) + '" target="_blank" rel="noopener">' + T.gc + '</a><a href="' + esc(x.ic) + '" download>' + T.ic + '</a></span>' : '') +
+             '</span><span class="cb">' + badge + '</span></li>';
     }).join("") : '<li class="cal-empty">' + (sel ? T.noday : T.nomonth) + '</li>';
   }
   grid.addEventListener("click", function(ev){

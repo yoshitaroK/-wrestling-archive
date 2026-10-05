@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-kokutai-1012@japanwrestlingchannel.com
+DTSTAMP:20261012T000000Z
+DTSTART;VALUE=DATE:20261012
+DTEND;VALUE=DATE:20261016
+SUMMARY:第80回国民スポーツ大会
+LOCATION:青森・八戸市
+URL:https://japanwrestlingchannel.com/events/kokutai/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/kokutai/
+END:VEVENT
+END:VCALENDAR

@@ -507,6 +507,13 @@ def event_page(ev, ctx):
             f'<a class="elink" href="{e(x["url"])}" target="_blank" rel="noopener">'
             f'{e(L(x["label"], "Official tournament website") if x["label"] == "大会公式サイト" else N(x["label"]))} ↗</a>'
             for x in ev["links"]) + "</p>"
+    # これから開催される大会は「カレンダーに追加」
+    import calendar_page
+    if (ev.get("start") and not ev.get("derived") and status not in ("cancelled", "postponed")
+            and (ev.get("end") or ev["start"]) >= calendar_page.today_jst()):
+        gc, ic = calendar_page.add_to_calendar(ev["id"], f"{name} {year_label(ev['year'])}" if i18n.en() else name,
+                                               ev["start"][:10], (ev.get("end") or ev["start"])[:10], venue or "", U(path), ctx)
+        h += '<p class="elinks">' + calendar_page.add_buttons_html(gc, ic, e) + "</p>"
 
     # 開催年の年表(ほかの年へのリンク)
     h += year_rail(s, ev["id"], ctx)
@@ -1315,6 +1322,16 @@ def build(root=HERE, inline_css=False, only=None):
     i18n.set_lang("ja")
     if only is None:
         photo_gallery.write_hero(root, hero)
+        # 「カレンダーに追加」の .ics ファイル。終わった大会の分が残らないよう、毎回作り直す
+        import shutil
+        import calendar_page
+        for pre in ("", "/en"):
+            shutil.rmtree(os.path.join(root, (pre + calendar_page.ICS_DIR).strip("/")), ignore_errors=True)
+        for p, text in ctx.get("ics", {}).items():
+            fp = os.path.join(root, p.strip("/"))
+            os.makedirs(os.path.dirname(fp), exist_ok=True)
+            with open(fp, "w", encoding="utf-8", newline="") as f:
+                f.write(text)
     pages = all_pages[0][1]
     en_pages = all_pages[1][1]
 
