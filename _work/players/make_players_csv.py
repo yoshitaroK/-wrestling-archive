@@ -8,6 +8,8 @@
 - 「ローマ字」列:romaji_fix.tsv に直した綴りがあればそれ、無ければ機械の下書き
 - 「ローマ字確認」列:romaji_fix.tsv で「はい」の人だけ「はい」(英語版で注記を出さない)
 - PDF で「(氏名)」とかっこ付きで載っている人は、かっこを外し、同じ名前・同じ所属の人がいればその人にまとめる
+- 確認メモが「所属が複数」だけの人は「公開=はい」にする(移籍や「(株)」の書き方の違いがほとんどのため。運営者が決定)。
+  「クラブ・教室だけ(年齢を確認)」「階級の幅が大きい」の人は「いいえ」のまま
 - すでに players.csv があるときは、運営者が変えた「公開」「未成年」「ローマ字」「ローマ字確認」をそのまま残す
 """
 import csv
@@ -25,6 +27,10 @@ def read(path):
         return []
     with open(path, encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
+
+
+def is_yes(v):
+    return (v or "").strip() in ("はい", "yes", "1", "○", "〇")
 
 
 def unparen(s):
@@ -53,10 +59,16 @@ def main():
             continue
         roma, ok = fix.get(r["選手ID"], (auto.get(r["選手ID"], ""), ""))
         roma = " ".join(re.sub(r"[()()]", "", roma).split())
+        memo = [m for m in (r.get("確認メモ") or "").split("・") if m]
+        public = "はい" if memo and all(m.startswith("所属が複数") for m in memo) else r["公開"]
         row = {"選手ID": r["選手ID"], "氏名": name, "ふりがな": r["ふりがな"], "別表記": r["別表記"], "所属": club,
-               "公開": r["公開"], "未成年": r["未成年"], "ローマ字": roma, "ローマ字確認": ok}
+               "公開": public, "未成年": r["未成年"], "ローマ字": roma, "ローマ字確認": ok}
         if r["選手ID"] in old:
             for k in KEEP:
+                if k == "公開" and public != r["公開"] and old[r["選手ID"]].get(k) == r["公開"]:
+                    continue  # 上の「所属が複数」の決定を、前の players.csv の値で打ち消さない
+                if k in ("ローマ字", "ローマ字確認") and r["選手ID"] in fix and not is_yes(old[r["選手ID"]].get("ローマ字確認")):
+                    continue  # romaji_fix.tsv で直した綴りを使う(運営者が確かめた綴りは残す)
                 if old[r["選手ID"]].get(k):
                     row[k] = old[r["選手ID"]][k]
         out.append(row)

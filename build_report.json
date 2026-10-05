@@ -32,11 +32,11 @@
  },
  "players": {
   "total": 754,
-  "published": 683,
+  "published": 732,
   "hidden_minor": 0,
-  "hidden_private": 71,
+  "hidden_private": 22,
   "errors": [],
-  "video_links": 554
+  "video_links": 740
  },
  "photos": {
   "entries": 301,
@@ -134,8 +134,8 @@
   ]
  },
  "en": {
-  "pages": 990,
-  "names": 436,
+  "pages": 1039,
+  "names": 464,
   "machine_translations": 3714,
   "missing_names": []
  }
