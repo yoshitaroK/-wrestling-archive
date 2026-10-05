@@ -22,7 +22,9 @@
     機械で作った綴りなので、英語版で「Name romanized automatically」と添える
   - 掲載の取りやめの連絡が来たら、その人の「公開」を「いいえ」にする
   - オリンピックの成績は大会名を「オリンピック(パリ)」のようにする(下の OLYMPICS)。名前の下に「パリ 2024 オリンピック代表」の印が出る。
-    成績は世界レスリング連合(UWW)の結果から _work/players/olympic_results.py で足す
+    世界選手権・U23世界選手権は大会名を「世界選手権」「U23世界選手権」にする(下の WORLDS)。
+    名前の下に「世界選手権 代表(2022・2023)」のように、種類ごとに1つ印が出る。
+    これらの成績は世界レスリング連合(UWW)の結果から _work/players/uww_results.py で足す
 """
 import csv
 import os
@@ -45,6 +47,11 @@ YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
 OLYMPICS = {
     "オリンピック(パリ)": ("パリ 2024 オリンピック代表", "Paris 2024 Olympian", "Olympic Games Paris 2024"),
     "オリンピック(東京 2020)": ("東京 2020 オリンピック代表", "Tokyo 2020 Olympian", "Olympic Games Tokyo 2020"),
+}
+# 世界選手権の大会名 → 印(日本語・英語。後ろに出場した年が付く)と英語の大会名。印はこの順に出る
+WORLDS = {
+    "世界選手権": ("世界選手権 代表", "World Championships", "World Championships"),
+    "U23世界選手権": ("U23世界選手権 代表", "U23 World Championships", "U23 World Championships"),
 }
 
 
@@ -150,7 +157,7 @@ def weight_key(w):
 
 def tournament_name(r, ctx, bp):
     """成績の大会名。英語版は開催回ページの英語名"""
-    oly = OLYMPICS.get(r.get("大会名", ""))
+    oly = OLYMPICS.get(r.get("大会名", "")) or WORLDS.get(r.get("大会名", ""))
     if oly:
         return L(r["大会名"], oly[2])
     ev = ctx["events_by_id"].get(r.get("開催回ID", ""))
@@ -178,10 +185,20 @@ def result_rows(p, ctx, bp):
     return out
 
 
-def olympic_badges(p):
-    """名前の下の「パリ 2024 オリンピック代表」の印(新しい大会から)"""
+def is_uww(r):
+    """オリンピック・世界選手権・U23世界選手権の成績(UWW の結果から取ったもの)か"""
+    return r.get("大会名", "") in OLYMPICS or r.get("大会名", "") in WORLDS
+
+
+def badges_html(p):
+    """名前の下の印。オリンピックは大会ごと(新しい大会から)、世界選手権・U23 は種類ごとに出場した年を並べる"""
     names = {r.get("大会名", "") for r in p["results"]}
-    return "".join(f'<span class="oly">{L(ja, en)}</span>' for k, (ja, en, _) in OLYMPICS.items() if k in names)
+    h = "".join(f'<span class="oly">{L(ja, en)}</span>' for k, (ja, en, _) in OLYMPICS.items() if k in names)
+    for k, (ja, en, _) in WORLDS.items():
+        years = sorted({r.get("開催年", "") for r in p["results"] if r.get("大会名") == k})
+        if years:
+            h += f'<span class="oly wc">{L(ja + "(" + "・".join(years) + ")", en + " (" + ", ".join(years) + ")")}</span>'
+    return h
 
 
 def optout_note(listing=False):
@@ -230,7 +247,7 @@ def player_page(p, ctx, bp):
         jsub = p["kana"] or (p["roman"] if p["roman_ok"] else "")
         sub = f' <small class="kana">{e(jsub)}</small>' if jsub else ""
     h += f'<h1>{e(name)}{sub}</h1>'
-    badges = olympic_badges(p)
+    badges = badges_html(p)
     if badges:
         h += f'<p class="olys">{badges}</p>'
     h += f'<p class="lead">{e(desc)}</p>'
@@ -243,8 +260,8 @@ def player_page(p, ctx, bp):
         h += '<p class="hint">' + L("成績は日本レスリング協会が公開している入賞者一覧から作っています。所属は大会のときのものです。",
                                     "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.")
         if badges:
-            h += L("オリンピックの成績は世界レスリング連合(UWW)の公式結果によります。",
-                   " Olympic results are from the official results of United World Wrestling (UWW).")
+            h += L("オリンピック・世界選手権・U23世界選手権の成績は世界レスリング連合(UWW)の公式結果によります。",
+                   " Olympic Games, World Championships and U23 World Championships results are from the official results of United World Wrestling (UWW).")
         h += "</p>"
     if p["videos"]:
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
@@ -281,8 +298,11 @@ def index_page(players, ctx, bp):
             # 日本語版では、確かめていないローマ字は出さない(英語版は名前そのものがローマ字)
             sub = (p["kana"] or (p["roman"] if p["roman_ok"] else "")) if not i18n.en() else ""
             nr, nv = len(p["results"]), len(p["videos"])
-            stat = L(f"入賞{nr}回", i18n.plural(nr, "medal")) + (L(f"・動画{nv}本", f" · {i18n.plural(nv, 'video')}") if nv else "")
-            h += (f'<li data-k="{e(key)}"><a href="{U("/players/" + p["id"] + "/")}"><span class="ob"><span class="od sname">{e(pname(p))}</span>'
+            stat = L(f"大会成績{nr}件", i18n.plural(nr, "result")) + (L(f"・動画{nv}本", f" · {i18n.plural(nv, 'video')}") if nv else "")
+            # 一覧ではオリンピックの印だけ、1つ出す(世界選手権・U23 は選手ページだけ)
+            oly = (f' <span class="olym">{L("オリンピック代表", "Olympian")}</span>'
+                   if any(r.get("大会名", "") in OLYMPICS for r in p["results"]) else "")
+            h += (f'<li data-k="{e(key)}"><a href="{U("/players/" + p["id"] + "/")}"><span class="ob"><span class="od sname">{e(pname(p))}{oly}</span>'
                   f'<span class="ov">{e(sub)}</span></span><span class="on">{e(stat)}</span></a></li>')
         h += "</ol></section>"
     h += "</div>"
@@ -339,8 +359,8 @@ def winners_html(ev, ctx, bp):
             rows += f"<tr><th>{e(w)}</th><td>{''.join(cells)}</td></tr>"
         body += f'<h3>{e(N(st))}</h3><div class="rtable"><table class="winners"><tbody>{rows}</tbody></table></div>'
     n = len({p["id"] for p, _ in lst})
-    if any(r.get("大会名", "") in OLYMPICS for _, r in lst):
-        # オリンピックは入賞していない人も載せるので「日本代表」とする
+    if any(is_uww(r) for _, r in lst):
+        # オリンピック・世界選手権は入賞していない人も載せるので「日本代表」とする
         summary = L(f"日本代表の成績({n}人)", "Team Japan results (" + i18n.plural(n, "player") + ")")
         hint = L("世界レスリング連合(UWW)の公式結果から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
                  "From the official results of United World Wrestling (UWW). Select a name to open the player page. Some players are not listed.")
@@ -405,6 +425,11 @@ PLAYER_CSS = """
 .olys .oly{display:inline-flex;align-items:center;gap:7px;padding:4px 14px 4px 10px;border-radius:999px;font-size:13px;font-weight:700;
   color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink)}
 .olys .oly::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pink);flex:0 0 auto}
+/* 世界選手権・U23 は白抜き(オリンピックを目立たせる)。紺の枠は黒テーマで見えにくいので、テーマごとに色が変わる --st-plan を使う */
+.olys .oly.wc{color:var(--ink);background:transparent;border:1.5px solid var(--st-plan)}
+.olys .oly.wc::before{background:var(--st-plan)}
+#plist .olym{display:inline-block;vertical-align:2px;margin-left:6px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;line-height:18px;
+  color:#fff;background:linear-gradient(90deg,var(--grad-a),var(--grad-b));border:1px solid var(--pink);white-space:nowrap}
 .psearch{margin:8px 0 6px}
 .psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}

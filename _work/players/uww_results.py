@@ -1,16 +1,18 @@
 """
-オリンピック(パリ 2024・東京 2020)の成績を、世界レスリング連合(UWW)の結果の冊子(PDF)から取り、
+オリンピック・世界選手権・U23世界選手権の成績を、世界レスリング連合(UWW)の結果の冊子(PDF)から取り、
 リポジトリの一番上の player_results.csv に足す。
 
-    python3 olympic_results.py
+    python3 uww_results.py
 
-- PDF は uww.org の大会ページ(/events/paris-2024・/events/tokyo-2020)の「Results」のもの。uww/ に取ってくる
+- PDF は uww.org の大会ページの「Results」のもの。uww/ に取ってくる
   (作業環境のネットワーク設定に uww.org と cdn.uww.org の許可が必要。pdftotext を使う)
 - 各階級の「Ranking」の表から JPN の選手を取り、players.csv の「ローマ字」と同じ名前の人に結びつける
-  (東京 2020 の冊子は「TAKATANI Sohsuke」のように姓が先。「Sohsuke」の oh は o として比べる)
+  (「TAKATANI Sohsuke」のように姓が先の冊子もある。「Sohsuke」の oh は o として比べる)
 - players.csv にいない人・同じローマ字の人が2人以上いる人は足さずに表示する
-- player_results.csv にある「オリンピック(…)」の行はいったん消してから足すので、何度動かしても同じ結果になる
-- make_players_csv.py で作り直しても、player_results.csv の「オリンピック(…)」の行は残る
+- player_results.csv にある UWW の行(出典URL が https://cdn.uww.org/ のもの)はいったん消してから足すので、
+  何度動かしても同じ結果になる
+- make_players_csv.py で作り直しても、player_results.csv の UWW の行は残る
+- 新しい大会を足すときは、下の GAMES に1行足す(大会名は players.py の OLYMPICS・WORLDS にあるもの)
 """
 import csv
 import os
@@ -20,16 +22,28 @@ import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
+UWW = "https://cdn.uww.org/"
 
 # 大会名・開催年・開催回ID(サイトの開催回ページ。無ければ空)・結果の冊子
 GAMES = [
     ("オリンピック(パリ)", "2024", "x-olympics-2024-05-23",
-     "https://cdn.uww.org/2026-07/2024-olympic-games_final-book_20260722.pdf"),
+     UWW + "2026-07/2024-olympic-games_final-book_20260722.pdf"),
     ("オリンピック(東京 2020)", "2021", "",
-     "https://cdn.uww.org/2026-01/results_tokyo_arena_upd_doping_case.pdf"),
+     UWW + "2026-01/results_tokyo_arena_upd_doping_case.pdf"),  # ドーピング違反の処分を反映した更新版
+    # 世界選手権。2020年は中止、2024年(非五輪階級・ティラナ)は uww.org に結果が見つからない
+    ("世界選手権", "2021", "x-world-championships-2021-10-05", UWW + "2026-01/results_10_oslo_upd_doping_case.pdf"),
+    ("世界選手権", "2022", "x-world-championships-2022-09-12", UWW + "2026-01/results_09_belgrade_upd_doping_case_2.pdf"),
+    ("世界選手権", "2023", "x-world-championships-2023-09-18", UWW + "2024-04/2023_seniors-world-chsips_final-book-20240424.pdf"),
+    ("世界選手権", "2025", "", UWW + "2026-05/final-book-2025_senior_world_championships_20260528.pdf"),
+    # U23世界選手権。2021年は日本が出ていない
+    ("U23世界選手権", "2022", "", UWW + "2025-01/2022-u23-worlds_final-book_20250107.pdf"),
+    ("U23世界選手権", "2023", "", UWW + "2023-10/2023-u23-world-championships_final-book.pdf"),
+    ("U23世界選手権", "2024", "", UWW + "2026-06/results_10_tirana_u23_20260608.pdf"),
+    ("U23世界選手権", "2025", "", UWW + "2025-10/final-book-1f0a015d-285b-6194-be9d-7d4675d42071.pdf"),
 ]
 STYLE = {"Freestyle": "フリースタイル", "Greco-Roman": "グレコローマン", "Women's wrestling": "女子"}
-HEAD = re.compile(r"^\s*(Freestyle|Greco-Roman|Women's wrestling)\s*-\s*Seniors\s*-\s*(\d+)\s*kg\s*\(")
+# 冊子によって、階級の見出しの後ろに日付「(8 Aug - 9 Aug 2024)」があるものと無いものがある
+HEAD = re.compile(r"^\s*(Freestyle|Greco-Roman|Women's wrestling)\s*-\s*(?:Seniors|U23)\s*-\s*(\d+)\s*kg\s*(?:\(|$)")
 ROW = re.compile(r"^\s*(\d+)\s+JPN\s+(.+?)\s{2,}\d")
 
 
@@ -83,12 +97,12 @@ def main():
         if p["ローマ字"]:
             by_key.setdefault(key(p["ローマ字"]), []).append(p)
     path = os.path.join(ROOT, "player_results.csv")
-    rows = [r for r in read(path) if not r["大会名"].startswith("オリンピック(")]
+    rows = [r for r in read(path) if not r["出典URL"].startswith(UWW)]
     cols = list(rows[0].keys())
     added = []
     for name, year, eid, url in GAMES:
         found = rankings(text(url))
-        print(f"{name}: 日本の選手 {len(found)}人")
+        print(f"{year} {name}: 日本の選手 {len(found)}人")
         for style, weight, rk, wname in found:
             hits = by_key.get(key(wname), [])
             if len(hits) != 1:
@@ -102,7 +116,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         w.writerows(rows + added)
-    print(f"player_results.csv にオリンピックの成績を {len(added)}件 足した")
+    print(f"player_results.csv に UWW の成績を {len(added)}件 足した")
 
 
 if __name__ == "__main__":
