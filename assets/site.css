@@ -409,6 +409,21 @@ a.yr{text-decoration:none}
 .soon .soon-list span{font-size:13px;color:var(--ink3)}
 .soon .soon-note{font-size:14px;color:var(--ink2)}
 .page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
+.psearch{margin:8px 0 6px}
+.psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}
+.psearch .pcount{margin:6px 2px 0;font-size:13px;color:var(--ink3)}
+.pgroup{margin:18px 0}
+#plist .occ a{grid-template-columns:1fr auto}
+.pgroup[hidden],#plist li[hidden]{display:none}
+.optout{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+table.winners{border-collapse:collapse;width:100%;font-size:14px}
+table.winners th{width:64px;padding:8px 10px 8px 0;text-align:left;vertical-align:top;color:var(--ink3);font-weight:500;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.winners td{padding:6px 0;border-bottom:1px solid var(--line)}
+table.winners .wr{display:inline-block;margin:2px 14px 2px 0}
+table.winners .wr b{color:var(--pink);font-weight:700;margin-right:2px}
+table.winners .wr small{color:var(--ink3);font-size:12px}
+.winners-box h3{font-size:15px;margin:14px 0 4px}
 .rtable{overflow-x:auto;margin:8px 0 22px}
 table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
 table.results th,table.results td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}

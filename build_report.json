@@ -31,12 +31,12 @@
   "error": ""
  },
  "players": {
-  "total": 0,
-  "published": 0,
+  "total": 754,
+  "published": 683,
   "hidden_minor": 0,
-  "hidden_private": 0,
+  "hidden_private": 71,
   "errors": [],
-  "video_links": 0
+  "video_links": 554
  },
  "photos": {
   "entries": 301,
@@ -134,8 +134,8 @@
   ]
  },
  "en": {
-  "pages": 307,
-  "names": 326,
+  "pages": 990,
+  "names": 436,
   "machine_translations": 3714,
   "missing_names": []
  }

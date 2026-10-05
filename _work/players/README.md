@@ -20,8 +20,11 @@
 | `fetch_pdfs.py` | PDF を `jwf/` に取ってくる(協会のサイトの許可が環境のネットワーク設定に必要:`www.japan-wrestling.jp`) |
 | `parse_winners.py` | PDF から階級・順位・氏名・所属を取り出す(文字の位置で名前と所属を対応づける) |
 | `build_candidates.py` | 上の2つの CSV を作る |
+| `make_romaji.py` | 英語版の選手名(ローマ字)の下書き `romaji_auto.csv` を機械で作る(pykakasi が必要。毎日の自動更新では使わない) |
+| `romaji_fix.tsv` | 機械のローマ字を直したもの。3列目が「はい」の人は、公の英語表記と一致を確かめた人 |
+| `make_players_csv.py` | 上の表から、リポジトリの一番上の `players.csv` / `player_results.csv` を作る。運営者が変えた「公開」「未成年」「ローマ字」「ローマ字確認」は残す |
 
-作り直すとき:`python3 fetch_pdfs.py` → `python3 build_candidates.py`
+作り直すとき:`python3 fetch_pdfs.py` → `python3 build_candidates.py` → `python3 make_romaji.py` → `python3 make_players_csv.py`
 
 ## 取れなかった大会
 - 明治杯 2025:PDF の文字が読み取れない(フォントに文字の対応表がない)
@@ -29,9 +32,15 @@
 - 天皇杯 2025:入賞者一覧がなく、階級ごとの PDF(30件)だけ。必要なら階級ごとの PDF から取る
 - 西日本学生・全国社会人オープンなど:協会のページに入賞者一覧がない
 
-## 次にやること(新しいセッションで)
-1. `players_candidates.csv` から確認用の列(入賞回数・最高順位・主な成績・確認メモ)を除いて、リポジトリの一番上に `players.csv` として置く。`player_results_candidates.csv` は `player_results.csv` として置く
-2. `players.py` の選手ページの下に「掲載の取りやめはお問い合わせから」の文(日本語・英語)を足す
-3. `players.py` の `COMING_SOON`(準備中の表示)が出なくなることを確かめる
-4. 英語版で、選手名・所属が日本語のまま出る部分の扱いを決める(en_names.csv に足すか、そのまま出すか)
-5. ビルドして、選手ページ・選手検索・大会ページからのリンクを確かめ、PR を出す
+## 公開後に決めたこと(2回目の /grill-me)
+- 英語版の選手名は「Kenichiro FUMITA」(名・姓。姓は大文字)。players.csv の「ローマ字」列
+- 確かめていないローマ字には、英語版で「Name romanized automatically」と添える。日本語版には出さない
+- 所属の英語名は en_names.csv(種類「所属」)
+- 選手一覧(/players/)は検索欄つき。所属ごとにまとめ、人数の多い所属から
+- 開催回ページに「入賞者」の欄(公開している選手だけ)
+- PDF で「(氏名)」とかっこ付きの人は、同じ名前・同じ所属の人にまとめた
+
+## 次にやること
+1. 運営者が players.csv の「ローマ字」を確かめ、正しければ「ローマ字確認」を「はい」にする(人数の多い大学から)
+2. 「公開=いいえ」の71人の確認メモを見て、確かめた人から「はい」にする(未成年の可能性がある13人は特に注意)
+3. 取れなかった大会(明治杯 2025・全日本大学 2024・天皇杯 2025 など)を足すか決める

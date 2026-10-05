@@ -551,6 +551,9 @@ def event_page(ev, ctx):
                                      "The tournament name or year in these titles is ambiguous, so they are not yet confirmed for this edition. The basis is shown.") + '</p>'
               + vgroup(L("確認待ち", "Pending review"), n_videos(len(cands)), cands, show_basis=True) + '</details>')
 
+    import players
+    import sys
+    h += players.winners_html(ev, ctx, sys.modules[__name__])
     h += info_details(ev)
     h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}&amp;e={e(ev["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
     h += "</main>" + footer(ctx["as_of"])
@@ -1263,6 +1266,8 @@ def build(root=HERE, inline_css=False, only=None):
     i18n.load_names(root)
     i18n.load_translations(root)
     i18n.missing.clear()
+    # 選手データ(players.csv / player_results.csv)。開催回ページの「入賞者」の欄でも使うので先に読む
+    preport = players.prepare(root, data, ctx)
     report = load_json(root, "build_report.json", {}) if only is None else None
 
     def latest(sr):
@@ -1297,8 +1302,7 @@ def build(root=HERE, inline_css=False, only=None):
             pages.extend(photo_gallery.photo_pages(ctx, photos_by_page, me))
             hero[lang] = photo_gallery.hero_items(ctx, photos_by_page, me)
             # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
-            ppages, preport = players.build(root, data, ctx, me)
-            pages.extend(ppages)
+            pages.extend(players.build(root, data, ctx, me))
             path, doc = index_page(ctx, listed)
             pages.append((path, doc, data.get("as_of")))
             # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
