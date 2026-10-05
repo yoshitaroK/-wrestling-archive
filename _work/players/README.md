@@ -23,7 +23,7 @@
 | `make_romaji.py` | 英語版の選手名(ローマ字)の下書き `romaji_auto.csv` を機械で作る(pykakasi が必要。毎日の自動更新では使わない) |
 | `romaji_fix.tsv` | 機械のローマ字を直したもの。3列目が「はい」の人は、公の英語表記と一致を確かめた人 |
 | `kana_entries.py` | 大会のエントリーリスト(jwf_index.json の entry_lists)から読みがなを取り出して `kana_entries.csv` を作る。英語名はこの読みから作る |
-| `olympic_results.py` | オリンピック(パリ 2024・東京 2020)の成績を UWW の結果の冊子から取り、player_results.csv に足す |
+| `uww_results.py` | オリンピック・世界選手権・U23世界選手権の成績を UWW の結果の冊子から取り、player_results.csv に足す |
 | `make_players_csv.py` | 上の表から、リポジトリの一番上の `players.csv` / `player_results.csv` を作る。運営者が変えた「公開」「未成年」「ローマ字」「ローマ字確認」は残す |
 
 作り直すとき:`python3 fetch_pdfs.py` → `python3 build_candidates.py` → `python3 kana_entries.py` → `python3 make_romaji.py` → `python3 make_players_csv.py`
@@ -57,7 +57,27 @@
 - 見せ方:大会成績の表に1行(例:「2024 オリンピック(パリ) グレコローマン 60kg 1位」)。名前の下に「パリ 2024 オリンピック代表」の印(英語版は「Paris 2024 Olympian」)
 - 成績は player_results.csv に足す。大会名は「オリンピック(パリ)」「オリンピック(東京 2020)」。東京 2020 の開催年は実際に開かれた 2021
 - パリ 2024 はサイトの開催回ページ(x-olympics-2024-05-23)にリンクする。その開催回ページには「日本代表の成績」の欄が出る。東京 2020 は開催回ページが無いのでリンクなし
-- 足し方:`python3 olympic_results.py`(PDF を `uww/` に取り、各階級の Ranking の表から JPN の選手を取って、players.csv の「ローマ字」で結びつける)
-- `make_players_csv.py` で作り直しても、player_results.csv の「オリンピック(…)」の行は残る
+- 足し方:`python3 uww_results.py`(PDF を `uww/` に取り、各階級の Ranking の表から JPN の選手を取って、players.csv の「ローマ字」で結びつける)
+- `make_players_csv.py` で作り直しても、player_results.csv の UWW の行(出典URL が `https://cdn.uww.org/`)は残る
 - players.csv にいないので足していない人:(UWW の表記のまま)パリ 2024 の Tsugumi SAKURAI、東京 2020 の TAKAHASHI Yuki・OTOGURO Takuto・OTOGURO Keisuke・Shohei YABIKU・Mayu SHIDOCHI MUKAIDA・Risako KINJO・KAWAI Yukako・DOSHO Sara・MINAGAWA Hiroe
   (選手ページは協会の入賞者一覧から作っているので、最近の国内大会に出ていない人はいない)
+
+## 世界選手権・U23世界選手権の成績(4回目の /grill-me で決定)
+- 出典:オリンピックと同じく UWW の公式結果の冊子。入れた大会は `uww_results.py` の GAMES
+  - 世界選手権:2021(オスロ)・2022(ベオグラード)・2023(ベオグラード)・2025(ザグレブ)
+  - U23世界選手権:2022(ポンテベドラ)・2023(ティラナ)・2024(ティラナ)・2025(ノビサド)
+- 入れていない大会
+  - 2020年の世界選手権:中止。代わりの Individual World Cup(ベオグラード)に日本は不参加
+  - 2021年の U23世界選手権(ベオグラード):日本は不参加
+- 選手ページに載っている選手だけ。順位に関係なく、出場した人の成績を全部載せる(29位も)
+- 大会名は「世界選手権」「U23世界選手権」(開催地は入れない)。英語版は「World Championships」「U23 World Championships」
+- 世界選手権 2021・2022・2023 はサイトの開催回ページ(x-world-championships-…)にリンクし、その開催回ページに「日本代表の成績」の欄を出す。2025年と U23 は開催回ページが無いのでリンクなし
+- 名前の下の印は種類ごとに1つ、出場した年を並べる:「世界選手権 代表(2021・2022・2023・2025)」「U23世界選手権 代表(2022)」
+  (英語版は「World Championships (2021, 2022, 2023, 2025)」)。オリンピック → 世界選手権 → U23 の順
+- 見た目:オリンピックの印は紺の地、世界選手権・U23 は白抜き(オリンピックを目立たせる)
+- 選手一覧(/players/)では、オリンピックに出た人だけ名前の横に小さな「オリンピック代表」(英語版は「Olympian」)の印を1つ出す
+- 選手一覧の「入賞○回」は「大会成績○件」(英語版は「○ results」)に変えた(世界選手権の下位の順位も数に入るため)
+
+## 宿題(UWW の成績)
+- 2024年の世界選手権(非五輪階級・ティラナ):uww.org に大会ページが見つからず、入れていない。結果の冊子のアドレスが分かれば、`uww_results.py` の GAMES に1行足して動かす
+- 2026年の U23世界選手権(10/12〜)・世界選手権(10/24〜):終わって UWW に結果の冊子が出たら、GAMES に足して動かす
