@@ -7,7 +7,8 @@
 - PDF は uww.org の大会ページの「Results」のもの。uww/ に取ってくる
   (作業環境のネットワーク設定に uww.org と cdn.uww.org の許可が必要。pdftotext を使う)
 - 各階級の「Ranking」の表から JPN の選手を取り、players.csv の「ローマ字」と同じ名前の人に結びつける
-  (「TAKATANI Sohsuke」のように姓が先の冊子もある。「Sohsuke」の oh は o として比べる)
+  (「TAKATANI Sohsuke」のように姓が先の冊子もある。「Sohsuke」の oh は o として比べる。
+   「Mayu SHIDOCHI MUKAIDA」のように新しい姓と前の姓が並ぶ人は、どちらかの姓で結びつける)
 - players.csv にいない人・同じローマ字の人が2人以上いる人は足さずに表示する
 - player_results.csv にある UWW の行(出典URL が https://cdn.uww.org/ のもの)はいったん消してから足すので、
   何度動かしても同じ結果になる
@@ -84,7 +85,8 @@ def key(name):
         fam = parts[-1:]  # 「HARUTO YABE」のように全部大文字のときは、最後を姓とする
     giv = [w for w in parts if w not in fam]
     k = (" ".join(fam).upper(), " ".join(giv).upper())
-    return tuple(re.sub(r"OH(?=[^AEIOU]|$)", "O", s) for s in k)
+    # 伸ばす音の書き方の違いはそろえる(「Sohsuke」→ SOSUKE、「OONO」→ ONO、「NATAAMI」→ NATAMI)
+    return tuple(re.sub(r"([AEIOU])\1", r"\1", re.sub(r"OH(?=[^AEIOU]|$)", "O", s)) for s in k)
 
 
 def read(path):
@@ -101,9 +103,23 @@ def main():
     path = os.path.join(ROOT, "player_results.csv")
     rows = [r for r in read(path) if not r["出典URL"].startswith(UWW)]
     cols = list(rows[0].keys())
+    games = [(g, rankings(text(g[3]))) for g in GAMES]
+
+    # 結婚などで姓が変わった人は「Mayu SHIDOCHI MUKAIDA」のように新しい姓と前の姓が並ぶ。
+    # どちらかの姓と名前で players.csv の1人に決まるときは、その人とし、もう一方の姓も覚えておく
+    # (前の姓だけで載っている年の「Haruna OKUNO」も、同じ人に結びつけるため)
+    for _, found in games:
+        for *_, wname in found:
+            fam, giv = key(wname)
+            if " " not in fam or (fam, giv) in by_key:
+                continue
+            cands = {p["選手ID"]: p for f in fam.split() for p in by_key.get((f, giv), [])}
+            if len(cands) == 1:
+                for f in fam.split() + [fam]:
+                    by_key.setdefault((f, giv), list(cands.values()))
+
     added = []
-    for name, year, eid, url in GAMES:
-        found = rankings(text(url))
+    for (name, year, eid, url), found in games:
         print(f"{year} {name}: 日本の選手 {len(found)}人")
         for style, weight, rk, wname in found:
             hits = by_key.get(key(wname), [])
