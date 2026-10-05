@@ -281,7 +281,15 @@ footer p{margin:0 0 6px;max-width:76ch}
   .facts{grid-template-columns:1fr}
   .facts dt{margin-top:6px}
 }
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* 入口の演出(トップページ・ブラウザを開いて最初の1回だけ。html に intro が付いたときだけ動く) */
+@keyframes jh-zoom{from{transform:scale(1.12)}to{transform:scale(1)}}
+@keyframes jh-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+html.intro .jhero-img.on{animation:jh-zoom 7s cubic-bezier(.2,.6,.2,1) both}
+html.intro .jhero h1{animation:jh-rise .7s .1s cubic-bezier(.2,.7,.2,1) both}
+html.intro .jlead{animation:jh-rise .7s .3s cubic-bezier(.2,.7,.2,1) both}
+html.intro .jhero .searchrow{animation:jh-rise .7s .5s cubic-bezier(.2,.7,.2,1) both}
+html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
 .contact{padding-bottom:44px}
 .contact .direct{max-width:640px;margin:4px 0 22px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:8px}
