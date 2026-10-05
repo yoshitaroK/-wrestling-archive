@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-east-autumn-1123@japanwrestlingchannel.com
+DTSTAMP:20261123T000000Z
+DTSTART;VALUE=DATE:20261123
+DTEND;VALUE=DATE:20261126
+SUMMARY:East Japan Collegiate Championships (Autumn)
+LOCATION:Komazawa Olympic Park Gymnasium\, Tokyo
+URL:https://japanwrestlingchannel.com/en/events/east-autumn/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/east-autumn/
+END:VEVENT
+END:VCALENDAR

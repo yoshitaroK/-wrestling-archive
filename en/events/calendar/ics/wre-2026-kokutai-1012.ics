@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-kokutai-1012@japanwrestlingchannel.com
+DTSTAMP:20261012T000000Z
+DTSTART;VALUE=DATE:20261012
+DTEND;VALUE=DATE:20261016
+SUMMARY:National Sports Festival (Kokutai / Kokusupo)
+LOCATION:Hachinohe\, Aomori
+URL:https://japanwrestlingchannel.com/en/events/kokutai/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/kokutai/
+END:VEVENT
+END:VCALENDAR

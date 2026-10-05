@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-tenno-cup-1224@japanwrestlingchannel.com
+DTSTAMP:20261224T000000Z
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20261228
+SUMMARY:令和8年度 天皇杯全日本レスリング選手権大会
+LOCATION:東京・駒沢オリンピック公園総合運動場体育館
+URL:https://japanwrestlingchannel.com/events/tenno-cup/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/tenno-cup/
+END:VEVENT
+END:VCALENDAR

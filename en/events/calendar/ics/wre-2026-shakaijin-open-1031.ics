@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-shakaijin-open-1031@japanwrestlingchannel.com
+DTSTAMP:20261031T000000Z
+DTSTART;VALUE=DATE:20261031
+DTEND;VALUE=DATE:20261102
+SUMMARY:All Japan Working Adults Open Championships
+LOCATION:Saitama
+URL:https://japanwrestlingchannel.com/en/events/shakaijin-open/2026/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/shakaijin-open/2026/
+END:VEVENT
+END:VCALENDAR

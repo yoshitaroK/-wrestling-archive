@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-west-autumn-league-1127@japanwrestlingchannel.com
+DTSTAMP:20261127T000000Z
+DTSTART;VALUE=DATE:20261127
+DTEND;VALUE=DATE:20261130
+SUMMARY:West Japan Collegiate Autumn League
+LOCATION:Osaka
+URL:https://japanwrestlingchannel.com/en/events/west-autumn-league/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/west-autumn-league/
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-tenno-cup-1224@japanwrestlingchannel.com
+DTSTAMP:20261224T000000Z
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20261228
+SUMMARY:Emperor's Cup All Japan Championships
+LOCATION:Komazawa Olympic Park Gymnasium\, Tokyo
+URL:https://japanwrestlingchannel.com/en/events/tenno-cup/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/tenno-cup/
+END:VEVENT
+END:VCALENDAR

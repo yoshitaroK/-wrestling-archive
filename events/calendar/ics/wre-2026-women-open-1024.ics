@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-women-open-1024@japanwrestlingchannel.com
+DTSTAMP:20261024T000000Z
+DTSTART;VALUE=DATE:20261024
+DTEND;VALUE=DATE:20261026
+SUMMARY:フォーデイズ杯 令和8年度 第19回全日本女子オー
+ プンレスリング選手権大会
+LOCATION:静岡
+URL:https://japanwrestlingchannel.com/events/women-open/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/women-open/
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-other-bf538b5b-1024@japanwrestlingchannel.com
+DTSTAMP:20261024T000000Z
+DTSTART;VALUE=DATE:20261024
+DTEND;VALUE=DATE:20261025
+SUMMARY:Beach Wrestling Open Tournament
+LOCATION:Suma Beach\, Hyogo
+URL:https://www.japan-wrestling.jp/news/competition/%e3%83%93%e3%83%bc%e3%8
+ 3%81%e3%83%bb%e3%83%ac%e3%82%b9%e3%83%aa%e3%83%b3%e3%82%b0-%e3%82%aa%e3%83
+ %bc%e3%83%97%e3%83%b3%e3%83%88%e3%83%bc%e3%83%8a%e3%83%a1%e3%83%b3%e3%83%8
+ 8
+DESCRIPTION:Tournament info and streams: https://www.japan-wrestling.jp/new
+ s/competition/%e3%83%93%e3%83%bc%e3%83%81%e3%83%bb%e3%83%ac%e3%82%b9%e3%83
+ %aa%e3%83%b3%e3%82%b0-%e3%82%aa%e3%83%bc%e3%83%97%e3%83%b3%e3%83%88%e3%83%
+ bc%e3%83%8a%e3%83%a1%e3%83%b3%e3%83%88
+END:VEVENT
+END:VCALENDAR

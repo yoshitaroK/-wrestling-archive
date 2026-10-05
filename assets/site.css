@@ -460,6 +460,9 @@ table.results td b{color:var(--pink)}
 [data-theme="light"] .lg.can::before,[data-theme="light"] .dots i.can{background:#9a9aa3}[data-theme="light"] .chip.can{background:#6b6b75}
 .cal-list .can .cn{text-decoration:line-through;color:var(--ink3)}
 .cal-list .cal-empty{display:block;color:var(--ink3);padding:16px 4px}
+.cal-list .addc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cal-list .addc a{font-size:12px;font-weight:700;color:var(--pink);border:1px solid var(--pink-line);border-radius:999px;padding:2px 10px;text-decoration:none}
+.cal-list .addc a:hover{border-color:var(--pink)}
 @media (max-width:640px){
   .cal-grid .day{min-height:54px;align-items:center}
   .cal-grid .chip,.cal-grid .cal-more{display:none}
