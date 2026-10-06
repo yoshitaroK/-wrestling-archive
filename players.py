@@ -322,10 +322,17 @@ PLAYER_SEARCH_JS = r"""<script>
 (function(){
   var q=document.getElementById('pq'),c=document.getElementById('pcount');
   var items=[].slice.call(document.querySelectorAll('#plist li')),groups=[].slice.call(document.querySelectorAll('#plist .pgroup'));
-  function n(s){return (s||'').normalize('NFKC').toLowerCase().replace(/\s+/g,'');}
+  // 大きい検索(トップページの skey)と同じく、ひらがなはカタカナに、名前の異体字(髙・﨑・德)はふつうの字にしてくらべる
+  function n(s){
+    s=(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
+    s=s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
+    s=s.replace(/[髙﨑德]/g,function(c){return {'髙':'高','﨑':'崎','德':'徳'}[c];});
+    return s.replace(/[\s・･]/g,'');
+  }
+  items.forEach(function(li){li._k=n(li.getAttribute('data-k'));});
   function run(){
     var t=n(q.value),hit=0;
-    items.forEach(function(li){var ok=!t||li.getAttribute('data-k').replace(/\s+/g,'').indexOf(t)>=0;li.hidden=!ok;if(ok)hit++;});
+    items.forEach(function(li){var ok=!t||li._k.indexOf(t)>=0;li.hidden=!ok;if(ok)hit++;});
     groups.forEach(function(g){g.hidden=!g.querySelector('li:not([hidden])');});
     c.textContent=t?(hit?'__HIT__'.replace('{n}',hit):'__NONE__'):'__ALL__'.replace('{n}',items.length);
     try{history.replaceState(null,'',t?'#q='+encodeURIComponent(q.value):location.pathname);}catch(x){}
