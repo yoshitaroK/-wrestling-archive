@@ -4,7 +4,11 @@
   /champions/            … 歴代優勝者のまとめ(大会の一覧と、何年分の記録があるか)
   /champions/<大会ID>/   … その大会の歴代優勝者の表(例: /champions/tenno-cup/)
 
-データは player_results.csv の「成績」が「1位」の行。開催回ID → data.json の events → series で大会にまとめる。
+データは2つ。
+  - player_results.csv の「成績」が「1位」の行。開催回ID → data.json の events → series で大会にまとめる
+  - champions.csv … 古い年の優勝者。日本レスリング協会『歴代記録』(レスリング・スピリッツ調べ)の PDF から
+    _work/champions/ のスクリプトで作った(大会ID, スタイル, 開催年, 階級, 氏名, 所属, 出典URL)。毎朝の自動更新では変わらない
+  同じ大会・スタイル・年・階級に両方あるときは player_results.csv を使う(食い違いは build_report.json に出す)
 
 決まり(/grill-me で決定)
   - 国内の大会だけ(data.json の series の scope が「海外」の大会は載せない)。新人戦の部は載せない
@@ -12,9 +16,13 @@
     階級の区分が変わった年で表を分ける
   - 優勝者の名前は選手ページへのリンク(公開している選手だけ)。
     players.csv で「公開」が「はい」でない人は名前だけ(リンクなし)。「未成年」が「はい」の人は「—」
+  - champions.csv の人は、players.csv の氏名(別表記も含む)が1人だけ一致するときだけ、その人として扱う。
+    直近6年分(データ更新日の年から数えて)で所属が高校・中学などの人は「—」
   - 出典はページの一番下にまとめて載せる
 """
 import os
+import re
+import unicodedata
 from collections import defaultdict
 
 import i18n
@@ -25,7 +33,28 @@ STYLES = ["フリースタイル", "グレコローマン", "女子"]
 # まとめページでの大会の並び順(ここにない大会は後ろに、名前順で並ぶ)
 ORDER = ["tenno-cup", "meiji-cup", "intercollegiate", "university-championship", "university-greco",
          "east-spring", "east-autumn", "shakaijin"]
-HERE_NOTE_MINOR = "未成年の選手は名前を載せていません(—)。"
+HERE_NOTE_MINOR = "未成年の選手(最近6年の記録で高校・中学などに所属していた選手を含む)は名前を載せていません(—)。"
+CHAMPIONS_CSV = "champions.csv"
+HISTORY_SOURCE = "日本レスリング協会『歴代記録』(レスリング・スピリッツ調べ)"
+RECENT_YEARS = 6
+# 所属が高校・中学など(未成年とみなす)。「高教」(高校の先生)などは除く
+SCHOOL_RE = re.compile(r"(高校|高等学校|中学|中等教育|高専|[^大]高$|[^大]中$|小学校|小$)")
+# 昔の階級名の並び順
+CLASSIC = ["ペーパー級", "ライトフライ級", "フライ級", "バンタム級", "フェザー級", "ライト級", "ウエルター級", "ミドル級",
+           "ライトヘビー級", "ヘビー級"]
+
+
+def wkey(w):
+    """階級の並び順(軽い順)。「100kg以上」は「100kg」の後ろ。昔の階級名は CLASSIC の順"""
+    if w in CLASSIC:
+        return (CLASSIC.index(w), 0)
+    m = re.match(r"(\d+)", w or "")
+    return (int(m.group(1)), 1 if "以上" in w else 0) if m else (999, 0)
+
+
+def name_key(s):
+    """名前をくらべるときの形(全角半角・空白・中点の違いを無視する)"""
+    return re.sub(r"[\s・･]", "", unicodedata.normalize("NFKC", s or ""))
 
 
 def load(root, data):
@@ -61,7 +90,57 @@ def load(root, data):
         report["rows"] += 1
         report["hidden_minor"] += minor
         report["no_link"] += (not public and not minor)
-    return table, sources, report
+    history = load_history(root, data, people, table, S, report)
+    return table, sources, history, report
+
+
+def load_history(root, data, people, table, S, report):
+    """champions.csv(古い年の優勝者)を table に足す。返すのは {大会ID: {(出典URL, スタイル): [年, …]}}"""
+    path = os.path.join(root, CHAMPIONS_CSV)
+    history = defaultdict(lambda: defaultdict(set))
+    if not os.path.exists(path):
+        return history
+    by_name = defaultdict(set)
+    for pid, p in people.items():
+        for n in [p.get("氏名", "")] + (p.get("別表記") or "").split(";"):
+            if name_key(n):
+                by_name[name_key(n)].add(pid)
+    as_of = str(data.get("as_of") or "")
+    this_year = int(as_of[:4]) if as_of[:4].isdigit() else 0
+    site_cells = {(sid, st, y, w) for sid, sts in table.items() for st, ys in sts.items() for y, ws in ys.items() for w in ws}
+    added = defaultdict(list)
+    report.update({"history_rows": 0, "history_linked": 0, "history_hidden": 0, "history_site_preferred": 0,
+                   "history_mismatch": []})
+    for r in P.read_csv(path):
+        sid, style, w = r.get("大会ID", ""), r.get("スタイル", ""), r.get("階級", "")
+        if sid not in S or style not in STYLES or not (r.get("開催年") or "").isdigit():
+            continue
+        year = int(r["開催年"])
+        key = (sid, style, year, w)
+        if key in site_cells:  # player_results.csv を優先する
+            report["history_site_preferred"] += 1
+            site = sorted(name_key(x["name"]) for x in table[sid][style][year][w])
+            if name_key(r.get("氏名")) not in site:
+                report["history_mismatch"].append(f"{sid} {style} {year} {w}: サイト「{'・'.join(x['name'] for x in table[sid][style][year][w])}」/ 歴代記録「{r.get('氏名')}」")
+            continue
+        added[key].append(r)
+    for (sid, style, year, w), rows in added.items():
+        for r in rows:
+            ids = by_name.get(name_key(r.get("氏名")), set())
+            p = people.get(next(iter(ids))) if len(ids) == 1 else None
+            club = r.get("所属", "")
+            minor = bool(p and P.is_yes(p.get("未成年")))
+            if this_year and year > this_year - RECENT_YEARS and SCHOOL_RE.search(club):
+                minor = True
+            public = bool(p and P.is_yes(p.get("公開"))) and not minor
+            table[sid][style][year][w].append({"name": p["氏名"] if p else r.get("氏名", ""), "club": club,
+                                                "id": p.get("選手ID") if public else None, "hidden": minor})
+            if r.get("出典URL", "").startswith("http"):
+                history[sid][(r["出典URL"], style)].add(year)
+            report["history_rows"] += 1
+            report["history_linked"] += public
+            report["history_hidden"] += minor
+    return history
 
 
 def eras(by_year):
@@ -75,7 +154,7 @@ def eras(by_year):
             out[-1][1] |= ws
         else:
             out.append([[y], ws])
-    return [(ys, sorted(ws, key=P.weight_key)) for ys, ws in out]
+    return [(ys, sorted(ws, key=wkey)) for ys, ws in out]
 
 
 def years_text(years):
@@ -126,7 +205,7 @@ def style_tables(sid, by_year, ctx, e):
     return h
 
 
-def series_page(s, t, src, ctx, bp):
+def series_page(s, t, src, hist, ctx, bp):
     e = bp.e
     path = f"/champions/{s['id']}/"
     name = s["name"]
@@ -161,9 +240,17 @@ def series_page(s, t, src, ctx, bp):
         links = "・".join(f'<a href="{e(u)}" target="_blank" rel="noopener">{e("・".join(sorted(sts, key=STYLES.index)))}</a>'
                          for u, sts in sorted(by_url.items(), key=lambda x: min(STYLES.index(s) for s in x[1])))
         items += f"<li><b>{y}年</b> {links}</li>"
-    if items:
-        h += (f'<section class="section csrc"><h2>出典</h2><p class="hint">日本レスリング協会が公開している入賞者一覧(PDF)から作っています。</p>'
-              f'<ul>{items}</ul></section>')
+    hitems = ""
+    for (u, st), ys in sorted(hist.items(), key=lambda x: STYLES.index(x[0][1])):
+        hitems += f'<li><a href="{e(u)}" target="_blank" rel="noopener">{e(st)}(PDF)</a> … {e(years_text(ys))}の記録</li>'
+    if items or hitems:
+        h += '<section class="section csrc"><h2>出典</h2>'
+        if items:
+            h += f'<p class="hint">日本レスリング協会が公開している入賞者一覧(PDF)から作っています。</p><ul>{items}</ul>'
+        if hitems:
+            h += (f'<p class="hint">{"それより前の年は、" if items else ""}{e(HISTORY_SOURCE)}から作っています。</p>'
+                  f'<ul>{hitems}</ul>')
+        h += "</section>"
     h += f'<p class="tosearch-line"><a href="{U("/events/" + s["id"] + "/")}">{e(name)}の配信動画を見る</a> / <a href="/champions/">ほかの大会の歴代優勝者</a></p>'
     h += P.optout_note(listing=True)
     h += "</main>" + bp.footer(ctx["as_of"])
@@ -188,16 +275,16 @@ def index_page(listed, ctx, bp):
         h += (f'<li><a href="/champions/{s["id"]}/"><span class="ob"><span class="od sname">{e(s["name"])}</span>'
               f'<span class="ov">{e(years_text(ys))}の記録</span></span><span class="on"><b class="num">{len(ys)}</b>年分</span></a></li>')
     h += "</ol>"
-    h += ('<p class="hint">日本レスリング協会が公開している入賞者一覧から作っています。いまは2024年以降の記録だけです。'
-          'それより前の年の記録も、順に足していきます。</p>')
+    h += ('<p class="hint">日本レスリング協会が公開している入賞者一覧と、' + e(HISTORY_SOURCE) + 'から作っています。'
+          '同じ年・階級の記録が両方にあるときは、入賞者一覧のほうを載せています。出典は各大会のページの一番下にあります。</p>')
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
 
 
 def prepare(root, data, ctx):
     """優勝者の表を読み、ctx["champions"] に {大会ID: 表} を入れる(大会ページのリンクでも使う)"""
-    table, sources, report = load(root, data)
-    ctx["champions"], ctx["champion_sources"] = table, sources
+    table, sources, history, report = load(root, data)
+    ctx["champions"], ctx["champion_sources"], ctx["champion_history"] = table, sources, history
     report["series"] = len(table)
     return report
 
@@ -219,7 +306,8 @@ def build(ctx, bp):
     S = ctx["S"]
     sids = sorted(table, key=lambda x: (ORDER.index(x) if x in ORDER else len(ORDER), S[x]["name"]))
     listed = [(S[x], table[x]) for x in sids]
-    pages = [series_page(s, t, sources[s["id"]], ctx, bp) for s, t in listed]
+    history = ctx.get("champion_history", {})
+    pages = [series_page(s, t, sources[s["id"]], history.get(s["id"], {}), ctx, bp) for s, t in listed]
     pages.append(index_page(listed, ctx, bp))
     return pages
 
