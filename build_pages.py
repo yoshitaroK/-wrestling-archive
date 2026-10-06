@@ -927,6 +927,7 @@ CONTACT_BODY = r"""<main class="wrap page contact">
 <div class="field"><label for="c-kind">お問い合わせの種類</label>
 <select id="c-kind" name="kind">
 <option>動画の掲載・非表示について</option>
+<option value="写真の掲載・取り下げについて" data-k="photo">写真の掲載・取り下げについて</option>
 <option>掲載内容の誤り(大会名・日付など)</option>
 <option>サイトの不具合</option>
 <option>取材・お仕事のご相談</option>
@@ -954,6 +955,9 @@ CONTACT_BODY = r"""<main class="wrap page contact">
   em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
   em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
   em.addEventListener("blur", function(){ em.value = half(em.value); });
+  // 写真ページの「取り下げのご依頼」から来たときは、種類と対象ページを入れておく
+  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
+    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "対象のページ: " + location.origin + pg + "\n"; } }catch(x){}
   function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
   form.addEventListener("submit", function(ev){
     ev.preventDefault();
@@ -995,6 +999,7 @@ CONTACT_BODY_EN = r"""<main class="wrap page contact">
 <div class="field"><label for="c-kind">Topic</label>
 <select id="c-kind" name="kind">
 <option>Listing or hiding a video</option>
+<option value="Photos (removal request)" data-k="photo">Photos (removal request)</option>
 <option>Incorrect information (tournament, date, etc.)</option>
 <option>Website problem</option>
 <option>Media or business inquiry</option>
@@ -1022,6 +1027,9 @@ CONTACT_BODY_EN = r"""<main class="wrap page contact">
   em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
   em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
   em.addEventListener("blur", function(){ em.value = half(em.value); });
+  // Coming from a photo page's removal link: preselect the topic and the page
+  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
+    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "Page: " + location.origin + pg + "\n"; } }catch(x){}
   function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
   form.addEventListener("submit", function(ev){
     ev.preventDefault();

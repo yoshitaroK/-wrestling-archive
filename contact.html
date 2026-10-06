@@ -34,7 +34,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=9bcb7eb2">
+<link rel="stylesheet" href="/assets/site.css?v=92deca44">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ContactPage", "name": "お問い合わせ", "url": "https://japanwrestlingchannel.com/contact.html"}</script>
 <script>function thumbFail(i){var o=['mqdefault','hqdefault','default'],m=/\/vi\/([^/]+)\/([a-z]+)\.jpg/.exec(i.src);if(m){var n=o[o.indexOf(m[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+m[1]+'/'+n+'.jpg';return;}}i.remove();}</script>
 </head>
@@ -59,6 +59,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 <div class="field"><label for="c-kind">お問い合わせの種類</label>
 <select id="c-kind" name="kind">
 <option>動画の掲載・非表示について</option>
+<option value="写真の掲載・取り下げについて" data-k="photo">写真の掲載・取り下げについて</option>
 <option>掲載内容の誤り(大会名・日付など)</option>
 <option>サイトの不具合</option>
 <option>取材・お仕事のご相談</option>
@@ -86,6 +87,9 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
   em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
   em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
   em.addEventListener("blur", function(){ em.value = half(em.value); });
+  // 写真ページの「取り下げのご依頼」から来たときは、種類と対象ページを入れておく
+  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
+    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "対象のページ: " + location.origin + pg + "\n"; } }catch(x){}
   function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
   form.addEventListener("submit", function(ev){
     ev.preventDefault();

@@ -33,7 +33,7 @@ import json
 import os
 import re
 from collections import defaultdict
-from urllib.parse import unquote
+from urllib.parse import quote, unquote
 
 import i18n
 from i18n import L, U
@@ -286,6 +286,14 @@ def album_html(albums, e):
     return "".join(out)
 
 
+def takedown_html(path, e):
+    """写真の掲載・取り下げのご依頼への案内(お問い合わせの種類と対象ページを入れた状態で開く)"""
+    page = photo_path(path) if path and path.startswith("/events/") else (path or "")
+    href = U("/contact.html") + "?kind=photo" + (f"&page={quote(U(page))}" if page else "")
+    return (f'<p class="ptakedown">{L("写真の掲載について・取り下げのご依頼は", "To ask about a photo or request its removal,")} '
+            f'<a href="{e(href)}">{L("こちら", "contact us")}</a>{L("。", ".")}</p>')
+
+
 def gallery_html(photos, e, title, path=None, more=None):
     """写真があるページだけギャラリーを出す。無いときは空文字(外部アルバムだけ設定されていればボタンだけ出す)。
     more は写真ページのURL(大会ページから写真ページへのボタン)"""
@@ -318,6 +326,7 @@ def gallery_html(photos, e, title, path=None, more=None):
             + (f'<button type="button" class="pshow">{L(f"もっと見る(残り{rest}枚)", f"Show {rest} more photos")}</button>' if rest > 0 else "")
             + (f'<a class="palbum pmore" href="{e(more)}">{L("写真ページで見る", "Open the photo page")} →</a>' if more else "")
             + album_html(album, e)
+            + takedown_html(path, e)
             + '</section>' + L(LIGHTBOX, LIGHTBOX_EN))
 
 
@@ -373,6 +382,8 @@ PHOTO_CSS = """
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
 .palbum{display:block;width:max-content;max-width:100%;margin:12px auto 0;padding:9px 22px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .palbum:hover{border-color:var(--pink)}
+.ptakedown{margin:14px 0 0;text-align:center;font-size:11.5px;color:var(--ink3)}
+.ptakedown a{color:inherit}
 .palbum-c{margin:4px 0 0;text-align:center;font-size:11.5px;color:var(--ink3)}
 .pcredit-all{margin:-4px 0 10px;font-size:12px;color:var(--ink3)}
 .pshow{display:block;margin:12px auto 0;padding:9px 22px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}

@@ -34,7 +34,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=9bcb7eb2">
+<link rel="stylesheet" href="/assets/site.css?v=92deca44">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact", "url": "https://japanwrestlingchannel.com/en/contact.html"}</script>
 <script>function thumbFail(i){var o=['mqdefault','hqdefault','default'],m=/\/vi\/([^/]+)\/([a-z]+)\.jpg/.exec(i.src);if(m){var n=o[o.indexOf(m[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+m[1]+'/'+n+'.jpg';return;}}i.remove();}</script>
 </head>
@@ -59,6 +59,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 <div class="field"><label for="c-kind">Topic</label>
 <select id="c-kind" name="kind">
 <option>Listing or hiding a video</option>
+<option value="Photos (removal request)" data-k="photo">Photos (removal request)</option>
 <option>Incorrect information (tournament, date, etc.)</option>
 <option>Website problem</option>
 <option>Media or business inquiry</option>
@@ -86,6 +87,9 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
   em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
   em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
   em.addEventListener("blur", function(){ em.value = half(em.value); });
+  // Coming from a photo page's removal link: preselect the topic and the page
+  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
+    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "Page: " + location.origin + pg + "\n"; } }catch(x){}
   function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
   form.addEventListener("submit", function(ev){
     ev.preventDefault();
