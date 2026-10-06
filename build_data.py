@@ -478,7 +478,30 @@ def source_type(url: str, evidence_level: str) -> str:
         return "年別一覧(旧協会サイト由来)"
     if "wrestling-spirits.jp" in url:
         return "旧協会サイト由来の記事" if evidence_level.startswith("former") else "専門媒体の記事"
+    if url.startswith("https://cdn.uww.org/"):
+        return "UWW の公式結果冊子"
     return "参照資料"
+
+
+def apply_event_dates(out_events, overrides):
+    """overrides.json の event_dates で、公式の資料で確かめた開催日・開催地を開催回に入れる。
+    マスター未収録(動画の公開日から推定)の回を、推定ではない日付にするためのもの。開催回ID(ページのアドレス)は変えない"""
+    by_id = {e["id"]: e for e in out_events}
+    applied = []
+    for o in overrides.get("event_dates", []):
+        e = by_id.get(o.get("event_id"))
+        if not e or not o.get("start") or not o.get("end") or not str(o.get("source_url", "")).startswith("https://"):
+            continue
+        e["start"], e["end"] = o["start"], o["end"]
+        e["fy_label"] = fy_label(fiscal_year(d(o["start"])))
+        if o.get("venue"):
+            e["venue"] = o["venue"]
+        e["status"], e["date_quality"] = "held", "source_date"
+        e["sources"] = [{"url": o["source_url"], "type": source_type(o["source_url"], "")}]
+        for k in ("derived", "notes"):
+            e.pop(k, None)
+        applied.append(e["id"])
+    return applied
 
 
 # ---------------------------------------------------------------------------
@@ -882,6 +905,8 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
         }
         out_videos.append({k: val for k, val in ov.items() if val not in (None, [], "")})
 
+    # 公式の資料で確かめた開催日(overrides.json の event_dates)
+    dates_applied = apply_event_dates(out_events, overrides)
     link_counts = Counter(v["link"] for v in videos)
     ids_now = {v["id"] for v in videos}
     report = {
@@ -894,6 +919,7 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
         "overrides_applied": applied_overrides,
         "master_events": len(events),
         "derived_events": len(derived_events),
+        "event_dates_applied": dates_applied,
         "events_with_videos": sum(1 for e in out_events if e.get("n")),
     }
     if previous is not None:

@@ -1,5 +1,5 @@
 {
- "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。 大会の公式サイトなどへのリンクは event_links に、event_id(開催回ID)・url・label(省略すると「大会公式サイト」)を書きます。結果のページへのリンクは label を「結果」にします(英語版では Results と表示)。日本レスリング協会の大会ページ(japan-wrestling.jp/competition/…)が出典にある開催回は、書かなくても自動で「結果を見る」ボタンが出ます。",
+ "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。 大会の公式サイトなどへのリンクは event_links に、event_id(開催回ID)・url・label(省略すると「大会公式サイト」)を書きます。結果のページへのリンクは label を「結果」にします(英語版では Results と表示)。日本レスリング協会の大会ページ(japan-wrestling.jp/competition/…)が出典にある開催回は、書かなくても自動で「結果を見る」ボタンが出ます。 公式の資料で確かめた開催日・開催地は event_dates に、event_id・start・end(YYYY-MM-DD)・venue・source_url(公式の資料)・basis・checked_on を書きます。動画の公開日から推定していた日付が、この内容に置きかわります(開催回のアドレスは変わりません)。",
  "video_overrides": [
   {
    "video_id": "rOpJGEOqWIM",
@@ -254,6 +254,35 @@
    "url": "https://jwfcssite.wixsite.com/open2026",
    "label": "大会公式サイト",
    "checked_on": "2026-10-03"
+  }
+ ],
+ "event_dates": [
+  {
+   "event_id": "x-olympics-2024-05-23",
+   "start": "2024-08-05",
+   "end": "2024-08-11",
+   "venue": "パリ(フランス)",
+   "source_url": "https://cdn.uww.org/2026-07/2024-olympic-games_final-book_20260722.pdf",
+   "basis": "UWW の公式結果冊子の表紙「Paris, FR / 5 Aug - 11 Aug 2024」",
+   "checked_on": "2026-10-07"
+  },
+  {
+   "event_id": "x-world-championships-2021-10-05",
+   "start": "2021-10-02",
+   "end": "2021-10-10",
+   "venue": "オスロ(ノルウェー)",
+   "source_url": "https://cdn.uww.org/2026-01/results_10_oslo_upd_doping_case.pdf",
+   "basis": "UWW の公式結果冊子の表紙「Oslo, NO / 2 Oct - 10 Oct 2021」",
+   "checked_on": "2026-10-07"
+  },
+  {
+   "event_id": "x-world-championships-2022-09-12",
+   "start": "2022-09-10",
+   "end": "2022-09-18",
+   "venue": "ベオグラード(セルビア)",
+   "source_url": "https://cdn.uww.org/2026-01/results_09_belgrade_upd_doping_case_2.pdf",
+   "basis": "UWW の公式結果冊子の表紙「Belgrade, RS / 10 Sep - 18 Sep 2022」",
+   "checked_on": "2026-10-07"
   }
  ]
 }
