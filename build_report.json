@@ -40,14 +40,14 @@
   "video_links": 738,
   "og_cards": {
    "ja": {
-    "made": 1,
-    "kept": 738,
+    "made": 44,
+    "kept": 695,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 1,
-    "kept": 738,
+    "made": 11,
+    "kept": 728,
     "removed": 0,
     "errors": []
    }
