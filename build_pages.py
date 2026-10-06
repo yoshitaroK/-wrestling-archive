@@ -1276,6 +1276,8 @@ def build(root=HERE, inline_css=False, only=None):
     i18n.missing.clear()
     # 選手データ(players.csv / player_results.csv)。開催回ページの「入賞者」の欄でも使うので先に読む
     preport = players.prepare(root, data, ctx)
+    # 選手ページの SNS 用画像を作った数(日本語版・英語版。players.build が書き込む)
+    preport["og_cards"] = ctx.setdefault("og_cards", {})
     report = load_json(root, "build_report.json", {}) if only is None else None
 
     def latest(sr):
