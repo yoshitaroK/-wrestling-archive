@@ -650,7 +650,9 @@ function renderShelves(){
   var recent = V.filter(function(v){ return v.vs!=='unavailable'; }).slice().sort(function(a,b){ return a.p<b.p?1:-1; }).slice(0,12);
   var rich = DATA.series.filter(function(s){ return s.master && s.n>0; }).sort(function(a,b){ return b.n-a.n; }).slice(0,12);
   var h = '';
-  var top = past[0];
+  // 大きな枠(最近開催された大会)に出さない大会(主催者の希望)。下の一覧には出る
+  var NO_HERO = {'x-fujinami-cup':1};
+  var top = past.filter(function(e){ return !NO_HERO[e.series]; })[0];
   if(top){
     var ts = S[top.series], tv = (byEvent[top.id]||[]).filter(function(v){return v.k==='match';})[0] || (byEvent[top.id]||[])[0];
     h += '<a class="hero" href="'+esc(eventPage(top.id)||linkTo(top.series,top.id))+'" style="background:'+grad(ts?ts.name:top.name)+'">'+
@@ -661,7 +663,7 @@ function renderShelves(){
       '<span class="cta">'+L('配信一覧を見る','Watch the streams')+'</span></a>';
   }
   if(future.length) h += '<section class="shelf"><h2>'+L('これから開催される大会','Upcoming tournaments')+'<span class="sub">'+L('配信枠が公開されています','Stream pages are already published')+'</span></h2><div class="row">'+future.map(tileEvent).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>'+L('最近開催された大会','Recent tournaments')+'</h2><div class="row">'+past.slice(1).map(tileEvent).join('')+'</div></section>';
+  h += '<section class="shelf"><h2>'+L('最近開催された大会','Recent tournaments')+'</h2><div class="row">'+past.filter(function(e){ return e!==top; }).map(tileEvent).join('')+'</div></section>';
   h += '<section class="shelf"><h2>'+L('最近追加した動画','Recently added videos')+'<span class="sub">'+L('YouTubeへの公開が新しい順','Newest on YouTube first')+'</span></h2><div class="row">'+recent.map(function(v){
     var s = v.s && S[v.s];
     return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, s?N(s.name):'')+'<div class="tt"'+L('',' lang="ja"')+'>'+esc(v.t)+'</div><div class="tm">'+L(esc(fmtDate(jstDate(v.p)))+'に公開','Published '+esc(fmtDate(jstDate(v.p))))+'</div></a>';
