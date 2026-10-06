@@ -29,6 +29,7 @@
 import csv
 import os
 import re
+import sys
 import unicodedata
 from collections import defaultdict
 
@@ -214,7 +215,7 @@ def optout_note(listing=False):
         'We will remove it after confirming the request.') + "</p>")
 
 
-def player_page(p, ctx, bp):
+def player_page(p, ctx, bp, card=""):
     e, SITE = bp.e, bp.SITE
     path = f"/players/{p['id']}/"
     name = pname(p)
@@ -237,7 +238,8 @@ def player_page(p, ctx, bp):
         person["affiliation"] = {"@type": "SportsOrganization", "name": club}
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "ProfilePage", "url": SITE + U(path), "mainEntity": person}]}
-    og = f"https://i.ytimg.com/vi/{p['videos'][0]['id']}/hqdefault.jpg" if p["videos"] else ""
+    # SNS 用画像(og_cards.py で作ったもの)。作れなかったときは試合動画のサムネイル
+    og = card or (f"https://i.ytimg.com/vi/{p['videos'][0]['id']}/hqdefault.jpg" if p["videos"] else "")
     h = bp.head(L(f"{name} 選手 大会成績・試合動画|{bp.SITE_NAME}", f"{name} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
     h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
     if i18n.en():
@@ -488,6 +490,10 @@ def build(root, data, ctx, bp):
     players = ctx.get("players") or []
     if not players:
         return [(*coming_soon_page(ctx, bp), data.get("as_of"))]
-    pages = [(*player_page(p, ctx, bp), data.get("as_of")) for p in players]
+    import og_cards
+    year = int((data.get("as_of") or "")[:4] or 0) or __import__("datetime").date.today().year
+    cards = og_cards.Cards(root, year)
+    pages = [(*player_page(p, ctx, bp, cards.url(p, ctx, bp, sys.modules[__name__])), data.get("as_of")) for p in players]
+    ctx.setdefault("og_cards", {})["en" if i18n.en() else "ja"] = cards.finish()
     pages.append((*index_page(players, ctx, bp), data.get("as_of")))
     return pages

@@ -36,7 +36,21 @@
   "hidden_minor": 0,
   "hidden_private": 22,
   "errors": [],
-  "video_links": 740
+  "video_links": 740,
+  "og_cards": {
+   "ja": {
+    "made": 0,
+    "kept": 739,
+    "removed": 1,
+    "errors": []
+   },
+   "en": {
+    "made": 0,
+    "kept": 739,
+    "removed": 1,
+    "errors": []
+   }
+  }
  },
  "photos": {
   "entries": 301,
