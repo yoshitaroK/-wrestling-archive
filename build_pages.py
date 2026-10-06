@@ -676,6 +676,8 @@ def series_page(s, ctx):
     elif alias:
         h += f'<p class="aliases">この名前でも探せます:{e("、".join(alias))}</p>'
 
+    import champions
+    h += champions.link_html(s, ctx)
     sl = status_label()
     h += f'<section class="section"><h2>{L("開催年から選ぶ", "Choose a year")}</h2><ol class="occ">'
     for x in reversed(evs):
@@ -1219,7 +1221,8 @@ def extract_css(index_path):
     import players
     import calendar_page
     import photo_gallery
-    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS
+    import champions
+    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS
 
 
 def build(root=HERE, inline_css=False, only=None):
@@ -1276,6 +1279,9 @@ def build(root=HERE, inline_css=False, only=None):
     i18n.missing.clear()
     # 選手データ(players.csv / player_results.csv)。開催回ページの「入賞者」の欄でも使うので先に読む
     preport = players.prepare(root, data, ctx)
+    # 大会ごとの歴代優勝者(player_results.csv の1位)。大会ページのリンクでも使うので先に読む
+    import champions
+    creport = champions.prepare(root, data, ctx)
     # 選手ページの SNS 用画像を作った数(日本語版・英語版。players.build が書き込む)
     preport["og_cards"] = ctx.setdefault("og_cards", {})
     report = load_json(root, "build_report.json", {}) if only is None else None
@@ -1313,6 +1319,8 @@ def build(root=HERE, inline_css=False, only=None):
             hero[lang] = photo_gallery.hero_items(ctx, photos_by_page, me)
             # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
             pages.extend(players.build(root, data, ctx, me))
+            # 歴代優勝者のページ(/champions/)。日本語版だけ
+            pages.extend((path, doc, data.get("as_of")) for path, doc in champions.build(ctx, me))
             path, doc = index_page(ctx, listed)
             pages.append((path, doc, data.get("as_of")))
             # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
@@ -1327,6 +1335,7 @@ def build(root=HERE, inline_css=False, only=None):
                 for v in shown:
                     cnt[v["cat"]] += 1
                 report["players"] = preport
+                report["champions"] = creport
                 report["photos"] = photo_report
                 report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
                                   "unclassified_count": len(unclassified),
@@ -1381,7 +1390,8 @@ def build(root=HERE, inline_css=False, only=None):
     n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
     n_pl = sum(1 for p in pages if p[0].startswith("/players/"))
     n_ph = sum(1 for p in pages if p[0].startswith("/photos/"))
-    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl}・写真 {n_ph})+英語版 {len(en_pages)}ページ")
+    n_ch = sum(1 for p in pages if p[0].startswith("/champions/"))
+    print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl}・写真 {n_ph}・歴代優勝者 {n_ch})+英語版 {len(en_pages)}ページ")
     if i18n.missing:
         print(f"[英語版] 英語名が無い名前 {len(i18n.missing)}件(日本語のまま表示): " + "、".join(sorted(i18n.missing)[:10]) + " … en_names.csv に追加してください")
     print(f"写真: {photo_report['shown']}枚を{photo_report['pages_with_photos']}ページに掲載"

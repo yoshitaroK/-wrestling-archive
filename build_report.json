@@ -41,13 +41,13 @@
    "ja": {
     "made": 0,
     "kept": 739,
-    "removed": 1,
+    "removed": 0,
     "errors": []
    },
    "en": {
     "made": 0,
     "kept": 739,
-    "removed": 1,
+    "removed": 0,
     "errors": []
    }
   }
@@ -152,5 +152,12 @@
   "names": 474,
   "machine_translations": 3714,
   "missing_names": []
+ },
+ "champions": {
+  "rows": 275,
+  "hidden_minor": 0,
+  "no_link": 8,
+  "skipped_unknown_event": 31,
+  "series": 8
  }
 }
