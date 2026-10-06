@@ -36,17 +36,18 @@
   "hidden_minor": 0,
   "hidden_private": 22,
   "errors": [],
-  "video_links": 740,
+  "video_excluded": 2,
+  "video_links": 738,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 739,
+    "made": 1,
+    "kept": 738,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 739,
+    "made": 1,
+    "kept": 738,
     "removed": 0,
     "errors": []
    }

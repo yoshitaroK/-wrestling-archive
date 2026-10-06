@@ -10,6 +10,11 @@
   player_results.csv  … 大会成績(1行 = 1大会の成績)
     選手ID, 開催回ID, 大会名, 開催年, スタイル, 階級, 成績, 出典URL
 
+  player_video_exclude.csv … 選手ページに出さない動画(1行 = 1選手の1本。無くてもよい)
+    選手ID, 動画ID, メモ
+    動画IDは YouTube の動画のURL(…watch?v=XXXX)の XXXX。名前がタイトルに入っているだけで、
+    その選手の試合ではない動画(ほかの選手のインタビューなど)を外すのに使う
+
 ルール
   - 「公開」が「はい」で、かつ「未成年」が「いいえ」の選手だけページを作る
     (未成年の選手・公開していない選手は、ページも検索対象も作らない)
@@ -42,6 +47,7 @@ COMING_SOON_EN = ""
 
 PLAYERS_CSV = "players.csv"
 RESULTS_CSV = "player_results.csv"
+VIDEO_EXCLUDE_CSV = "player_video_exclude.csv"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
 # オリンピックの大会名(player_results.csv)→ 名前の下の印(日本語・英語)と英語の大会名。新しい大会を上に足す
@@ -119,8 +125,8 @@ def load(root):
     return players, report
 
 
-def attach_videos(players, videos):
-    """動画タイトルに選手名が含まれる動画を結びつける"""
+def attach_videos(players, videos, exclude=frozenset()):
+    """動画タイトルに選手名が含まれる動画を結びつける。exclude は外す (選手ID, 動画ID)"""
     n = 0
     titles = [(v, norm(v.get("t"))) for v in videos]
     for p in players:
@@ -128,7 +134,7 @@ def attach_videos(players, videos):
             continue
         hits = {}
         for v, t in titles:
-            if any(k in t for k in p["keys"]):
+            if any(k in t for k in p["keys"]) and (p["id"], v["id"]) not in exclude:
                 hits[v["id"]] = v
         p["videos"] = sorted(hits.values(), key=lambda v: v.get("p") or "", reverse=True)
         n += len(p["videos"])
@@ -465,7 +471,10 @@ table.results td b{color:var(--pink)}
 def prepare(root, data, ctx):
     """選手データを読み、動画と開催回に結びつけて ctx に入れる(日本語版・英語版の前に1回だけ)"""
     players, report = load(root)
-    report["video_links"] = attach_videos(players, data.get("videos", [])) if players else 0
+    path = os.path.join(root, VIDEO_EXCLUDE_CSV)
+    exclude = {(norm(r.get("選手ID")), norm(r.get("動画ID"))) for r in read_csv(path)} if os.path.exists(path) else set()
+    report["video_excluded"] = len(exclude)
+    report["video_links"] = attach_videos(players, data.get("videos", []), exclude) if players else 0
     winners = defaultdict(list)
     for p in players:
         for r in p["results"]:
