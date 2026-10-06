@@ -515,6 +515,8 @@ table.results td b{color:var(--pink)}
 .pcredit{display:block;font-size:11px;color:var(--ink3)}
 .palbum{display:block;width:max-content;max-width:100%;margin:12px auto 0;padding:9px 22px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .palbum:hover{border-color:var(--pink)}
+.ptakedown{margin:14px 0 0;text-align:center;font-size:11.5px;color:var(--ink3)}
+.ptakedown a{color:inherit}
 .palbum-c{margin:4px 0 0;text-align:center;font-size:11.5px;color:var(--ink3)}
 .pcredit-all{margin:-4px 0 10px;font-size:12px;color:var(--ink3)}
 .pshow{display:block;margin:12px auto 0;padding:9px 22px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
