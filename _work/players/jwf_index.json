@@ -454,5 +454,39 @@
   "winners": [],
   "n_weight_pdfs": 0,
   "files": []
+ },
+ {
+  "event": "",
+  "series": "",
+  "year": 2025,
+  "name": "U23,U15 JOCジュニアオリンピックカップ(U23 のエントリーリストだけ使う)",
+  "page": "https://www.japan-wrestling.jp/competition/2025/3228",
+  "winners": [],
+  "entry_lists_known_only": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/02/U23FSエントリー.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/02/U23GRエントリー.pdf"
+  ]
+ },
+ {
+  "event": "",
+  "series": "",
+  "year": 2025,
+  "name": "JOCジュニアオリンピックカップ 令和7年度ジュニアクイーンズカップ(U23 のエントリーリストだけ使う)",
+  "page": "https://www.japan-wrestling.jp/competition/2025/3572",
+  "winners": [],
+  "entry_lists_known_only": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/03/令和7年度ジュニアクイーンズカップ_U23_エントリー選手リスト.pdf"
+  ]
+ },
+ {
+  "event": "",
+  "series": "",
+  "year": 2026,
+  "name": "JOCジュニアオリンピックカップ 2026年度ジュニアクイーンズカップ(U23 のエントリーリストだけ使う)",
+  "page": "https://www.japan-wrestling.jp/competition/2026/7020",
+  "winners": [],
+  "entry_lists_known_only": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/03/エントリー_U23_260303.pdf"
+  ]
  }
 ]

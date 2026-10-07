@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-06T06:32:55+09:00",
- "as_of": "2026-10-06",
+ "built_at": "2026-10-07T06:18:04+09:00",
+ "as_of": "2026-10-07",
  "video_count": 3354,
  "raw_count": 3354,
  "duplicate_ids_removed": 0,
@@ -28,7 +28,10 @@
   "new": 0,
   "pending": 0,
   "chars_used": 0,
-  "error": ""
+  "error": "",
+  "name_fixed": 0,
+  "name_suspects": 0,
+  "name_suspect_examples": []
  },
  "players": {
   "total": 761,
@@ -52,6 +55,24 @@
     "errors": []
    }
   }
+ },
+ "champions": {
+  "rows": 275,
+  "hidden_minor": 0,
+  "no_link": 8,
+  "skipped_unknown_event": 31,
+  "history_rows": 5893,
+  "history_linked": 735,
+  "history_hidden": 8,
+  "history_site_preferred": 216,
+  "history_mismatch": [
+   "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
+   "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
+   "tenno-cup フリースタイル 2024 74kg: サイト「高田 熙」/ 歴代記録「高田 煕」",
+   "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
+   "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」"
+  ],
+  "series": 8
  },
  "photos": {
   "entries": 301,
@@ -153,23 +174,5 @@
   "names": 478,
   "machine_translations": 3714,
   "missing_names": []
- },
- "champions": {
-  "rows": 275,
-  "hidden_minor": 0,
-  "no_link": 8,
-  "skipped_unknown_event": 31,
-  "history_rows": 5893,
-  "history_linked": 735,
-  "history_hidden": 8,
-  "history_site_preferred": 216,
-  "history_mismatch": [
-   "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
-   "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
-   "tenno-cup フリースタイル 2024 74kg: サイト「高田 熙」/ 歴代記録「高田 煕」",
-   "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
-   "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」"
-  ],
-  "series": 8
  }
 }
