@@ -4,7 +4,7 @@ import hashlib, json, os, time, urllib.parse, urllib.request
 UA = {"User-Agent": "JapanWrestlingChannelArchive/1.0 (+https://japanwrestlingchannel.com/)"}
 os.makedirs("jwf", exist_ok=True)
 for x in json.load(open("jwf_index.json", encoding="utf-8")):
-    for u in x["winners"] + x.get("entry_lists", []):
+    for u in x["winners"] + x.get("entry_lists", []) + x.get("entry_lists_known_only", []):
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
         if os.path.exists(fn) and os.path.getsize(fn) > 0:
             continue
