@@ -1,0 +1,46 @@
+name: UWW の日本人の動画を集める
+
+# Issue #93。UWW(世界レスリング連合)の YouTube から、日本人選手が出ている動画の一覧を作る。
+# 手で「Run workflow」を押したときだけ動く(毎朝の更新とは別。サイトのページと data.json には何もしない)。
+# 結果は uww-list ブランチの _work/uww/ に保存する(Claude がそれで PR を作る)。
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: 'チャンネル(空のままでよい。違うチャンネルを読んだときだけ、UC で始まるIDを入れる)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: uww-videos
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: UWW の動画を読んで、日本人選手が出ている動画の一覧を作る
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          python _work/uww/uww_videos.py --channel "$CHANNEL"
+          cat _work/uww/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 一覧を uww-list ブランチに保存する
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B uww-list
+          git add _work/uww/uww_japan_videos.csv _work/uww/summary.md
+          git commit -m "UWW の日本人選手の動画の一覧を作る(#93)($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git push -f origin uww-list
