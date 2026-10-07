@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-07T06:18:04+09:00",
- "as_of": "2026-10-07",
+ "built_at": "2026-10-08T06:17:08+09:00",
+ "as_of": "2026-10-08",
  "video_count": 3354,
  "raw_count": 3354,
  "duplicate_ids_removed": 0,
@@ -16,6 +16,11 @@
  "overrides_applied": 41,
  "master_events": 443,
  "derived_events": 41,
+ "event_dates_applied": [
+  "x-olympics-2024-05-23",
+  "x-world-championships-2021-10-05",
+  "x-world-championships-2022-09-12"
+ ],
  "events_with_videos": 215,
  "previous_video_count": 3354,
  "missing_from_previous": [],
@@ -30,8 +35,39 @@
   "chars_used": 0,
   "error": "",
   "name_fixed": 0,
-  "name_suspects": 0,
-  "name_suspect_examples": []
+  "name_suspects": 6,
+  "name_suspect_examples": [
+   {
+    "ja": "2021年ジュニアクイーンズカップ(カデット) 46kg級 決勝 太田真蓉（青＝埼玉・埼玉栄高）○［フォール、4:00=4-4］●小川凜佳（中津川ジュニア）",
+    "en": "2021 Junior Queens Cup (Cadets) 46kg Class Final: Mayu Ota (Blue = Saitama Sakae High School, Saitama) ○ [Fall, 4:00 = 4-4] ● Rinka Ogawa (Nakatsugawa Junior)",
+    "expected": "Mayo Ota"
+   },
+   {
+    "ja": "2021年ジュニアクイーンズカップ(カデット) 57kg級 決勝 太田早也香（赤＝埼玉・埼玉栄高）○［2-1］●山下叶夢（香川・高松北高）",
+    "en": "2021 Junior Queens Cup (Cadets) 57kg Class Final: Sayaka Ota (Red = Saitama Ei High School, Saitama) ○ [2-1] ● Kamui Yamashita (Takamatsu Kita High School, Kagawa)",
+    "expected": "Kanon Yamashita"
+   },
+   {
+    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【W50kg級】決勝　森川晴凪（至学館大）○［VSU、5:59=11-0］●太田真蓉（東洋大）",
+    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [W50kg Class] Final: Haruna Morikawa (Shigakukan University) ○ [VSU, 5:59=11-0] ● Mayu Ota (Toyo University)",
+    "expected": "Mayo Ota"
+   },
+   {
+    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【Ｗ59kg級】決勝　山下叶夢（東洋大）○［11-2］●太田早也香（東洋大）",
+    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [Women’s 59kg Class] Final: Kanamu Yamashita (Toyo University) ○ [11-2] ● Sayaka Ota (Toyo University)",
+    "expected": "Kanon Yamashita"
+   },
+   {
+    "ja": "令和３年度第65回風間杯全国高校選抜レスリング大会決勝戦 　【65kg級】　細川周（京都・丹後緑風）○［Ｔフォール、3:52=14-2］●平井友真（山梨・甲府城西）",
+    "en": "Reiwa 3, 65th Kazama Cup National High School Select Wrestling Tournament Finals  [65kg Class] Shu Hosokawa (Tango Ryokufu, Kyoto) ○ [Technical Fall, 3:52 = 14-2] ● Tomoma Hirai (Kofu Josai, Yamanashi)",
+    "expected": "Yuma Hirai"
+   },
+   {
+    "ja": "令和３年度第65回風間杯全国高校選抜レスリング大会決勝戦 　【65kg級】　細川周（京都・丹後緑風）○［Ｔフォール、3:52=14-2］●平井友真（山梨・甲府城西）",
+    "en": "Reiwa 3, 65th Kazama Cup National High School Select Wrestling Tournament Finals  [65kg Class] Shu Hosokawa (Tango Ryokufu, Kyoto) ○ [Technical Fall, 3:52 = 14-2] ● Tomoma Hirai (Kofu Josai, Yamanashi)",
+    "expected": "Makoto Hosokawa"
+   }
+  ]
  },
  "players": {
   "total": 761,
@@ -49,8 +85,8 @@
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 739,
+    "made": 1,
+    "kept": 738,
     "removed": 0,
     "errors": []
    }
@@ -170,7 +206,7 @@
   ]
  },
  "en": {
-  "pages": 1046,
+  "pages": 1047,
   "names": 478,
   "machine_translations": 3714,
   "missing_names": []

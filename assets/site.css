@@ -322,6 +322,14 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
 .page{padding-top:18px}
+.policy{padding-bottom:44px}
+.policy .upd{font-size:13px;color:var(--ink3);margin:0 0 8px}
+.policy h2{font-size:18px;font-weight:700;margin:28px 0 8px;padding-left:10px;border-left:3px solid var(--pink)}
+.policy p,.policy ul{max-width:70ch}
+.policy li{margin:0 0 8px}
+.ptable{border-collapse:collapse;font-size:14px;margin:4px 0 12px;max-width:70ch;width:100%}
+.ptable th,.ptable td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.ptable th{background:var(--surface);font-weight:700}
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
 .crumbs a{color:var(--ink2);text-decoration:none}.crumbs a:hover{color:var(--pink)}
