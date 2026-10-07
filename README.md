@@ -63,6 +63,16 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 - 開催回が分からず大会だけ決めたい場合は `event_id` の代わりに `"series_id": "tenno-cup"` のように書きます。
 - 動画の種類を直したい場合は `"kind": "interview"`(match / interview / announcement / highlight / other)を追加します。
 
+## データを直す PR の決まり(#75)
+
+- PR に入れるのは、元になるファイル(`overrides.json`・`players.csv`・`en_names.csv`・`*.py` など)だけにします。
+  作られるファイル(`data.json`・`build_report.json`・`events/`・`players/`・`en/`・`assets/` の中の作られたもの・`sitemap.xml` など)は入れません。
+  - `data.json` などは毎朝 6:00 の更新で丸ごと作り直されるので、PR に入れると翌朝には「This branch has conflicts」になってマージできなくなります。
+- マージすると、`.github/workflows/update.yml` が自動で動いて(数分)、ページを作り直して保存します。
+  そのあと Cloudflare の「Purge Everything」を押します。
+  - 動いているかは、GitHub の「Actions」タブで「Update wrestling archive data」が黄色(実行中)→ 緑(完了)になるかで分かります。
+- 確認のため、PR には手元で作り直したページのスクリーンショットをのせます。
+
 ## 大会データの更新
 
 `master_events.json` は 2026年9月24日時点の照合用データです。予定(scheduled)の大会は、日付が過ぎても自動で「開催済み」にはなりません。

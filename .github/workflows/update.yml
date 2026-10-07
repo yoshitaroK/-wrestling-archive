@@ -5,6 +5,26 @@ on:
     # 毎日 日本時間 6:00 (UTC 21:00) に実行
     - cron: '0 21 * * *'
   workflow_dispatch: {}
+  # データやしくみのファイルを変えた PR をマージしたら、すぐにページを作り直す(#75)。
+  # PR にはページ(events/ players/ en/ など)や data.json を入れない決まりにしたので、ここで作り直す。
+  # この作業自身の保存(github-actions の push)では、もう一度動くことはない
+  push:
+    branches: [main]
+    paths:
+      - '*.py'
+      - 'index.html'
+      - 'overrides.json'
+      - 'master_events.json'
+      - 'series_aliases.json'
+      - 'legacy_map.json'
+      - 'players.csv'
+      - 'player_results.csv'
+      - 'player_video_exclude.csv'
+      - 'champions.csv'
+      - 'en_names.csv'
+      - 'translations_en.json'
+      - 'photos.json'
+      - 'tech_*.json'
 
 permissions:
   contents: write
