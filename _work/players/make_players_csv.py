@@ -84,7 +84,7 @@ def main():
         kana = next(iter(kanas.get(name_key(name), ())), "") if len(kanas.get(name_key(name), ())) == 1 else ""
         foreign = re.match(r"^[ァ-ヶー]+ ", name) and r["選手ID"] in fix  # カタカナの外国名は、元の綴りに近い romaji_fix.tsv を使う
         if kana and not is_yes(ok) and not foreign:
-            roma = romaji(kana)
+            roma = romaji(kana, name)
         roma = " ".join(re.sub(r"[()()]", "", roma).split())
         memo = [m for m in (r.get("確認メモ") or "").split("・") if m]
         public = "はい" if memo and all(m.startswith("所属が複数") for m in memo) else r["公開"]
