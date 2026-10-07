@@ -276,7 +276,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 def footer(as_of):
     if i18n.en():
         return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/">日本語</a></p>
+<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
 <p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
@@ -285,7 +285,7 @@ def footer(as_of):
 </html>
 """
     return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -1060,6 +1060,137 @@ CONTACT_BODY_EN = r"""<main class="wrap page contact">
 """
 
 
+PRIVACY_UPDATED = "2026-10-07"
+
+
+def privacy_page(ctx):
+    """プライバシーポリシー(/privacy/)。App Store・Google Play・Firebase に登録する URL。アプリの実際の動きと合わせて書く"""
+    h = head(L(f"プライバシーポリシー|{SITE_NAME}", f"Privacy Policy | {site_name()}"),
+             L("レスリング配信アーカイブ(japanwrestlingchannel.com)とスマホアプリ「JWC」で扱う情報と、その使い方についての説明です。",
+               "How the Japan Wrestling Archive (japanwrestlingchannel.com) and the JWC mobile app handle information."),
+             "/privacy/", "",
+             {"@context": "https://schema.org", "@type": "WebPage", "name": L("プライバシーポリシー", "Privacy Policy"),
+              "url": SITE + U("/privacy/"), "dateModified": PRIVACY_UPDATED}, ctx["css"])
+    body = (L(PRIVACY_BODY, PRIVACY_BODY_EN).replace("__EMAIL__", CONTACT_EMAIL).replace("__UPDATED__", fmt_date(PRIVACY_UPDATED))
+            .replace("__CONTACT__", U("/contact.html")))
+    return "/privacy/", h + body + footer(ctx["as_of"])
+
+
+PRIVACY_BODY = r"""<main class="wrap page policy">
+<nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>プライバシーポリシー</li></ol></nav>
+<h1>プライバシーポリシー</h1>
+<p class="lead">Japan Wrestling Channel 公式の「レスリング配信アーカイブ」(japanwrestlingchannel.com。以下「サイト」)と、スマホアプリ「JWC - Japan Wrestling Channel」(iPhone・Android。以下「アプリ」)で扱う情報と、その使い方を説明します。</p>
+<p class="upd">最終更新日:__UPDATED__</p>
+
+<h2>1. サイトで扱う情報</h2>
+<ul>
+<li><b>アクセス解析</b>:サイトの使われ方を知るために Google アナリティクスを使っています。Cookie を使い、見たページ・おおよその地域・端末やブラウザの種類などを集めます。名前やメールアドレスなど、あなたを特定する情報は集めません。集めたくない場合は、<a href="https://tools.google.com/dlpage/gaoptout?hl=ja" rel="noopener">Google アナリティクス オプトアウト アドオン</a>を使うか、ブラウザで Cookie を無効にしてください。</li>
+<li><b>お問い合わせ</b>:お問い合わせのときにいただいたお名前・メールアドレス・内容は、返信と対応のためだけに使います。</li>
+<li><b>表示の設定</b>:言語やテーマ(白・黒)の設定は、あなたのブラウザの中だけに保存します。</li>
+</ul>
+
+<h2>2. アプリで扱う情報</h2>
+<ul>
+<li><b>アカウント登録はありません</b>。アプリが、お名前・メールアドレス・電話番号・位置情報・連絡先・写真などを集めることはありません。</li>
+<li><b>お気に入り</b>:☆をつけた選手・大会は、<b>あなたのスマホの中だけ</b>に保存します。私たちのサーバーには送りません。アプリを削除すると、お気に入りも消えます。</li>
+<li><b>通知</b>:通知を許可した場合に限り、Google の Firebase Cloud Messaging を使って通知を送ります。そのために、Firebase が発行する通知用の ID(トークン)と、受け取る通知の種類(新着動画、☆をつけた選手のお知らせ)が Firebase に登録されます。私たちはこの ID を、あなた個人と結びつけません。通知はアプリの設定やスマホの設定から、いつでもオフにできます。</li>
+<li><b>アクセス解析・広告・追跡はしません</b>。アプリには広告を入れず、ほかのアプリやサイトをまたいだ行動の追跡(トラッキング)もしません。</li>
+<li><b>大会・動画のデータ</b>:アプリは、大会や動画の情報を japanwrestlingchannel.com から読み込みます。このとき、ふつうのサイトを見るときと同じように、IP アドレスなどの通信の記録が、サイトの配信に使っている Cloudflare で処理されます。</li>
+</ul>
+
+<h2>3. 動画(YouTube)について</h2>
+<p>サイトとアプリの動画は、YouTube の埋め込みプレーヤーで再生されます。再生のときには YouTube(Google)が Cookie などで情報を集めることがあり、その扱いは <a href="https://policies.google.com/privacy?hl=ja" rel="noopener">Google のプライバシーポリシー</a>に従います。</p>
+
+<h2>4. 使っている外部のサービス</h2>
+<table class="ptable">
+<thead><tr><th>サービス</th><th>使う場所</th><th>目的</th></tr></thead>
+<tbody>
+<tr><td>Google アナリティクス</td><td>サイト</td><td>アクセス解析</td></tr>
+<tr><td>Firebase Cloud Messaging(Google)</td><td>アプリ</td><td>通知を送る(許可した場合だけ)</td></tr>
+<tr><td>YouTube(Google)</td><td>サイト・アプリ</td><td>動画の再生・サムネイルの表示</td></tr>
+<tr><td>Cloudflare</td><td>サイト・アプリ</td><td>サイトとデータの配信、セキュリティ</td></tr>
+<tr><td>Google Fonts</td><td>サイト</td><td>文字(フォント)の表示</td></tr>
+</tbody>
+</table>
+<p>法令にもとづく場合を除き、いただいた情報を、上の目的のほかに第三者へ渡すことはありません。情報を売ることもありません。</p>
+
+<h2>5. 選手の情報と写真</h2>
+<ul>
+<li>選手のお名前や成績は、大会の公式の結果など、公開されている情報をもとに載せています。<b>未成年の選手は、掲載の許可が確認できた方だけ</b>を載せています。</li>
+<li>写真は、撮影した方の許可を得て載せています。写っているご本人や保護者の方から依頼があれば、取り下げます。</li>
+<li>掲載内容の訂正・削除のご依頼は、下の窓口へお送りください。</li>
+</ul>
+
+<h2>6. お子さまの利用</h2>
+<p>サイトとアプリは、お子さまから意図して個人情報を集めることはありません。</p>
+
+<h2>7. このポリシーの変更</h2>
+<p>サイトやアプリの機能が変わったときは、このページを更新し、最終更新日を書き換えます。</p>
+
+<h2>8. お問い合わせ</h2>
+<p>運営:Japan Wrestling Channel 公式<br>
+情報の扱いについてのご質問、削除・訂正のご依頼は、<a href="__CONTACT__">お問い合わせ</a>、またはメール(<a href="mailto:__EMAIL__">__EMAIL__</a>)へお送りください。</p>
+</main>
+"""
+
+PRIVACY_BODY_EN = r"""<main class="wrap page policy">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li>Privacy Policy</li></ol></nav>
+<h1>Privacy Policy</h1>
+<p class="lead">This policy explains what information the Japan Wrestling Archive, the official archive of Japan Wrestling Channel (japanwrestlingchannel.com, the "Site"), and the mobile app "JWC - Japan Wrestling Channel" (iPhone and Android, the "App") handle, and how it is used.</p>
+<p class="upd">Last updated: __UPDATED__</p>
+
+<h2>1. Information on the Site</h2>
+<ul>
+<li><b>Analytics</b>: We use Google Analytics to understand how the Site is used. It uses cookies to collect the pages you view, your approximate region, and your device and browser type. It does not collect information that identifies you, such as your name or email address. To opt out, use the <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Google Analytics Opt-out Browser Add-on</a> or disable cookies in your browser.</li>
+<li><b>Contact</b>: The name, email address and message you send us are used only to reply to and handle your inquiry.</li>
+<li><b>Display settings</b>: Your language and theme (light or dark) settings are stored only in your browser.</li>
+</ul>
+
+<h2>2. Information in the App</h2>
+<ul>
+<li><b>No account is required.</b> The App does not collect your name, email address, phone number, location, contacts or photos.</li>
+<li><b>Favorites</b>: Players and tournaments you star are stored <b>only on your device</b>. They are never sent to our servers. Deleting the App deletes your favorites.</li>
+<li><b>Notifications</b>: Only if you allow notifications, we send them through Google's Firebase Cloud Messaging. For this, a notification ID (token) issued by Firebase and the kinds of notifications you receive (new videos, news about players you starred) are registered with Firebase. We never link this ID to you as a person. You can turn notifications off at any time in the App or in your device settings.</li>
+<li><b>No analytics, ads or tracking.</b> The App contains no ads and does not track you across other apps or websites.</li>
+<li><b>Tournament and video data</b>: The App downloads tournament and video information from japanwrestlingchannel.com. As with visiting any website, connection records such as your IP address are processed by Cloudflare, which delivers the Site.</li>
+</ul>
+
+<h2>3. Videos (YouTube)</h2>
+<p>Videos on the Site and in the App play in the embedded YouTube player. YouTube (Google) may collect information through cookies and similar technologies during playback, as described in <a href="https://policies.google.com/privacy" rel="noopener">Google's Privacy Policy</a>.</p>
+
+<h2>4. Third-party services</h2>
+<table class="ptable">
+<thead><tr><th>Service</th><th>Used in</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>Google Analytics</td><td>Site</td><td>Analytics</td></tr>
+<tr><td>Firebase Cloud Messaging (Google)</td><td>App</td><td>Sending notifications (only if you allow them)</td></tr>
+<tr><td>YouTube (Google)</td><td>Site, App</td><td>Video playback and thumbnails</td></tr>
+<tr><td>Cloudflare</td><td>Site, App</td><td>Delivering the Site and data, security</td></tr>
+<tr><td>Google Fonts</td><td>Site</td><td>Displaying fonts</td></tr>
+</tbody>
+</table>
+<p>Except where required by law, we do not share information with third parties beyond the purposes above, and we never sell it.</p>
+
+<h2>5. Player information and photos</h2>
+<ul>
+<li>Player names and results are based on public information such as official tournament results. <b>Minors are listed only when permission has been confirmed.</b></li>
+<li>Photos are published with the photographer's permission. We will take a photo down at the request of the person in it or their guardian.</li>
+<li>For corrections or removal requests, please contact us below.</li>
+</ul>
+
+<h2>6. Children</h2>
+<p>The Site and the App do not knowingly collect personal information from children.</p>
+
+<h2>7. Changes to this policy</h2>
+<p>When the features of the Site or the App change, we will update this page and its "Last updated" date.</p>
+
+<h2>8. Contact</h2>
+<p>Operated by: Japan Wrestling Channel (official)<br>
+For questions about how information is handled, or for removal and correction requests, please use the <a href="__CONTACT__">contact form</a> or email <a href="mailto:__EMAIL__">__EMAIL__</a>.</p>
+</main>
+"""
+
+
 def llms_txt(data, series_list, ctx):
     """AI(ChatGPT・Claude・Perplexityなど)向けに、サイトの概要と主なページを平文でまとめる"""
     n_videos = len(data.get("videos", []))
@@ -1127,6 +1258,14 @@ PAGE_CSS = """
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
 .page{padding-top:18px}
+.policy{padding-bottom:44px}
+.policy .upd{font-size:13px;color:var(--ink3);margin:0 0 8px}
+.policy h2{font-size:18px;font-weight:700;margin:28px 0 8px;padding-left:10px;border-left:3px solid var(--pink)}
+.policy p,.policy ul{max-width:70ch}
+.policy li{margin:0 0 8px}
+.ptable{border-collapse:collapse;font-size:14px;margin:4px 0 12px;max-width:70ch;width:100%}
+.ptable th,.ptable td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.ptable th{background:var(--surface);font-weight:700}
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
 .crumbs a{color:var(--ink2);text-decoration:none}.crumbs a:hover{color:var(--pink)}
@@ -1325,6 +1464,8 @@ def build(root=HERE, inline_css=False, only=None):
             pages.append((path, doc, data.get("as_of")))
             # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
             pages.append((*calendar_page.calendar_page(data, ctx, me), data.get("as_of")))
+            # プライバシーポリシー(アプリの審査・Firebase にも登録する URL)
+            pages.append((*privacy_page(ctx), PRIVACY_UPDATED))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))
             os.makedirs(os.path.dirname(contact), exist_ok=True)
             with open(contact, "w", encoding="utf-8") as f:
