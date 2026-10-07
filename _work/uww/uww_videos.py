@@ -13,6 +13,9 @@ UWW(世界レスリング連合)の YouTube から、日本人選手が出てい
 - 大会を丸ごと流す長時間の配信(45分以上)は外す
 - 「日本人選手」の列は、players.csv で 公開=はい、かつ 未成年=いいえ の人だけ書く(サイトの決まりと同じ)
 - 結果: _work/uww/uww_japan_videos.csv と _work/uww/summary.md
+- UWW のチャンネルは動画が7万本以上あり、1日に使える API の量では1回で読みきれないことがある。
+  そのため、どこまで読んだかを _work/uww/state.json に保存し、次に動かしたときは続きから読む
+  (ワークフローが uww-list ブランチから state.json を取ってくる)。全部読み終えると summary.md に「完了」と出る
 """
 import argparse
 import csv
@@ -20,6 +23,8 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -32,19 +37,44 @@ CHANNEL_TITLE = "United World Wrestling"
 CHANNEL_HANDLES = ["@UnitedWorldWrestling", "@wrestling", "@uww"]
 LONG_MIN = 45
 # YouTube API の1日の上限は 10,000回分。毎朝の更新(同じキーを使う。1日100回ほど)のぶんを残すため、
-# 再生リストの読み込みはこの回数で止める
-CALL_LIMIT = 7000
+# 1回に使うのはこの回数まで。残りは次に動かしたときに続きから読む
+CALL_LIMIT = 6000
 calls = 0
+STATE = os.path.join(HERE, "state.json")
+
+
+class OutOfQuota(Exception):
+    pass
 
 COLS = ["動画ID", "タイトル", "公開日", "長さ", "種類", "年代", "大会", "年", "見分けた理由", "確かさ", "日本人選手", "再生リスト", "URL"]
 
 
 def api(path, **params):
+    """つながらないときや YouTube 側のエラー(5xx)は、待ってからやり直す。1日の上限に達したら OutOfQuota"""
     global calls
+    if calls >= CALL_LIMIT:
+        raise OutOfQuota()
     calls += 1
     params["key"] = os.environ["YOUTUBE_API_KEY"]
-    with urllib.request.urlopen(API + path + "?" + urllib.parse.urlencode(params), timeout=60) as r:
-        return json.load(r)
+    url = API + path + "?" + urllib.parse.urlencode(params)
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(url, timeout=60) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", "replace")
+            if e.code == 403 and "quota" in body.lower():
+                raise OutOfQuota()
+            if e.code == 404:
+                return {}  # 消された再生リストなど
+            if e.code < 500 or attempt == 5:
+                raise
+        except (urllib.error.URLError, TimeoutError, ConnectionError, OSError):
+            if attempt == 5:
+                raise
+        wait = 2 ** attempt
+        print(f"つながらなかったので {wait}秒待ってやり直します({path})")
+        time.sleep(wait)
 
 
 def find_channel(want):
@@ -69,41 +99,103 @@ def pages(path, **params):
             return
 
 
-def fetch(channel):
+def load_state():
+    try:
+        with open(STATE, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+def save_state(st):
+    with open(STATE, "w", encoding="utf-8") as f:
+        json.dump(st, f, ensure_ascii=False, separators=(",", ":"))
+
+
+def is_candidate(title, description, players):
+    """日本人選手が出ているかもしれない動画か(詳しい分け方は classify でする)"""
+    return bool(JP_TITLE.search(title) or JP_DESC.search(description) or names_in(title, players))
+
+
+def fetch(channel, players):
+    """前回の続きから読む。読んだところまでを state に入れて返す(上限に達したら途中で止める)"""
     ch = find_channel(channel)
     print(f"読むチャンネル: {ch['snippet']['title']}({ch['id']})")
-    uploads = ch["contentDetails"]["relatedPlaylists"]["uploads"]
-    ids = [i["contentDetails"]["videoId"] for i in pages("playlistItems", part="contentDetails", playlistId=uploads)]
-    stats = {"uploads": len(ids)}
-    print(f"アップロードの一覧: {len(ids)}本")
-    # 再生リスト(大会ごとに作られている)。動画ID → 入っている再生リストの名前
-    in_lists = {}
-    lists = list(pages("playlists", part="snippet", channelId=ch["id"]))
-    stopped = 0
-    for n, pl in enumerate(lists):
-        if calls > CALL_LIMIT - len(lists) // 50 - 600:
-            stopped = len(lists) - n  # 残りの動画の詳しい情報を取る分を残して止める
-            print(f"API の呼び出しが多くなったので、残りの再生リスト {stopped}個は読みませんでした")
-            break
-        for i in pages("playlistItems", part="contentDetails", playlistId=pl["id"]):
-            in_lists.setdefault(i["contentDetails"]["videoId"], []).append(pl["snippet"]["title"])
-    seen = set(ids)
-    extra = [v for v in in_lists if v not in seen]
-    stats.update(playlists=len(lists) - stopped, playlists_skipped=stopped, from_playlists=len(extra))
-    print(f"再生リスト: {len(lists)}個・アップロードの一覧に無かった動画 {len(extra)}本")
-    videos = []
-    all_ids = ids + extra
-    for i in range(0, len(all_ids), 50):
-        r = api("videos", part="snippet,contentDetails", id=",".join(all_ids[i:i + 50]))
-        for v in r.get("items", []):
-            if v["snippet"].get("channelId") != ch["id"]:
-                continue  # 再生リストに入っているほかのチャンネルの動画は外す
-            videos.append({"id": v["id"], "title": v["snippet"]["title"], "description": v["snippet"].get("description", ""),
-                           "published": v["snippet"]["publishedAt"], "duration": v["contentDetails"].get("duration", ""),
-                           "playlists": in_lists.get(v["id"], [])})
-    stats["calls"] = calls
+    st = load_state()
+    if st.get("channel") != ch["id"]:
+        st = {"channel": ch["id"]}
+    st.setdefault("checked", [])           # videos で詳しい情報を取った動画ID
+    st.setdefault("queue", [])             # 見つけたが、まだ詳しい情報を取っていない動画ID
+    st.setdefault("done_playlists", [])    # 読み終えた再生リスト
+    st.setdefault("candidates", {})        # 日本人選手が出ているかもしれない動画
+    st.setdefault("vid_lists", {})         # 動画ID → 入っている再生リストのID(候補とまだ調べていない動画のぶんだけ)
+    st.setdefault("oldest_upload", "")
+    checked, queued = set(st["checked"]), set(st["queue"])
+
+    def add(vid):
+        if vid not in checked and vid not in queued:
+            queued.add(vid)
+            st["queue"].append(vid)
+
+    try:
+        if not st.get("uploads_done"):
+            uploads = ch["contentDetails"]["relatedPlaylists"]["uploads"]
+            for i in pages("playlistItems", part="contentDetails", playlistId=uploads):
+                add(i["contentDetails"]["videoId"])
+                d = i["contentDetails"].get("videoPublishedAt", "")[:10]
+                if d and (not st["oldest_upload"] or d < st["oldest_upload"]):
+                    st["oldest_upload"] = d
+            st["uploads_done"] = True
+            print(f"アップロードの一覧: {len(st['queue'])}本(YouTube API は新しい順に 20,000本まで)")
+        if "playlists" not in st:
+            st["playlists"] = {pl["id"]: pl["snippet"]["title"] for pl in pages("playlists", part="snippet", channelId=ch["id"])}
+            print(f"再生リスト: {len(st['playlists'])}個")
+        done = set(st["done_playlists"])
+        for pid in st["playlists"]:
+            if pid in done:
+                continue
+            for i in pages("playlistItems", part="contentDetails", playlistId=pid):
+                vid = i["contentDetails"]["videoId"]
+                if vid not in checked or vid in st["candidates"]:
+                    st["vid_lists"].setdefault(vid, [])
+                    if pid not in st["vid_lists"][vid]:
+                        st["vid_lists"][vid].append(pid)
+                add(vid)
+            st["done_playlists"].append(pid)
+            done.add(pid)
+        while st["queue"]:
+            batch = st["queue"][:50]
+            r = api("videos", part="snippet,contentDetails", id=",".join(batch))
+            for v in r.get("items", []):
+                if v["snippet"].get("channelId") != ch["id"]:
+                    continue  # 再生リストに入っているほかのチャンネルの動画は外す
+                t, d = v["snippet"]["title"], v["snippet"].get("description", "")
+                if is_candidate(t, d, players):
+                    st["candidates"][v["id"]] = {"title": t, "description": "JPN" if JP_DESC.search(d) else "",
+                                                 "published": v["snippet"]["publishedAt"], "duration": v["contentDetails"].get("duration", "")}
+            for vid in batch:
+                checked.add(vid)
+                st["checked"].append(vid)
+                if vid not in st["candidates"]:
+                    st["vid_lists"].pop(vid, None)
+            del st["queue"][:len(batch)]
+            queued.difference_update(batch)
+        st["complete"] = True
+    except OutOfQuota:
+        st["complete"] = False
+        print(f"API の1回分の上限({CALL_LIMIT}回)または1日の上限に達したので、ここまでを保存して止めます。続きは次に動かしたときに読みます")
+    except (urllib.error.URLError, OSError) as e:
+        # 何度やり直してもつながらなかったとき。ここまで読んだ分は保存して、次に続きから読む
+        st["complete"] = False
+        print(f"YouTube につながらなかったので、ここまでを保存して止めます({e})。続きは次に動かしたときに読みます")
+    save_state(st)
+    titles = st.get("playlists", {})
+    videos = [{"id": vid, **c, "playlists": [titles.get(p, "") for p in st["vid_lists"].get(vid, [])]}
+              for vid, c in st["candidates"].items()]
+    stats = {"checked": len(st["checked"]), "queue": len(st["queue"]), "playlists": len(titles),
+             "done_playlists": len(st["done_playlists"]), "oldest_upload": st["oldest_upload"], "calls": calls,
+             "complete": st["complete"], "total": ch["statistics"].get("videoCount", "")}
     print(f"API の呼び出し: {calls}回")
-    stats["oldest_upload"] = min((v["published"][:10] for v in videos if v["id"] in seen), default="")
     return ch, videos, stats
 
 
@@ -267,13 +359,17 @@ def classify(videos, players):
 
 def summary(ch, videos, rows, skipped_long, stats):
     c = lambda k: Counter(r[k] for r in rows).most_common()
+    done = stats.get("complete", True)
     lines = [f"## UWW の日本人選手の動画の一覧(チャンネル: {ch['snippet']['title']}・{ch['id']})", "",
-             f"- 読んだ動画: {len(videos)}本 → **日本人選手が出ている動画: {len(rows)}本**(長時間の配信 {skipped_long}本は外した)",
+             ("- **完了**:読める動画は全部読みました" if done else
+              f"- **途中**:続きがあります。もう一度「Run workflow」を押してください(1日1回、夕方4時より後に)"),
+             f"- 調べた動画: {stats.get('checked', len(videos))}本(チャンネルの動画は {stats.get('total', '?')}本)"
+             f"・まだ調べていない動画: {stats.get('queue', 0)}本・読んだ再生リスト: {stats.get('done_playlists', 0)}/{stats.get('playlists', 0)}個",
+             f"- **日本人選手が出ている動画: {len(rows)}本**(長時間の配信 {skipped_long}本は外した)",
              f"- 一覧: `_work/uww/uww_japan_videos.csv`",
-             f"- 取り方: アップロードの一覧 {stats.get('uploads', 0)}本(YouTube API は新しい順に 20,000本まで。いちばん古いもの {stats.get('oldest_upload', '')})"
-             f"+ 再生リスト {stats.get('playlists', 0)}個から {stats.get('from_playlists', 0)}本。"
-             f"{stats.get('oldest_upload', '')} より前で、どの再生リストにも入っていない動画は取れていない",
-             f"- API の呼び出し: {stats.get('calls', 0)}回(読まなかった再生リスト: {stats.get('playlists_skipped', 0)}個)", ""]
+             f"- YouTube API はアップロードの一覧を新しい順に 20,000本までしか返さない(いちばん古いもの {stats.get('oldest_upload', '')})。"
+             f"それより前で、どの再生リストにも入っていない動画は取れない",
+             f"- 今回の API の呼び出し: {stats.get('calls', 0)}回", ""]
     for k in ("種類", "年代", "大会", "確かさ", "年"):
         lines.append(f"### {k}ごと")
         lines += [f"- {name or '(分からない)'}: {n}本" for name, n in sorted(c(k), key=lambda x: (-x[1], x[0]))[:25]]
@@ -289,13 +385,14 @@ def main():
     ap.add_argument("--channel", default="")
     ap.add_argument("--sample", default="")
     a = ap.parse_args()
+    players = load_players()
     if a.sample:
         with open(a.sample, encoding="utf-8") as f:
             videos = json.load(f)
         ch, stats = {"id": "sample", "snippet": {"title": "sample"}}, {}
     else:
-        ch, videos, stats = fetch(a.channel)
-    rows, skipped = classify(videos, load_players())
+        ch, videos, stats = fetch(a.channel, players)
+    rows, skipped = classify(videos, players)
     with open(os.path.join(HERE, "uww_japan_videos.csv"), "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, COLS)
         w.writeheader()
