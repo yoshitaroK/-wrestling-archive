@@ -2,6 +2,8 @@ name: UWW の日本人の動画を集める
 
 # Issue #93。UWW(世界レスリング連合)の YouTube から、日本人選手が出ている動画の一覧を作る。
 # 手で「Run workflow」を押したときだけ動く(毎朝の更新とは別。サイトのページと data.json には何もしない)。
+# 動画が多く1回で読みきれないときは、どこまで読んだかを state.json に保存し、次に押したときに続きから読む。
+# API の1日の上限は日本時間の夕方4時ごろに戻るので、続きを読むときは1日1回、夕方4時より後に押す。
 # 結果は uww-list ブランチの _work/uww/ に保存する(Claude がそれで PR を作る)。
 on:
   workflow_dispatch:
@@ -28,6 +30,14 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: 前回どこまで読んだか(uww-list ブランチの state.json)を取ってくる
+        run: |
+          if git fetch --depth=1 origin uww-list 2>/dev/null; then
+            git checkout FETCH_HEAD -- _work/uww/state.json 2>/dev/null && echo "前回の続きから読みます" || echo "はじめから読みます"
+          else
+            echo "はじめから読みます"
+          fi
+
       - name: UWW の動画を読んで、日本人選手が出ている動画の一覧を作る
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -41,6 +51,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -B uww-list
-          git add _work/uww/uww_japan_videos.csv _work/uww/summary.md
+          git add _work/uww/uww_japan_videos.csv _work/uww/summary.md _work/uww/state.json
           git commit -m "UWW の日本人選手の動画の一覧を作る(#93)($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git push -f origin uww-list
