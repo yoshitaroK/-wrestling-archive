@@ -200,7 +200,7 @@ def official_bar(lang_link=""):
             f'{lang_link}</div></div>')
 
 
-NAV = [("/", "大会を検索", "Search"), ("/players/", "選手", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos")]
+NAV = [("/", "大会を検索", "Search"), ("/players/", "選手", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos"), ("/uww/", "国際大会", "International")]
 
 
 def nav_links(path):
@@ -276,7 +276,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 def footer(as_of):
     if i18n.en():
         return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
+<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
 <p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
@@ -285,7 +285,7 @@ def footer(as_of):
 </html>
 """
     return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -1389,7 +1389,8 @@ def extract_css(index_path):
     import calendar_page
     import photo_gallery
     import champions
-    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS
+    import uww_page
+    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS + uww_page.UWW_CSS
 
 
 def build(root=HERE, inline_css=False, only=None):
@@ -1492,6 +1493,9 @@ def build(root=HERE, inline_css=False, only=None):
             pages.append((path, doc, data.get("as_of")))
             # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
             pages.append((*calendar_page.calendar_page(data, ctx, me), data.get("as_of")))
+            # 国際大会(UWW)の動画のページ(uww_videos.csv があるときだけ作る)
+            import uww_page
+            pages.extend(uww_page.build(root, ctx, me))
             # プライバシーポリシー(アプリの審査・Firebase にも登録する URL)
             pages.append((*privacy_page(ctx), PRIVACY_UPDATED))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))

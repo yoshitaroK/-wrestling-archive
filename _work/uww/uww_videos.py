@@ -12,7 +12,8 @@ UWW(世界レスリング連合)の YouTube から、日本人選手が出てい
   (名前が合っても、すぐ後ろに JPN 以外の国名があれば、同じローマ字の外国人選手として外す)
 - 大会を丸ごと流す長時間の配信(45分以上)は外す
 - 「日本人選手」の列は、players.csv で 公開=はい、かつ 未成年=いいえ の人だけ書く(サイトの決まりと同じ)
-- 結果: _work/uww/uww_japan_videos.csv と _work/uww/summary.md
+- 結果: uww_videos.csv(リポジトリの一番上。サイトの /uww/ のページの元。uww_page.py)と _work/uww/summary.md
+- --new:週1回用(uww-weekly.yml)。アップロードの一覧の新しいほうから、まだ調べていない動画だけ読む
 - UWW のチャンネルは動画が7万本以上あり、1日に使える API の量では1回で読みきれないことがある。
   そのため、どこまで読んだかを _work/uww/state.json に保存し、次に動かしたときは続きから読む
   (ワークフローが uww-list ブランチから state.json を取ってくる)。全部読み終えると summary.md に「完了」と出る
@@ -115,6 +116,45 @@ def save_state(st):
 def is_candidate(title, description, players):
     """日本人選手が出ているかもしれない動画か(詳しい分け方は classify でする)"""
     return bool(JP_TITLE.search(title) or JP_DESC.search(description) or names_in(title, players))
+
+
+def fetch_new(channel, players):
+    """週1回用。アップロードの一覧を新しい順に読み、調べたことのある動画だけのページが出たら止める"""
+    ch = find_channel(channel)
+    st = load_state()
+    if st.get("channel") != ch["id"] or not st.get("complete"):
+        sys.exit("全部の動画をまだ読み終えていません。先に「UWW の日本人の動画を集める」を動かしてください")
+    checked = set(st["checked"])
+    uploads = ch["contentDetails"]["relatedPlaylists"]["uploads"]
+    new = []
+    try:
+        for i in pages("playlistItems", part="contentDetails", playlistId=uploads):
+            vid = i["contentDetails"]["videoId"]
+            if vid in checked:
+                break  # ここから先は前に調べた動画
+            new.append(vid)
+        for k in range(0, len(new), 50):
+            batch = new[k:k + 50]
+            r = api("videos", part="snippet,contentDetails", id=",".join(batch))
+            for v in r.get("items", []):
+                if v["snippet"].get("channelId") != ch["id"]:
+                    continue
+                t, d = v["snippet"]["title"], v["snippet"].get("description", "")
+                if is_candidate(t, d, players):
+                    st["candidates"][v["id"]] = {"title": t, "description": "JPN" if JP_DESC.search(d) else "",
+                                                 "published": v["snippet"]["publishedAt"], "duration": v["contentDetails"].get("duration", "")}
+            st["checked"] += batch
+    except (OutOfQuota, urllib.error.URLError, OSError) as e:
+        print(f"途中で止まりました({e})。読めたところまで保存します")
+    save_state(st)
+    print(f"新しい動画: {len(new)}本 / API の呼び出し: {calls}回")
+    titles = st.get("playlists", {})
+    videos = [{"id": vid, **c, "playlists": [titles.get(p, "") for p in st["vid_lists"].get(vid, [])]}
+              for vid, c in st["candidates"].items()]
+    stats = {"checked": len(st["checked"]), "queue": len(st["queue"]), "playlists": len(titles),
+             "done_playlists": len(st["done_playlists"]), "oldest_upload": st["oldest_upload"], "calls": calls,
+             "complete": True, "total": ch["statistics"].get("videoCount", ""), "new": len(new)}
+    return ch, videos, stats
 
 
 def fetch(channel, players):
@@ -298,9 +338,12 @@ def kind(t, sec):
 
 
 # 上から順に見て、最初に合ったものにする(「Olympic Qualifier」を「オリンピック」にしないよう、細かいものを先に)
-EVENTS = [(r"olympic qualif", "オリンピック予選"), (r"asian games", "アジア大会"), (r"olympic", "オリンピック"),
-          (r"world cup", "ワールドカップ"), (r"world (?:championships?|c'?ships)|\bworlds\b", "世界選手権"),
-          (r"asian (?:championships?|c'?ships)", "アジア選手権"),
+EVENTS = [(r"olympic qualif", "オリンピック予選"), (r"asian games", "アジア大会"),
+          (r"youth olympic|\byog\b", "ユース五輪"),
+          # 「Olympic champion」「Paris Olympic medalist」のような選手の紹介は大会名ではないので、Olympic Games / Olympics だけ
+          (r"olympic games|\bolympics\b", "オリンピック"),
+          (r"world cup", "ワールドカップ"), (r"world (?:wrestling )?(?:championships?|c'?ships)|\bworlds\b", "世界選手権"),
+          (r"asian (?:wrestling )?(?:championships?|c'?ships)", "アジア選手権"),
           (r"ranking series|grand prix|zagreb open|yasar dogu|ibrahim moustafa|kolov|poland open|muhamet malo|matteo pellicone|takhti",
            "ランキングシリーズ等")]
 
@@ -345,12 +388,16 @@ def classify(videos, players):
         if note or not names:
             player_col = (player_col + "・" if player_col else "") + (note or "照合なし")
         # 大会・年代・年は、タイトルに無ければ再生リストの名前から
-        y = re.search(r"\b(19[89]\d|20[0-4]\d)\b", t) or re.search(r"\b(19[89]\d|20[0-4]\d)\b", lists)
+        # 再生リストの名前(例:2025 World Wrestling Championships)で大会が分かるときは、そちらを先に使う
+        # (タイトルの「Paris Olympics final の再戦」のような言葉より確か)
+        ev_l = event_of(lists)
+        yr = r"\b(19[89]\d|20[0-4]\d)\b"
+        y = (re.search(yr, lists) or re.search(yr, t)) if ev_l else (re.search(yr, t) or re.search(yr, lists))
         age = age_group(t)
         if age.startswith("シニア"):
             age = age_group(lists)
         rows.append({"動画ID": v["id"], "タイトル": t, "公開日": v["published"][:10], "長さ": hms(sec), "種類": kind(t, sec),
-                     "年代": age, "大会": event_of(t) or event_of(lists), "年": y.group(1) if y else v["published"][:4],
+                     "年代": age, "大会": ev_l or event_of(t), "年": y.group(1) if y else v["published"][:4],
                      "見分けた理由": "・".join(reasons), "確かさ": sure, "日本人選手": player_col,
                      "再生リスト": lists, "URL": f"https://www.youtube.com/watch?v={v['id']}"})
     rows.sort(key=lambda r: r["公開日"], reverse=True)
@@ -366,7 +413,7 @@ def summary(ch, videos, rows, skipped_long, stats):
              f"- 調べた動画: {stats.get('checked', len(videos))}本(チャンネルの動画は {stats.get('total', '?')}本)"
              f"・まだ調べていない動画: {stats.get('queue', 0)}本・読んだ再生リスト: {stats.get('done_playlists', 0)}/{stats.get('playlists', 0)}個",
              f"- **日本人選手が出ている動画: {len(rows)}本**(長時間の配信 {skipped_long}本は外した)",
-             f"- 一覧: `_work/uww/uww_japan_videos.csv`",
+             f"- 一覧: `uww_videos.csv`(サイトの /uww/ のページの元)",
              f"- YouTube API はアップロードの一覧を新しい順に 20,000本までしか返さない(いちばん古いもの {stats.get('oldest_upload', '')})。"
              f"それより前で、どの再生リストにも入っていない動画は取れない",
              f"- 今回の API の呼び出し: {stats.get('calls', 0)}回", ""]
@@ -384,6 +431,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--channel", default="")
     ap.add_argument("--sample", default="")
+    ap.add_argument("--new", action="store_true", help="週1回用。新しい動画だけ読む")
     ap.add_argument("--offline", action="store_true", help="API を使わず、state.json に保存した動画だけで一覧を作り直す")
     a = ap.parse_args()
     players = load_players()
@@ -400,10 +448,12 @@ def main():
         stats = {"checked": len(st["checked"]), "queue": len(st["queue"]), "playlists": len(titles),
                  "done_playlists": len(st["done_playlists"]), "oldest_upload": st["oldest_upload"], "calls": 0,
                  "complete": st.get("complete", False), "total": "70071"}
+    elif a.new:
+        ch, videos, stats = fetch_new(a.channel, players)
     else:
         ch, videos, stats = fetch(a.channel, players)
     rows, skipped = classify(videos, players)
-    with open(os.path.join(HERE, "uww_japan_videos.csv"), "w", encoding="utf-8-sig", newline="") as f:
+    with open(os.path.join(ROOT, "uww_videos.csv"), "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, COLS)
         w.writeheader()
         w.writerows(rows)
