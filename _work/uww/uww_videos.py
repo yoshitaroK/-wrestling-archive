@@ -299,8 +299,8 @@ def kind(t, sec):
 
 # 上から順に見て、最初に合ったものにする(「Olympic Qualifier」を「オリンピック」にしないよう、細かいものを先に)
 EVENTS = [(r"olympic qualif", "オリンピック予選"), (r"asian games", "アジア大会"), (r"olympic", "オリンピック"),
-          (r"world cup", "ワールドカップ"), (r"world championships?|\bworlds\b", "世界選手権"),
-          (r"asian championships?", "アジア選手権"),
+          (r"world cup", "ワールドカップ"), (r"world (?:championships?|c'?ships)|\bworlds\b", "世界選手権"),
+          (r"asian (?:championships?|c'?ships)", "アジア選手権"),
           (r"ranking series|grand prix|zagreb open|yasar dogu|ibrahim moustafa|kolov|poland open|muhamet malo|matteo pellicone|takhti",
            "ランキングシリーズ等")]
 
@@ -384,12 +384,22 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--channel", default="")
     ap.add_argument("--sample", default="")
+    ap.add_argument("--offline", action="store_true", help="API を使わず、state.json に保存した動画だけで一覧を作り直す")
     a = ap.parse_args()
     players = load_players()
     if a.sample:
         with open(a.sample, encoding="utf-8") as f:
             videos = json.load(f)
         ch, stats = {"id": "sample", "snippet": {"title": "sample"}}, {}
+    elif a.offline:
+        st = load_state()
+        titles = st.get("playlists", {})
+        videos = [{"id": vid, **c, "playlists": [titles.get(p, "") for p in st["vid_lists"].get(vid, [])]}
+                  for vid, c in st["candidates"].items()]
+        ch = {"id": st["channel"], "snippet": {"title": CHANNEL_TITLE}}
+        stats = {"checked": len(st["checked"]), "queue": len(st["queue"]), "playlists": len(titles),
+                 "done_playlists": len(st["done_playlists"]), "oldest_upload": st["oldest_upload"], "calls": 0,
+                 "complete": st.get("complete", False), "total": "70071"}
     else:
         ch, videos, stats = fetch(a.channel, players)
     rows, skipped = classify(videos, players)
