@@ -13,6 +13,7 @@ import html
 import json
 import os
 import re
+import urllib.parse
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
@@ -568,13 +569,20 @@ def source_label(src):
     return N(t) if t != "出典" else L("出典", "Source")
 
 
+def source_url_text(url):
+    """出典のリンクの横に出すアドレス。英語版はドメインだけにする(日本語のファイル名を英語版に出さないため。#74)"""
+    if i18n.en():
+        return urllib.parse.urlsplit(url).netloc or re.sub("^https?://", "", url)
+    return re.sub("^https?://", "", url)
+
+
 def info_details(ev):
     rows = []
     if ev.get("evidence"):
         rows.append(f"<dt>{L('記録の種類', 'Record type')}</dt><dd>{e(N(ev['evidence']))}{(L('(', ' (') + e(N(ev['jwf_relationship'])) + ')') if ev.get('jwf_relationship') else ''}</dd>")
     if ev.get("sources"):
         rows.append(f"<dt>{L('出典', 'Sources')}</dt><dd><ul class=\"sources\">" + "".join(
-            f'<li><a href="{e(x["url"])}" target="_blank" rel="noopener">{e(source_label(x))}</a> <span class="url">{e(re.sub("^https?://", "", x["url"]))}</span></li>'
+            f'<li><a href="{e(x["url"])}" target="_blank" rel="noopener">{e(source_label(x))}</a> <span class="url">{e(source_url_text(x["url"]))}</span></li>'
             for x in ev["sources"]) + "</ul></dd>")
     notes = list(ev.get("notes") or [])
     for x in ev.get("schedule_history") or []:
