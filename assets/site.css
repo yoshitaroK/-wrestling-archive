@@ -455,6 +455,13 @@ table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px
 table.results th,table.results td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
 table.results th{color:var(--ink3);font-weight:500;font-size:12px}
 table.results td b{color:var(--pink)}
+.pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}
+.pager button{min-width:38px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.pager button[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager .pg-n{font-size:12px;color:var(--ink3);margin-left:4px}
+.uww-pl{scroll-margin-top:72px}
+.uww-pl .v[hidden]{display:none}
 
 .cal{padding-bottom:40px}
 .cal-bar{display:flex;align-items:center;gap:10px;margin:14px 0 8px;flex-wrap:wrap}
@@ -605,3 +612,4 @@ table.champs td.none{color:var(--ink3)}
 .uww-g .vlist{margin-top:10px}
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
 .uww-who a{margin-right:10px;font-weight:700}
+.vm .uww-ev{font-weight:700;color:var(--ink2)}

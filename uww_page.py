@@ -52,7 +52,7 @@ def load(root, ctx):
                 if "照合なし" in r["日本人選手"] or not names or len(names) < len(JP_MARK.findall(r["タイトル"])):
                     continue
             out[cat].append({"id": r["動画ID"], "t": r["タイトル"], "p": r["公開日"], "du": r["長さ"], "k": r["種類"],
-                             "ev": r["大会"], "y": r["年"], "players": names})
+                             "ev": r["大会"], "y": r["年"], "c": cat, "players": names})
     for lst in out.values():
         lst.sort(key=lambda v: (v["p"], v["id"]), reverse=True)
     return out
@@ -67,15 +67,18 @@ def ev_name(ev):
     return L(ev or "その他の大会", EV_EN.get(ev, ev))
 
 
-def row(v, bp):
+def row(v, bp, me=None):
+    """動画1本の行。me(選手ID)を渡すと選手ページ用:大会名と年を出し、「出ている選手」からその選手を外す"""
     e = bp.e
     url = bp.yt(v["id"])
     meta = [f'<span class="d">{L("公開日", "Published")} {e(bp.fmt_date(v["p"]))}</span>']
+    if me:
+        meta.insert(0, f'<span class="uww-ev">{e(ev_name(v["ev"]))}{" " + e(v["y"]) if v["y"] else ""}{" · " + e(cat_name(v["c"])) if v["c"] != "senior" else ""}</span>')
     if v["du"]:
         meta.append(f'<span class="tabnum">{e(v["du"])}</span>')
     meta.append(f'<span>{e(L(v["k"], KINDS.get(v["k"], "Other")))}</span>')
     pl = "".join(f'<a href="{U("/players/" + p["id"] + "/")}">{e((p["roman"] or p["name"]) if i18n.en() else p["name"])}</a>'
-                 for p in v["players"])
+                 for p in v["players"] if p["id"] != me)
     who = f'<div class="uww-who">{L("出ている選手:", "Japanese wrestlers: ")}{pl}</div>' if pl else ""
     return (f'<li class="v"><a href="{e(url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{bp.thumb(v["id"])}</a>'
             f'<div><div class="vt"><a href="{e(url)}" target="_blank" rel="noopener"{L(" lang=" + chr(34) + "en" + chr(34), "")}>{e(v["t"])}</a></div>'
@@ -193,4 +196,5 @@ UWW_CSS = """
 .uww-g .vlist{margin-top:10px}
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
 .uww-who a{margin-right:10px;font-weight:700}
+.vm .uww-ev{font-weight:700;color:var(--ink2)}
 """

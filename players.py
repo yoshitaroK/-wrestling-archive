@@ -228,14 +228,18 @@ def player_page(p, ctx, bp, card=""):
     club = N(p["club"])
     crumbs = [(L("トップ", "Home"), "/"), (L("選手", "Players"), "/players/"), (name, None)]
     nv, nr = len(p["videos"]), len(p["results"])
+    uww = ctx.get("uww_by_player", {}).get(p["id"], [])
+    nu = len(uww)
     if i18n.en():
         desc = f"{name}{(' (' + club + ')') if club else ''}: " + (
-            f"{i18n.plural(nr, 'tournament result')} and {i18n.plural(nv, 'match video')}." if nr else f"{i18n.plural(nv, 'match video')}.")
+            f"{i18n.plural(nr, 'tournament result')} and {i18n.plural(nv, 'match video')}" if nr else f"{i18n.plural(nv, 'match video')}")
+        desc += f", plus {i18n.plural(nu, 'video')} from international events." if nu else "."
     else:
         parts = [f"{name}選手"]
         if club:
             parts.append(f"({club})")
-        parts.append(f"の大会成績{nr}件と試合動画{nv}本。" if nr else f"の試合動画{nv}本。")
+        parts.append(f"の大会成績{nr}件と試合動画{nv}本" if nr else f"の試合動画{nv}本")
+        parts.append(f"、国際大会の動画{nu}本。" if nu else "。")
         desc = "".join(parts)
     person = {"@type": "Person", "name": name, "url": SITE + U(path)}
     if p["kana"] and not i18n.en():
@@ -245,7 +249,8 @@ def player_page(p, ctx, bp, card=""):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "ProfilePage", "url": SITE + U(path), "mainEntity": person}]}
     # SNS 用画像(og_cards.py で作ったもの)。作れなかったときは試合動画のサムネイル
-    og = card or (f"https://i.ytimg.com/vi/{p['videos'][0]['id']}/hqdefault.jpg" if p["videos"] else "")
+    first = (p["videos"] or uww)[:1]
+    og = card or (f"https://i.ytimg.com/vi/{first[0]['id']}/hqdefault.jpg" if first else "")
     h = bp.head(L(f"{name} 選手 大会成績・試合動画|{bp.SITE_NAME}", f"{name} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
     h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
     if i18n.en():
@@ -273,9 +278,40 @@ def player_page(p, ctx, bp, card=""):
         h += "</p>"
     if p["videos"]:
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
+    if uww:
+        h += uww_videos_html(p, uww, bp)
     h += optout_note()
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
+
+
+UWW_PER_PAGE = 10
+# 国際大会の動画を UWW_PER_PAGE 本ずつのページに分ける。JavaScript が動かないときは全部出したまま
+PAGER_JS = ("<script>(function(){var s=document.currentScript.previousElementSibling,l=s.querySelector('.vlist'),"
+            "it=[].slice.call(l.children),n=+s.dataset.per,pg=Math.ceil(it.length/n),nav=document.createElement('nav'),cur=0;"
+            "if(pg<2)return;nav.className='pager';nav.setAttribute('aria-label',s.dataset.label);"
+            "function show(k,go){cur=k;it.forEach(function(x,i){x.hidden=i<k*n||i>=(k+1)*n;});"
+            "var h='<button type=\"button\" data-k=\"'+(k-1)+'\"'+(k?'':' disabled')+' aria-label=\"'+s.dataset.prev+'\">‹</button>';"
+            "for(var i=0;i<pg;i++)h+='<button type=\"button\" data-k=\"'+i+'\"'+(i==k?' aria-current=\"page\"':'')+'>'+(i+1)+'</button>';"
+            "h+='<button type=\"button\" data-k=\"'+(k+1)+'\"'+(k<pg-1?'':' disabled')+' aria-label=\"'+s.dataset.next+'\">›</button>';"
+            "h+='<span class=\"pg-n\">'+s.dataset.range.replace('{a}',k*n+1).replace('{b}',Math.min((k+1)*n,it.length))+'</span>';"
+            "nav.innerHTML=h;if(go)s.scrollIntoView({block:'start'});}"
+            "nav.addEventListener('click',function(ev){var b=ev.target.closest('button');if(b&&!b.disabled)show(+b.dataset.k,1);});"
+            "l.after(nav);show(0);})();</script>")
+
+
+def uww_videos_html(p, vids, bp):
+    """選手ページの「国際大会の動画」(UWW の公式 YouTube。新しい順に UWW_PER_PAGE 本ずつのページ)"""
+    import uww_page
+    e, n = bp.e, len(vids)
+    rng = L(f"{{a}}〜{{b}}本目/{n}本", f"{{a}}–{{b}} of {n}")
+    return (f'<section class="vgroup uww-pl" id="uww" data-per="{UWW_PER_PAGE}" data-label="{L("国際大会の動画のページ", "International video pages")}"'
+            f' data-prev="{L("前のページ", "Previous page")}" data-next="{L("次のページ", "Next page")}" data-range="{e(rng)}">'
+            f'<h3>{L("国際大会の動画", "International videos")}<small>{e(L(f"{n}本・世界レスリング連合(UWW)の公式 YouTube", f"{i18n.plural(n, 'video')} from the official YouTube channel of United World Wrestling (UWW)"))}</small></h3>'
+            f'<ul class="vlist">{"".join(uww_page.row(v, bp, p["id"]) for v in vids)}</ul>'
+            f'<p class="hint">{L("動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。", "Titles are shown as published by UWW.")}'
+            f' <a href="{U("/uww/")}">{L("国際大会の動画をすべて見る", "See all international videos")}</a></p>'
+            f'</section>' + PAGER_JS)
 
 
 def index_page(players, ctx, bp):
@@ -465,6 +501,13 @@ table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px
 table.results th,table.results td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
 table.results th{color:var(--ink3);font-weight:500;font-size:12px}
 table.results td b{color:var(--pink)}
+.pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}
+.pager button{min-width:38px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.pager button[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager .pg-n{font-size:12px;color:var(--ink3);margin-left:4px}
+.uww-pl{scroll-margin-top:72px}
+.uww-pl .v[hidden]{display:none}
 """
 
 
@@ -481,6 +524,17 @@ def prepare(root, data, ctx):
             if r.get("開催回ID"):
                 winners[r["開催回ID"]].append((p, r))
     ctx["players"], ctx["winners"] = players, winners
+    # 国際大会(UWW)の動画を選手ごとに(/uww/ のページに出しているものと同じ。新しい順)
+    import uww_page
+    uww = defaultdict(list)
+    for lst in uww_page.load(root, ctx).values():
+        for v in lst:
+            for q in v["players"]:
+                uww[q["id"]].append(v)
+    for lst in uww.values():
+        lst.sort(key=lambda v: (v["p"], v["id"]), reverse=True)
+    ctx["uww_by_player"] = uww
+    report["uww_video_links"] = sum(len(x) for x in uww.values())
     ctx["events_by_id"] = {ev["id"]: ev for ev in data.get("events", [])}
     write_search_index(root, players)
     return report
