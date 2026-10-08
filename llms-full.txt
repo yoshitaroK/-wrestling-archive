@@ -1,0 +1,506 @@
+# レスリング配信アーカイブ(Japan Wrestling Channel アーカイブ)
+
+> YouTubeで公開されている日本のレスリング大会の配信・動画3,354本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。
+
+- サイト: https://japanwrestlingchannel.com/
+- データ更新日: 2026年10月8日
+- お問い合わせ: https://japanwrestlingchannel.com/contact.html
+
+## 主なページ
+- [大会一覧](https://japanwrestlingchannel.com/events/): 配信動画のある66大会の一覧
+- [技術動画](https://japanwrestlingchannel.com/technique/): レスリングクラブが公開している技術・トレーニング動画を、タックル・投げ技・グラウンドなどの区分で整理
+- [写真](https://japanwrestlingchannel.com/photos/): 大会で撮影された写真(撮影者の許可を得て掲載)を大会ごとに掲載
+- [大会カレンダー](https://japanwrestlingchannel.com/events/calendar/): 開催予定・過去の大会を月ごとに表示
+- [選手検索](https://japanwrestlingchannel.com/players/): 選手ごとの出場大会・成績・動画
+- [歴代優勝者](https://japanwrestlingchannel.com/champions/): 主な大会の階級ごとの歴代優勝者
+- [検索ページ](https://japanwrestlingchannel.com/): 大会名・通称・動画タイトルで検索
+- [English version](https://japanwrestlingchannel.com/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)
+- [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
+
+## 詳しい一覧
+- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)の一覧
+
+## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
+- [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
+- [藤波朱理杯 三重県少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-fujinami-cup/): 2025〜2026年 動画14本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/): 2014〜2026年 動画242本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/): 2014〜2026年 動画92本
+- [東日本学生選手権（春季大会）](https://japanwrestlingchannel.com/events/east-spring/): 2014〜2026年 動画155本
+- [全日本社会人選手権](https://japanwrestlingchannel.com/events/shakaijin/): 2022〜2026年 動画30本
+- [茨城ジュニア大会](https://japanwrestlingchannel.com/events/x-ibaraki-junior/): 2026年 動画3本
+- [東日本少年少女レスリング選手権大会](https://japanwrestlingchannel.com/events/x-east-kids/): 2026年 動画6本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/): 2015〜2026年 動画147本
+- [杉並区区民体育祭・杉並区レスリング大会](https://japanwrestlingchannel.com/events/x-suginami/): 2025〜2026年 動画6本
+- [JOC杯全日本ジュニア・U20・U17選手権](https://japanwrestlingchannel.com/events/joc-junior/): 2022〜2026年 動画56本
+- [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/): 2015〜2026年 動画102本
+- [第11回日野レスリング選手権大会](https://japanwrestlingchannel.com/events/local-283989/): 2026年 動画6本
+- [関東少年少女レスリング横須賀大会](https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/): 2023〜2026年 動画6本
+- [堺市レスリング連盟 少年少女レスリング選手権](https://japanwrestlingchannel.com/events/local-282985/): 2026年 動画6本
+- [全日本マスターズ選手権](https://japanwrestlingchannel.com/events/masters/): 2016〜2026年 動画9本
+- [高谷惣亮杯(ゴールドキッズ年末合宿)](https://japanwrestlingchannel.com/events/x-takatani-cup/): 2022〜2025年 動画8本
+- [第24回兵庫県ジュニアレスリングオープン大会](https://japanwrestlingchannel.com/events/local-280653/): 2025年 動画4本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/): 2014〜2025年 動画475本
+- [全国中学選抜・全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/): 2014〜2025年 動画120本
+- [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2025年 動画104本
+- [東日本大学女子リーグ戦](https://japanwrestlingchannel.com/events/east-women-league/): 2024〜2025年 動画3本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2025年 動画118本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2025年 動画92本
+- [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/): 2023〜2025年 動画2本
+- [BUNSUGI International Wrestling Friendly Match](https://japanwrestlingchannel.com/events/x-bunsugi/): 2025年 動画1本
+- [COMBAT WRESTLING ASIA](https://japanwrestlingchannel.com/events/x-combat-asia/): 2025年 動画1本
+- [関東高校総体・高校選手権](https://japanwrestlingchannel.com/events/regional-関東-summer/): 2021〜2025年 動画32本
+- [第10回日野町少年少女大会](https://japanwrestlingchannel.com/events/local-264485/): 2025年 動画6本
+- [第18回堺市レスリング連盟少年少女レスリング選手権大会](https://japanwrestlingchannel.com/events/local-263382/): 2025年 動画6本
+- [関東高校リーグ戦(齋藤つよし杯)](https://japanwrestlingchannel.com/events/x-kanto-hs-league/): 2024年 動画4本
+- [兵庫県ジュニアオープン(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/): 2023〜2024年 動画6本
+- [オリンピック(海外)](https://japanwrestlingchannel.com/events/x-olympics/): 2024年 動画12本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/): 2014〜2024年 動画85本
+- [押立杯(大会名の確認が必要)](https://japanwrestlingchannel.com/events/x-oshitate/): 2024年 動画2本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/): 2014〜2024年 動画355本
+- [巻キッズレスリング大会](https://japanwrestlingchannel.com/events/x-maki-kids/): 2024年 動画1本
+- [日野町少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-hino-junior/): 2023〜2024年 動画12本
+- [世界ベテランズ選手権(海外)](https://japanwrestlingchannel.com/events/x-veterans-world/): 2018年 動画3本
+- [堺市少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-sakai-junior/): 2023〜2024年 動画7本
+- [関東高校選抜・新人・全国高校選抜予選](https://japanwrestlingchannel.com/events/regional-関東-qualifier/): 2024年 動画24本
+- [日韓高校選抜交流・交歓競技会（日本開催・親善試合）](https://japanwrestlingchannel.com/events/japan-korea-highschool/): 2023年 動画1本
+- [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/): 2014〜2023年 動画53本
+- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/): 2021〜2023年 動画37本
+- [日本代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/): 2018〜2023年 動画36本
+- [ビーチレスリング・ワールドシリーズ(海外)](https://japanwrestlingchannel.com/events/x-beach-world-series/): 2023年 動画1本
+- [U23日本代表選考会・U23全日本選手権](https://japanwrestlingchannel.com/events/u23-selection/): 2023年 動画2本
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/): 2016〜2023年 動画41本
+- [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/): 2023年 動画4本
+- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/): 2022年 動画20本
+- [U13ジャパンオープン・レスリングトーナメント](https://japanwrestlingchannel.com/events/u13/): 2023年 動画15本
+- [全国少年少女選抜選手権](https://japanwrestlingchannel.com/events/kids-senbatsu/): 2023年 動画4本
+- [近畿少年少女選手権・兵庫県ジュニアオープン](https://japanwrestlingchannel.com/events/x-kinki-kids/): 2022年 動画4本
+- [野田オープン大会](https://japanwrestlingchannel.com/events/x-noda-open/): 2022年 動画42本
+- [全国少年少女選手権](https://japanwrestlingchannel.com/events/kids/): 2022年 動画25本
+- [茨城オープン](https://japanwrestlingchannel.com/events/x-ibaraki-open/): 2022年 動画17本
+- [東京都団体戦予選](https://japanwrestlingchannel.com/events/x-tokyo-team/): 2022年 動画13本
+- [アジア選手権(海外)](https://japanwrestlingchannel.com/events/x-asian-championships/): 2021年 動画2本
+- [全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/): 2014〜2022年 動画143本
+- [群馬県千代田町少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-chiyoda-kids/): 2021年 動画59本
+- [西日本学生選手権](https://japanwrestlingchannel.com/events/west-championship/): 2014〜2021年 動画41本
+- [関東中学生選手権 東京代表選考会](https://japanwrestlingchannel.com/events/x-kanto-jh-tokyo/): 2021年 動画9本
+- [西日本学生秋季リーグ戦](https://japanwrestlingchannel.com/events/west-autumn-league/): 2014〜2020年 動画20本
+- [国民体育大会・国民スポーツ大会](https://japanwrestlingchannel.com/events/kokutai/): 2014〜2016年 動画57本
+- [西日本学生新人選手権](https://japanwrestlingchannel.com/events/west-rookie/): 2014〜2015年 動画31本
+- [西日本学生春季リーグ戦](https://japanwrestlingchannel.com/events/west-spring-league/): 2015年 動画7本
+
+## 開催回の一覧(新しい順)
+
+### 全国社会人オープン選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/shakaijin-open/
+- [第43回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2026/): 2026年10月31日〜11月1日(予定)・埼玉・動画6本
+- [第42回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2025/): 2025年11月1日〜2日・埼玉・富士見市立市民総合体育・動画6本
+- [第41回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2024/): 2024年11月2日〜3日・埼玉・富士見市立市民総合体育館・動画6本
+- [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/2023/): 2023年10月21日〜22日・埼玉・富士見市立市民総合体育館・動画5本
+- [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/2022/): 2022年10月29日〜30日・埼玉・富士見市立市民総合体育館・動画6本
+
+### 藤波朱理杯 三重県少年少女レスリング大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-fujinami-cup/
+- [藤波朱理杯 三重県少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-fujinami-cup/2026/): 2026年8月29日〜30日・動画6本
+- [藤波朱理杯 三重県少年少女レスリング大会(第1回)](https://japanwrestlingchannel.com/events/x-fujinami-cup/2025/): 2025年8月30日〜31日・動画8本
+
+### 全日本学生選手権（インカレ）
+- 大会ページ: https://japanwrestlingchannel.com/events/intercollegiate/
+- [文部科学大臣杯 UNIVAS CUP 令和8年度 全日本学生レスリング選手権大会](https://japanwrestlingchannel.com/events/intercollegiate/2026/): 2026年8月20日〜23日・東京・駒沢体育館・動画16本・写真あり
+- [文部科学大臣杯 令和7年度 全日本学生レスリング選手権大会](https://japanwrestlingchannel.com/events/intercollegiate/2025/): 2025年8月21日〜24日・東京・駒沢体育館・動画34本
+- [文部科学大臣杯 令和6年度全日本学生レスリング選手権大会](https://japanwrestlingchannel.com/events/intercollegiate/2024/): 2024年8月23日〜26日・東京・駒沢屋内球技場・動画16本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2023/): 2023年8月26日〜29日・神奈川・横須賀アリーナ・動画16本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2022/): 2022年8月15日〜18日・東京・駒沢体育館・動画16本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2021/): 2021年10月13日〜11月5日・山口・キリンビバレッジ周南総合スポーツセンター/東京・駒沢体育館・動画16本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2019/): 2019年8月20日〜23日・東京・駒沢体育館・動画20本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2017/): 2017年8月28日〜31日・東京・駒沢体育館・動画21本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2016/): 2016年8月25日〜28日・大阪・堺市金岡公園体育館・動画5本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2015/): 2015年8月18日〜21日・東京・駒沢体育館・動画24本
+- [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2014/): 2014年8月26日〜29日・岐阜・岐阜メモリアルセンター・動画42本
+
+### 全国高校生グレコローマン選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/highschool-greco/
+- [第42回全国高校生グレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/highschool-greco/2026/): 2026年8月14日〜16日・滋賀・栗東市民体育館・動画12本・写真あり
+- [第41回全国高校生グレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/highschool-greco/2025/): 2025年8月15日〜17日・滋賀・大津市ウカルちゃんアリーナ・動画14本
+- [第40回全国高校生グレコローマンスタイルレスリング選手権大会](https://japanwrestlingchannel.com/events/highschool-greco/2024/): 2024年8月18日〜20日・滋賀・大津市ウカルちゃんアリーナ・動画14本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2023/): 2023年8月18日〜20日・滋賀県大津市・ウカルちゃんアリーナ・動画12本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2022/): 2022年8月17日〜19日・大阪・堺市金岡公園体育館・動画12本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2021/): 2021年7月17日〜19日・滋賀・大津市ウカルちゃんアリーナ・動画12本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2015/): 2015年8月16日〜18日・大阪・堺市金岡公園体育館・動画8本
+- [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2014/): 2014年8月17日〜19日・大阪・堺市金岡公園体育館・動画8本
+
+### 東日本学生選手権（春季大会）
+- 大会ページ: https://japanwrestlingchannel.com/events/east-spring/
+- [令和8年度 東日本学生レスリング選手権大会(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2026/): 2026年7月13日〜15日・東京・駒沢体育館・動画11本・写真あり
+- [令和7年度 東日本学生レスリング選手権大会(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2025/): 2025年7月9日〜11日・東京・駒沢体育館・動画9本
+- [東日本学生選手権(春季)・女子 / 新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-spring/2024/): 2024年7月8日〜10日・東京・駒沢屋内球技場・動画9本
+- [東日本学生選手権(春季大会)・女子 / 新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-spring/2023/): 2023年6月26日〜28日・東京・駒沢屋内球技場・動画10本
+- [東日本学生選手権(春季)・新人戦 / 女子の部 / 選手権の部](https://japanwrestlingchannel.com/events/east-spring/2022/): 2022年6月29日〜7月1日・東京・駒沢体育館・動画8本
+- [東日本学生春季選手権・女子の部 / 新人戦の部 / 選手権の部](https://japanwrestlingchannel.com/events/east-spring/2019/): 2019年6月26日〜28日・東京・駒沢体育館・動画29本
+- [東日本学生選手権(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2016/): 2016年6月23日〜24日・東京・駒沢体育館・動画23本
+- [東日本学生選手権(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2015/): 2015年6月24日〜26日・東京・駒沢体育館・動画17本
+- [東日本学生選手権(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2014/): 2014年6月25日〜27日・東京・駒沢体育館・動画16本
+
+### 全日本社会人選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/shakaijin/
+- [第73回 全日本社会人レスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin/2026/): 2026年7月11日〜12日・愛知・名古屋市稲永スポーツセンター・動画6本・写真あり
+- [第72回 全日本社会人レスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin/2025/): 2025年7月12日〜13日・埼玉・富士見市立市民総合体育館・動画6本
+- [第71回 全日本社会人レスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin/2024/): 2024年6月29日〜30日・埼玉・富士見市立市民体育館・動画6本
+- [全日本社会人選手権](https://japanwrestlingchannel.com/events/shakaijin/2023/): 2023年7月1日〜2日・埼玉・富士見市立市民総合体育館・動画6本
+- [全日本社会人選手権](https://japanwrestlingchannel.com/events/shakaijin/2022/): 2022年7月2日〜3日・埼玉・富士見市立総合体育館・動画6本
+
+### 茨城ジュニア大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-ibaraki-junior/
+- [茨城ジュニア大会](https://japanwrestlingchannel.com/events/x-ibaraki-junior/2026/): 2026年7月4日・動画3本
+
+### 東日本少年少女レスリング選手権大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-east-kids/
+- [東日本少年少女レスリング選手権大会(第40回)](https://japanwrestlingchannel.com/events/x-east-kids/2026/): 2026年6月28日・動画6本
+
+### 東日本学生リーグ戦
+- 大会ページ: https://japanwrestlingchannel.com/events/east-league/
+- [東京都知事杯 令和8年度 東日本学生レスリングリーグ戦](https://japanwrestlingchannel.com/events/east-league/2026/): 2026年6月16日〜18日・東京・駒沢体育館・動画11本・写真あり
+- [東京都知事杯 令和7年度 東日本学生レスリングリーグ戦](https://japanwrestlingchannel.com/events/east-league/2025/): 2025年5月26日〜28日・東京・駒沢屋内球技場・動画10本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2024/): 2024年6月24日〜26日・東京・駒沢屋内球技場・動画17本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2023/): 2023年5月16日〜18日・東京・駒沢屋内球技場・動画14本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2022/): 2022年5月18日〜20日・東京・駒沢体育館・動画61本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2019/): 2019年5月13日〜15日・東京・駒沢体育館・動画13本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2017/): 2017年5月17日〜19日・東京・駒沢体育館・動画11本
+- [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2015/): 2015年5月20日〜22日・東京・駒沢体育館・動画10本
+
+### 杉並区区民体育祭・杉並区レスリング大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-suginami/
+- [杉並区区民体育祭・杉並区レスリング大会(第79回)](https://japanwrestlingchannel.com/events/x-suginami/2026/): 2026年5月10日・動画4本
+- [杉並区区民体育祭・杉並区レスリング大会(第78回)](https://japanwrestlingchannel.com/events/x-suginami/2025/): 2025年6月29日・動画2本
+
+### JOC杯全日本ジュニア・U20・U17選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/joc-junior/
+- [JOCジュニアオリンピックカップ 2026年U17,U20全日本レスリング選手権大会](https://japanwrestlingchannel.com/events/joc-junior/2026/): 2026年4月25日〜26日・神奈川・横浜武道館・動画10本・写真あり
+- [2025年度 JOCジュニアオリンピックカップ 全日本ジュニアレスリング選手権大会](https://japanwrestlingchannel.com/events/joc-junior/2025/): 2025年4月26日〜27日・神奈川・横浜武道館・動画10本
+- [2024年度 JOCジュニアオリンピックカップ 全日本ジュニアレスリング選手権大会](https://japanwrestlingchannel.com/events/joc-junior/2024/): 2024年4月27日〜28日・神奈川・横浜武道館・動画10本
+- [JOCジュニアオリンピックカップ（U20・U17）](https://japanwrestlingchannel.com/events/joc-junior/2023/): 2023年4月15日〜16日・神奈川・横浜武道館・動画13本
+- [JOCジュニアオリンピックカップ（U20・U17）](https://japanwrestlingchannel.com/events/joc-junior/2022/): 2022年4月23日〜24日・神奈川・横浜武道館・動画13本
+
+### 全国高校選抜大会
+- 大会ページ: https://japanwrestlingchannel.com/events/highschool-senbatsu/
+- [令和7年度 風間杯第69回全国高等学校選抜レスリング大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2026/): 2026年3月27日〜29日・新潟・新潟東総合センター・動画13本
+- [令和6年度 風間杯第68回全国高等学校選抜レスリング大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2025/): 2025年3月27日〜29日・新潟・新潟市東総合スポーツセンター・動画12本
+- [令和5年度 風間杯第67回全国高等学校選抜レスリング大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2024/): 2024年3月27日〜29日・新潟・新潟市東総合スポーツセンター・動画12本
+- [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2023/): 2023年3月27日〜29日・新潟・新潟東総合スポーツセンター・動画12本
+- [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2022/): 2022年3月27日〜29日・新潟・新潟東総合スポーツセンター・動画22本
+- [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2015/): 2015年3月27日〜29日・新潟・新潟市体育館・動画15本
+
+### 第11回日野レスリング選手権大会
+- 大会ページ: https://japanwrestlingchannel.com/events/local-283989/
+- [第11回日野レスリング選手権大会](https://japanwrestlingchannel.com/events/local-283989/2026/): 2026年3月7日〜8日・滋賀・日野町大谷公園体育館・動画6本
+
+### 関東少年少女レスリング横須賀大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/
+- [関東少年少女レスリング横須賀大会(第42回)](https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/2026/): 2026年3月7日・動画2本
+- [関東少年少女レスリング横須賀大会(第41回)](https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/2025/): 2025年3月8日・動画2本
+- [関東少年少女レスリング横須賀大会(第39回)](https://japanwrestlingchannel.com/events/x-kanto-kids-yokosuka/2023/): 2023年3月4日・動画2本
+
+### 堺市レスリング連盟 少年少女レスリング選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/local-282985/
+- [堺市レスリング連盟 少年少女レスリング選手権](https://japanwrestlingchannel.com/events/local-282985/2026/): 2026年2月8日・大阪・堺市金岡公園体育館・動画6本
+
+### 全日本マスターズ選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/masters/
+- [全日本マスターズ選手権](https://japanwrestlingchannel.com/events/masters/2026/): 2026年1月17日・東京・青少年総合センター・動画3本
+- [第24回全日本マスターズレスリング選手権大会](https://japanwrestlingchannel.com/events/masters/2025/): 2025年1月19日・東京・青少年総合センター・動画3本
+- [第23回全日本マスターズ選手権大会](https://japanwrestlingchannel.com/events/masters/2024/): 2024年2月25日・東京・青少年総合センター・動画2本
+- [全日本マスターズ選手権](https://japanwrestlingchannel.com/events/masters/2016/): 2016年1月24日・東京・青少年総合センター・動画1本
+
+### 高谷惣亮杯(ゴールドキッズ年末合宿)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-takatani-cup/
+- [高谷惣亮杯(ゴールドキッズ年末合宿)(第3回)](https://japanwrestlingchannel.com/events/x-takatani-cup/2025/): 2025年12月27日・動画2本
+- [高谷惣亮杯(ゴールドキッズ年末合宿)](https://japanwrestlingchannel.com/events/x-takatani-cup/2024/): 2024年12月28日・動画2本
+- [高谷惣亮杯(ゴールドキッズ年末合宿)(第1回)](https://japanwrestlingchannel.com/events/x-takatani-cup/2023/): 2023年12月27日・動画2本
+- [高谷惣亮杯(ゴールドキッズ年末合宿)](https://japanwrestlingchannel.com/events/x-takatani-cup/2022/): 2022年12月27日・動画2本
+
+### 第24回兵庫県ジュニアレスリングオープン大会
+- 大会ページ: https://japanwrestlingchannel.com/events/local-280653/
+- [第24回兵庫県ジュニアレスリングオープン大会](https://japanwrestlingchannel.com/events/local-280653/2025/): 2025年12月21日・動画4本
+
+### 天皇杯全日本選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/tenno-cup/
+- [令和7年度 天皇杯全日本レスリング選手権大会](https://japanwrestlingchannel.com/events/tenno-cup/2025/): 2025年12月18日〜21日・東京・駒沢体育館・動画31本
+- [令和6年度 天皇杯全日本レスリング選手権大会](https://japanwrestlingchannel.com/events/tenno-cup/2024/): 2024年12月19日〜22日・東京・代々木競技場第2体育館大会・動画29本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2023/): 2023年12月21日〜24日・東京・代々木競技場第2体育館・動画6本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2022/): 2022年12月22日〜25日・東京・駒沢体育館・動画67本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2021/): 2021年12月16日〜19日・東京・駒沢体育館・動画82本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2020/): 2020年12月17日〜20日・東京・駒沢体育館・動画94本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2019/): 2019年12月19日〜22日・東京・駒沢体育館・動画54本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2018/): 2018年12月20日〜23日・東京・駒沢体育館・動画30本
+- [全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2016/): 2016年12月21日〜23日・東京・代々木競技場第2体育館・動画16本
+- [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2015/): 2015年12月21日〜23日・東京・代々木競技場第2体育館・動画23本
+- [全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2014/): 2014年12月21日〜23日・東京・代々木競技場第2体育館・動画41本
+
+### 全国中学選抜・全国中学選抜U15選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/
+- [令和7年度 東京都知事杯 第16回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2025/): 2025年12月6日〜7日・東京・駒沢屋内球技場・動画8本
+- [令和6年度 東京都知事杯第15回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2024/): 2024年11月30日〜12月1日・東京・駒沢屋内球技場・動画8本
+- [東京都知事杯全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2023/): 2023年11月25日〜26日・東京・駒沢屋内球技場・動画8本
+- [東京都知事杯全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2021/): 2021年11月27日〜28日・東京・駒沢屋内球技場・動画29本
+- [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2017/): 2017年11月25日〜26日・東京・駒沢屋内球技場・動画16本
+- [全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2016/): 2016年11月26日〜27日・東京・駒沢体育館・動画18本
+- [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2015/): 2015年11月28日〜29日・東京・駒沢体育館・動画17本
+- [全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2014/): 2014年11月23日〜24日・東京・駒沢体育館・動画16本
+
+### 東日本学生選手権（秋季大会）
+- 大会ページ: https://japanwrestlingchannel.com/events/east-autumn/
+- [令和7年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2025/): 2025年11月27日〜29日・東京・駒沢屋内球技場・動画10本
+- [東日本学生選手権(秋季)・新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-autumn/2024/): 2024年11月26日〜28日・東京・駒沢屋内球技場・動画9本
+- [東日本学生選手権(秋季)・選手権 / 新人選手権](https://japanwrestlingchannel.com/events/east-autumn/2023/): 2023年11月9日〜10日・東京・駒沢屋内球技場・動画6本
+- [東日本学生選手権(秋季)・新人戦 / 選手権の部](https://japanwrestlingchannel.com/events/east-autumn/2022/): 2022年11月28日〜30日・東京・駒沢体育館・動画9本
+- [東日本学生秋季選手権・選手権の部 / 新人戦](https://japanwrestlingchannel.com/events/east-autumn/2021/): 2021年11月23日〜25日・東京・駒沢屋内球技場・動画9本
+- [東日本学生秋季選手権・新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-autumn/2018/): 2018年11月26日〜28日・東京・駒沢屋内球技場・動画20本
+- [東日本学生秋季新人選手権](https://japanwrestlingchannel.com/events/east-autumn/2015/): 2015年11月25日〜26日・東京・駒沢体育館・動画16本
+- [東日本学生秋季新人選手権](https://japanwrestlingchannel.com/events/east-autumn/2014/): 2014年11月26日〜28日・東京・駒沢体育館・動画16本
+
+### 東日本大学女子リーグ戦
+- 大会ページ: https://japanwrestlingchannel.com/events/east-women-league/
+- [東日本大学女子リーグ戦STIカップ](https://japanwrestlingchannel.com/events/east-women-league/2025/): 2025年11月23日・東京・自由ヶ丘学園高校体育館・動画1本
+- [東日本大学女子リーグ戦STIカップ](https://japanwrestlingchannel.com/events/east-women-league/2024-11-24/): 2024年11月24日・東京・自由ヶ丘学園高体育館・動画1本
+- [STIカップ東日本大学女子リーグ戦](https://japanwrestlingchannel.com/events/east-women-league/2024-01-14/): 2024年1月14日・東京・国学院高校体育館・動画1本
+
+### 全日本大学選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/university-championship/
+- [第51回内閣総理大臣杯 令和7年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2025/): 2025年11月8日〜9日・大阪・堺市金岡公園体育館・動画6本
+- [第50回内閣総理大臣杯 令和6年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2024/): 2024年11月9日〜10日・大阪・堺市金岡公園体育館・動画6本
+- [内閣総理大臣杯全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2023/): 2023年11月18日〜19日・大阪・堺市金岡公園体育館・動画6本
+- [内閣総理大臣杯全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2022/): 2022年11月19日〜20日・大阪・堺市金岡公園体育館・動画6本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2021/): 2021年11月13日〜14日・栃木・足利市民体育館・動画6本
+- [内閣総理大臣杯全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2020/): 2020年11月7日〜8日・大阪・東和薬品RACTABドーム・動画11本
+- [内閣総理大臣杯全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2019/): 2019年11月9日〜10日・鹿児島・日置市吹上浜公園体育館・動画7本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2017/): 2017年11月11日〜12日・福井・おおい町総合運動公園体育館・動画8本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2016/): 2016年11月12日〜13日・愛媛・宇和島市総合体育館・動画9本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2015/): 2015年11月14日〜15日・大阪・堺市金岡公園体育館・動画13本
+- [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2014/): 2014年11月12日〜13日・東京・駒沢体育館・動画19本
+
+### 全日本大学グレコローマン選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/university-greco/
+- [文部科学大臣杯 令和7年度 全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2025/): 2025年10月18日〜19日・東京・駒沢体育館・動画6本
+- [文部科学大臣杯 令和6年度全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2024/): 2024年10月23日〜24日・東京・駒沢屋内球技場・動画6本
+- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2023/): 2023年10月18日〜19日・東京・駒沢屋内球技場・動画6本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2022/): 2022年10月19日〜20日・東京・駒沢体育館・動画6本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2021/): 2021年10月9日〜10日・大阪・泉佐野市J:COM末広体育館・動画6本
+- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2020/): 2020年10月15日〜16日・東京・駒沢体育館・動画6本
+- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2019/): 2019年10月17日〜18日・東京・駒沢体育館・動画10本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2018/): 2018年10月18日〜19日・東京・駒沢屋内球技場・動画10本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2017/): 2017年10月21日〜22日・神奈川・平塚市総合体育館・動画8本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2016/): 2016年10月22日〜23日・山形県上山市・三友エンジニア体育文化センター・動画8本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2014/): 2014年9月25日〜26日・東京・駒沢体育館・動画8本
+
+### 障がい者レスリング エキシビションマッチ
+- 大会ページ: https://japanwrestlingchannel.com/events/x-para/
+- [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/2025/): 2025年9月6日・動画1本
+- [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/2023/): 2023年1月25日・動画1本
+
+### BUNSUGI International Wrestling Friendly Match
+- 大会ページ: https://japanwrestlingchannel.com/events/x-bunsugi/
+- [BUNSUGI International Wrestling Friendly Match](https://japanwrestlingchannel.com/events/x-bunsugi/2025/): 2025年8月8日・動画1本
+
+### COMBAT WRESTLING ASIA
+- 大会ページ: https://japanwrestlingchannel.com/events/x-combat-asia/
+- [COMBAT WRESTLING ASIA](https://japanwrestlingchannel.com/events/x-combat-asia/2025/): 2025年6月22日・動画1本
+
+### 関東高校総体・高校選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/regional-関東-summer/
+- [関東高校大会](https://japanwrestlingchannel.com/events/regional-関東-summer/2025/): 2025年6月7日〜8日・栃木・足利市FUKAI SQUARE GARDEN・動画8本
+- [関東高等学校大会](https://japanwrestlingchannel.com/events/regional-関東-summer/2024/): 2024年6月1日〜2日・山梨・甲府市小瀬スポーツ公園武道館・動画8本
+- [関東高校大会](https://japanwrestlingchannel.com/events/regional-関東-summer/2023/): 2023年6月3日〜4日・埼玉・熊谷スポーツ文化公園彩の国くまがやドーム・動画8本
+- [2021年関東高校大会](https://japanwrestlingchannel.com/events/regional-関東-summer/2021/): 2021年6月5日〜6日・神奈川・逗子アリーナ・動画8本
+
+### 第10回日野町少年少女大会
+- 大会ページ: https://japanwrestlingchannel.com/events/local-264485/
+- [第10回日野町少年少女大会](https://japanwrestlingchannel.com/events/local-264485/2025/): 2025年3月8日〜9日・滋賀・日野町大谷公園体育館・動画6本
+
+### 第18回堺市レスリング連盟少年少女レスリング選手権大会
+- 大会ページ: https://japanwrestlingchannel.com/events/local-263382/
+- [第18回堺市レスリング連盟少年少女レスリング選手権大会](https://japanwrestlingchannel.com/events/local-263382/2025/): 2025年2月8日〜9日・大阪・堺市金岡公園体育館・動画6本
+
+### 関東高校リーグ戦(齋藤つよし杯)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-kanto-hs-league/
+- [関東高校リーグ戦(齋藤つよし杯)](https://japanwrestlingchannel.com/events/x-kanto-hs-league/2024/): 2025年1月12日・動画4本
+
+### 兵庫県ジュニアオープン(マスター未収録の回)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-hyogo-junior/
+- [兵庫県ジュニアオープン(マスター未収録の回)(第23回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/2024/): 2024年12月21日〜22日・動画5本
+- [兵庫県ジュニアオープン(マスター未収録の回)(第22回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/2023/): 2023年12月17日・動画1本
+
+### オリンピック(海外)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-olympics/
+- [オリンピック(海外)](https://japanwrestlingchannel.com/events/x-olympics/2024/): 2024年8月5日〜11日・パリ(フランス)・動画12本
+
+### 全国高校総体（インターハイ）
+- 大会ページ: https://japanwrestlingchannel.com/events/interhigh/
+- [令和8年度全国高等学校総合体育大会(インターハイ)](https://japanwrestlingchannel.com/events/interhigh/2026/): 2026年7月23日〜26日・和歌山・那智勝浦体育文化会館・動画0本・写真あり
+- [令和6年度全国高等学校総合体育大会(インターハイ)](https://japanwrestlingchannel.com/events/interhigh/2024/): 2024年8月1日〜4日・佐賀・嬉野市中央体育館・動画11本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2023/): 2023年7月27日〜30日・北海道札幌市・真駒内セキスイハイムアイスアリーナ・動画6本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2018/): 2018年8月4日〜7日・三重県津市・メッセウイング・みえ・動画18本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2016/): 2016年8月2日〜5日・広島・東広島運動公園体育館・動画15本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2015/): 2015年8月2日〜5日・京都・舞鶴文化公園体育館・動画16本
+- [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2014/): 2014年8月2日〜5日・神奈川・横須賀アリーナ・動画18本
+
+### 押立杯(大会名の確認が必要)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-oshitate/
+- [押立杯(大会名の確認が必要)](https://japanwrestlingchannel.com/events/x-oshitate/2024/): 2024年6月23日・動画2本
+
+### 明治杯全日本選抜選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/meiji-cup/
+- [令和8年度 明治杯全日本選抜レスリング選手権大会](https://japanwrestlingchannel.com/events/meiji-cup/2026/): 2026年5月21日〜24日・東京・駒沢体育館・動画0本・写真あり
+- [令和6年度 明治杯全日本選抜レスリング選手権大会](https://japanwrestlingchannel.com/events/meiji-cup/2024/): 2024年5月23日〜26日・東京・東京体育館・動画8本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2023/): 2023年6月15日〜18日・東京・東京体育館・動画48本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2022/): 2022年6月16日〜19日・東京・駒沢体育館・動画53本
+- [明治杯全日本選抜選手権/世界選手権代表選考プレーオフ](https://japanwrestlingchannel.com/events/meiji-cup/2021/): 2021年5月27日〜30日・東京・駒沢体育館・動画85本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2019/): 2019年6月13日〜16日・東京・駒沢体育館・動画36本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2018/): 2018年6月14日〜17日・東京・駒沢体育館・動画29本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2017/): 2017年6月16日〜18日・東京・代々木競技場第2体育館・動画28本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2016/): 2016年5月27日〜29日・東京・代々木競技場第2体育館・動画2本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2015/): 2015年6月19日〜21日・東京・代々木競技場第2体育館・動画31本
+- [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2014/): 2014年6月14日〜15日・東京・代々木競技場第2体育館・動画35本
+
+### 巻キッズレスリング大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-maki-kids/
+- [巻キッズレスリング大会(第14回)](https://japanwrestlingchannel.com/events/x-maki-kids/2024/): 2024年5月14日・動画1本
+
+### 日野町少年少女レスリング大会(マスター未収録の回)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-hino-junior/
+- [日野町少年少女レスリング大会(マスター未収録の回)(第9回)](https://japanwrestlingchannel.com/events/x-hino-junior/2024/): 2024年3月9日〜10日・動画6本
+- [日野町少年少女レスリング大会(マスター未収録の回)(第8回)](https://japanwrestlingchannel.com/events/x-hino-junior/2023/): 2023年3月11日〜12日・動画6本
+
+### 世界ベテランズ選手権(海外)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-veterans-world/
+- [世界ベテランズ選手権(海外)](https://japanwrestlingchannel.com/events/x-veterans-world/2018/): 2024年2月20日・動画3本
+
+### 堺市少年少女レスリング大会(マスター未収録の回)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-sakai-junior/
+- [堺市少年少女レスリング大会(マスター未収録の回)(第17回)](https://japanwrestlingchannel.com/events/x-sakai-junior/2024/): 2024年2月11日・動画3本
+- [堺市少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-sakai-junior/2023/): 2023年2月12日・動画4本
+
+### 関東高校選抜・新人・全国高校選抜予選
+- 大会ページ: https://japanwrestlingchannel.com/events/regional-関東-qualifier/
+- [関東高校選抜大会・最終日/個人戦・男子](https://japanwrestlingchannel.com/events/regional-関東-qualifier/2024/): 2024年2月3日〜4日・千葉・佐倉市民体育館・動画8本
+
+### 日韓高校選抜交流・交歓競技会（日本開催・親善試合）
+- 大会ページ: https://japanwrestlingchannel.com/events/japan-korea-highschool/
+- [日韓高校選抜交流・交歓競技会(日本開催・親善試合)](https://japanwrestlingchannel.com/events/japan-korea-highschool/2023/): 2023年11月23日・神奈川・磯子工業高校体育館・動画1本
+
+### 全日本女子オープン選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/women-open/
+- [フォーデイズ杯全日本女子オープン選手・シニア / U17・U15・U12](https://japanwrestlingchannel.com/events/women-open/2023/): 2023年10月14日〜15日・静岡・焼津市総合体育館・動画8本
+- [フォーデイズ杯全日本女子オープン選手権・シニア / 高校生・中学生・キッズ](https://japanwrestlingchannel.com/events/women-open/2022/): 2022年10月15日〜16日・静岡・焼津市総合体育館・動画7本
+- [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/2016/): 2016年10月2日・静岡・三島市民体育館・動画24本
+- [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/2014/): 2014年10月5日・静岡・三島市立体育館・動画14本
+
+### 世界選手権(海外)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-world-championships/
+- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/2023/): 2023年9月18日〜24日・動画17本
+- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/2022/): 2022年9月10日〜18日・ベオグラード(セルビア)・動画19本
+- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/2021/): 2021年10月2日〜10日・オスロ(ノルウェー)・動画1本
+
+### 日本代表決定プレーオフ
+- 大会ページ: https://japanwrestlingchannel.com/events/national-team-playoff/
+- [世界選手権代表決定プレーオフ/非オリンピック階級](https://japanwrestlingchannel.com/events/national-team-playoff/2023/): 2023年7月17日・東京・味の素ナショナルトレーニングセンター・動画7本
+- [東京オリンピック代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/2021/): 2021年6月12日・東京・味の素トレーニングセンター・動画1本
+- [世界選手権代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/2018/): 2018年7月7日・埼玉・和光市総合体育館・動画10本
+
+### ビーチレスリング・ワールドシリーズ(海外)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-beach-world-series/
+- [ビーチレスリング・ワールドシリーズ(海外)](https://japanwrestlingchannel.com/events/x-beach-world-series/2023/): 2023年5月9日・動画1本
+
+### U23日本代表選考会・U23全日本選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/u23-selection/
+- [U23世界選手権・日本代表選考会](https://japanwrestlingchannel.com/events/u23-selection/2023/): 2023年4月22日・埼玉・富士見市立市民総合体育館・動画2本
+
+### ジュニアクイーンズカップ
+- 大会ページ: https://japanwrestlingchannel.com/events/queens-cup/
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/2023/): 2023年4月8日〜9日・東京・東京武道館・動画6本
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/2022/): 2022年4月9日〜10日・東京・駒沢体育館・動画6本
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/2021/): 2021年4月10日〜11日・東京・駒沢体育館・動画20本
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/2017/): 2017年4月2日・東京・駒沢体育館・動画7本
+- [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/2016/): 2016年4月3日・東京・駒沢体育館・動画2本
+
+### 関西オープン合宿
+- 大会ページ: https://japanwrestlingchannel.com/events/x-kansai-camp/
+- [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/2023/): 2023年3月12日・動画4本
+
+### 新宿ライオンズ杯
+- 大会ページ: https://japanwrestlingchannel.com/events/x-shinjuku-lions/
+- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/2022/): 2023年2月26日・動画20本
+
+### U13ジャパンオープン・レスリングトーナメント
+- 大会ページ: https://japanwrestlingchannel.com/events/u13/
+- [U13ジャパン・オープン・トーナメント](https://japanwrestlingchannel.com/events/u13/2023/): 2023年2月25日〜26日・東京・板橋区立植村記念加賀スポーツセンター・動画15本
+
+### 全国少年少女選抜選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/kids-senbatsu/
+- [全国少年少女選抜選手権](https://japanwrestlingchannel.com/events/kids-senbatsu/2023/): 2023年1月28日〜29日・東京・板橋区立植村記念加賀スポーツセンター・動画4本
+
+### 近畿少年少女選手権・兵庫県ジュニアオープン
+- 大会ページ: https://japanwrestlingchannel.com/events/x-kinki-kids/
+- [近畿少年少女選手権・兵庫県ジュニアオープン(第35回)](https://japanwrestlingchannel.com/events/x-kinki-kids/2022/): 2022年12月18日・動画4本
+
+### 野田オープン大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-noda-open/
+- [野田オープン大会](https://japanwrestlingchannel.com/events/x-noda-open/2022/): 2022年8月21日〜28日・動画42本
+
+### 全国少年少女選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/kids/
+- [全国少年少女選手権](https://japanwrestlingchannel.com/events/kids/2022/): 2022年7月30日〜31日・東京・代々木競技場第1体育館・動画23本
+
+### 茨城オープン
+- 大会ページ: https://japanwrestlingchannel.com/events/x-ibaraki-open/
+- [茨城オープン](https://japanwrestlingchannel.com/events/x-ibaraki-open/2022/): 2022年7月11日・動画17本
+
+### 東京都団体戦予選
+- 大会ページ: https://japanwrestlingchannel.com/events/x-tokyo-team/
+- [東京都団体戦予選](https://japanwrestlingchannel.com/events/x-tokyo-team/2022/): 2022年7月11日・動画13本
+
+### アジア選手権(海外)
+- 大会ページ: https://japanwrestlingchannel.com/events/x-asian-championships/
+- [アジア選手権(海外)](https://japanwrestlingchannel.com/events/x-asian-championships/2021/): 2022年6月24日・動画2本
+
+### 全国中学生選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/juniorhigh/
+- [沼尻直杯全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/2022/): 2022年6月11日〜12日・茨城・アダストリアみとアリーナ・動画53本
+- [沼尻直杯全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/2019/): 2019年6月8日〜9日・茨城・アダストリアみとアリーナ・動画20本
+- [沼尻直杯全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/2017/): 2017年6月10日〜11日・茨城・水戸市民体育館・動画18本
+- [沼尻直杯全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/2016/): 2016年6月11日〜12日・茨城県水戸市・青柳公園水戸市民体育館・動画17本
+- [沼尻直杯全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/2015/): 2015年6月13日〜14日・茨城県水戸市・茨城県立スポーツセンター・動画18本
+- [沼尻直杯全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/2014/): 2014年6月7日〜8日・茨城県水戸市・茨城県立スポーツセンター・動画17本
+
+### 群馬県千代田町少年少女レスリング大会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-chiyoda-kids/
+- [群馬県千代田町少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-chiyoda-kids/2021/): 2021年12月6日・動画59本
+
+### 西日本学生選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/west-championship/
+- [西日本学生選手権](https://japanwrestlingchannel.com/events/west-championship/2021/): 2021年10月20日〜22日・山口・キリンビバレッジ周南総合スポーツセンター・動画9本
+- [西日本学生選手権](https://japanwrestlingchannel.com/events/west-championship/2015/): 2015年10月16日〜18日・大阪・堺市金岡公園体育館・動画16本
+- [西日本学生選手権](https://japanwrestlingchannel.com/events/west-championship/2014/): 2014年10月25日〜26日・大阪・堺市金岡公園体育館・動画16本
+
+### 関東中学生選手権 東京代表選考会
+- 大会ページ: https://japanwrestlingchannel.com/events/x-kanto-jh-tokyo/
+- [関東中学生選手権 東京代表選考会](https://japanwrestlingchannel.com/events/x-kanto-jh-tokyo/2021/): 2021年7月11日・動画9本
+
+### 西日本学生秋季リーグ戦
+- 大会ページ: https://japanwrestlingchannel.com/events/west-autumn-league/
+- [西日本学生秋季リーグ戦](https://japanwrestlingchannel.com/events/west-autumn-league/2020/): 2020年12月5日〜6日・大阪・堺市金岡公園体育館・動画6本
+- [西日本学生秋季リーグ戦](https://japanwrestlingchannel.com/events/west-autumn-league/2015/): 2015年12月5日〜6日・大阪・堺市金岡公園体育館・動画7本
+- [西日本学生秋季リーグ戦](https://japanwrestlingchannel.com/events/west-autumn-league/2014/): 2014年11月29日〜30日・大阪・堺市金岡公園体育館・動画7本
+
+### 国民体育大会・国民スポーツ大会
+- 大会ページ: https://japanwrestlingchannel.com/events/kokutai/
+- [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2016/): 2016年10月7日〜10日・岩手・宮古市総合体育館・動画25本
+- [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2015/): 2015年9月27日〜30日・和歌山・那智勝浦町文化体育会館・動画24本
+- [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2014/): 2014年10月14日〜16日・長崎・島原復興アリーナ・動画8本
+
+### 西日本学生新人選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/west-rookie/
+- [西日本学生新人戦](https://japanwrestlingchannel.com/events/west-rookie/2015/): 2015年7月4日〜5日・大阪・堺市金岡公園体育館・動画16本
+- [西日本学生新人戦](https://japanwrestlingchannel.com/events/west-rookie/2014/): 2014年7月5日〜6日・大阪・堺市金岡公園体育館・動画15本
+
+### 西日本学生春季リーグ戦
+- 大会ページ: https://japanwrestlingchannel.com/events/west-spring-league/
+- [西日本学生春季リーグ戦](https://japanwrestlingchannel.com/events/west-spring-league/2015/): 2015年5月30日〜31日・大阪・堺市金岡公園体育館・動画7本
