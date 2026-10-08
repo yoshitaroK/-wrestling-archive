@@ -1208,9 +1208,17 @@ def llms_txt(data, series_list, ctx):
         f"- [大会一覧]({SITE}/events/): 配信動画のある{len(series_list)}大会の一覧",
         f"- [技術動画]({SITE}/technique/): レスリングクラブが公開している技術・トレーニング動画を、タックル・投げ技・グラウンドなどの区分で整理",
         f"- [写真]({SITE}/photos/): 大会で撮影された写真(撮影者の許可を得て掲載)を大会ごとに掲載",
+        f"- [大会カレンダー]({SITE}/events/calendar/): 開催予定・過去の大会を月ごとに表示",
+        f"- [選手検索]({SITE}/players/): 選手ごとの出場大会・成績・動画",
+        f"- [歴代優勝者]({SITE}/champions/): 主な大会の階級ごとの歴代優勝者",
         f"- [検索ページ]({SITE}/): 大会名・通称・動画タイトルで検索",
+        f"- [English version]({SITE}/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)",
+        f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
-        "## 大会(開催回ごとのページへのリンクを含む)",
+        "## 詳しい一覧",
+        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)の一覧",
+        "",
+        "## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)",
     ]
     for x in series_list:
         evs = [v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]
@@ -1218,6 +1226,26 @@ def llms_txt(data, series_list, ctx):
         span = (f"{min(yrs)}年" if min(yrs) == max(yrs) else f"{min(yrs)}〜{max(yrs)}年") if yrs else ""
         lines.append(f"- [{x['name']}]({SITE}/events/{x['id']}/): {span} 動画{x.get('n', 0)}本")
     return "\n".join(lines) + "\n"
+
+
+def llms_full_txt(data, series_list, ctx):
+    """llms.txt の詳しい版。大会ごとに、開催回の開催日・会場・動画の本数・ページのURLを並べる"""
+    lines = [llms_txt(data, series_list, ctx).rstrip("\n"), "", "## 開催回の一覧(新しい順)", ""]
+    for x in series_list:
+        lines.append(f"### {x['name']}")
+        lines.append(f"- 大会ページ: {SITE}/events/{x['id']}/")
+        for v in sorted(ctx["events_by_series"].get(x["id"], []), key=lambda v: v.get("start") or f"{v['year']}-99", reverse=True):
+            if v["id"] not in ctx["slugs"]:
+                continue
+            when = "中止" if v.get("status") == "cancelled" else (fmt_range(v.get("start"), v.get("end")) if v.get("start") else "日付未確認")
+            if v.get("status") == "scheduled":
+                when += "(予定)"
+            parts = [when] + ([v["venue"]] if v.get("venue") and not v.get("derived") else []) + [f"動画{v.get('n', 0)}本"]
+            if f"/events/{ctx['slugs'][v['id']]}/" in ctx.get("photo_paths", ()):
+                parts.append("写真あり")
+            lines.append(f"- [{v.get('official_name') or v['name']}]({SITE}/events/{ctx['slugs'][v['id']]}/): " + "・".join(parts))
+        lines.append("")
+    return "\n".join(lines).rstrip("\n") + "\n"
 
 
 def not_found_page(ctx):
@@ -1485,6 +1513,8 @@ def build(root=HERE, inline_css=False, only=None):
                     f.write(not_found_page(ctx))
                 with open(os.path.join(root, "llms.txt"), "w", encoding="utf-8") as f:
                     f.write(llms_txt(data, listed, ctx))
+                with open(os.path.join(root, "llms-full.txt"), "w", encoding="utf-8") as f:
+                    f.write(llms_full_txt(data, listed, ctx))
             else:
                 # 英語版の検索ページ(index.html をもとに作る)
                 import en_index
