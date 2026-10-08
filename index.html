@@ -863,6 +863,41 @@ function playerSection(ps){
     }).join('')+'</ul>'+
     (ps.length>MAX?'<p class="hint"><a href="'+U('/players/')+'#q='+encodeURIComponent(st.q)+'">'+L('ほかの'+(ps.length-MAX)+'人も選手一覧で見る','See '+(ps.length-MAX)+' more in the player list')+'</a></p>':'')+'</section>';
 }
+/* ---------- 国際大会(UWW)の動画(assets/uww.json。検索語が入ったときだけ読む) ---------- */
+var UW = null, uwLoading = false;
+function loadUww(){
+  if(UW || uwLoading) return; uwLoading = true;
+  fetch('/assets/uww.json',{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    d = d || {v:[]};
+    UW = (d.v||[]).map(function(v){
+      var c = (d.cat||{})[v.c] || ['', ''];
+      v.cl = c; v.ee = (d.ev||{})[v.e] || (v.e ? v.e : 'Other events');
+      v.key = skey([v.t, v.e, v.ee, c[0], c[1], v.y].concat(v.pl.map(function(p){ return p.slice(1).join(' '); })).join(' '));
+      return v;
+    });
+    if(st.q) render();
+  }).catch(function(){ UW = []; });
+}
+function uwwHits(){
+  if(!st.q) return [];
+  if(!UW){ loadUww(); return []; }
+  var toks = st.q.split(/\s+/).map(skey).filter(Boolean); if(!toks.length) return [];
+  return UW.filter(function(v){ return toks.every(function(t){ return v.key.indexOf(t)>=0; }); });
+}
+function uwwSection(us){
+  if(!us.length) return '';
+  var MAX = 10;
+  return '<section class="section psec"><h2>'+L('国際大会','International')+'<small class="hint" style="margin-left:8px">'+L(us.length+'本', plural(us.length,'video'))+'</small></h2>'+
+    '<p class="hint">'+L('世界レスリング連合(UWW)の公式 YouTube の動画です。','Videos from the official YouTube channel of United World Wrestling (UWW).')+'</p><ul class="vlist">'+
+    us.slice(0,MAX).map(function(v){
+      var meta = '<span>'+esc(L((v.e||'その他の大会')+' '+v.y, v.ee+' '+v.y))+'</span><span>'+esc(L(v.cl[0], v.cl[1]))+'</span><span>'+L('公開 ','Published ')+esc(fmtDate(v.p))+'</span>';
+      var who = v.pl.map(function(p){ return '<a href="'+U('/players/'+p[0]+'/')+'">'+esc(LANG==='en' ? (p[2]||p[1]) : p[1])+'</a>'; }).join(' ');
+      return '<li class="v"><a href="'+esc(yt(v.i))+'" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">'+thumb(v.i,'')+'</a>'+
+        '<div><div class="vt"><a href="'+esc(yt(v.i))+'" target="_blank" rel="noopener"'+L(' lang="en"','')+'>'+esc(v.t)+'</a></div>'+
+        '<div class="vm">'+meta+'</div>'+(who?'<div class="vm">'+L('出ている選手:','Japanese wrestlers: ')+who+'</div>':'')+'</div></li>';
+    }).join('')+'</ul>'+
+    '<p class="hint"><a href="'+U('/uww/')+'">'+(us.length>MAX ? L('ほかの'+(us.length-MAX)+'本は国際大会のページで見る','See '+(us.length-MAX)+' more on the International videos page') : L('国際大会のページを見る','Open the International videos page'))+'</a></p></section>';
+}
 function looseSection(){
   var list = loose.filter(vidOk); if(!list.length) return '';
   moreCache['loose']=list;
@@ -874,18 +909,20 @@ function render(){
   var vr = videoHits();
   // 選手名で一致した選手は、大会より上に出す
   var ph = st.s ? [] : playerHits();
+  var uh = st.s ? [] : uwwHits();
   renderStatus(list, st.q && (vr.hits.length || !list.length) ? vr.hits.length : null, ph.length);
   var anyFilter = st.q||st.y||st.c||st.sty||st.sc||st.k||st.all;
   var h = '';
   if(!anyFilter && !st.s) h += renderShelves();
   h += playerSection(ph);
+  h += uwwSection(uh);
   // 大会が0件で動画だけ見つかったときは、動画を先に出す
   var videosFirst = !list.length && vr.hits.length && !st.s;
   if(videosFirst){
     h += '<p class="noser">'+L('大会名では一致しませんでしたが、動画タイトルで'+vr.hits.length+'本見つかりました。','No tournament matched, but '+plural(vr.hits.length,'video')+' matched by title.')+'</p>' + videoSearch(vr, true);
     document.getElementById('main').innerHTML = h; afterRender(); return;
   }
-  if(!list.length && !st.s && ph.length){ document.getElementById('main').innerHTML = h; afterRender(); return; }
+  if(!list.length && !st.s && (ph.length || uh.length)){ document.getElementById('main').innerHTML = h; afterRender(); return; }
   if(!list.length && !st.s){
     h += '<div class="empty"><p>'+L('<strong>条件に合う大会・動画はありません。</strong>検索語を短くするか、条件を外してください。','<strong>No tournaments or videos match.</strong> Try a shorter search or remove filters. Video titles are in Japanese, so English words only match tournament names.')+'</p>'+
       '<p>'+L('いまの条件:','Current filters: ')+esc(currentConditions())+'</p><button type="button" class="clear" id="clear">'+L('条件をすべてクリア','Clear all filters')+'</button></div>';

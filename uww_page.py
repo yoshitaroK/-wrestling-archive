@@ -10,6 +10,7 @@
 - 選手名は ctx["players"] にいる人だけ出し、選手ページへのリンクにする
 """
 import csv
+import json
 import os
 import re
 from collections import defaultdict
@@ -111,6 +112,7 @@ def build(root, ctx, bp):
     # トップページの「収録○本」に国際大会の本数も足すため、本数を書き出す(index.html が読む)
     with open(os.path.join(root, "assets", "uww-count.js"), "w", encoding="utf-8") as f:
         f.write(f"window.UWW_N={sum(len(v) for v in data.values())};\n")
+    write_search_index(root, data)
     if not data:
         return []
     top_t = L("国際大会の動画", "International videos")
@@ -158,6 +160,18 @@ def build(root, ctx, bp):
         out.append((path, page(bp, ctx, path, title, intro(), [home, (top_t, "/uww/"), (cat_name(cat), None)], body),
                     max(v["p"] for v in lst)))
     return out
+
+
+def write_search_index(root, data):
+    """トップページの検索で国際大会の動画も探せるように、サイトに出している動画の一覧を assets/uww.json に書く。
+    v: i=動画ID t=タイトル p=公開日 c=年代 e=大会 y=年 pl=[選手ID, 氏名, ローマ字, 読み](公開している大人の選手だけ)"""
+    rows = [{"i": v["id"], "t": v["t"], "p": v["p"], "c": cat, "e": v["ev"], "y": v["y"],
+             "pl": [[p["id"], p["name"], p["roman"], p.get("kana", "")] for p in v["players"]]}
+            for cat, lst in data.items() for v in lst]
+    rows.sort(key=lambda r: (r["p"], r["i"]), reverse=True)
+    out = {"ev": {ja: en for ja, en in EVENTS if ja}, "cat": {c: [ja, en] for c, _, ja, en in CATS}, "v": rows}
+    with open(os.path.join(root, "assets", "uww.json"), "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
 
 
 UWW_CSS = """
