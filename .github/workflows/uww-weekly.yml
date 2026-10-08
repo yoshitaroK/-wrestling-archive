@@ -1,0 +1,58 @@
+name: UWW の新しい動画を足す(週1回)
+
+# Issue #101。UWW(世界レスリング連合)の YouTube の新しい動画から、日本人選手が出ている動画を uww_videos.csv に足す。
+# ページ(/uww/)は、翌朝 6:00 の自動更新(update.yml)で作り直される。サイトのページと data.json には何もしない。
+# 前回どこまで調べたかは uww-list ブランチの _work/uww/state.json にある(「UWW の日本人の動画を集める」が作ったもの)。
+on:
+  schedule:
+    # 毎週日曜 日本時間 12:17(UTC 3:17)。毎朝 6:00 の更新や、ほかの自動作業(9:49・2:53)と重ならない時刻
+    - cron: '17 3 * * 0'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 毎朝の更新(update.yml)と同時に main に書き込まないよう、同じグループで順番に動かす
+concurrency:
+  group: update-archive
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 前回どこまで調べたか(uww-list ブランチの state.json)を取ってくる
+        run: |
+          git fetch --depth=1 origin uww-list
+          git checkout FETCH_HEAD -- _work/uww/state.json
+          git reset -q _work/uww/state.json
+
+      - name: 新しい動画を読んで、一覧に足す
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          python _work/uww/uww_videos.py --new
+          cat _work/uww/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 一覧を main に、state.json を uww-list に保存する
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp _work/uww/state.json "$RUNNER_TEMP/state.json"
+          git add uww_videos.csv _work/uww/summary.md
+          if ! git diff --cached --quiet; then
+            git commit -m "UWW の新しい動画を一覧に足す(#101)($(date -u +'%Y-%m-%d %H:%M UTC'))"
+            git pull --rebase --autostash
+            git push
+          fi
+          git checkout -B uww-list
+          cp "$RUNNER_TEMP/state.json" _work/uww/state.json
+          git add -f _work/uww/state.json
+          git diff --cached --quiet || git commit -m "UWW の調べた動画を記録する(#101)"
+          git push -f origin uww-list

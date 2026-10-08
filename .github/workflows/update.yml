@@ -59,7 +59,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # 写真の縮小版は assets/photos/ に、写真ページは photos/ の下(index.html)に作られる
-          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html contact.html llms.txt llms-full.txt assets events technique players photos champions privacy en translations_en.json
+          git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html contact.html llms.txt llms-full.txt assets events technique players photos champions privacy uww en translations_en.json
           git diff --cached --quiet || git commit -m "Update data and pages ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           # 実行中にファイルがアップロードされていた場合は、その変更を取り込んでから保存する
           git pull --rebase --autostash
