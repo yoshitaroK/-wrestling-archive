@@ -108,6 +108,9 @@ def build(root, ctx, bp):
     """(パス, HTML, 更新日) のリストを返す"""
     e = bp.e
     data = load(root, ctx)
+    # トップページの「収録○本」に国際大会の本数も足すため、本数を書き出す(index.html が読む)
+    with open(os.path.join(root, "assets", "uww-count.js"), "w", encoding="utf-8") as f:
+        f.write(f"window.UWW_N={sum(len(v) for v in data.values())};\n")
     if not data:
         return []
     top_t = L("国際大会の動画", "International videos")

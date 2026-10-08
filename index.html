@@ -365,6 +365,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
   <div class="wrap jhero-in">
     <h1 id="jhero-h">レスリング配信アーカイブ</h1>
     <p class="jlead" id="tagline">Japan Wrestling Channel 公式 · レスリングの配信・動画を、大会名・開催年・日程から探せます。収録<b class="num" id="stat-v"></b>本</p>
+    <script src="/assets/uww-count.js"></script>
     <div class="searchrow" role="search">
       <label for="q" class="sr">大会名・通称・選手名・動画タイトルで検索</label>
       <input id="q" type="search" autocomplete="off" placeholder="大会名・通称・選手名で検索(例:天皇杯、インカレ、文田健一郎)">
@@ -916,10 +917,10 @@ function afterRender(){
   var sv = document.getElementById('stat-v');
   // 入口の演出:収録本数を 0 から数え上げる(最初の1回だけ)
   if(document.documentElement.classList.contains('intro') && !sv.dataset.done && window.requestAnimationFrame){
-    sv.dataset.done = '1'; var n = V.length, t0 = 0;
+    sv.dataset.done = '1'; var n = V.length + (window.UWW_N||0), t0 = 0;
     var step = function(t){ if(!t0) t0 = t; var k = Math.min(1, (t - t0) / 1400); sv.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if(k < 1) requestAnimationFrame(step); };
     sv.textContent = '0'; requestAnimationFrame(step);
-  } else if(!sv.dataset.done) sv.textContent = V.length;
+  } else if(!sv.dataset.done) sv.textContent = V.length + (window.UWW_N||0);
   var r = DATA.report||{};
   document.getElementById('build-info').textContent = L('データ更新:'+fmtDate(DATA.as_of)+'。動画'+(r.video_count||V.length)+'本。', 'Data updated: '+fmtDate(DATA.as_of)+'. '+plural(r.video_count||V.length,'video')+'.');
   // 年表レールは選択中の年が見える位置までスクロールする
