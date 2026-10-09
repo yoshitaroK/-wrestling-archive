@@ -276,7 +276,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 def footer(as_of):
     if i18n.en():
         return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
+<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/faq/">FAQ</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
 <p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
@@ -285,7 +285,7 @@ def footer(as_of):
 </html>
 """
     return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -1063,6 +1063,77 @@ CONTACT_BODY_EN = r"""<main class="wrap page contact">
 PRIVACY_UPDATED = "2026-10-07"
 
 
+FAQ_UPDATED = "2026-10-09"
+
+
+def faq_items(data, series_list):
+    """よくある質問。数字はデータから入れるので、毎日の更新で最新になる"""
+    n_videos = len(data.get("videos", []))
+    years = [e["year"] for e in data.get("events", []) if e.get("n")]
+    y0 = min(years) if years else ""
+    n_series = len(series_list)
+    return [
+        (L("このサイトは何ですか?", "What is this site?"),
+         L(f"Japan Wrestling Channel 公式の配信アーカイブです。YouTube で公開されている日本のレスリング大会の配信・動画{n_videos:,}本を、大会・開催年・日程ごとに整理しています。",
+           f"The official archive of Japan Wrestling Channel. It organizes {n_videos:,} Japanese wrestling streams and videos published on YouTube by tournament, year and day."),
+         None),
+        (L("大会の配信はどこで見られますか?", "Where can I watch tournament streams?"),
+         L("動画はすべて YouTube で再生されます。大会一覧から大会と開催年を選ぶと、その開催回の配信が日程・マットごとに並んでいます。",
+           "All videos play on YouTube. Choose a tournament and year from the tournament list to see that edition's streams by day and mat."),
+         ("/events/", L("大会一覧", "Tournaments"))),
+        (L("これから行われる大会の配信予定はわかりますか?", "Can I see upcoming streams?"),
+         L("大会カレンダーで、開催予定の大会を月ごとに確認できます。配信枠が公開されている大会は、大会のページに「配信予定」として表示されます。",
+           "The tournament calendar shows upcoming tournaments by month. When stream slots are published, they appear on the tournament page as scheduled streams."),
+         ("/events/calendar/", L("大会カレンダー", "Calendar"))),
+        (L("過去の大会の動画はありますか?", "Are there videos of past tournaments?"),
+         L(f"{y0}年以降の{n_series}大会の配信・動画を掲載しています。大会名・通称(例:インカレ、天皇杯)・年で検索できます。",
+           f"Yes. Streams and videos from {n_series} tournaments since {y0} are listed. You can search by tournament name, nickname (e.g. Inter-College, Emperor's Cup) or year."),
+         ("/", L("大会を検索", "Search"))),
+        (L("選手の試合を探せますか?", "Can I find a wrestler's matches?"),
+         L("選手検索から、選手ごとの出場大会・成績・関連する動画を見られます。",
+           "Yes. Player pages list each wrestler's tournaments, results and related videos."),
+         ("/players/", L("選手検索", "Players"))),
+        (L("写真は使ってもいいですか? 取り下げてほしい写真があります", "Can I use the photos? I want a photo removed"),
+         L("写真は撮影者の許可を得て掲載しています。著作権は撮影者にあるため、利用したい場合は撮影者にご確認ください。写真の取り下げのご依頼は、お問い合わせの「写真の掲載・取り下げについて」から受け付けています。",
+           "Photos are published with the photographers' permission, and the copyright belongs to them. Please ask the photographer before using a photo. To request a removal, use the contact form and choose Photos (removal request)."),
+         ("/contact.html?kind=photo", L("写真の取り下げのご依頼", "Photo removal request"))),
+        (L("動画の掲載や非表示、情報の誤りを伝えたいです", "How do I report a mistake or ask to list or hide a video?"),
+         L("お問い合わせフォームからお送りください。内容を確認のうえ対応します。",
+           "Please use the contact form. We will review it and respond."),
+         ("/contact.html", L("お問い合わせ", "Contact"))),
+        (L("情報はいつ更新されますか?", "How often is the site updated?"),
+         L("毎日、日本時間の朝6時ごろに YouTube の新しい動画を取り込み、ページを自動で作り直しています。",
+           "Every day at around 6:00 a.m. Japan time, new YouTube videos are added and the pages are rebuilt automatically."),
+         None),
+        (L("英語版はありますか?", "Is there a Japanese version?"),
+         L("あります。すべてのページに英語版があり、大会名・会場名は英語で表示されます(動画タイトルは日本語の原題のままです)。",
+           "Yes. Every page has a Japanese version at the same address without /en/. English pages show tournament and venue names in English; video titles stay in Japanese as originally published."),
+         (L("/en/", "/"), L("English version", "日本語版"))),
+    ]
+
+
+def faq_page(data, series_list, ctx):
+    """よくある質問(/faq/)。FAQPage の構造化データ付き(Google や AI が答えとして引用しやすい形)"""
+    items = faq_items(data, series_list)
+    crumbs = [(L("トップ", "Home"), "/"), (L("よくある質問", "FAQ"), None)]
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
+        "@type": "FAQPage", "url": SITE + U("/faq/"), "dateModified": FAQ_UPDATED,
+        "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a, _ in items]}]}
+    h = head(L(f"よくある質問|{SITE_NAME}", f"FAQ | {site_name()}"),
+             L("レスリング配信アーカイブ(Japan Wrestling Channel 公式)についてよくある質問と答えです。配信の見方、過去の大会、選手、写真、更新の頻度など。",
+               "Frequently asked questions about the Japan Wrestling Archive (official, Japan Wrestling Channel): watching streams, past tournaments, players, photos and updates."),
+             "/faq/", "", jsonld, ctx["css"])
+    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f'<h1>{L("よくある質問", "Frequently asked questions")}</h1>'
+    for q, a, link in items:
+        h += f'<section class="section faq"><h2>{e(q)}</h2><p>{e(a)}</p>'
+        if link:
+            href = link[0] if link[0].startswith("/en/") or link[0] == "/" and i18n.en() else U(link[0])
+            h += f'<p><a href="{e(href)}">{e(link[1])} →</a></p>'
+        h += "</section>"
+    h += "</main>" + footer(ctx["as_of"])
+    return "/faq/", h
+
+
 def privacy_page(ctx):
     """プライバシーポリシー(/privacy/)。App Store・Google Play・Firebase に登録する URL。アプリの実際の動きと合わせて書く"""
     h = head(L(f"プライバシーポリシー|{SITE_NAME}", f"Privacy Policy | {site_name()}"),
@@ -1213,6 +1284,7 @@ def llms_txt(data, series_list, ctx):
         f"- [歴代優勝者]({SITE}/champions/): 主な大会の階級ごとの歴代優勝者",
         f"- [検索ページ]({SITE}/): 大会名・通称・動画タイトルで検索",
         f"- [English version]({SITE}/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)",
+        f"- [よくある質問]({SITE}/faq/): 配信の見方・過去の大会・選手・写真・更新の頻度などの質問と答え",
         f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
         "## 詳しい一覧",
@@ -1498,6 +1570,8 @@ def build(root=HERE, inline_css=False, only=None):
             pages.extend(uww_page.build(root, ctx, me))
             # プライバシーポリシー(アプリの審査・Firebase にも登録する URL)
             pages.append((*privacy_page(ctx), PRIVACY_UPDATED))
+            # よくある質問
+            pages.append((*faq_page(data, listed, ctx), data.get("as_of")))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))
             os.makedirs(os.path.dirname(contact), exist_ok=True)
             with open(contact, "w", encoding="utf-8") as f:
