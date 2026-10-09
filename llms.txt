@@ -15,6 +15,7 @@
 - [歴代優勝者](https://japanwrestlingchannel.com/champions/): 主な大会の階級ごとの歴代優勝者
 - [検索ページ](https://japanwrestlingchannel.com/): 大会名・通称・動画タイトルで検索
 - [English version](https://japanwrestlingchannel.com/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)
+- [よくある質問](https://japanwrestlingchannel.com/faq/): 配信の見方・過去の大会・選手・写真・更新の頻度などの質問と答え
 - [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
 
 ## 詳しい一覧
