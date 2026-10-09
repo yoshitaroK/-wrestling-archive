@@ -1,12 +1,12 @@
 {
- "built_at": "2026-10-09T13:01:05+09:00",
- "as_of": "2026-10-09",
- "video_count": 3354,
- "raw_count": 3354,
+ "built_at": "2026-10-10T06:18:22+09:00",
+ "as_of": "2026-10-10",
+ "video_count": 3360,
+ "raw_count": 3360,
  "duplicate_ids_removed": 0,
  "link_counts": {
+  "matched": 2428,
   "derived": 302,
-  "matched": 2422,
   "manual": 41,
   "livedate": 177,
   "candidate": 193,
@@ -21,18 +21,18 @@
   "x-world-championships-2021-10-05",
   "x-world-championships-2022-09-12"
  ],
- "events_with_videos": 215,
+ "events_with_videos": 216,
  "previous_video_count": 3354,
  "missing_from_previous": [],
- "new_since_previous": 0,
+ "new_since_previous": 6,
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
-  "total": 3714,
-  "translated": 3714,
-  "new": 0,
+  "total": 3722,
+  "translated": 3722,
+  "new": 8,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 436,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 6,
@@ -207,9 +207,9 @@
   ]
  },
  "en": {
-  "pages": 1053,
+  "pages": 1054,
   "names": 478,
-  "machine_translations": 3714,
+  "machine_translations": 3722,
   "missing_names": []
  }
 }

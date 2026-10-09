@@ -1,9 +1,9 @@
 # レスリング配信アーカイブ(Japan Wrestling Channel アーカイブ)
 
-> YouTubeで公開されている日本のレスリング大会の配信・動画3,354本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。
+> YouTubeで公開されている日本のレスリング大会の配信・動画3,360本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
-- データ更新日: 2026年10月9日
+- データ更新日: 2026年10月10日
 - お問い合わせ: https://japanwrestlingchannel.com/contact.html
 
 ## 主なページ
@@ -23,6 +23,7 @@
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2026年 動画98本
 - [藤波朱理杯 三重県少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-fujinami-cup/): 2025〜2026年 動画14本
 - [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/): 2014〜2026年 動画242本
 - [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/): 2014〜2026年 動画92本
@@ -45,7 +46,6 @@
 - [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2025年 動画104本
 - [東日本大学女子リーグ戦](https://japanwrestlingchannel.com/events/east-women-league/): 2024〜2025年 動画3本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2025年 動画118本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2025年 動画92本
 - [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/): 2023〜2025年 動画2本
 - [BUNSUGI International Wrestling Friendly Match](https://japanwrestlingchannel.com/events/x-bunsugi/): 2025年 動画1本
 - [COMBAT WRESTLING ASIA](https://japanwrestlingchannel.com/events/x-combat-asia/): 2025年 動画1本
@@ -98,6 +98,21 @@
 - [第41回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2024/): 2024年11月2日〜3日・埼玉・富士見市立市民総合体育館・動画6本
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/2023/): 2023年10月21日〜22日・埼玉・富士見市立市民総合体育館・動画5本
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/2022/): 2022年10月29日〜30日・埼玉・富士見市立市民総合体育館・動画6本
+
+### 全日本大学グレコローマン選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/university-greco/
+- [文部科学大臣杯 令和8年度 全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2026/): 2026年10月23日〜24日(予定)・東京・駒沢オリンピック公園総合運動場体育館・動画6本
+- [文部科学大臣杯 令和7年度 全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2025/): 2025年10月18日〜19日・東京・駒沢体育館・動画6本
+- [文部科学大臣杯 令和6年度全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2024/): 2024年10月23日〜24日・東京・駒沢屋内球技場・動画6本
+- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2023/): 2023年10月18日〜19日・東京・駒沢屋内球技場・動画6本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2022/): 2022年10月19日〜20日・東京・駒沢体育館・動画6本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2021/): 2021年10月9日〜10日・大阪・泉佐野市J:COM末広体育館・動画6本
+- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2020/): 2020年10月15日〜16日・東京・駒沢体育館・動画6本
+- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2019/): 2019年10月17日〜18日・東京・駒沢体育館・動画10本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2018/): 2018年10月18日〜19日・東京・駒沢屋内球技場・動画10本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2017/): 2017年10月21日〜22日・神奈川・平塚市総合体育館・動画8本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2016/): 2016年10月22日〜23日・山形県上山市・三友エンジニア体育文化センター・動画8本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2014/): 2014年9月25日〜26日・東京・駒沢体育館・動画8本
 
 ### 藤波朱理杯 三重県少年少女レスリング大会
 - 大会ページ: https://japanwrestlingchannel.com/events/x-fujinami-cup/
@@ -277,20 +292,6 @@
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2016/): 2016年11月12日〜13日・愛媛・宇和島市総合体育館・動画9本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2015/): 2015年11月14日〜15日・大阪・堺市金岡公園体育館・動画13本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2014/): 2014年11月12日〜13日・東京・駒沢体育館・動画19本
-
-### 全日本大学グレコローマン選手権
-- 大会ページ: https://japanwrestlingchannel.com/events/university-greco/
-- [文部科学大臣杯 令和7年度 全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2025/): 2025年10月18日〜19日・東京・駒沢体育館・動画6本
-- [文部科学大臣杯 令和6年度全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2024/): 2024年10月23日〜24日・東京・駒沢屋内球技場・動画6本
-- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2023/): 2023年10月18日〜19日・東京・駒沢屋内球技場・動画6本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2022/): 2022年10月19日〜20日・東京・駒沢体育館・動画6本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2021/): 2021年10月9日〜10日・大阪・泉佐野市J:COM末広体育館・動画6本
-- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2020/): 2020年10月15日〜16日・東京・駒沢体育館・動画6本
-- [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2019/): 2019年10月17日〜18日・東京・駒沢体育館・動画10本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2018/): 2018年10月18日〜19日・東京・駒沢屋内球技場・動画10本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2017/): 2017年10月21日〜22日・神奈川・平塚市総合体育館・動画8本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2016/): 2016年10月22日〜23日・山形県上山市・三友エンジニア体育文化センター・動画8本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2014/): 2014年9月25日〜26日・東京・駒沢体育館・動画8本
 
 ### 障がい者レスリング エキシビションマッチ
 - 大会ページ: https://japanwrestlingchannel.com/events/x-para/

@@ -1,9 +1,9 @@
 # レスリング配信アーカイブ(Japan Wrestling Channel アーカイブ)
 
-> YouTubeで公開されている日本のレスリング大会の配信・動画3,354本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。
+> YouTubeで公開されている日本のレスリング大会の配信・動画3,360本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画そのものはYouTubeで再生されます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
-- データ更新日: 2026年10月9日
+- データ更新日: 2026年10月10日
 - お問い合わせ: https://japanwrestlingchannel.com/contact.html
 
 ## 主なページ
@@ -23,6 +23,7 @@
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
+- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2026年 動画98本
 - [藤波朱理杯 三重県少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-fujinami-cup/): 2025〜2026年 動画14本
 - [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/): 2014〜2026年 動画242本
 - [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/): 2014〜2026年 動画92本
@@ -45,7 +46,6 @@
 - [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2025年 動画104本
 - [東日本大学女子リーグ戦](https://japanwrestlingchannel.com/events/east-women-league/): 2024〜2025年 動画3本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2025年 動画118本
-- [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2025年 動画92本
 - [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/): 2023〜2025年 動画2本
 - [BUNSUGI International Wrestling Friendly Match](https://japanwrestlingchannel.com/events/x-bunsugi/): 2025年 動画1本
 - [COMBAT WRESTLING ASIA](https://japanwrestlingchannel.com/events/x-combat-asia/): 2025年 動画1本
