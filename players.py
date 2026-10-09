@@ -305,9 +305,12 @@ def uww_videos_html(p, vids, bp):
     import uww_page
     e, n = bp.e, len(vids)
     rng = L(f"{{a}}〜{{b}}本目/{n}本", f"{{a}}–{{b}} of {n}")
+    # f 文字列の中に同じ引用符の f 文字列を入れると Python 3.11 で動かないので、先に作っておく(#108)
+    sub = L(f"{n}本・世界レスリング連合(UWW)の公式 YouTube",
+            f"{i18n.plural(n, 'video')} from the official YouTube channel of United World Wrestling (UWW)")
     return (f'<section class="vgroup uww-pl" id="uww" data-per="{UWW_PER_PAGE}" data-label="{L("国際大会の動画のページ", "International video pages")}"'
             f' data-prev="{L("前のページ", "Previous page")}" data-next="{L("次のページ", "Next page")}" data-range="{e(rng)}">'
-            f'<h3>{L("国際大会の動画", "International videos")}<small>{e(L(f"{n}本・世界レスリング連合(UWW)の公式 YouTube", f"{i18n.plural(n, 'video')} from the official YouTube channel of United World Wrestling (UWW)"))}</small></h3>'
+            f'<h3>{L("国際大会の動画", "International videos")}<small>{e(sub)}</small></h3>'
             f'<ul class="vlist">{"".join(uww_page.row(v, bp, p["id"]) for v in vids)}</ul>'
             f'<p class="hint">{L("動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。", "Titles are shown as published by UWW.")}'
             f' <a href="{U("/uww/")}">{L("国際大会の動画をすべて見る", "See all international videos")}</a></p>'
