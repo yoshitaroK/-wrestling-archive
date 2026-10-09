@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-10T06:18:22+09:00",
+ "built_at": "2026-10-10T07:38:40+09:00",
  "as_of": "2026-10-10",
  "video_count": 3360,
  "raw_count": 3360,
@@ -22,17 +22,17 @@
   "x-world-championships-2022-09-12"
  ],
  "events_with_videos": 216,
- "previous_video_count": 3354,
+ "previous_video_count": 3360,
  "missing_from_previous": [],
- "new_since_previous": 6,
+ "new_since_previous": 0,
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
   "total": 3722,
   "translated": 3722,
-  "new": 8,
+  "new": 0,
   "pending": 0,
-  "chars_used": 436,
+  "chars_used": 0,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 6,
