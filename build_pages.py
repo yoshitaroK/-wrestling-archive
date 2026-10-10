@@ -277,7 +277,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 def footer(as_of):
     if i18n.en():
         return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/faq/">FAQ</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
+<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/about/">About</a> · <a href="/en/faq/">FAQ</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
 <p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. All videos play on YouTube. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
 <p>Data updated: {e(fmt_date(as_of))}</p>
@@ -286,7 +286,7 @@ def footer(as_of):
 </html>
 """
     return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
+<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はすべて YouTube で再生されます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -1120,6 +1120,48 @@ def faq_items(data, series_list):
     ]
 
 
+def about_page(data, series_list, ctx):
+    """運営者情報(/about/)。誰が運営し、データをどこから集め、どう更新しているか(Google や AI が信頼できる情報源か判断する材料)"""
+    n_videos = len(data.get("videos", []))
+    years = [x["year"] for x in data.get("events", []) if x.get("n")]
+    y0 = min(years) if years else ""
+    crumbs = [(L("トップ", "Home"), "/"), (L("運営者情報", "About"), None)]
+    org = {"@type": "Organization", "@id": SITE + "/#organization", "name": "Japan Wrestling Channel", "url": SITE + "/",
+           "logo": SITE + "/assets/logo.png", "email": CONTACT_EMAIL}
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), org, {
+        "@type": "AboutPage", "url": SITE + U("/about/"), "name": L("運営者情報", "About"),
+        "about": {"@id": SITE + "/#organization"}, "publisher": {"@id": SITE + "/#organization"}}]}
+    h = head(L(f"運営者情報|{SITE_NAME}", f"About | {site_name()}"),
+             L("レスリング配信アーカイブは Japan Wrestling Channel 公式のサイトです。運営者、データの出典、更新のしかた、写真の掲載、連絡先について。",
+               "The Japan Wrestling Archive is the official site of Japan Wrestling Channel. Who runs it, where the data comes from, how it is updated, photos and contact."),
+             "/about/", "", jsonld, ctx["css"])
+    rows = [
+        (L("運営", "Operated by"), L("Japan Wrestling Channel(このサイトは Japan Wrestling Channel 公式の配信アーカイブです)",
+                                     "Japan Wrestling Channel (this site is the official stream archive of Japan Wrestling Channel)")),
+        (L("掲載している内容", "What is listed"),
+         L(f"YouTube で公開されている日本のレスリング大会の配信・動画{n_videos:,}本({y0}年以降)を、大会・開催年・日程・マットごとに整理しています。あわせて、技術動画、選手ごとの出場大会と成績、国際大会の動画、大会の写真を掲載しています。動画はすべて YouTube で再生されます。",
+           f"{n_videos:,} streams and videos of Japanese wrestling tournaments published on YouTube (since {y0}), organized by tournament, year, day and mat, plus technique videos, player pages with results, international videos and tournament photos. All videos play on YouTube.")),
+        (L("データの出典", "Data sources"),
+         L("動画は YouTube(Japan Wrestling Channel ほか)の公開情報から取得しています。大会の開催日・会場は、公益財団法人日本レスリング協会の大会ページ・事業報告書、旧協会サイト由来の記録、専門媒体の記事などをもとにした照合用の大会データに基づきます。出典は各開催回のページに表示しています。国際大会の動画は、世界レスリング連合(UWW)の公式 YouTube から日本人選手が出ている動画を集めています。",
+           "Videos come from public YouTube information (Japan Wrestling Channel and others). Tournament dates and venues come from our reference data, based on Japan Wrestling Federation event pages and annual reports, records from the former federation site and specialist media. Sources are shown on each edition page. International videos featuring Japanese wrestlers come from the official YouTube channel of United World Wrestling (UWW).")),
+        (L("更新", "Updates"),
+         L("毎日、日本時間の朝6時ごろに新しい動画を取り込み、ページを自動で作り直しています。動画と大会の対応が確定していないものは「確認待ち」として区別し、確認できたものから手作業で直しています。",
+           "Every day at around 6:00 a.m. Japan time, new videos are added and the pages are rebuilt automatically. Videos not yet confirmed to belong to an edition are marked \"Pending review\" and corrected by hand once checked.")),
+        (L("写真", "Photos"),
+         L("大会の写真は、撮影者の許可を得て掲載しています。著作権は撮影者にあります。写真の掲載・取り下げについては、お問い合わせからご連絡ください。",
+           "Tournament photos are published with the photographers' permission, and the copyright belongs to them. For questions about a photo or removal requests, please contact us.")),
+        (L("お問い合わせ", "Contact"),
+         L("掲載内容の誤り、動画の掲載・非表示、写真の取り下げ、取材・お仕事のご相談は、お問い合わせフォームからお送りください。",
+           "For corrections, listing or hiding a video, photo removal, or media and business inquiries, please use the contact form.")),
+    ]
+    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f'<h1>{L("運営者情報", "About this site")}</h1><dl class="facts">'
+    h += "".join(f"<dt>{e(k)}</dt><dd>{e(v)}</dd>" for k, v in rows) + "</dl>"
+    h += (f'<p class="tosearch-line"><a href="{U("/contact.html")}">{L("お問い合わせ", "Contact")} →</a>　'
+          f'<a href="{U("/faq/")}">{L("よくある質問", "FAQ")} →</a>　<a href="{U("/privacy/")}">{L("プライバシーポリシー", "Privacy Policy")} →</a></p>')
+    h += "</main>" + footer(ctx["as_of"])
+    return "/about/", h
+
+
 def faq_page(data, series_list, ctx):
     """よくある質問(/faq/)。FAQPage の構造化データ付き(Google や AI が答えとして引用しやすい形)"""
     items = faq_items(data, series_list)
@@ -1292,6 +1334,7 @@ def llms_txt(data, series_list, ctx):
         f"- [歴代優勝者]({SITE}/champions/): 主な大会の階級ごとの歴代優勝者",
         f"- [検索ページ]({SITE}/): 大会名・通称・動画タイトルで検索",
         f"- [English version]({SITE}/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)",
+        f"- [運営者情報]({SITE}/about/): 運営者(Japan Wrestling Channel)、データの出典、更新のしかた、写真の掲載について",
         f"- [よくある質問]({SITE}/faq/): 配信の見方・過去の大会・選手・写真・更新の頻度などの質問と答え",
         f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
@@ -1580,6 +1623,8 @@ def build(root=HERE, inline_css=False, only=None):
             pages.append((*privacy_page(ctx), PRIVACY_UPDATED))
             # よくある質問
             pages.append((*faq_page(data, listed, ctx), data.get("as_of")))
+            # 運営者情報
+            pages.append((*about_page(data, listed, ctx), data.get("as_of")))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))
             os.makedirs(os.path.dirname(contact), exist_ok=True)
             with open(contact, "w", encoding="utf-8") as f:
