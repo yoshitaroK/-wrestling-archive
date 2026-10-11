@@ -14,7 +14,7 @@ import json
 import os
 import re
 import urllib.parse
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
 import i18n
@@ -635,6 +635,37 @@ def year_rail(s, current_id, ctx):
 
 # ---------------------------------------------------------------- 大会ページ
 
+AUDIENCE = [("大学", "大学生", "university students"), ("高校", "高校生", "high school students"), ("中学", "中学生", "junior high school students"),
+            ("少年少女", "小学生などの子ども", "children"), ("社会人", "社会人", "working adults"), ("マスターズ", "マスターズ(ベテラン)の選手", "masters (veteran) wrestlers"),
+            ("年代別", "", "")]
+MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+
+def series_summary(s, evs, name):
+    """大会ページの最初に置く1〜2文の要約(Google や AI が引用しやすい形)。
+    大会データで確かめられることだけを書く:対象(大会の区分)と、例年の開催月(3回以上・6割以上が同じ月のときだけ)"""
+    if not s.get("master"):
+        return ""
+    if s.get("scope") == "海外":
+        first = L(f"{name}は、海外で開かれる国際大会です。", f"The {name} is an international tournament held outside Japan.")
+    else:
+        groups = s.get("groups") or []
+        aud = next((a for g, *a in AUDIENCE if groups == [g]), None)
+        if not aud:
+            return ""  # 区分が複数(例:一般・高校生)や対象外のときは書かない
+        if groups == ["年代別"]:
+            ages = sorted({u for c in s.get("categories") or [] for u in re.findall(r"U\d+", c)}, key=lambda u: -int(u[1:]))
+            if not ages:
+                return ""
+            aud = (f"年代別({'・'.join(ages)})の選手", f"{', '.join(ages)} age-group wrestlers")
+        first = L(f"{name}は、{aud[0]}が出場する国内のレスリング大会です。", f"The {name} is a Japanese wrestling tournament for {aud[1]}.")
+    months = [int(x["start"][5:7]) for x in evs if x.get("start") and not x.get("derived") and x.get("status") in ("held", "scheduled")]
+    if len(months) >= 3:
+        m, c = Counter(months).most_common(1)[0]
+        if c / len(months) >= 0.6:
+            first += L(f"例年{m}月ごろに開かれています。", f" It is usually held in {MONTHS_EN[m - 1]}.")
+    return first
+
 def series_page(s, ctx):
     path = f"/events/{s['id']}/"
     evs = ctx["events_by_series"].get(s["id"], [])
@@ -677,6 +708,9 @@ def series_page(s, ctx):
         lead = f"YouTubeで公開されている配信・動画{total}本を開催年ごとに整理しています。" + (f"動画があるのは{span}の{len(with_v)}開催回です。" if with_v else "")
         if not s.get("master"):
             lead += "この大会の公式の開催日・会場は確認中です。"
+    summary = series_summary(s, evs, name)
+    if summary:
+        lead = summary + L("", " ") + lead
     h += f'<p class="lead">{e(lead)}</p>'
     if i18n.en():
         if name != s["name"]:
