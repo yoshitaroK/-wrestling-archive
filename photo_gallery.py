@@ -494,7 +494,7 @@ def photo_index(ctx, photos_by_page, bp):
     return paths, info
 
 
-def home_cards(ctx, photos_by_page, bp, limit=12):
+def home_cards(ctx, photos_by_page, bp, limit=30):
     """トップページの「写真」の列。写真トップ(/photos/)のカードと同じ表紙・同じ順番。[{href, label, src, n}]"""
     paths, info = photo_index(ctx, photos_by_page, bp)
     out = []
