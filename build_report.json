@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-12T21:30:07+09:00",
+ "built_at": "2026-10-12T23:37:53+09:00",
  "as_of": "2026-10-12",
  "video_count": 3360,
  "raw_count": 3360,
@@ -131,22 +131,40 @@
   "series": 8
  },
  "photos": {
-  "entries": 301,
-  "shown": 301,
+  "entries": 841,
+  "shown": 841,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 10,
+  "pages_with_photos": 28,
   "by_page": {
+   "/events/east-autumn/2025/": 30,
+   "/events/east-league/2025/": 30,
    "/events/east-league/2026/": 30,
+   "/events/east-spring/2025/": 30,
    "/events/east-spring/2026/": 30,
+   "/events/highschool-greco/2025/": 30,
    "/events/highschool-greco/2026/": 30,
+   "/events/intercollegiate/2025/": 30,
    "/events/intercollegiate/2026/": 31,
+   "/events/interhigh/2025/": 30,
    "/events/interhigh/2026/": 30,
+   "/events/joc-junior/2025/": 30,
    "/events/joc-junior/2026/": 30,
+   "/events/juniorhigh-senbatsu/2025/": 30,
+   "/events/meiji-cup/2025/": 30,
    "/events/meiji-cup/2026/": 30,
    "/events/regional-関東-qualifier/": 30,
+   "/events/regional-関東-summer/2025/": 30,
+   "/events/shakaijin-open/2025/": 30,
+   "/events/shakaijin/2025/": 30,
    "/events/shakaijin/2026/": 30,
-   "/events/x-asian-championships/": 30
+   "/events/tenno-cup/2025/": 30,
+   "/events/u15-selection/2025/": 30,
+   "/events/u23-selection/2025/": 30,
+   "/events/university-championship/2025/": 30,
+   "/events/university-greco/2025/": 30,
+   "/events/x-asian-championships/": 30,
+   "/events/x-world-championships/": 30
   },
   "warnings": [],
   "errors": [],
@@ -226,7 +244,7 @@
   ]
  },
  "en": {
-  "pages": 1254,
+  "pages": 1272,
   "names": 521,
   "machine_translations": 3723,
   "missing_names": []
