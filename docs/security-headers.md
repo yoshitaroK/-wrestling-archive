@@ -31,7 +31,7 @@ CSP は「このサイトが読み込んでよい場所」の一覧です。間�
 値(1行で入れます):
 
 ```
-default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://formspree.io https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io mailto:; frame-ancestors 'self'; upgrade-insecure-requests
+default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://formspree.io https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io mailto:; frame-ancestors 'self'; upgrade-insecure-requests
 ```
 
 ### それぞれの意味
@@ -43,7 +43,7 @@ default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanag
 | `font-src` | Google Fonts のフォントファイル | 同上 |
 | `img-src` | 自分のサイト、YouTube のサムネイル(i.ytimg.com) | 動画一覧のサムネイル、写真(assets/photos/)は自分のサイト |
 | `connect-src` | 自分のサイト、Formspree、Google アナリティクス | data.json などの読み込み、お問い合わせの送信、アクセス解析 |
-| `frame-src 'none'` | なし | サイト内に YouTube などの埋め込み(iframe)は無い |
+| `frame-src` | YouTube の埋め込みプレーヤー(www.youtube-nocookie.com) | 動画をサイトの中で再生するため(`video_player.py`)。`'none'` にすると動画が再生できなくなる |
 | `frame-ancestors 'self'` | 自分のサイトだけ | 他人のサイトに埋め込まれてなりすまされるのを防ぐ |
 | `object-src 'none'` / `base-uri 'self'` | なし / 自分のサイト | 古いプラグインや、リンク先を書き換える攻撃を防ぐ |
 | `form-action` | 自分のサイト、Formspree、メール | お問い合わせフォームの送信先 |

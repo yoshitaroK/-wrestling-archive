@@ -27,6 +27,7 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 | `photos.json` | **手で編集**。どの写真をどのページに載せるかの設定 |
 | `photo_gallery.py` | 写真の縮小・サムネイル作成とギャラリー表示(`build_pages.py` から使われます) |
 | `assets/photos/` | 自動生成される縮小版の写真(手で編集しない) |
+| `video_player.py` | 動画をサイトの中で再生するしくみ。動画のリンクを押すと、ページを離れずに YouTube のプレーヤーが画面の上に開きます(`assets/player.js` に書き出され、すべてのページで読み込まれます)。Ctrl/⌘+クリックではこれまでどおり YouTube で開きます |
 | `champions.py` | 大会ごとの歴代優勝者のページ(`champions/`。日本語版だけ)。`player_results.csv` の「1位」から自動で作ります(`build_pages.py` から使われます) |
 | `.github/workflows/update.yml` | 毎日の自動更新の設定 |
 
