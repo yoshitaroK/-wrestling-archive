@@ -317,7 +317,7 @@ def gallery_html(photos, e, title, path=None, more=None):
         cap = e(p["caption"]) + ((" " + credit_html) if credit_html and not shared else "")
         items.append(
             f'<li{" hidden" if i >= GALLERY_FIRST else ""}><a href="{e(p["full"])}" data-full="{e(p["full"])}"'
-            f' data-cap="{e(e(p["caption"]) + (" " + credit_html if credit_html else ""))}">'
+            f' data-cap="{e(p["caption"])}" data-credit="{e(credit)}">'
             f'<img src="{e(p["thumb"])}" alt="{e(alt)}" loading="lazy" decoding="async"{wh(p["tw"], p["th"])}></a>'
             + (f'<p class="pcap">{cap}</p>' if cap else "") + "</li>")
     return (f'<section class="section photos" aria-label="{L("写真", "Photos")}"><h2 class="vh">{L("写真", "Photos")} <small>{L(f"{len(photos)}枚", str(len(photos)))}</small></h2>'
@@ -345,7 +345,7 @@ if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll(
 if(!d.showModal)return;
 var as=[].slice.call(g.querySelectorAll('.pgrid a')),im=d.querySelector('img'),fc=d.querySelector('figcaption'),i=0,x0=null;
 function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img');
-im.src=a.getAttribute('data-full');im.alt=t.alt;fc.innerHTML=a.getAttribute('data-cap')||'';d.classList.toggle('one',as.length<2);}
+im.src=a.getAttribute('data-full');im.alt=t.alt;fc.textContent=a.getAttribute('data-cap')||'';var cr=a.getAttribute('data-credit');if(cr){var sp=document.createElement('span');sp.className='pcredit';sp.textContent=cr;fc.appendChild(sp);}d.classList.toggle('one',as.length<2);}
 as.forEach(function(a,k){a.addEventListener('click',function(ev){ev.preventDefault();show(k);d.showModal();});});
 d.querySelector('.plb-x').onclick=function(){d.close();};d.querySelector('.plb-p').onclick=function(){show(i-1);};d.querySelector('.plb-n').onclick=function(){show(i+1);};
 d.addEventListener('click',function(ev){if(ev.target===d||ev.target.tagName==='FIGURE')d.close();});
@@ -360,7 +360,7 @@ if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll(
 if(!d.showModal)return;
 var as=[].slice.call(g.querySelectorAll('.pgrid a')),im=d.querySelector('img'),fc=d.querySelector('figcaption'),i=0,x0=null;
 function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img');
-im.src=a.getAttribute('data-full');im.alt=t.alt;fc.innerHTML=a.getAttribute('data-cap')||'';d.classList.toggle('one',as.length<2);}
+im.src=a.getAttribute('data-full');im.alt=t.alt;fc.textContent=a.getAttribute('data-cap')||'';var cr=a.getAttribute('data-credit');if(cr){var sp=document.createElement('span');sp.className='pcredit';sp.textContent=cr;fc.appendChild(sp);}d.classList.toggle('one',as.length<2);}
 as.forEach(function(a,k){a.addEventListener('click',function(ev){ev.preventDefault();show(k);d.showModal();});});
 d.querySelector('.plb-x').onclick=function(){d.close();};d.querySelector('.plb-p').onclick=function(){show(i-1);};d.querySelector('.plb-n').onclick=function(){show(i+1);};
 d.addEventListener('click',function(ev){if(ev.target===d||ev.target.tagName==='FIGURE')d.close();});
