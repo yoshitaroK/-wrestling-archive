@@ -38,7 +38,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      # 順番待ちのあいだに前の実行が保存したものも含めて、最新の main から作り直す
+      # (PR のマージが続いたとき、古い状態から作り直して保存がぶつかるのを防ぐ)
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
