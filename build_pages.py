@@ -696,6 +696,10 @@ def series_page(s, ctx):
     else:
         title = f"{s['name']} 配信動画アーカイブ({span}・{total}本)|{SITE_NAME}"
         desc = f"{s['name']}の配信動画{total}本を開催年ごとに掲載。{span + '、' if span else ''}{len(with_v)}開催回。" + (f"別名:{'、'.join(alias[:4])}。" if alias else "")
+    if not total:
+        # 配信動画がまだない大会(写真・アルバムや結果のリンクだけの開催回がある)
+        title = L(f"{s['name']}|{SITE_NAME}", f"{name} | {site_name()}")
+        desc = L(f"{s['name']}の開催年ごとの情報・写真。配信動画はまだありません。", f"Editions, photos and links for the {name}. No videos yet.")
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (name, None)]
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": L(f"{s['name']} 配信動画アーカイブ", f"{name} video archive"), "url": SITE + U(path),
@@ -708,10 +712,14 @@ def series_page(s, ctx):
     if i18n.en():
         lead = f"{i18n.plural(total, 'stream/video', 'streams/videos')} published on YouTube, organized by year." + (
             f" Videos are available for {i18n.plural(len(with_v), 'edition')} ({span})." if with_v else "")
+        if not total:
+            lead = "No videos for this tournament yet. Choose a year to see its photos and links."
         if not s.get("master"):
             lead += " Official dates and venues for this tournament are being confirmed."
     else:
         lead = f"YouTubeで公開されている配信・動画{total}本を開催年ごとに整理しています。" + (f"動画があるのは{span}の{len(with_v)}開催回です。" if with_v else "")
+        if not total:
+            lead = "この大会の配信動画はまだありません。開催年を選ぶと、写真や結果のリンクを見られます。"
         if not s.get("master"):
             lead += "この大会の公式の開催日・会場は確認中です。"
     summary = series_summary(s, evs, name)
@@ -1656,7 +1664,9 @@ def build(root=HERE, inline_css=False, only=None):
                 lastmod = max((jst_date(v.get("p")) for v in by_event.get(ev["id"], [])), default=data.get("as_of"))
                 pages.append((path, doc, lastmod))
         for s in data["series"]:
-            if s.get("n") and (only is None or s["id"] in only):
+            # 配信動画がなくても、写真・アルバムや結果のリンクで開催回のページがある大会は、大会のページも作る(開催回ページの「大会名」のリンク先)
+            has_page = s.get("n") or any(x["id"] in slugs for x in events_by_series[s["id"]])
+            if has_page and (only is None or s["id"] in only):
                 path, doc = series_page(s, ctx)
                 vids = [v for x in events_by_series[s["id"]] for v in by_event.get(x["id"], [])] + loose_by_series[s["id"]]
                 lastmod = max((jst_date(v.get("p")) for v in vids), default=data.get("as_of"))
