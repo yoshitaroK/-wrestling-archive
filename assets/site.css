@@ -6,7 +6,7 @@
   --pink:#ff4458; --pink-fill:#d91f36; --pink-deep:#ff8591; --pink-tint:rgba(255,68,88,.16); --pink-line:#5e2128; --grad-a:#1a1a21; --grad-b:#2e2e38;
   /* ヘッダー・フッターの帯(名前は前のまま。白テーマ・黒テーマのどちらでも黒) */
   --navy:#0b0b0e; --navy-2:#050506; --on-navy:#ffffff; --on-navy-2:#a9a9b3; --brand-pink:#ff2e7e;
-  --card-r:8px; --shadow-hi:0 14px 34px rgba(0,0,0,.55);
+  --card-r:8px; --shadow-hi:0 14px 34px rgba(0,0,0,.55); --hero-fade:#08080a;
   --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
   --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
   --font:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
@@ -60,7 +60,7 @@ button,input,select{font:inherit;color:inherit}
     color-scheme:light;
     --bg:#f6f6f8; --bg2:#ffffff; --surface:#ffffff; --surface-2:#ececf0; --ink:#121216; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e2e2e8; --line-hi:#b5b5c0;
     --pink:#c8102e; --pink-fill:#c8102e; --pink-deep:#a50d26; --pink-tint:rgba(200,16,46,.08); --pink-line:#f0bcc4; --grad-a:#2a2a33; --grad-b:#4a4a56;
-    --navy:#0b0b0e; --navy-2:#050506; --shadow-hi:0 12px 28px rgba(18,18,22,.18);
+    --navy:#0b0b0e; --navy-2:#050506; --shadow-hi:0 12px 28px rgba(18,18,22,.18); --hero-fade:rgba(8,8,10,.7);
     --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
     --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
 }
@@ -96,16 +96,48 @@ button,input,select{font:inherit;color:inherit}
 .jcredit:hover{text-decoration:underline}
 .jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .jcredit[hidden]{display:none}
+/* トップページ:メニューを特集の写真の上に透明で重ね、下へスクロールすると黒い帯にする(html.overlay と --hdr-h はスクリプトが付ける) */
+html.overlay .jhero{margin-top:calc(-1 * var(--hdr-h,0px))}
+html.overlay .jhero-in{padding-top:calc(48px + var(--hdr-h,0px))}
+html.overlay .top{transition:background-color .3s,border-color .3s}
+html.overlay .top.see-through{background:transparent;border-bottom-color:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+/* 特集(最近の大会・これからの大会・新しい写真を ‹ › で切り替える。自動では動かない) */
+.jhero-scrim{background:linear-gradient(to top,var(--hero-fade) 0,rgba(8,8,10,0) 38%),linear-gradient(to bottom,rgba(8,8,10,.65) 0,rgba(8,8,10,0) 160px),linear-gradient(90deg,rgba(8,8,10,.85) 0%,rgba(8,8,10,.5) 50%,rgba(8,8,10,.1) 100%)}
+.jhero .jhero-in{min-height:640px;justify-content:flex-start}
+.jhero h1{font-size:28px;font-weight:700;letter-spacing:.04em;margin-bottom:6px}
+.jlead{font-size:14px;margin-bottom:18px}
+.feat{margin-top:auto;padding-top:48px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}
+.feat-main{min-width:0;max-width:760px}
+.feat .badge-l{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;background:var(--pink-fill);color:#fff;border-radius:4px;padding:2px 9px;margin-bottom:12px}
+.feat .fn{display:block;font-size:38px;font-weight:700;line-height:1.3;letter-spacing:.02em;color:#fff;text-decoration:none;text-shadow:0 2px 18px rgba(0,0,0,.45);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:balance}
+.feat .fm{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;margin-top:10px;font-size:14px;color:#e4e4ea}
+.feat .fm .num{font-size:20px;color:#fff;margin-right:1px}
+.feat .cta{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#fff;color:#0b0b0e;font-weight:700;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none}
+.feat .cta::before{content:"";width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent var(--pink-fill)}
+.feat .cta:hover{background:#e9e9ee}
+.feat .cta:focus-visible,.fnav button:focus-visible,.feat .fn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.fnav{display:flex;align-items:center;gap:10px}
+.fnav .fb{width:42px;height:42px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(8,8,10,.4);color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:0 0 3px}
+.fnav .fb:hover{background:rgba(255,255,255,.16);border-color:#fff}
+.fdots{display:flex;gap:6px}
+.fdots button{width:22px;height:22px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.fdots button::before{content:"";width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.4);transition:width .2s,background .2s}
+.fdots button[aria-current="true"]::before{width:22px;background:#fff}
+/* 検索・絞り込みをしているときは特集をしまって、結果をすぐ見せる */
+.jhero.compact .jhero-in{min-height:0;padding-bottom:40px}
+.jhero.compact .feat{display:none}
 
 /* 検索・絞り込み */
 .searchbox{padding:14px 0 4px}
 .searchrow input{width:100%;border:1px solid var(--surface-2);border-radius:10px;padding:13px 16px;font-size:16px;background:var(--surface);color:var(--ink)}
 .searchrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
 .hint{margin:6px 2px 0;font-size:12px;color:var(--ink3)}
-.ftoggle{display:none;align-items:center;gap:6px;margin-top:12px;min-height:40px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.ftoggle{display:inline-flex;align-items:center;gap:6px;margin-top:12px;min-height:40px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .ftoggle::after{content:"▾";font-size:12px;transition:transform .2s}
 .ftoggle[aria-expanded="true"]::after{transform:rotate(180deg)}
 .filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;gap:8px;margin-top:12px;align-items:end}
+.filters:not(.open){display:none}
 .filters label{display:flex;flex-direction:column;font-size:11.5px;color:var(--ink2);gap:3px;min-width:0}
 .filters select{border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
 .filters .check{flex-direction:row;align-items:center;gap:8px;padding:8px 2px;font-size:13px;color:var(--ink);white-space:nowrap}
@@ -156,6 +188,18 @@ main{padding:10px 0 60px}
 .shelf{margin:0 0 30px}
 .shelf h2,.section h2{font-size:19px;font-weight:700;margin:0 0 12px;letter-spacing:.04em}
 .shelf .sub{font-weight:400;font-size:12px;color:var(--ink3);margin-left:8px}
+.shelf-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.shelf-h h2{margin-bottom:4px}
+.shelf .all{flex:0 0 auto;border:0;background:none;padding:4px 0;font:inherit;font-size:13px;color:var(--ink2);text-decoration:none;cursor:pointer;white-space:nowrap}
+.shelf .all:hover{color:var(--ink)}
+.rowwrap{position:relative}
+.rbtn{position:absolute;top:10px;z-index:3;width:52px;aspect-ratio:auto;height:var(--rb-h,146px);border:0;padding:0;cursor:pointer;color:var(--ink);font-size:40px;line-height:1;opacity:0;transition:opacity .2s}
+.rbtn.prev{left:-8px;background:linear-gradient(90deg,var(--bg) 20%,transparent)}
+.rbtn.next{right:-8px;background:linear-gradient(270deg,var(--bg) 20%,transparent)}
+.rowwrap:hover .rbtn,.rbtn:focus-visible{opacity:1}
+.rbtn[disabled]{display:none}
+@media (hover:none){.rbtn{display:none}}
+.thumb.photo{background:var(--surface-2)}
 .row{display:grid;grid-auto-flow:column;grid-auto-columns:260px;gap:14px;overflow-x:auto;padding:10px 2px 14px;scroll-snap-type:x proximity;scrollbar-width:none}
 .row::-webkit-scrollbar{display:none}
 .tile{scroll-snap-align:start;text-align:left;display:block;min-width:0;color:inherit;text-decoration:none}
@@ -163,6 +207,7 @@ main{padding:10px 0 60px}
 .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
 .thumb .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:10px 11px;color:#fff;font-weight:700;font-size:12.5px;line-height:1.4;
   background:linear-gradient(to top,rgba(0,0,0,.45),rgba(0,0,0,0) 70%)}
+.thumb img~.ph{display:none}
 .thumb .rk{position:absolute;top:8px;left:9px;z-index:2;font-family:var(--num);font-size:15px;color:#fff;background:rgba(0,0,0,.45);border-radius:6px;padding:0 7px}
 .tile .tt{font-weight:500;font-size:13.5px;line-height:1.5;margin-top:10px;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tile .tm{font-size:12px;color:var(--ink3);margin-top:2px}
@@ -273,18 +318,23 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
   /* 項目が5つになったので、狭い画面では横にはみ出さず2行に折り返す */
   .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:0 14px;flex-wrap:wrap;padding-top:2px}
-  .topnav a{font-size:13px;padding:6px 0 8px}
+  .topnav a{font-size:13px;padding:6px 0 8px;letter-spacing:0}
   .hsearch{order:5;width:100%;margin:2px 0 10px}
   .top{position:static}
   .hsearch input{font-size:16px;padding:9px 4px 9px 12px}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
-  /* スマホでは絞り込みをたたんで、結果をすぐ見られるようにする(条件を選んでいるときは開いておく) */
-  .ftoggle{display:inline-flex}
-  .filters:not(.open){display:none}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
-  .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
-  .jhero h1{font-size:24px;margin-bottom:6px}
+  .top{position:relative}
+  .jhero-in,.jhero .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
+  html.overlay .jhero-in{padding-top:calc(22px + var(--hdr-h,0px))}
+  .jhero h1{font-size:20px;margin-bottom:6px}
+  .feat{padding-top:30px;gap:16px}
+  .feat .fn{font-size:22px}
+  .feat .fm{font-size:12.5px}
+  .feat .fm .num{font-size:17px}
+  .feat .cta{margin-top:14px;padding:10px 18px;font-size:13.5px}
+  .fnav .fb{width:36px;height:36px;font-size:19px}
   .jlead{font-size:12.5px;margin-bottom:14px}
   .jlead .num{font-size:17px}
   .jhero .searchrow input{padding:13px 14px;font-size:16px}
@@ -292,7 +342,7 @@ footer p{margin:0 0 6px;max-width:76ch}
   .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px);padding:6px 9px}
   .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
-  .row{grid-auto-columns:66%}
+  .row{grid-auto-columns:41%;gap:10px}
   .sbody{padding:2px 12px 16px}
   .shead .sthumb{flex-basis:112px}
   .shead{gap:10px;padding:10px}

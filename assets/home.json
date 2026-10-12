@@ -1,0 +1,279 @@
+{
+ "about": "自動生成。トップページの「技術動画」「写真」の列(build_pages.py)。手で編集しない",
+ "ja": {
+  "tech": [
+   {
+    "id": "6VuXbpM_At8",
+    "t": "2on1からの展開　パート２",
+    "cat": "組み手・スタンド",
+    "href": "/technique/stand/"
+   },
+   {
+    "id": "o4srOHDNsq4",
+    "t": "2on1からの展開　パート1",
+    "cat": "組み手・スタンド",
+    "href": "/technique/stand/"
+   },
+   {
+    "id": "Mm-F4BRO9Xk",
+    "t": "【ガブり方の基本】相手の頭を落としてガブる3つの方法",
+    "cat": "グラウンド",
+    "href": "/technique/ground/"
+   },
+   {
+    "id": "lyELTf12tL0",
+    "t": "4種類の『手取り』のテクニック",
+    "cat": "組み手・スタンド",
+    "href": "/technique/stand/"
+   },
+   {
+    "id": "oaIJskcnXNU",
+    "t": "タックルに入るタイミングのポイント",
+    "cat": "タックル",
+    "href": "/technique/tackle/"
+   },
+   {
+    "id": "dwSM-G-hjBM",
+    "t": "【レスリングの基本】片足タックルの切り方",
+    "cat": "ディフェンス",
+    "href": "/technique/defense/"
+   },
+   {
+    "id": "41_DL0T-obU",
+    "t": "相手がレッグホールドをしてきた際の処理について",
+    "cat": "ディフェンス",
+    "href": "/technique/defense/"
+   },
+   {
+    "id": "2NzQLC4JV3c",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その5〜",
+    "cat": "タックル",
+    "href": "/technique/tackle/"
+   },
+   {
+    "id": "EwEza--XHds",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その4〜",
+    "cat": "タックル",
+    "href": "/technique/tackle/"
+   },
+   {
+    "id": "HkPQnp6hoAU",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その3〜",
+    "cat": "タックル",
+    "href": "/technique/tackle/"
+   },
+   {
+    "id": "-vaMPBQhUQk",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その2〜",
+    "cat": "タックル",
+    "href": "/technique/tackle/"
+   },
+   {
+    "id": "2XuX_hchT04",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その1〜",
+    "cat": "タックル",
+    "href": "/technique/tackle/"
+   }
+  ],
+  "photos": [
+   {
+    "href": "/photos/x-asian-championships/",
+    "label": "アジア選手権(海外) 2026年",
+    "src": "/assets/photos/68e2f731c37a-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/regional-関東-qualifier/",
+    "label": "関東高校選抜・新人・全国高校選抜予選 2026年",
+    "src": "/assets/photos/c0ea6ebdad24-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/intercollegiate/2026/",
+    "label": "全日本学生選手権（インカレ） 2026年",
+    "src": "/assets/photos/79f66dfe139f-t.jpg",
+    "n": 31
+   },
+   {
+    "href": "/photos/highschool-greco/2026/",
+    "label": "全国高校生グレコローマン選手権 2026年",
+    "src": "/assets/photos/9d678dd7ec29-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/interhigh/2026/",
+    "label": "全国高校総体（インターハイ） 2026年",
+    "src": "/assets/photos/67c5dd266247-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/east-spring/2026/",
+    "label": "東日本学生選手権（春季大会） 2026年",
+    "src": "/assets/photos/5625506c5298-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/shakaijin/2026/",
+    "label": "全日本社会人選手権 2026年",
+    "src": "/assets/photos/4a8a3ffa82c6-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/east-league/2026/",
+    "label": "東日本学生リーグ戦 2026年",
+    "src": "/assets/photos/ce952a42e7d1-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/meiji-cup/2026/",
+    "label": "明治杯全日本選抜選手権 2026年",
+    "src": "/assets/photos/0ef83e29e6d8-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/photos/joc-junior/2026/",
+    "label": "JOC杯全日本ジュニア・U20・U17選手権 2026年",
+    "src": "/assets/photos/e1b3dc67bbfc-t.jpg",
+    "n": 30
+   }
+  ]
+ },
+ "en": {
+  "tech": [
+   {
+    "id": "6VuXbpM_At8",
+    "t": "2on1からの展開　パート２",
+    "cat": "Hand fighting & standing",
+    "href": "/en/technique/stand/"
+   },
+   {
+    "id": "o4srOHDNsq4",
+    "t": "2on1からの展開　パート1",
+    "cat": "Hand fighting & standing",
+    "href": "/en/technique/stand/"
+   },
+   {
+    "id": "Mm-F4BRO9Xk",
+    "t": "【ガブり方の基本】相手の頭を落としてガブる3つの方法",
+    "cat": "Par terre (ground)",
+    "href": "/en/technique/ground/"
+   },
+   {
+    "id": "lyELTf12tL0",
+    "t": "4種類の『手取り』のテクニック",
+    "cat": "Hand fighting & standing",
+    "href": "/en/technique/stand/"
+   },
+   {
+    "id": "oaIJskcnXNU",
+    "t": "タックルに入るタイミングのポイント",
+    "cat": "Takedowns (tackles)",
+    "href": "/en/technique/tackle/"
+   },
+   {
+    "id": "dwSM-G-hjBM",
+    "t": "【レスリングの基本】片足タックルの切り方",
+    "cat": "Defense",
+    "href": "/en/technique/defense/"
+   },
+   {
+    "id": "41_DL0T-obU",
+    "t": "相手がレッグホールドをしてきた際の処理について",
+    "cat": "Defense",
+    "href": "/en/technique/defense/"
+   },
+   {
+    "id": "2NzQLC4JV3c",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その5〜",
+    "cat": "Takedowns (tackles)",
+    "href": "/en/technique/tackle/"
+   },
+   {
+    "id": "EwEza--XHds",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その4〜",
+    "cat": "Takedowns (tackles)",
+    "href": "/en/technique/tackle/"
+   },
+   {
+    "id": "HkPQnp6hoAU",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その3〜",
+    "cat": "Takedowns (tackles)",
+    "href": "/en/technique/tackle/"
+   },
+   {
+    "id": "-vaMPBQhUQk",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その2〜",
+    "cat": "Takedowns (tackles)",
+    "href": "/en/technique/tackle/"
+   },
+   {
+    "id": "2XuX_hchT04",
+    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その1〜",
+    "cat": "Takedowns (tackles)",
+    "href": "/en/technique/tackle/"
+   }
+  ],
+  "photos": [
+   {
+    "href": "/en/photos/x-asian-championships/",
+    "label": "Asian Championships (overseas) 2026",
+    "src": "/assets/photos/68e2f731c37a-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/regional-関東-qualifier/",
+    "label": "Kanto High School Selection / Rookie Tournament (National Selection Qualifier) 2026",
+    "src": "/assets/photos/c0ea6ebdad24-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/intercollegiate/2026/",
+    "label": "All Japan Intercollegiate Championships (Inter-College) 2026",
+    "src": "/assets/photos/79f66dfe139f-t.jpg",
+    "n": 31
+   },
+   {
+    "href": "/en/photos/highschool-greco/2026/",
+    "label": "All Japan High School Greco-Roman Championships 2026",
+    "src": "/assets/photos/9d678dd7ec29-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/interhigh/2026/",
+    "label": "All Japan High School Championships (Inter-High) 2026",
+    "src": "/assets/photos/67c5dd266247-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/east-spring/2026/",
+    "label": "East Japan Collegiate Championships (Spring) 2026",
+    "src": "/assets/photos/5625506c5298-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/shakaijin/2026/",
+    "label": "All Japan Working Adults Championships 2026",
+    "src": "/assets/photos/4a8a3ffa82c6-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/east-league/2026/",
+    "label": "East Japan Collegiate League 2026",
+    "src": "/assets/photos/ce952a42e7d1-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/meiji-cup/2026/",
+    "label": "Meiji Cup All Japan Invitational Championships 2026",
+    "src": "/assets/photos/0ef83e29e6d8-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/joc-junior/2026/",
+    "label": "JOC Cup All Japan Junior Championships (U20/U17) 2026",
+    "src": "/assets/photos/e1b3dc67bbfc-t.jpg",
+    "n": 30
+   }
+  ]
+ }
+}
