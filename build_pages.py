@@ -166,8 +166,8 @@ def assign_slugs(data, slug_path):
 
 
 def page_worthy(ev):
-    # 配信動画がある開催回のほか、写真・アルバム(photos.json)がある開催回もページを作る
-    return ev.get("n", 0) > 0 or bool(ev.get("_photo_page"))
+    # 配信動画がある開催回のほか、写真・アルバム(photos.json)や、結果・公式サイトのリンク(overrides.json の event_links)がある開催回もページを作る
+    return ev.get("n", 0) > 0 or bool(ev.get("_photo_page")) or bool(ev.get("links"))
 
 
 # ---------------------------------------------------------------- 共通パーツ
@@ -416,6 +416,8 @@ def event_page(ev, ctx):
     status = ev.get("status")
     venue = N(ev.get("venue"))
     others = sorted({N(v["ch"]) for v in vids if v.get("ch")})
+    # 配信動画がない開催回は、写真があれば写真へ、なければ結果・公式サイトのボタンへ案内する
+    has_ph = path in ctx["photo_paths"]
     n_main = sum(1 for v in vids if not v.get("ch"))
     rng = fmt_range(ev.get("start"), ev.get("end")) if ev.get("start") else ""
 
@@ -430,7 +432,7 @@ def event_page(ev, ctx):
         if vids:
             lead_parts.append(f" {i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
         else:
-            lead_parts.append(" No videos for this edition yet. See the photos below.")
+            lead_parts.append(" No videos for this edition yet. " + ("See the photos below." if has_ph else "Use the buttons below for results and tournament information."))
         if others:
             lead_parts.append(f" Includes {n_main} Japan Wrestling Channel streams plus videos from {', '.join(others)}." if n_main
                               else f" All videos are published by {', '.join(others)}.")
@@ -445,7 +447,7 @@ def event_page(ev, ctx):
         if vids:
             lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
         else:
-            lead_parts.append("この開催回の配信動画はまだありません。下の「写真」から写真を見られます。")
+            lead_parts.append("この開催回の配信動画はまだありません。" + ("下の「写真」から写真を見られます。" if has_ph else "結果や大会の情報は、下のボタンから見られます。"))
         if others:
             lead_parts.append(f"Japan Wrestling Channel の配信{n_main}本のほか、{'、'.join(others)}の動画を含みます。" if n_main
                               else f"いずれも{'、'.join(others)}が公開している動画です。")
@@ -522,7 +524,8 @@ def event_page(ev, ctx):
                       else L("大会情報(日本レスリング協会)", "Tournament info (Japan Wrestling Federation)")))
     if links:
         h += '<p class="elinks">' + "".join(
-            f'<a class="elink" href="{e(u)}" target="_blank" rel="noopener">{e(t)} ↗</a>' for u, t in links) + "</p>"
+            f'<a class="elink{" primary" if ("結果" in t or "Results" in t or "results" in t) and i < len(ev.get("links") or []) else ""}" href="{e(u)}" target="_blank" rel="noopener">{e(t)} ↗</a>'
+            for i, (u, t) in enumerate(links)) + "</p>"
     # これから開催される大会は「カレンダーに追加」
     import calendar_page
     if (ev.get("start") and not ev.get("derived") and status not in ("cancelled", "postponed")
@@ -1489,6 +1492,8 @@ a.yr{text-decoration:none}
 .elinks{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
 .elink{display:inline-block;padding:8px 18px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .elink:hover{border-color:var(--pink)}
+.elink.primary{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
+.elink.primary:hover{filter:brightness(1.12)}
 .tosearch-line{margin:26px 0 0;font-size:13px}
 .page .section{margin-top:24px}
 .page .aliases{margin:0 0 6px}

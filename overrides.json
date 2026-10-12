@@ -254,6 +254,12 @@
    "url": "https://jwfcssite.wixsite.com/open2026",
    "label": "大会公式サイト",
    "checked_on": "2026-10-03"
+  },
+  {
+   "event_id": "wre-2026-kokutai-1012",
+   "url": "https://kirokukensaku.net/5NS26/discipline_date_20261012.html",
+   "label": "結果(速報)",
+   "checked_on": "2026-10-12"
   }
  ],
  "event_dates": [
