@@ -53,7 +53,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
   --pink:#ff4458; --pink-fill:#d91f36; --pink-deep:#ff8591; --pink-tint:rgba(255,68,88,.16); --pink-line:#5e2128; --grad-a:#1a1a21; --grad-b:#2e2e38;
   /* ヘッダー・フッターの帯(名前は前のまま。白テーマ・黒テーマのどちらでも黒) */
   --navy:#0b0b0e; --navy-2:#050506; --on-navy:#ffffff; --on-navy-2:#a9a9b3; --brand-pink:#ff2e7e;
-  --card-r:8px; --shadow-hi:0 14px 34px rgba(0,0,0,.55);
+  --card-r:8px; --shadow-hi:0 14px 34px rgba(0,0,0,.55); --hero-fade:#08080a;
   --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
   --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
   --font:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
@@ -107,7 +107,7 @@ button,input,select{font:inherit;color:inherit}
     color-scheme:light;
     --bg:#f6f6f8; --bg2:#ffffff; --surface:#ffffff; --surface-2:#ececf0; --ink:#121216; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e2e2e8; --line-hi:#b5b5c0;
     --pink:#c8102e; --pink-fill:#c8102e; --pink-deep:#a50d26; --pink-tint:rgba(200,16,46,.08); --pink-line:#f0bcc4; --grad-a:#2a2a33; --grad-b:#4a4a56;
-    --navy:#0b0b0e; --navy-2:#050506; --shadow-hi:0 12px 28px rgba(18,18,22,.18);
+    --navy:#0b0b0e; --navy-2:#050506; --shadow-hi:0 12px 28px rgba(18,18,22,.18); --hero-fade:rgba(8,8,10,.7);
     --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
     --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
 }
@@ -143,16 +143,48 @@ button,input,select{font:inherit;color:inherit}
 .jcredit:hover{text-decoration:underline}
 .jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .jcredit[hidden]{display:none}
+/* トップページ:メニューを特集の写真の上に透明で重ね、下へスクロールすると黒い帯にする(html.overlay と --hdr-h はスクリプトが付ける) */
+html.overlay .jhero{margin-top:calc(-1 * var(--hdr-h,0px))}
+html.overlay .jhero-in{padding-top:calc(48px + var(--hdr-h,0px))}
+html.overlay .top{transition:background-color .3s,border-color .3s}
+html.overlay .top.see-through{background:transparent;border-bottom-color:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+/* 特集(最近の大会・これからの大会・新しい写真を ‹ › で切り替える。自動では動かない) */
+.jhero-scrim{background:linear-gradient(to top,var(--hero-fade) 0,rgba(8,8,10,0) 38%),linear-gradient(to bottom,rgba(8,8,10,.65) 0,rgba(8,8,10,0) 160px),linear-gradient(90deg,rgba(8,8,10,.85) 0%,rgba(8,8,10,.5) 50%,rgba(8,8,10,.1) 100%)}
+.jhero .jhero-in{min-height:640px;justify-content:flex-start}
+.jhero h1{font-size:28px;font-weight:700;letter-spacing:.04em;margin-bottom:6px}
+.jlead{font-size:14px;margin-bottom:18px}
+.feat{margin-top:auto;padding-top:48px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}
+.feat-main{min-width:0;max-width:760px}
+.feat .badge-l{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;background:var(--pink-fill);color:#fff;border-radius:4px;padding:2px 9px;margin-bottom:12px}
+.feat .fn{display:block;font-size:38px;font-weight:700;line-height:1.3;letter-spacing:.02em;color:#fff;text-decoration:none;text-shadow:0 2px 18px rgba(0,0,0,.45);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:balance}
+.feat .fm{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;margin-top:10px;font-size:14px;color:#e4e4ea}
+.feat .fm .num{font-size:20px;color:#fff;margin-right:1px}
+.feat .cta{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#fff;color:#0b0b0e;font-weight:700;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none}
+.feat .cta::before{content:"";width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent var(--pink-fill)}
+.feat .cta:hover{background:#e9e9ee}
+.feat .cta:focus-visible,.fnav button:focus-visible,.feat .fn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.fnav{display:flex;align-items:center;gap:10px}
+.fnav .fb{width:42px;height:42px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(8,8,10,.4);color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:0 0 3px}
+.fnav .fb:hover{background:rgba(255,255,255,.16);border-color:#fff}
+.fdots{display:flex;gap:6px}
+.fdots button{width:22px;height:22px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.fdots button::before{content:"";width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.4);transition:width .2s,background .2s}
+.fdots button[aria-current="true"]::before{width:22px;background:#fff}
+/* 検索・絞り込みをしているときは特集をしまって、結果をすぐ見せる */
+.jhero.compact .jhero-in{min-height:0;padding-bottom:40px}
+.jhero.compact .feat{display:none}
 
 /* 検索・絞り込み */
 .searchbox{padding:14px 0 4px}
 .searchrow input{width:100%;border:1px solid var(--surface-2);border-radius:10px;padding:13px 16px;font-size:16px;background:var(--surface);color:var(--ink)}
 .searchrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
 .hint{margin:6px 2px 0;font-size:12px;color:var(--ink3)}
-.ftoggle{display:none;align-items:center;gap:6px;margin-top:12px;min-height:40px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.ftoggle{display:inline-flex;align-items:center;gap:6px;margin-top:12px;min-height:40px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .ftoggle::after{content:"▾";font-size:12px;transition:transform .2s}
 .ftoggle[aria-expanded="true"]::after{transform:rotate(180deg)}
 .filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;gap:8px;margin-top:12px;align-items:end}
+.filters:not(.open){display:none}
 .filters label{display:flex;flex-direction:column;font-size:11.5px;color:var(--ink2);gap:3px;min-width:0}
 .filters select{border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
 .filters .check{flex-direction:row;align-items:center;gap:8px;padding:8px 2px;font-size:13px;color:var(--ink);white-space:nowrap}
@@ -203,6 +235,18 @@ main{padding:10px 0 60px}
 .shelf{margin:0 0 30px}
 .shelf h2,.section h2{font-size:19px;font-weight:700;margin:0 0 12px;letter-spacing:.04em}
 .shelf .sub{font-weight:400;font-size:12px;color:var(--ink3);margin-left:8px}
+.shelf-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.shelf-h h2{margin-bottom:4px}
+.shelf .all{flex:0 0 auto;border:0;background:none;padding:4px 0;font:inherit;font-size:13px;color:var(--ink2);text-decoration:none;cursor:pointer;white-space:nowrap}
+.shelf .all:hover{color:var(--ink)}
+.rowwrap{position:relative}
+.rbtn{position:absolute;top:10px;z-index:3;width:52px;aspect-ratio:auto;height:var(--rb-h,146px);border:0;padding:0;cursor:pointer;color:var(--ink);font-size:40px;line-height:1;opacity:0;transition:opacity .2s}
+.rbtn.prev{left:-8px;background:linear-gradient(90deg,var(--bg) 20%,transparent)}
+.rbtn.next{right:-8px;background:linear-gradient(270deg,var(--bg) 20%,transparent)}
+.rowwrap:hover .rbtn,.rbtn:focus-visible{opacity:1}
+.rbtn[disabled]{display:none}
+@media (hover:none){.rbtn{display:none}}
+.thumb.photo{background:var(--surface-2)}
 .row{display:grid;grid-auto-flow:column;grid-auto-columns:260px;gap:14px;overflow-x:auto;padding:10px 2px 14px;scroll-snap-type:x proximity;scrollbar-width:none}
 .row::-webkit-scrollbar{display:none}
 .tile{scroll-snap-align:start;text-align:left;display:block;min-width:0;color:inherit;text-decoration:none}
@@ -210,6 +254,7 @@ main{padding:10px 0 60px}
 .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
 .thumb .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:10px 11px;color:#fff;font-weight:700;font-size:12.5px;line-height:1.4;
   background:linear-gradient(to top,rgba(0,0,0,.45),rgba(0,0,0,0) 70%)}
+.thumb img~.ph{display:none}
 .thumb .rk{position:absolute;top:8px;left:9px;z-index:2;font-family:var(--num);font-size:15px;color:#fff;background:rgba(0,0,0,.45);border-radius:6px;padding:0 7px}
 .tile .tt{font-weight:500;font-size:13.5px;line-height:1.5;margin-top:10px;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tile .tm{font-size:12px;color:var(--ink3);margin-top:2px}
@@ -320,18 +365,23 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
   /* 項目が5つになったので、狭い画面では横にはみ出さず2行に折り返す */
   .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:0 14px;flex-wrap:wrap;padding-top:2px}
-  .topnav a{font-size:13px;padding:6px 0 8px}
+  .topnav a{font-size:13px;padding:6px 0 8px;letter-spacing:0}
   .hsearch{order:5;width:100%;margin:2px 0 10px}
   .top{position:static}
   .hsearch input{font-size:16px;padding:9px 4px 9px 12px}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
-  /* スマホでは絞り込みをたたんで、結果をすぐ見られるようにする(条件を選んでいるときは開いておく) */
-  .ftoggle{display:inline-flex}
-  .filters:not(.open){display:none}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
-  .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
-  .jhero h1{font-size:24px;margin-bottom:6px}
+  .top{position:relative}
+  .jhero-in,.jhero .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
+  html.overlay .jhero-in{padding-top:calc(22px + var(--hdr-h,0px))}
+  .jhero h1{font-size:20px;margin-bottom:6px}
+  .feat{padding-top:30px;gap:16px}
+  .feat .fn{font-size:22px}
+  .feat .fm{font-size:12.5px}
+  .feat .fm .num{font-size:17px}
+  .feat .cta{margin-top:14px;padding:10px 18px;font-size:13.5px}
+  .fnav .fb{width:36px;height:36px;font-size:19px}
   .jlead{font-size:12.5px;margin-bottom:14px}
   .jlead .num{font-size:17px}
   .jhero .searchrow input{padding:13px 14px;font-size:16px}
@@ -339,7 +389,7 @@ footer p{margin:0 0 6px;max-width:76ch}
   .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px);padding:6px 9px}
   .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
-  .row{grid-auto-columns:66%}
+  .row{grid-auto-columns:41%;gap:10px}
   .sbody{padding:2px 12px 16px}
   .shead .sthumb{flex-basis:112px}
   .shead{gap:10px;padding:10px}
@@ -376,7 +426,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
     </div>
   </div>
 </header>
-<section class="jhero" aria-labelledby="jhero-h">
+<section class="jhero" id="jhero" aria-labelledby="jhero-h">
   <img class="jhero-img" id="jhero-img" alt="" decoding="async">
   <div class="jhero-scrim"></div>
   <div class="wrap jhero-in">
@@ -388,22 +438,10 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
       <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索">
     </div>
     <p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
+    <div class="feat" id="feat" hidden></div>
   </div>
   <a class="jcredit" id="jhero-credit" hidden></a>
 </section>
-<script>(function(){
-// トップの写真:開くたびに候補から1枚を選ぶ(写真を押すと、その大会の写真ページへ)
-var en=document.documentElement.lang==='en';
-fetch('/assets/hero.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
-  var list=d&&d[en?'en':'ja']; if(!list||!list.length) return;
-  var h=list[Math.floor(Math.random()*list.length)], img=document.getElementById('jhero-img'), a=document.getElementById('jhero-credit');
-  img.onload=function(){img.classList.add('on');};
-  img.sizes='100vw'; img.srcset=h.srcset; img.src=h.src; if(h.w&&h.h){img.width=h.w;img.height=h.h;}
-  a.href=h.href; a.textContent=h.credit; a.title=h.label;
-  if(h.label){var s=document.createElement('span'); s.className='jl'; s.textContent=(en?'Photo from '+h.label:h.label+'の写真')+' · '; a.insertBefore(s,a.firstChild);}
-  a.hidden=false;
-}).catch(function(){});
-})();</script>
 <div class="wrap">
     <div class="searchbox" role="group" aria-label="絞り込み">
       <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filters">絞り込み</button>
@@ -451,6 +489,17 @@ function plural(n, w, ws){ return n + ' ' + (n === 1 ? w : (ws || w + 's')); }
 function nv(n){ return L(n + '本', plural(n, 'video')); }
 function yl(y){ return L(y + '年', String(y)); }
 function fyEn(s){ var m = /^(令和|平成)(元|\d+)年度$/.exec(s||''); if(!m) return s; var n = m[2]==='元' ? 1 : +m[2]; return 'FY' + ((m[1]==='令和' ? 2018 : 1988) + n); }
+/* ---------- メニューを特集の写真の上に重ねる(スクロールすると黒い帯にする) ---------- */
+(function(){
+  var root = document.documentElement, top = document.querySelector('.top'), off = document.querySelector('.official'); if(!top) return;
+  function size(){ root.style.setProperty('--hdr-h', top.offsetHeight+'px'); }
+  function onScroll(){ top.classList.toggle('see-through', window.scrollY <= (off ? off.offsetHeight : 0) + 8); }
+  root.classList.add('overlay'); size(); onScroll();
+  window.addEventListener('resize', size); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+// 特集の写真(assets/hero.json)と、技術動画・写真の列(assets/home.json)。data.json と並べて読み込む
+function getJSON(u){ return fetch(u,{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }); }
+var heroP = getJSON('/assets/hero.json'), homeP = getJSON('/assets/home.json');
 var DATA = window.__DATA__;
 if(!DATA){
   try{ var res = await fetch('/data.json',{cache:'no-cache'}); DATA = await res.json(); }
@@ -481,6 +530,8 @@ V.forEach(function(v){
   if(!v.e && v.c){ v.c.forEach(function(c){ (candByEvent[c]=candByEvent[c]||[]).push(v); }); }
   if(v.s && S[v.s]) S[v.s].videoIds.push(v.id);
 });
+
+var HERO = ((await heroP)||{})[LANG] || [], HOME = ((await homeP)||{})[LANG] || {};
 
 function skey(s){
   s = String(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
@@ -676,8 +727,82 @@ function tileEvent(e){
   return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ thumb(first?first.id:'', s?s.name:'') +
     '<div class="tt">'+esc(N(s?s.name:e.name))+'</div><div class="tm"><span class="num">'+e.n+'</span>'+L('本 '+e.year+'年 ',' videos · '+e.year+' · ')+fmtShort(e.start)+(e.end&&e.end!==e.start?L('〜','–')+fmtShort(e.end):'')+'</div></a>';
 }
+function tileSeries(s){
+  var lastE = s.events.filter(function(e){return e.n>0;}).pop(), lv = lastE ? (byEvent[lastE.id]||[]) : [];
+  var fv = lv.filter(function(v){return v.k==='match';})[0] || lv[0];
+  var yrs = s.events.filter(function(e){return e.n>0;}).map(function(e){return e.year;});
+  return '<a class="tile" href="'+esc(seriesPage(s.id)||linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', N(s.name))+'<div class="tt">'+esc(N(s.name))+'</div><div class="tm"><span class="num">'+s.n+'</span>'+L('本 ',' videos · ')+
+    (yrs.length? Math.min.apply(null,yrs)+(Math.min.apply(null,yrs)!==Math.max.apply(null,yrs)?L('〜','–')+Math.max.apply(null,yrs):'')+L('年',''):'')+'</div></a>';
+}
+// 横に流れる列。tiles は1枚ずつの HTML、more は見出しの右の「すべて見る」
+var shelfN = 0;
+function shelf(title, sub, tiles, more){
+  if(!tiles.length) return '';
+  var id = 'row'+(++shelfN);
+  return '<section class="shelf" aria-labelledby="'+id+'-h"><div class="shelf-h"><h2 id="'+id+'-h">'+esc(title)+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'</h2>'+(more||'')+'</div>'+
+    '<div class="rowwrap"><button type="button" class="rbtn prev" data-row="'+id+'" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button>'+
+    '<div class="row" id="'+id+'">'+tiles.join('')+'</div>'+
+    '<button type="button" class="rbtn next" data-row="'+id+'" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section>';
+}
+// 列の端まで来たら矢印を消す。矢印の高さはサムネイルに合わせる
+function updRow(r){
+  var w = r.parentNode, p = w.querySelector('.prev'), n = w.querySelector('.next'), t = r.querySelector('.thumb');
+  if(t) w.style.setProperty('--rb-h', t.offsetHeight+'px');
+  p.disabled = r.scrollLeft <= 4; n.disabled = r.scrollLeft + r.clientWidth >= r.scrollWidth - 4;
+}
+var SHELF_CATS = L([['大学','大学の大会'],['高校','高校の大会'],['社会人','社会人の大会'],['少年少女','少年少女の大会']],
+                   [['大学','University'],['高校','High school'],['社会人','Working adults'],['少年少女','Kids']]);
+
+/* ---------- 特集(トップの大きな写真。‹ › で切り替える) ---------- */
+// 大きな枠に出さない大会(主催者の希望)。下の列には出る
+var NO_HERO = {'x-fujinami-cup':1};
+var FEAT = [], featI = 0;
+function buildFeature(){
+  var past = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start<=TODAY_ISO && e.status!=='cancelled' && !NO_HERO[e.series]; })
+    .sort(function(a,b){ return a.start<b.start?1:-1; });
+  var future = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start>TODAY_ISO && !NO_HERO[e.series]; })
+    .sort(function(a,b){ return a.start<b.start?-1:1; });
+  var used = {};
+  // 大会の写真(hero.json に載っている写真だけ)があればそれを、なければ試合動画のサムネイルを背景にする
+  function photoFor(e){
+    var keys = [PAGES[e.id] ? U('/photos/'+PAGES[e.id]+'/') : '', U('/photos/'+e.series+'/')];
+    for(var i=0;i<HERO.length;i++) if(!used[i] && keys.indexOf(HERO[i].href)>=0){ used[i]=1; return HERO[i]; }
+    return null;
+  }
+  function evSlide(e, kind){
+    var s = S[e.series], vs = byEvent[e.id]||[], v = vs.filter(function(x){return x.k==='match';})[0] || vs[0];
+    return {kind:kind, href:eventPage(e.id)||linkTo(e.series,e.id), name:L(e.official_name||e.name, N(s?s.name:e.name)+' '+e.year),
+      meta:'<span><span class="num">'+e.n+'</span>'+L('本',' videos')+'</span><span>'+esc(fmtRange(e.start,e.end))+'</span>'+(e.venue?'<span>'+esc(N(e.venue))+'</span>':''),
+      photo:photoFor(e), vid:v?v.id:''};
+  }
+  var out = past.slice(0,2).map(function(e){ return evSlide(e,'recent'); });
+  if(future[0]) out.push(evSlide(future[0],'upcoming'));
+  HERO.forEach(function(p,i){ if(!used[i] && out.length<5){ used[i]=1; out.push({kind:'photo', href:p.href, name:p.label, meta:'', photo:p, vid:''}); } });
+  return out;
+}
+var FEAT_TXT = L({recent:['最近開催された大会','配信一覧を見る'], upcoming:['これから開催される大会','配信予定を見る'], photo:['新しく載った写真','写真を見る']},
+                 {recent:['Latest tournament','Watch the streams'], upcoming:['Upcoming tournament','See the stream schedule'], photo:['New photos','See the photos']});
+function showFeature(i){
+  if(!FEAT.length) return;
+  featI = (i + FEAT.length) % FEAT.length;
+  var f = FEAT[featI], box = document.getElementById('feat'), img = document.getElementById('jhero-img'), cr = document.getElementById('jhero-credit');
+  var t = FEAT_TXT[f.kind];
+  box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="badge-l">'+t[0]+'</div><a class="fn" href="'+esc(f.href)+'">'+esc(f.name)+'</a>'+
+    (f.meta?'<div class="fm">'+f.meta+'</div>':'')+'<a class="cta" href="'+esc(f.href)+'" tabindex="-1">'+t[1]+'</a></div>'+
+    (FEAT.length>1 ? '<div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="'+L('前の特集','Previous')+'">‹</button><div class="fdots">'+
+      FEAT.map(function(x,k){ return '<button type="button" data-featto="'+k+'" aria-label="'+L((k+1)+'件目('+FEAT.length+'件中)','Item '+(k+1)+' of '+FEAT.length)+'"'+(k===featI?' aria-current="true"':'')+'></button>'; }).join('')+
+      '</div><button type="button" class="fb" data-feat="1" aria-label="'+L('次の特集','Next')+'">›</button></div>' : '');
+  box.hidden = false;
+  img.classList.remove('on'); img.onload = function(){ img.classList.add('on'); }; img.onerror = function(){ if(this.src.indexOf('ytimg')>=0) thumbFail(this); };
+  if(f.photo){ img.sizes='100vw'; img.srcset=f.photo.srcset; img.src=f.photo.src; if(f.photo.w&&f.photo.h){ img.width=f.photo.w; img.height=f.photo.h; } }
+  else if(f.vid){ img.removeAttribute('srcset'); img.src='https://i.ytimg.com/vi/'+encodeURIComponent(f.vid)+'/maxresdefault.jpg'; img.referrerPolicy='no-referrer'; }
+  if(f.photo && f.photo.credit){ cr.href=f.photo.href; cr.textContent=f.photo.credit; cr.title=f.photo.label;
+    if(f.photo.label){ var sp=document.createElement('span'); sp.className='jl'; sp.textContent=L(f.photo.label+'の写真','Photo from '+f.photo.label)+' · '; cr.insertBefore(sp, cr.firstChild); }
+    cr.hidden=false; } else cr.hidden=true;
+}
 function linkTo(sid,eid){ var p = new URLSearchParams(); p.set('s',sid); if(eid) p.set('e',eid); return '#'+p.toString(); }
 function renderShelves(){
+  shelfN = 0;
   var past = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start<=TODAY_ISO && e.status!=='cancelled'; })
     .sort(function(a,b){ return a.start<b.start?1:-1; }).slice(0,12);
   var future = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start>TODAY_ISO; })
@@ -685,30 +810,26 @@ function renderShelves(){
   var recent = V.filter(function(v){ return v.vs!=='unavailable'; }).slice().sort(function(a,b){ return a.p<b.p?1:-1; }).slice(0,12);
   var rich = DATA.series.filter(function(s){ return s.master && s.n>0; }).sort(function(a,b){ return b.n-a.n; }).slice(0,12);
   var h = '';
-  // 大きな枠(最近開催された大会)に出さない大会(主催者の希望)。下の一覧には出る
-  var NO_HERO = {'x-fujinami-cup':1};
-  var top = past.filter(function(e){ return !NO_HERO[e.series]; })[0];
-  if(top){
-    var ts = S[top.series], tv = (byEvent[top.id]||[]).filter(function(v){return v.k==='match';})[0] || (byEvent[top.id]||[])[0];
-    h += '<a class="hero" href="'+esc(eventPage(top.id)||linkTo(top.series,top.id))+'" style="background:'+grad(ts?ts.name:top.name)+'">'+
-      (tv?'<img src="https://i.ytimg.com/vi/'+esc(tv.id)+'/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" onerror="thumbFail(this)">':'')+'<span class="scrim"></span>'+
-      '<svg class="rings" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true"><circle cx="120" cy="120" r="104" stroke-width="1.2"/><circle cx="120" cy="120" r="66" stroke-width="1.2"/></svg>'+
-      '<div class="badge-l">'+L('最近開催された大会','Latest tournament')+'</div><div class="hn">'+esc(L(top.official_name||top.name, N(ts?ts.name:top.name)+' '+top.year))+'</div>'+
-      '<div class="hm"><span><span class="num">'+top.n+'</span>'+L('本',' videos')+'</span><span>'+esc(fmtRange(top.start,top.end))+'</span>'+(top.venue?'<span>'+esc(N(top.venue))+'</span>':'')+'</div>'+
-      '<span class="cta">'+L('配信一覧を見る','Watch the streams')+'</span></a>';
-  }
-  if(future.length) h += '<section class="shelf"><h2>'+L('これから開催される大会','Upcoming tournaments')+'<span class="sub">'+L('配信枠が公開されています','Stream pages are already published')+'</span></h2><div class="row">'+future.map(tileEvent).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>'+L('最近開催された大会','Recent tournaments')+'</h2><div class="row">'+past.filter(function(e){ return e!==top; }).map(tileEvent).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>'+L('最近追加した動画','Recently added videos')+'<span class="sub">'+L('YouTubeへの公開が新しい順','Newest on YouTube first')+'</span></h2><div class="row">'+recent.map(function(v){
+  if(future.length) h += shelf(L('これから開催される大会','Upcoming tournaments'), L('配信枠が公開されています','Stream pages are already published'), future.map(tileEvent), '<a class="all" href="'+U('/events/calendar/')+'">'+L('カレンダーを見る ›','See the calendar ›')+'</a>');
+  h += shelf(L('最近開催された大会','Recent tournaments'), '', past.map(tileEvent), '<a class="all" href="'+U('/events/')+'">'+L('すべて見る ›','See all ›')+'</a>');
+  h += shelf(L('最近追加した動画','Recently added videos'), L('YouTubeへの公開が新しい順','Newest on YouTube first'), recent.map(function(v){
     var s = v.s && S[v.s];
     return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, s?N(s.name):'')+'<div class="tt"'+L('',' lang="ja"')+'>'+esc(v.t)+'</div><div class="tm">'+L(esc(fmtDate(jstDate(v.p)))+'に公開','Published '+esc(fmtDate(jstDate(v.p))))+'</div></a>';
-  }).join('')+'</div></section>';
-  h += '<section class="shelf"><h2>'+L('動画が充実している大会','Tournaments with the most videos')+'<span class="sub">'+L('収録本数の多い順','Most videos first')+'</span></h2><div class="row">'+rich.map(function(s){
-    var lastE = s.events.filter(function(e){return e.n>0;}).pop(); var fv = lastE && (byEvent[lastE.id]||[])[0];
-    var yrs = s.events.filter(function(e){return e.n>0;}).map(function(e){return e.year;});
-    return '<a class="tile" href="'+esc(seriesPage(s.id)||linkTo(s.id,''))+'">'+thumb(fv?fv.id:'', N(s.name))+'<div class="tt">'+esc(N(s.name))+'</div><div class="tm"><span class="num">'+s.n+'</span>'+L('本 ',' videos · ')+
-      (yrs.length? Math.min.apply(null,yrs)+L('〜','–')+Math.max.apply(null,yrs)+L('年',''):'')+'</div></a>';
-  }).join('')+'</div></section>';
+  }));
+  // 区分ごとの列(開催日の新しい大会から)
+  SHELF_CATS.forEach(function(c){
+    var list = DATA.series.filter(function(s){ return s.n>0 && (s.groups||[]).indexOf(c[0])>=0; }).sort(function(a,b){ return (b.latest||'') < (a.latest||'') ? -1 : 1; }).slice(0,12);
+    if(list.length) h += shelf(c[1], '', list.map(tileSeries), '<button type="button" class="all" data-cat="'+esc(c[0])+'">'+L('すべて見る ›','See all ›')+'</button>');
+  });
+  var tech = HOME.tech || [];
+  if(tech.length) h += shelf(L('技術動画','Technique videos'), L('レスリングクラブが公開している技術・トレーニングの動画','Technique and training videos from wrestling clubs'), tech.map(function(v){
+    return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, v.cat)+'<div class="tt"'+L('',' lang="ja"')+'>'+esc(v.t)+'</div><div class="tm">'+esc(v.cat)+'</div></a>';
+  }), '<a class="all" href="'+U('/technique/')+'">'+L('すべて見る ›','See all ›')+'</a>');
+  var photos = HOME.photos || [];
+  if(photos.length) h += shelf(L('写真','Photos'), L('大会で撮影された写真','Photos taken at tournaments'), photos.map(function(p){
+    return '<a class="tile" href="'+esc(p.href)+'"><div class="thumb photo"><img src="'+esc(p.src)+'" alt="" loading="lazy" decoding="async"></div><div class="tt">'+esc(p.label)+'</div><div class="tm"><span class="num">'+p.n+'</span>'+L('枚',' photos')+'</div></a>';
+  }), '<a class="all" href="'+U('/photos/')+'">'+L('すべて見る ›','See all ›')+'</a>');
+  h += shelf(L('動画が充実している大会','Tournaments with the most videos'), L('収録本数の多い順','Most videos first'), rich.map(tileSeries));
   return h;
 }
 function videoRow(v, showBasis){
@@ -944,6 +1065,7 @@ function render(){
   renderStatus(list, st.q && (vr.hits.length || !list.length) ? vr.hits.length : null, ph.length);
   var anyFilter = st.q||st.y||st.c||st.sty||st.sc||st.k||st.all;
   var h = '';
+  document.getElementById('jhero').classList.toggle('compact', !!(anyFilter || st.s));
   if(!anyFilter && !st.s) h += renderShelves();
   h += playerSection(ph);
   h += uwwSection(uh);
@@ -995,6 +1117,7 @@ function afterRender(){
   Array.prototype.forEach.call(document.querySelectorAll('.rail'), function(r){
     var b = r.querySelector('.yr[aria-pressed="true"]'); if(b) r.scrollLeft = Math.max(0, b.offsetLeft - r.clientWidth/2 + b.offsetWidth/2);
   });
+  Array.prototype.forEach.call(document.querySelectorAll('.rowwrap .row'), function(r){ updRow(r); r.addEventListener('scroll', function(){ updRow(r); }, {passive:true}); });
   if(pendingScroll){ var el = document.getElementById(pendingScroll); pendingScroll=''; if(el){ el.scrollIntoView({block:'start'}); var f = el.querySelector('.shead'); if(f) f.focus({preventScroll:true}); } }
 }
 var pendingScroll = '';
@@ -1013,8 +1136,12 @@ document.getElementById('f-all').addEventListener('change', function(ev){ st.all
 document.getElementById('home').addEventListener('click', function(ev){ ev.preventDefault(); st = blankState(); legacyNote=''; commit(true); window.scrollTo(0,0); });
 document.addEventListener('change', function(ev){ if(ev.target.id==='sort'){ st.sort = ev.target.value; commit(true); } });
 document.addEventListener('click', function(ev){
-  var t = ev.target.closest('[data-series],[data-event],[data-drop],[data-setyear],[data-more],#clear,a.tile[href^="#"],.event a[href^="#"]');
+  var t = ev.target.closest('[data-series],[data-event],[data-drop],[data-setyear],[data-more],[data-cat],[data-feat],[data-featto],.rbtn,#clear,a.tile[href^="#"],.event a[href^="#"]');
   if(!t) return;
+  if(t.dataset.row){ var r = document.getElementById(t.dataset.row); if(r) r.scrollBy({left:(+t.dataset.dir)*r.clientWidth*0.9, behavior:'smooth'}); return; }
+  if(t.dataset.feat){ showFeature(featI + (+t.dataset.feat)); var nb = document.querySelector('[data-feat="'+t.dataset.feat+'"]'); if(nb) nb.focus(); return; }
+  if(t.dataset.featto){ showFeature(+t.dataset.featto); var db = document.querySelector('[data-featto="'+t.dataset.featto+'"]'); if(db) db.focus(); return; }
+  if(t.dataset.cat){ st = blankState(); st.c = t.dataset.cat; legacyNote=''; commit(true); var sb = document.getElementById('status'); if(sb) sb.scrollIntoView({block:'start'}); return; }
   if(t.id==='clear'){ var keep = {s:st.s, e:st.e, sort:st.sort}; st = blankState(); st.s=keep.s; st.e=keep.e; st.sort=keep.sort; legacyNote=''; document.getElementById('q').value=''; commit(true); return; }
   if(t.dataset.setyear){ st.y = t.dataset.setyear; st.e=''; commit(true); return; }
   if(t.dataset.drop){ var k=t.dataset.drop; if(k==='all') st.all=false; else st[k]=''; if(k==='y') st.e=''; if(k==='q') document.getElementById('q').value=''; commit(true); return; }
@@ -1034,7 +1161,10 @@ themeLabel();
 
 readHash();
 if(st.s) pendingScroll = 's-'+st.s;
+FEAT = buildFeature(); showFeature(0);
 render();
+// 画面の幅が変わったら、列の矢印の高さと表示を合わせ直す
+window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('.rowwrap .row'), updRow); });
 })();
 </script>
 </body>
