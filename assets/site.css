@@ -91,7 +91,7 @@ button,input,select{font:inherit;color:inherit}
 .jhero .searchrow input{border:0;border-radius:6px;padding:15px 18px;font-size:17px;background:#fff;color:#16161a;box-shadow:0 8px 28px rgba(0,0,0,.35)}
 .jhero .searchrow input::placeholder{color:#6b6b75}
 .jhero .searchrow input:focus{outline:none;box-shadow:0 0 0 4px var(--pink),0 8px 28px rgba(0,0,0,.35)}
-.jhero .hint{color:#e8edf6;margin-top:8px;display:inline-block;background:rgba(8,8,10,.62);padding:3px 8px;border-radius:6px}
+.jhero .hint{color:#e8edf6;margin-top:8px;display:block;width:fit-content;max-width:100%;background:rgba(8,8,10,.62);padding:3px 8px;border-radius:6px}
 .jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:5px 9px;text-decoration:none}
 .jcredit:hover{text-decoration:underline}
 .jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}

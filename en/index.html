@@ -134,7 +134,7 @@ button,input,select{font:inherit;color:inherit}
 .jhero .searchrow input{border:0;border-radius:6px;padding:15px 18px;font-size:17px;background:#fff;color:#16161a;box-shadow:0 8px 28px rgba(0,0,0,.35)}
 .jhero .searchrow input::placeholder{color:#6b6b75}
 .jhero .searchrow input:focus{outline:none;box-shadow:0 0 0 4px var(--pink),0 8px 28px rgba(0,0,0,.35)}
-.jhero .hint{color:#e8edf6;margin-top:8px;display:inline-block;background:rgba(8,8,10,.62);padding:3px 8px;border-radius:6px}
+.jhero .hint{color:#e8edf6;margin-top:8px;display:block;width:fit-content;max-width:100%;background:rgba(8,8,10,.62);padding:3px 8px;border-radius:6px}
 .jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:5px 9px;text-decoration:none}
 .jcredit:hover{text-decoration:underline}
 .jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
@@ -761,6 +761,8 @@ var SHELF_CATS = L([['大学','大学の大会'],['高校','高校の大会'],['
 /* ---------- 特集(トップの大きな写真。‹ › で切り替える) ---------- */
 // 大きな枠に出さない大会(主催者の希望)。下の列には出る
 var NO_HERO = {'x-fujinami-cup':1};
+// 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
+var FEATURE_ART = {'wre-2026-kokutai-1012': {src:'/assets/feature/kokutai-2026.jpg', pos:'22% 50%'}};
 var FEAT = [], featI = 0;
 function buildFeature(){
   var past = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start<=TODAY_ISO && e.status!=='cancelled' && !NO_HERO[e.series]; })
@@ -787,7 +789,8 @@ function buildFeature(){
   var out = live.map(function(e){
     var x = evSlide(e, (e.end||e.start)>=today ? 'live' : 'result');
     // 配信動画がまだない大会は、同じ大会の前の年の試合動画を背景にする
-    if(!x.photo && !x.vid){ var s = S[e.series], pv = s ? s.events.filter(function(o){ return o.n>0; }).pop() : null, vs = pv ? (byEvent[pv.id]||[]) : [];
+    if(!x.photo && FEATURE_ART[e.id]) x.art = FEATURE_ART[e.id];
+    if(!x.photo && !x.art && !x.vid){ var s = S[e.series], pv = s ? s.events.filter(function(o){ return o.n>0; }).pop() : null, vs = pv ? (byEvent[pv.id]||[]) : [];
       var m = vs.filter(function(v){ return v.k==='match'; })[0] || vs[0]; if(m) x.vid = m.id; }
     if(!e.n) x.meta = '<span>'+esc(fmtRange(e.start,e.end))+'</span>'+(e.venue?'<span>'+esc(N(e.venue))+'</span>':'');
     x.ext = e.links[0].url; x.extLabel = e.links[0].label;
@@ -814,7 +817,9 @@ function showFeature(i){
       '</div><button type="button" class="fb" data-feat="1" aria-label="'+L('次の特集','Next')+'">›</button></div>' : '');
   box.hidden = false;
   img.classList.remove('on'); img.onload = function(){ img.classList.add('on'); }; img.onerror = function(){ if(this.src.indexOf('ytimg')>=0) thumbFail(this); };
-  if(f.photo){ img.sizes='100vw'; img.srcset=f.photo.srcset; img.src=f.photo.src; if(f.photo.w&&f.photo.h){ img.width=f.photo.w; img.height=f.photo.h; } }
+  img.style.objectPosition = f.art && f.art.pos || '';
+  if(f.art){ img.removeAttribute('srcset'); img.src=f.art.src; }
+  else if(f.photo){ img.sizes='100vw'; img.srcset=f.photo.srcset; img.src=f.photo.src; if(f.photo.w&&f.photo.h){ img.width=f.photo.w; img.height=f.photo.h; } }
   else if(f.vid){ img.removeAttribute('srcset'); img.src='https://i.ytimg.com/vi/'+encodeURIComponent(f.vid)+'/maxresdefault.jpg'; img.referrerPolicy='no-referrer'; }
   if(f.photo && f.photo.credit){ cr.href=f.photo.href; cr.textContent=f.photo.credit; cr.title=f.photo.label;
     if(f.photo.label){ var sp=document.createElement('span'); sp.className='jl'; sp.textContent=L(f.photo.label+'の写真','Photo from '+f.photo.label)+' · '; cr.insertBefore(sp, cr.firstChild); }
