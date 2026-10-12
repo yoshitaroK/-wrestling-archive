@@ -217,7 +217,7 @@ def series_page(s, t, src, hist, ctx, bp):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "WebPage", "name": f"{name} 歴代優勝者", "url": bp.SITE + path}]}
     h = bp.head(title, desc, path, "", jsonld, ctx["css"], alternates=False)
-    h += '<main class="wrap page champ">' + bp.breadcrumb_html(crumbs)
+    h += '<main id="content" class="wrap page champ">' + bp.breadcrumb_html(crumbs)
     h += f"<h1>{e(name)} 歴代優勝者</h1>"
     h += (f'<p class="lead">{e(name)}の優勝者を、スタイル・階級ごとに年別にまとめています。いま載せているのは{e(span)}の記録です。'
           f'選手名を押すと、その選手のページへ移れます。</p>')
@@ -266,7 +266,7 @@ def index_page(listed, ctx, bp):
         "@type": "CollectionPage", "name": "歴代優勝者", "url": bp.SITE + path,
         "hasPart": [{"@type": "WebPage", "name": f"{s['name']} 歴代優勝者", "url": bp.SITE + f"/champions/{s['id']}/"} for s, _ in listed]}]}
     h = bp.head(f"歴代優勝者({len(listed)}大会)|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
-    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs) + "<h1>歴代優勝者</h1>"
+    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + "<h1>歴代優勝者</h1>"
     h += f'<p class="lead">{e(desc)}大会名を押すと、その大会の歴代優勝者の表が開きます。</p>'
     h += '<ol class="occ slist-static champ-list">'
     for s, t in listed:

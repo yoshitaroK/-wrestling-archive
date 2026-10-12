@@ -252,7 +252,7 @@ def player_page(p, ctx, bp, card=""):
     first = (p["videos"] or uww)[:1]
     og = card or (f"https://i.ytimg.com/vi/{first[0]['id']}/hqdefault.jpg" if first else "")
     h = bp.head(L(f"{name} 選手 大会成績・試合動画|{bp.SITE_NAME}", f"{name} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
-    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
+    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
     if i18n.en():
         # 読みがな(大会のエントリーリスト)が分かっている人は、その読みからローマ字にしているので注記を出さない
         sub = "" if p["roman_ok"] or p["kana"] or not p["roman"] else ' <small class="kana">Name romanized automatically</small>'
@@ -331,7 +331,7 @@ def index_page(players, ctx, bp):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": L("選手一覧", "Players"), "url": SITE + U(path)}]}
     h = bp.head(L(f"選手検索・選手一覧({len(players)}人)|{bp.SITE_NAME}", f"Player search ({len(players)} players) | {bp.site_name()}"), desc, path, "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{L('選手検索', 'Player search')}</h1>"
+    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{L('選手検索', 'Player search')}</h1>"
     h += f'<p class="lead">{e(desc)}</p>'
     h += (f'<div class="psearch"><input type="search" id="pq" placeholder="{L("選手名・所属で検索", "Search by name or club")}" '
           f'aria-label="{L("選手名・所属で検索", "Search by name or club")}" autocomplete="off"><p class="pcount" id="pcount" aria-live="polite"></p></div>')
@@ -439,7 +439,7 @@ def coming_soon_page(ctx, bp):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "WebPage", "name": L("選手検索(準備中)", "Player search (coming soon)"), "url": SITE + U(path)}]}
     h = bp.head(L(f"選手検索({when})|{bp.SITE_NAME}", f"Player search ({when}) | {bp.site_name()}"), desc, path, "", jsonld, ctx["css"])
-    h += '<main class="wrap page soon">' + bp.breadcrumb_html(crumbs)
+    h += '<main id="content" class="wrap page soon">' + bp.breadcrumb_html(crumbs)
     h += f'<p class="soon-badge">COMING SOON</p><h1>{title}</h1><p class="soon-when">{e(when)}</p>'
     if i18n.en():
         h += ('<p class="lead">You will be able to search for a wrestler by name and see their tournament results and match videos in one place.</p>'
@@ -506,7 +506,7 @@ table.results th{color:var(--ink3);font-weight:500;font-size:12px}
 table.results td b{color:var(--pink)}
 .pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}
 .pager button{min-width:38px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.pager button[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.pager button[aria-current]{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
 .pager button:disabled{opacity:.35;cursor:default}
 .pager .pg-n{font-size:12px;color:var(--ink3);margin-left:4px}
 .uww-pl{scroll-margin-top:72px}
