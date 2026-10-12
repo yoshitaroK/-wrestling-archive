@@ -495,6 +495,7 @@
 
 ### 国民体育大会・国民スポーツ大会
 - 大会ページ: https://japanwrestlingchannel.com/events/kokutai/
+- [第80回国民スポーツ大会](https://japanwrestlingchannel.com/events/kokutai/2026/): 2026年10月12日〜15日(予定)・青森・八戸市・動画0本
 - [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2016/): 2016年10月7日〜10日・岩手・宮古市総合体育館・動画25本
 - [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2015/): 2015年9月27日〜30日・和歌山・那智勝浦町文化体育会館・動画24本
 - [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2014/): 2014年10月14日〜16日・長崎・島原復興アリーナ・動画8本

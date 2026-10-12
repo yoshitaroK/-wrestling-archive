@@ -159,6 +159,14 @@ html.overlay .top.see-through{background:transparent;border-bottom-color:transpa
 .feat .cta{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#fff;color:#0b0b0e;font-weight:700;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none}
 .feat .cta::before{content:"";width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent var(--pink-fill)}
 .feat .cta:hover{background:#e9e9ee}
+.feat .ctas{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.feat .ctas .cta{margin-top:18px}
+.feat .cta2{margin-top:18px;display:inline-flex;align-items:center;padding:10px 20px;border-radius:6px;border:1px solid rgba(255,255,255,.6);background:rgba(8,8,10,.35);color:#fff;font-weight:700;font-size:14px;text-decoration:none}
+.feat .cta2:hover{background:rgba(255,255,255,.14);border-color:#fff}
+.feat .cta2:focus-visible{outline:3px solid #fff;outline-offset:3px}
+/* 開催中の大会の印(赤い点が光る) */
+.feat .badge-l.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#fff;margin-right:6px;vertical-align:1px;animation:live-dot 1.4s ease-in-out infinite}
+@keyframes live-dot{50%{opacity:.25}}
 .feat .cta:focus-visible,.fnav button:focus-visible,.feat .fn:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .fnav{display:flex;align-items:center;gap:10px}
 .fnav .fb{width:42px;height:42px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(8,8,10,.4);color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:0 0 3px}
@@ -772,20 +780,35 @@ function buildFeature(){
       meta:'<span><span class="num">'+e.n+'</span>'+L('本',' videos')+'</span><span>'+esc(fmtRange(e.start,e.end))+'</span>'+(e.venue?'<span>'+esc(N(e.venue))+'</span>':''),
       photo:photoFor(e), vid:v?v.id:''};
   }
-  var out = past.slice(0,2).map(function(e){ return evSlide(e,'recent'); });
+  // 開催中(終わってから7日まで)で、結果・速報のリンク(overrides.json の event_links)がある大会を一番前に出す
+  var today = jstDate(new Date().toISOString()), weekAgo = jstDate(new Date(Date.now()-7*864e5).toISOString());
+  var live = DATA.events.filter(function(e){ return e.links && e.links.length && PAGES[e.id] && e.start && e.start<=today && (e.end||e.start)>=weekAgo && e.status!=='cancelled' && !NO_HERO[e.series]; })
+    .sort(function(a,b){ return a.start<b.start?1:-1; });
+  var out = live.map(function(e){
+    var x = evSlide(e, (e.end||e.start)>=today ? 'live' : 'result');
+    // 配信動画がまだない大会は、同じ大会の前の年の試合動画を背景にする
+    if(!x.photo && !x.vid){ var s = S[e.series], pv = s ? s.events.filter(function(o){ return o.n>0; }).pop() : null, vs = pv ? (byEvent[pv.id]||[]) : [];
+      var m = vs.filter(function(v){ return v.k==='match'; })[0] || vs[0]; if(m) x.vid = m.id; }
+    if(!e.n) x.meta = '<span>'+esc(fmtRange(e.start,e.end))+'</span>'+(e.venue?'<span>'+esc(N(e.venue))+'</span>':'');
+    x.ext = e.links[0].url; x.extLabel = e.links[0].label;
+    return x;
+  });
+  out = out.concat(past.slice(0,2).map(function(e){ return evSlide(e,'recent'); }));
   if(future[0]) out.push(evSlide(future[0],'upcoming'));
   HERO.forEach(function(p,i){ if(!used[i] && out.length<5){ used[i]=1; out.push({kind:'photo', href:p.href, name:p.label, meta:'', photo:p, vid:''}); } });
   return out;
 }
-var FEAT_TXT = L({recent:['最近開催された大会','配信一覧を見る'], upcoming:['これから開催される大会','配信予定を見る'], photo:['新しく載った写真','写真を見る']},
-                 {recent:['Latest tournament','Watch the streams'], upcoming:['Upcoming tournament','See the stream schedule'], photo:['New photos','See the photos']});
+var FEAT_TXT = L({live:['開催中','結果・速報を見る'], result:['結果が出ています','結果を見る'], recent:['最近開催された大会','配信一覧を見る'], upcoming:['これから開催される大会','配信予定を見る'], photo:['新しく載った写真','写真を見る']},
+                 {live:['Happening now','See the live results'], result:['Results are in','See the results'], recent:['Latest tournament','Watch the streams'], upcoming:['Upcoming tournament','See the stream schedule'], photo:['New photos','See the photos']});
 function showFeature(i){
   if(!FEAT.length) return;
   featI = (i + FEAT.length) % FEAT.length;
   var f = FEAT[featI], box = document.getElementById('feat'), img = document.getElementById('jhero-img'), cr = document.getElementById('jhero-credit');
   var t = FEAT_TXT[f.kind];
-  box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="badge-l">'+t[0]+'</div><a class="fn" href="'+esc(f.href)+'">'+esc(f.name)+'</a>'+
-    (f.meta?'<div class="fm">'+f.meta+'</div>':'')+'<a class="cta" href="'+esc(f.href)+'" tabindex="-1">'+t[1]+'</a></div>'+
+  box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="badge-l'+(f.kind==='live'?' live':'')+'">'+t[0]+'</div><a class="fn" href="'+esc(f.href)+'">'+esc(f.name)+'</a>'+
+    (f.meta?'<div class="fm">'+f.meta+'</div>':'')+
+    (f.ext ? '<div class="ctas"><a class="cta" href="'+esc(f.ext)+'" target="_blank" rel="noopener">'+t[1]+' ↗</a><a class="cta2" href="'+esc(f.href)+'">'+L('大会ページへ','Tournament page')+'</a></div>'
+           : '<a class="cta" href="'+esc(f.href)+'" tabindex="-1">'+t[1]+'</a>')+'</div>'+
     (FEAT.length>1 ? '<div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="'+L('前の特集','Previous')+'">‹</button><div class="fdots">'+
       FEAT.map(function(x,k){ return '<button type="button" data-featto="'+k+'" aria-label="'+L((k+1)+'件目('+FEAT.length+'件中)','Item '+(k+1)+' of '+FEAT.length)+'"'+(k===featI?' aria-current="true"':'')+'></button>'; }).join('')+
       '</div><button type="button" class="fb" data-feat="1" aria-label="'+L('次の特集','Next')+'">›</button></div>' : '');
