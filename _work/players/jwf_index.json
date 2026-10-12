@@ -1,5 +1,148 @@
 [
  {
+  "event": "wre-2014-tenno-cup-1221",
+  "series": "tenno-cup",
+  "year": 2014,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2014/12/24/63545/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2014/1223/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2014/1223/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2014/1223/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2015-tenno-cup-1221",
+  "series": "tenno-cup",
+  "year": 2015,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2015/12/24/84365/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2015/1223alljapan/ichiran_FF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2015/1223alljapan/ichiran_Fe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2015/1223alljapan/ichiran_GR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2016-tenno-cup-1221",
+  "series": "tenno-cup",
+  "year": 2016,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2016/12/24/102370/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2016/1223alljapan/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2016/1223alljapan/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2016/1223alljapan/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2017-tenno-cup-1220",
+  "series": "tenno-cup",
+  "year": 2017,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2017/12/24/120606/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2017/1223alljapan/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2017/1223alljapan/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2017/1223alljapan/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2018-tenno-cup-1220",
+  "series": "tenno-cup",
+  "year": 2018,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2018/12/28/138562/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2018/1223alljapan4/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2018/1223alljapan4/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2018/1223alljapan4/ichiranGR_new.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2019-tenno-cup-1219",
+  "series": "tenno-cup",
+  "year": 2019,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2019/12/23/156840/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranFS1_8.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranGR1_8.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranWW.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranWW1_8.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2020-tenno-cup-1217",
+  "series": "tenno-cup",
+  "year": 2020,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2020/12/21/167047/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2020/1220_alljapan/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2020/1220_alljapan/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2020/1220_alljapan/ichiranWW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2021-tenno-cup-1216",
+  "series": "tenno-cup",
+  "year": 2021,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2021/12/20/183723/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1219_alljapan/ichiran_FS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1219_alljapan/ichiran_GR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1219_alljapan/ichiran_WW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2022-tenno-cup-1222",
+  "series": "tenno-cup",
+  "year": 2022,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2022/12/26/201673/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/1225_alljapan4/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/1225_alljapan4/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/1225_alljapan4/ichiranWW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2023-tenno-cup-1221",
+  "series": "tenno-cup",
+  "year": 2023,
+  "name": "天皇杯全日本選手権",
+  "page": "https://wrestling-spirits.jp/2023/12/25/219899/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/1224_alljapan/ichiranGR1_8.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/1224_alljapan/ichiranWW1_8.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/1224_alljapan/ichirannFS1_8.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
   "event": "wre-2024-meiji-cup-0523",
   "series": "meiji-cup",
   "year": 2024,

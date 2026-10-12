@@ -19,6 +19,12 @@ for x in idx:
                 if x.get("rotated") else parsewin.parse(fn))
         for r in rows:
             nm = re.sub(r"\s+", " ", r["name"]).strip()
+            # 古い入賞者一覧(2014〜2019年ごろ)は「高 橋 侑 希」のように1文字ずつ空ける書き方で、姓と名の区切りが分からない。
+            # 空白を取って比べ、名前の形は新しい一覧のもの(「高橋 侑希」)を使う。古い一覧にしか出ない人は区切りが分からないので公開しない
+            toks = nm.split()
+            unsplit = len(toks) >= 3 and sum(len(t) == 1 for t in toks) >= len(toks) - 1
+            if unsplit:
+                nm = "".join(toks)
             if BAD.search(nm) or not re.search(r"[一-龥ぁ-んァ-ヶ]", nm):
                 continue
             if MINOR.search(r["org"]) and not STAFF.search(r["org"]):
@@ -26,7 +32,7 @@ for x in idx:
                 continue
             st = (r["div"] + " " if r["div"] else "") + (r["style"] or DEF.get(x["series"], ""))
             res.append(dict(event=x["event"], series=x["series"], year=x["year"], ename=x["name"], style=st, weight=r["weight"],
-                            place=r["place"], name=nm, org=r["org"], src=u))
+                            place=r["place"], name=nm, org=r["org"], src=u, unsplit=unsplit))
 seen, U = set(), []
 for r in res:
     k = (r["event"], r["style"], r["weight"], r["name"].replace(" ", ""))
@@ -47,9 +53,12 @@ for key, rs in by.items():
     club = any(CLUB.search(o) for o in orgs) and not any(re.search(r"大学|自衛隊|株式会社|㈱|\(株\)|警|庁|役所", o) for o in orgs)
     if club: memo.append("所属がクラブ・教室だけ(年齢を確認)")
     if len(orgs) > 1: memo.append("所属が複数: " + " / ".join(orgs))
-    if max(ws) - min(ws) >= 20: memo.append(f"階級の幅が大きい({min(ws)}〜{max(ws)}kg)。同じ名前の別の人かもしれない")
-    P.append(dict(pid="p-" + hashlib.sha1(key.encode()).hexdigest()[:6], name=max((r["name"] for r in rs), key=lambda n: (" " in n, len(n))),
-                  org=orgs[-1] if orgs else "", n=len(rs), best=min(int(r["place"]) for r in rs), club=club, memo=memo, rs=rs))
+    # 重量級(86kg 以上)どうしの移動は、階級の区分の変わり目(97・125・130kg など)で幅が大きく見えるだけなので印を付けない
+    if max(ws) - min(ws) >= 20 and min(ws) < 86: memo.append(f"階級の幅が大きい({min(ws)}〜{max(ws)}kg)。同じ名前の別の人かもしれない")
+    if all(r.get("unsplit") for r in rs): memo.append("姓と名の区切りが分からない(古い入賞者一覧にだけ出てくる)")
+    P.append(dict(pid="p-" + hashlib.sha1(key.encode()).hexdigest()[:6], name=max((r["name"] for r in rs), key=lambda n: (len(n.split()) == 2, " " in n, len(n))),
+                  org=next((r["org"] for r in reversed(rs) if r["org"]), ""), n=len(rs),  # 所属はいちばん新しい大会のもの
+                  best=min(int(r["place"]) for r in rs), club=club, memo=memo, rs=rs))
 P.sort(key=lambda p: (-p["n"], p["best"]))
 with open("players_candidates.csv", "w", encoding="utf-8-sig", newline="") as f:
     w = csv.writer(f)
