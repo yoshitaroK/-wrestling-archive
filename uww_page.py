@@ -87,9 +87,9 @@ def row(v, bp, me=None):
 
 def intro():
     return L("世界レスリング連合(UWW)の公式 YouTube にある、日本人選手が出ている試合・ハイライトなどの動画を年代ごとにまとめました。"
-             "動画は YouTube で再生されます。動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。",
+             "動画はこのサイトの中(YouTube のプレーヤー)で再生できます。動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。",
              "Videos featuring Japanese wrestlers from the official YouTube channel of United World Wrestling (UWW), "
-             "organized by age category. All videos play on YouTube. Titles are shown as published by UWW.")
+             "organized by age category. Videos play right on this site in the YouTube player. Titles are shown as published by UWW.")
 
 
 def note(cat):
