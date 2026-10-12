@@ -16,6 +16,8 @@ DESC = ("The official Japan Wrestling Channel archive of Japanese wrestling stre
         "searchable by tournament, year and day. Emperor's Cup, Meiji Cup, Inter-College, Inter-High and more.")
 
 PAIRS = [
+    ('aria-controls="filters">絞り込み</button>', 'aria-controls="filters">Filters</button>'),
+    ('<a class="skip" href="#q">検索へ移動</a>', '<a class="skip" href="#q">Skip to search</a>'),
     ('<html lang="ja">', '<html lang="en">'),
     ('<title>レスリング配信アーカイブ</title>', '<title>Japan Wrestling Archive – Japanese wrestling streams by tournament</title>'),
     ('<meta name="description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">',
@@ -38,7 +40,7 @@ PAIRS = [
     ('<div class="searchbox" role="group" aria-label="絞り込み">', '<div class="searchbox" role="group" aria-label="Filters">'),
     ('aria-label="表示色を切り替え"', 'aria-label="Switch color theme"'),
     ('<label for="q" class="sr">大会名・通称・選手名・動画タイトルで検索</label>', '<label for="q" class="sr">Search by tournament name, player name or video title</label>'),
-    ('placeholder="大会名・通称・選手名で検索(例:天皇杯、インカレ、文田健一郎)"', 'placeholder="Search tournaments or players (e.g. Emperor\'s Cup, Fumita)"'),
+    ('placeholder="大会名・選手名で検索"', 'placeholder="Search tournaments or players"'),
     ('<p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>',
      '<p class="hint">Search tournament names (English or Japanese) or player names. Separate words with spaces to narrow down (e.g. Emperor 2022). Video titles are in Japanese.</p>'),
     ('<label>開催年<select id="f-year"><option value="">すべて</option></select></label>', '<label>Year<select id="f-year"><option value="">All</option></select></label>'),

@@ -150,7 +150,7 @@ def calendar_page(data, ctx, bp):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs),
               {"@type": "CollectionPage", "name": cal_t, "url": SITE + U(path), "hasPart": ld_events}]}
     h = bp.head(f"{cal_t}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
-    h += '<main class="wrap page cal">' + bp.breadcrumb_html(crumbs)
+    h += '<main id="content" class="wrap page cal">' + bp.breadcrumb_html(crumbs)
     h += f'<h1>{cal_t}</h1><p class="lead">{e(desc)}</p>'
     h += (f'<div class="cal-bar"><button type="button" class="cal-nav" id="cal-prev" aria-label="{L("前の月", "Previous month")}">‹</button>'
           '<h2 id="cal-title" aria-live="polite"></h2>'
@@ -209,9 +209,9 @@ CAL_CSS = """
 .cal-grid .day.sel{background:var(--surface-2)}
 .cal-grid .dn{font-size:13px;font-weight:700;color:var(--ink2)}
 .cal-grid .day.sun .dn{color:#ff6a8a}.cal-grid .day.sat .dn{color:#7aa6ff}
-.cal-grid .chip{display:block;font-size:11px;line-height:1.35;padding:2px 5px;border-radius:5px;color:#fff;text-decoration:none;
+.cal-grid .chip{display:block;font-size:11px;line-height:1.35;padding:2px 5px;min-height:24px;box-sizing:border-box;padding-top:4px;border-radius:5px;color:#fff;text-decoration:none;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chip.vid{background:var(--pink)}.chip.sch{background:#2f4f8f}.chip.can{background:#3a3a42;text-decoration:line-through}
+.chip.vid{background:var(--pink-fill)}.chip.sch{background:#2f4f8f}.chip.can{background:#3a3a42;text-decoration:line-through}
 .cal-grid .cal-more{font-size:11px;color:var(--ink3)}
 .cal-grid .dots{display:none;gap:3px;flex-wrap:wrap}
 .cal-grid .dots i{width:7px;height:7px;border-radius:50%}
@@ -236,7 +236,7 @@ CAL_CSS = """
 .cal-list .can .cn{text-decoration:line-through;color:var(--ink3)}
 .cal-list .cal-empty{display:block;color:var(--ink3);padding:16px 4px}
 .cal-list .addc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.cal-list .addc a{font-size:12px;font-weight:700;color:var(--pink);border:1px solid var(--pink-line);border-radius:999px;padding:2px 10px;text-decoration:none}
+.cal-list .addc a{font-size:12px;font-weight:700;color:var(--pink);border:1px solid var(--pink-line);border-radius:999px;padding:4px 10px;text-decoration:none}
 .cal-list .addc a:hover{border-color:var(--pink)}
 @media (max-width:640px){
   .cal-grid .day{min-height:54px;align-items:center}

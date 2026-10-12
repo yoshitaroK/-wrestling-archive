@@ -503,7 +503,7 @@ def photo_pages(ctx, photos_by_page, bp):
         "hasPart": [{"@type": "ImageGallery", "name": label(p), "url": bp.SITE + U(photo_path(p))} for p in paths]}]}
     cover = photos_by_page[paths[0]][0] if paths else None
     h = bp.head(title, desc, path, (bp.SITE + cover["full"]) if cover else "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{e(photos_t)}</h1>"
+    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{e(photos_t)}</h1>"
     h += '<p class="lead">' + e(L(f"レスリング大会で撮影された写真です。大会を選ぶと、その大会の写真をまとめて見られます。写真は撮影者の許可を得て掲載しています。現在{len(paths)}大会・{total}枚。",
                                   f"Photos taken at wrestling tournaments. Choose a tournament to see all of its photos. Photos are published with the photographers' permission. {i18n.plural(len(paths), 'tournament')}, {i18n_plural(total)}.")) + "</p>"
     if paths:
@@ -541,7 +541,7 @@ def photo_pages(ctx, photos_by_page, bp):
                                      **({"creditText": credit_text(ph["credit"])} if ph["credit"] else {}),
                                      **({"caption": ph["caption"]} if ph["caption"] else {})) for ph in lst]}]}
         h = bp.head(title, desc, path, bp.SITE + lst[0]["full"], jsonld, ctx["css"])
-        h += '<main class="wrap page">' + bp.breadcrumb_html(crumbs)
+        h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
         h += f'<h1>{e(x["series"])} <span class="yr-h">{e(bp.year_label(x["year"]) if x["year"] else "")}</span><span class="badge ph">{photos_t}</span></h1>'
         lead = L((f"{when}" + (f"、{venue}で" if venue else "に") + "開催。" if when else "") + f"写真{len(lst)}枚を掲載しています。",
                  (f"Held {when}" + (f" at {venue}" if venue else "") + ". " if when else "") + f"{i18n_plural(len(lst))}.")
@@ -571,7 +571,7 @@ PHOTO_CSS += """
 .pc-t{font-weight:700;font-size:15px;line-height:1.4}
 .pc-s{font-size:12.5px;color:var(--ink2)}
 .pc-c{font-size:11.5px;color:var(--ink3)}
-.badge.ph{background:var(--pink-line);color:var(--pink)}
+.badge.ph{background:var(--pink-tint);color:var(--pink-deep)}
 .pback{margin:22px 0 32px;justify-content:center}
 .pmark{margin-left:6px;font-size:.9em;text-decoration:none}
 """

@@ -265,6 +265,7 @@ window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}c
 {THUMB_JS}
 </head>
 <body>
+<a class="skip" href="#content">{L("本文へ移動", "Skip to main content")}</a>
 {official_bar(lang_switch(path) if alternates else '')}
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="{U('/')}" aria-label="{e(site_name())}{L('(トップへ)', ' (home)')}"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
@@ -479,7 +480,7 @@ def event_page(ev, ctx):
     jsonld = {"@context": "https://schema.org", "@graph": ld}
 
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first['id']}/hqdefault.jpg" if first else "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs)
+    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs)
     sl = status_label()
     badge = f'<span class="badge {e(status)}">{e(sl[status])}</span>' if status in sl else ""
     h += f'<h1>{e(name)} <span class="yr-h">{e(year_label(ev["year"]))}</span>{badge}</h1>'
@@ -697,7 +698,7 @@ def series_page(s, ctx):
                     for x in with_v if x["id"] in ctx["slugs"]]}]}
 
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first_v['id']}/hqdefault.jpg" if first_v else "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs)
+    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs)
     h += f"<h1>{e(name)}</h1>"
     if i18n.en():
         lead = f"{i18n.plural(total, 'stream/video', 'streams/videos')} published on YouTube, organized by year." + (
@@ -838,7 +839,7 @@ def tech_pages(tech, cats, shown, ctx):
         "@type": "CollectionPage", "name": tech_t, "url": SITE + U(path),
         "hasPart": [{"@type": "WebPage", "name": N(c["name"]), "url": SITE + U(f"/technique/{c['slug']}/")} for c in cats if counts.get(c["slug"])]}]}
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{shown[0]['id']}/hqdefault.jpg" if shown else "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(tech_t)}</h1>"
+    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(tech_t)}</h1>"
     h += '<p class="lead">' + e(L(f"レスリングクラブが公開している、技術やトレーニング方法を紹介する動画です。区分を選ぶと、その技術の動画だけを見られます。現在{len(shown)}本を掲載しています。",
                                   f"Videos from wrestling clubs that teach techniques and training methods. Choose a category to see only those videos. {i18n.plural(len(shown), 'video')} listed. Titles are in Japanese.")) + '</p>'
     h += cat_nav(cats, counts)
@@ -868,7 +869,7 @@ def tech_pages(tech, cats, shown, ctx):
         jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs),
                   {"@type": "CollectionPage", "name": L(f"{cn}の技術動画", f"{cn} technique videos"), "url": SITE + U(path)}]}
         h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg", jsonld, ctx["css"])
-        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(cn)}</h1>"
+        h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(cn)}</h1>"
         h += '<p class="lead">' + e(L(f"{cd}。レスリングクラブが公開している動画{len(vids)}本を、公開日の新しい順に並べています。",
                                       f"{cd}. {i18n.plural(len(vids), 'video')} published by wrestling clubs, newest first.")) + '</p>'
         h += cat_nav(cats, counts, current=c["slug"])
@@ -887,7 +888,7 @@ def tech_pages(tech, cats, shown, ctx):
                  f"{i18n.plural(len(vids), 'technique and training video')} published by {chn}, by category." + (f" {note}." if note else ""))
         jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs)]}
         h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg" if vids else "", jsonld, ctx["css"])
-        h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(chn)}</h1>"
+        h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(chn)}</h1>"
         if note:
             h += '<p class="lead">' + e(L(f"{note}。技術・トレーニング動画{len(vids)}本を区分ごとに並べています。",
                                           f"{note}. {i18n.plural(len(vids), 'technique and training video')}, by category.")) + '</p>'
@@ -923,7 +924,7 @@ def index_page(ctx, series_list):
         "@type": "CollectionPage", "name": L("大会一覧", "Tournaments"), "url": SITE + U(path),
         "hasPart": [{"@type": "WebPage", "name": N(x["name"]), "url": SITE + U(f"/events/{x['id']}/")} for x in series_list]}]}
     h = head(title, desc, path, "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{L('大会一覧', 'Tournaments')}</h1>"
+    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{L('大会一覧', 'Tournaments')}</h1>"
     h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。開催日の新しい順に並んでいます。スタイルや開催年での絞り込みは検索ページで行えます。",
                                   f"{len(series_list)} tournaments with videos, most recent first. Use the search page to filter by style or year.")) + '</p>'
     h += '<ol class="occ slist-static">'
@@ -957,7 +958,7 @@ def contact_page(ctx):
     return h + body + footer(ctx["as_of"])
 
 
-CONTACT_BODY = r"""<main class="wrap page contact">
+CONTACT_BODY = r"""<main id="content" class="wrap page contact">
 <nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>お問い合わせ</li></ol></nav>
 <h1>お問い合わせ</h1>
 <p class="lead">動画の掲載・非表示のご依頼、掲載内容の誤りのご指摘、サイトの不具合のご報告、お仕事のご相談など、お気軽にお送りください。内容を確認のうえ、ご返信いたします。</p>
@@ -1029,7 +1030,7 @@ CONTACT_BODY = r"""<main class="wrap page contact">
 </script>
 """
 
-CONTACT_BODY_EN = r"""<main class="wrap page contact">
+CONTACT_BODY_EN = r"""<main id="content" class="wrap page contact">
 <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li>Contact</li></ol></nav>
 <h1>Contact</h1>
 <p class="lead">Requests to list or hide videos, corrections, bug reports, business inquiries — feel free to get in touch. We will reply after reviewing your message. English is welcome.</p>
@@ -1188,7 +1189,7 @@ def about_page(data, series_list, ctx):
          L("掲載内容の誤り、動画の掲載・非表示、写真の取り下げ、取材・お仕事のご相談は、お問い合わせフォームからお送りください。",
            "For corrections, listing or hiding a video, photo removal, or media and business inquiries, please use the contact form.")),
     ]
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f'<h1>{L("運営者情報", "About this site")}</h1><dl class="facts">'
+    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f'<h1>{L("運営者情報", "About this site")}</h1><dl class="facts">'
     h += "".join(f"<dt>{e(k)}</dt><dd>{e(v)}</dd>" for k, v in rows) + "</dl>"
     h += (f'<p class="tosearch-line"><a href="{U("/contact.html")}">{L("お問い合わせ", "Contact")} →</a>　'
           f'<a href="{U("/faq/")}">{L("よくある質問", "FAQ")} →</a>　<a href="{U("/privacy/")}">{L("プライバシーポリシー", "Privacy Policy")} →</a></p>')
@@ -1207,7 +1208,7 @@ def faq_page(data, series_list, ctx):
              L("レスリング配信アーカイブ(Japan Wrestling Channel 公式)についてよくある質問と答えです。配信の見方、過去の大会、選手、写真、更新の頻度など。",
                "Frequently asked questions about the Japan Wrestling Archive (official, Japan Wrestling Channel): watching streams, past tournaments, players, photos and updates."),
              "/faq/", "", jsonld, ctx["css"])
-    h += '<main class="wrap page">' + breadcrumb_html(crumbs) + f'<h1>{L("よくある質問", "Frequently asked questions")}</h1>'
+    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f'<h1>{L("よくある質問", "Frequently asked questions")}</h1>'
     for q, a, link in items:
         h += f'<section class="section faq"><h2>{e(q)}</h2><p>{e(a)}</p>'
         if link:
@@ -1231,7 +1232,7 @@ def privacy_page(ctx):
     return "/privacy/", h + body + footer(ctx["as_of"])
 
 
-PRIVACY_BODY = r"""<main class="wrap page policy">
+PRIVACY_BODY = r"""<main id="content" class="wrap page policy">
 <nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>プライバシーポリシー</li></ol></nav>
 <h1>プライバシーポリシー</h1>
 <p class="lead">Japan Wrestling Channel 公式の「レスリング配信アーカイブ」(japanwrestlingchannel.com。以下「サイト」)と、スマホアプリ「JWC - Japan Wrestling Channel」(iPhone・Android。以下「アプリ」)で扱う情報と、その使い方を説明します。</p>
@@ -1288,7 +1289,7 @@ PRIVACY_BODY = r"""<main class="wrap page policy">
 </main>
 """
 
-PRIVACY_BODY_EN = r"""<main class="wrap page policy">
+PRIVACY_BODY_EN = r"""<main id="content" class="wrap page policy">
 <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li>Privacy Policy</li></ol></nav>
 <h1>Privacy Policy</h1>
 <p class="lead">This policy explains what information the Japan Wrestling Archive, the official archive of Japan Wrestling Channel (japanwrestlingchannel.com, the "Site"), and the mobile app "JWC - Japan Wrestling Channel" (iPhone and Android, the "App") handle, and how it is used.</p>
@@ -1409,7 +1410,7 @@ def not_found_page(ctx):
     h = head(f"ページが見つかりません / Page not found|{SITE_NAME}", "お探しのページは見つかりませんでした。 The page you are looking for was not found.", "/404.html", "",
              {"@context": "https://schema.org", "@type": "WebPage", "name": "ページが見つかりません"}, ctx["css"], alternates=False)
     h = h.replace('<link rel="canonical" href="https://japanwrestlingchannel.com/404.html">', '<meta name="robots" content="noindex">')
-    h += ('<main class="wrap page"><h1>ページが見つかりません</h1>'
+    h += ('<main id="content" class="wrap page"><h1>ページが見つかりません</h1>'
           '<p class="lead">URLが変わったか、削除された可能性があります。大会一覧か検索ページから探してください。</p>'
           '<p><a href="/events/">大会一覧を見る</a> / <a href="/">検索ページへ</a></p>'
           '<h2 lang="en">Page not found</h2>'
@@ -1428,13 +1429,13 @@ PAGE_CSS = """
 .cform{max-width:640px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 22px 24px}
 .cform .field{margin-bottom:18px}
 .cform label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}
-.cform .req{display:inline-block;margin-left:8px;padding:0 7px;border-radius:4px;background:var(--pink);color:#fff;font-size:11px;font-weight:700;vertical-align:1px}
+.cform .req{display:inline-block;margin-left:8px;padding:0 7px;border-radius:4px;background:var(--pink-fill);color:#fff;font-size:11px;font-weight:700;vertical-align:1px}
 .cform .fhint{font-size:12px;color:var(--ink3);margin:6px 0}
 .cform input[type=text],.cform input[type=email],.cform select,.cform textarea{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:11px 13px;border:1px solid var(--surface-2);border-radius:10px;background:var(--bg2);color:var(--ink)}
 .cform textarea{min-height:170px;resize:vertical}
 .cform input:focus,.cform select:focus,.cform textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
-.cform button{display:block;width:100%;margin-top:14px;padding:13px;border:0;border-radius:999px;background:var(--pink);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
-.cform button:hover{background:var(--pink-deep)}
+.cform button{display:block;width:100%;margin-top:14px;padding:13px;border:0;border-radius:999px;background:var(--pink-fill);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.cform button:hover{filter:brightness(1.12)}
 .cform button:disabled{opacity:.6;cursor:wait}
 .cform .hp{position:absolute;left:-9999px}
 .cresult{display:none;margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px}
@@ -1515,7 +1516,7 @@ a.yr{text-decoration:none}
 .catnav a{flex:0 0 auto;display:inline-flex;align-items:baseline;gap:5px;font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:var(--surface)}
 .catnav a b{font-family:var(--num);font-weight:600;font-size:15px;color:var(--ink3)}
 .catnav a:hover{border-color:var(--pink)}
-.catnav a[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.catnav a[aria-current]{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
 .catnav a[aria-current] b{color:#fff}
 .catcards{list-style:none;margin:10px 0 10px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
 .catcards a{display:flex;flex-direction:column;gap:4px;height:100%;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-top:3px solid var(--pink)}

@@ -105,7 +105,7 @@ def page(bp, ctx, path, title, desc, crumbs, body):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs),
               {"@type": "CollectionPage", "name": title, "url": bp.SITE + U(path)}]}
     h = bp.head(f"{title}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
-    return h + '<main class="wrap page uww">' + bp.breadcrumb_html(crumbs) + body + "</main>" + bp.footer(ctx["as_of"])
+    return h + '<main id="content" class="wrap page uww">' + bp.breadcrumb_html(crumbs) + body + "</main>" + bp.footer(ctx["as_of"])
 
 
 def build(root, ctx, bp):
@@ -188,7 +188,7 @@ UWW_CSS = """
 .uww-cards .uc-s{font-size:12px;color:var(--ink3)}
 .uww-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
 .uww-tabs a{padding:6px 14px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font-weight:700;font-size:14px;color:var(--ink)}
-.uww-tabs a[aria-current]{background:var(--pink);border-color:var(--pink);color:#fff}
+.uww-tabs a[aria-current]{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
 .uww-count{font-size:13px;color:var(--ink3);margin:0 0 8px}
 .uww-g{margin:10px 0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
 .uww-g summary{cursor:pointer;font-weight:700;font-size:16px}
