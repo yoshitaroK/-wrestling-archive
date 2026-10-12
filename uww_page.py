@@ -182,8 +182,8 @@ UWW_CSS = """
 .uww h2{font-size:19px;margin:26px 0 10px}
 .uww-cards{list-style:none;margin:0 0 6px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
 .uww-cards a{display:flex;flex-direction:column;gap:2px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:10px;text-decoration:none;color:var(--ink)}
-.uww-cards a:hover{border-color:var(--pink)}
-.uww-cards .uc-n{font-size:20px;font-weight:900}
+.uww-cards a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.uww-cards .uc-n{font-size:20px;font-weight:700}
 .uww-cards .uc-c{font-size:15px;font-weight:700;color:var(--pink)}
 .uww-cards .uc-s{font-size:12px;color:var(--ink3)}
 .uww-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
