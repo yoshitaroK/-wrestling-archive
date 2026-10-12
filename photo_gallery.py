@@ -275,14 +275,26 @@ def load(root, page_paths):
 def album_html(albums, e):
     """外部アルバムへのボタン。year があれば「2026年の写真(アルバム)」、無ければ「アルバムですべての写真を見る」"""
     out = []
-    for album in albums or []:
+    albums = albums or []
+    # 同じページにアルバムが2つ以上あるときは「アルバム1」「アルバム2」と番号を付けて見分けられるようにし、
+    # 撮影者が全部同じなら最後に1回だけ出す
+    many = len(albums) > 1
+    crs = {credit_text(a["credit"]) for a in albums}
+    one_cr = crs.pop() if many and len(crs) == 1 else None
+    for i, album in enumerate(albums, 1):
         n, y = album["count"], album["year"]
         cnt = L(f"({n}枚)", f" ({n} photos)") if n else ""
-        label = (L(f"{y}年の写真をアルバムで見る", f"See {y} photos in the album") if y
-                 else L("アルバムですべての写真を見る", "See all photos in the album")) + cnt
-        cr = credit_text(album["credit"])
+        if many:
+            label = L(f"{y}年の写真をアルバム{i}で見る", f"See {y} photos in album {i}") if y else L(f"アルバム{i}で写真を見る", f"See the photos in album {i}")
+        else:
+            label = (L(f"{y}年の写真をアルバムで見る", f"See {y} photos in the album") if y
+                     else L("アルバムですべての写真を見る", "See all photos in the album"))
+        label += cnt
+        cr = credit_text(album["credit"]) if one_cr is None else ""
         out.append(f'<a class="palbum" href="{e(album["url"])}" target="_blank" rel="noopener">{e(label)} ↗</a>'
                    + (f'<p class="palbum-c">{e(cr)}</p>' if cr else ""))
+    if one_cr:
+        out.append(f'<p class="palbum-c">{e(one_cr)}</p>')
     return "".join(out)
 
 
