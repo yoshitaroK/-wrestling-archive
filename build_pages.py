@@ -1640,7 +1640,7 @@ def build(root=HERE, inline_css=False, only=None):
     listed = sorted([x for x in data["series"] if x.get("n")], key=latest, reverse=True)
 
     all_pages = []
-    hero = {}
+    hero, home = {}, {}
     # 日本語版(今までのURL)と英語版(/en/ の下)を同じ処理で作る
     for lang in ("ja", "en"):
         i18n.set_lang(lang)
@@ -1666,6 +1666,11 @@ def build(root=HERE, inline_css=False, only=None):
             # 写真ページ(/photos/)。photos.json に写真があるページの分だけ作る
             pages.extend(photo_gallery.photo_pages(ctx, photos_by_page, me))
             hero[lang] = photo_gallery.hero_items(ctx, photos_by_page, me)
+            # トップページの「技術動画」「写真」の列(assets/home.json)
+            cat_names = {c["slug"]: c["name"] for c in cats}
+            home[lang] = {"tech": [{"id": v["id"], "t": v["t"], "cat": N(cat_names.get(v["cat"], "")), "href": U("/technique/" + v["cat"] + "/")}
+                                   for v in sorted(shown, key=lambda v: v.get("p") or "", reverse=True)[:12]],
+                          "photos": photo_gallery.home_cards(ctx, photos_by_page, me)}
             # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
             pages.extend(players.build(root, data, ctx, me))
             # 歴代優勝者のページ(/champions/)。日本語版だけ
@@ -1717,6 +1722,8 @@ def build(root=HERE, inline_css=False, only=None):
     i18n.set_lang("ja")
     if only is None:
         photo_gallery.write_hero(root, hero)
+        with open(os.path.join(root, "assets", "home.json"), "w", encoding="utf-8") as f:
+            json.dump({"about": "自動生成。トップページの「技術動画」「写真」の列(build_pages.py)。手で編集しない", **home}, f, ensure_ascii=False, indent=1)
         # 「カレンダーに追加」の .ics ファイル。終わった大会の分が残らないよう、毎回作り直す
         import shutil
         import calendar_page

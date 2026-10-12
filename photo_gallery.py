@@ -469,9 +469,8 @@ def write_hero(root, hero):
         json.dump({"about": "自動生成。トップページの写真(photo_gallery.py の HERO_PHOTOS)。手で編集しない", **hero}, f, ensure_ascii=False, indent=1)
 
 
-def photo_pages(ctx, photos_by_page, bp):
-    """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
-    e, N = bp.e, bp.N
+def photo_index(ctx, photos_by_page, bp):
+    """写真がある大会のページ(新しい順)と、その名前・開催日など"""
     info = photo_targets(ctx, bp)
     for p, lst in photos_by_page.items():
         # 大会ページ(年なし)に載せた写真は、photos.json の year を開催年として扱う
@@ -480,6 +479,24 @@ def photo_pages(ctx, photos_by_page, bp):
             y = yrs.pop()
             info[p] = dict(info[p], year=y, sort=f"{y}-99")
     paths = sorted((p for p in photos_by_page if p in info), key=lambda p: info[p]["sort"], reverse=True)
+    return paths, info
+
+
+def home_cards(ctx, photos_by_page, bp, limit=12):
+    """トップページの「写真」の列。写真トップ(/photos/)のカードと同じ表紙・同じ順番。[{href, label, src, n}]"""
+    paths, info = photo_index(ctx, photos_by_page, bp)
+    out = []
+    for p in paths[:limit]:
+        x, c = info[p], photos_by_page[p][0]
+        out.append({"href": U(photo_path(p)), "label": x["series"] + ((" " + bp.year_label(x["year"])) if x["year"] else ""),
+                    "src": c["thumb"], "n": len(photos_by_page[p])})
+    return out
+
+
+def photo_pages(ctx, photos_by_page, bp):
+    """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
+    e, N = bp.e, bp.N
+    paths, info = photo_index(ctx, photos_by_page, bp)
     home, photos_t = L("トップ", "Home"), L("写真", "Photos")
     total = sum(len(photos_by_page[p]) for p in paths)
     pages = []
