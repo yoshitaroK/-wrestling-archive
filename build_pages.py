@@ -250,10 +250,10 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#07111f">
+<meta name="theme-color" content="#08080a">
 <script>(function(){{var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
 try{{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}}catch(e){{}}
-function set(v){{d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#0d1f3c':'#07111f';}}
+function set(v){{d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#0b0b0e':'#08080a';}}
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
 if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){{try{{if(sessionStorage.getItem('theme'))return;}}catch(x){{}}set(e.matches?'light':'dark');}});
 window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}catch(e){{}}}};}})();</script>
@@ -927,7 +927,7 @@ def index_page(ctx, series_list):
     h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{L('大会一覧', 'Tournaments')}</h1>"
     h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。開催日の新しい順に並んでいます。スタイルや開催年での絞り込みは検索ページで行えます。",
                                   f"{len(series_list)} tournaments with videos, most recent first. Use the search page to filter by style or year.")) + '</p>'
-    h += '<ol class="occ slist-static">'
+    h += '<ul class="egrid">'
     for x in series_list:
         evs = [v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]
         span = year_span([v["year"] for v in evs], L("開催年を確認中", "Years TBC"))
@@ -936,9 +936,21 @@ def index_page(ctx, series_list):
             tags += f'<span class="tag">{L("海外", "Overseas")}</span>'
         has_photo = f'/events/{x["id"]}/' in ctx["photo_paths"] or any(
             f'/events/{ctx["slugs"][v["id"]]}/' in ctx["photo_paths"] for v in ctx["events_by_series"].get(x["id"], []) if v["id"] in ctx["slugs"])
-        h += (f'<li><a href="{U("/events/" + x["id"] + "/")}"><span class="ob"><span class="od sname">{e(N(x["name"]))}{photo_mark() if has_photo else ""}</span>'
-              f'<span class="ov">{e(span)} {tags}</span></span><span class="on"><b class="num">{x.get("n", 0)}</b>{L("本", " videos")}</span></a></li>')
-    h += "</ol></main>" + footer(ctx["as_of"])
+        # カードの絵は、いちばん新しい開催回の試合の動画のサムネイル
+        cover = ""
+        for ev in sorted(evs, key=lambda v: v.get("start") or "", reverse=True):
+            vs = ctx["by_event"].get(ev["id"], [])
+            m = next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
+            if m:
+                cover = m["id"]
+                break
+        cover = cover or next((v["id"] for v in ctx["loose_by_series"].get(x["id"], [])), "")
+        th = thumb(cover) if cover else '<div class="thumb"></div>'
+        if has_photo:
+            th = th[:-len("</div>")] + photo_mark() + "</div>"
+        h += (f'<li><a class="tile" href="{U("/events/" + x["id"] + "/")}">{th}<span class="tt">{e(N(x["name"]))}</span>'
+              f'<span class="tm"><span><b class="num">{x.get("n", 0)}</b>{L("本", " videos")}</span><span>{e(span)}</span>{tags}</span></a></li>')
+    h += "</ul></main>" + footer(ctx["as_of"])
     return path, h
 
 
@@ -1455,7 +1467,7 @@ PAGE_CSS = """
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
 .crumbs a{color:var(--ink2);text-decoration:none}.crumbs a:hover{color:var(--pink)}
-.page h1{font-size:28px;font-weight:900;line-height:1.35;margin:0 0 8px;letter-spacing:.01em}
+.page h1{font-size:28px;font-weight:700;line-height:1.35;margin:0 0 8px;letter-spacing:.03em}
 .page h1 .yr-h{font-family:var(--num);font-weight:600;font-size:1.25em;color:var(--pink);letter-spacing:.02em}
 .lead{color:var(--ink2);margin:0 0 14px;max-width:70ch}
 .page .facts{font-size:14px;margin-bottom:6px}
@@ -1479,8 +1491,8 @@ a.yr{text-decoration:none}
 .page .section{margin-top:24px}
 .page .aliases{margin:0 0 6px}
 .occ{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.occ a,.occ .off>div{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
-.occ a:hover{border-color:var(--pink)}
+.occ a,.occ .off>div{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--card-r);transition:background .15s,border-color .15s;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.occ a:hover{border-color:var(--line-hi);background:var(--surface-2)}
 .occ .off>div{opacity:.6}
 .occ .oy{font-family:var(--num);font-weight:600;font-size:26px;line-height:1;color:var(--pink)}
 .occ .off .oy{color:var(--ink3)}
@@ -1492,9 +1504,17 @@ a.yr{text-decoration:none}
 .slist-static a{grid-template-columns:1fr auto}
 .slist-static .sname{font-weight:700}
 .slist-static .tag{margin-left:4px}
+.egrid{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px 16px}
+.egrid .tile .tt{font-weight:700;font-size:14.5px}
+.egrid .tile .tm{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:4px}
+.egrid .tile .tm .num{font-size:16px}
+.egrid .thumb .ph{font-size:13px}
+.egrid .pmark{position:absolute;top:7px;right:8px;z-index:2;font-size:12px;line-height:1;background:rgba(0,0,0,.55);border-radius:4px;padding:4px 6px}
+@media (max-width:980px){.egrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.egrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 10px}.egrid .tile .tt{font-size:13.5px}}
 .chlist{list-style:none;margin:0 0 30px;padding:0;display:flex;flex-direction:column;gap:6px}
 .chlist a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none}
-.chlist a:hover{border-color:var(--pink)}
+.chlist a:hover{border-color:var(--line-hi);background:var(--surface-2)}
 .chlist .cn{font-weight:700;min-width:0}
 .chlist .cm{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px;white-space:nowrap;flex:0 0 auto}
 .chlist .cm .num{font-size:16px;color:var(--ink);font-family:var(--num)}
@@ -1520,12 +1540,12 @@ a.yr{text-decoration:none}
 .catnav a[aria-current] b{color:#fff}
 .catcards{list-style:none;margin:10px 0 10px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
 .catcards a{display:flex;flex-direction:column;gap:4px;height:100%;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-top:3px solid var(--pink)}
-.catcards a:hover{border-color:var(--pink)}
-.catcards .cn{font-weight:900;font-size:16px}
+.catcards a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.catcards .cn{font-weight:700;font-size:16px}
 .catcards .cd{font-size:12px;color:var(--ink3);line-height:1.55;flex:1}
 .catcards .cc{font-size:12px;color:var(--ink3)}
 .catcards .cc .num{font-size:20px;color:var(--pink);margin-right:2px}
-.page h2.vh{margin:0 0 8px;font-size:17px;font-weight:900;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.page h2.vh{margin:0 0 8px;font-size:17px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .page h2.vh small{font-weight:400;color:var(--ink3);font-size:12px}
 .v .thumb img{width:100%;height:100%}
 @media (max-width:760px){
