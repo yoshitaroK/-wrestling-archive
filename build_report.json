@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-12T06:17:50+09:00",
+ "built_at": "2026-10-12T12:20:20+09:00",
  "as_of": "2026-10-12",
  "video_count": 3360,
  "raw_count": 3360,
@@ -70,42 +70,61 @@
   ]
  },
  "players": {
-  "total": 761,
-  "published": 739,
+  "total": 1265,
+  "published": 932,
   "hidden_minor": 0,
-  "hidden_private": 22,
+  "hidden_private": 333,
   "errors": [],
   "video_excluded": 2,
-  "video_links": 738,
+  "video_links": 1054,
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 739,
+    "made": 388,
+    "kept": 544,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 739,
+    "made": 388,
+    "kept": 544,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 275,
+  "rows": 553,
   "hidden_minor": 0,
-  "no_link": 8,
+  "no_link": 81,
   "skipped_unknown_event": 31,
-  "history_rows": 5893,
-  "history_linked": 735,
-  "history_hidden": 8,
-  "history_site_preferred": 216,
+  "history_rows": 5624,
+  "history_linked": 969,
+  "history_hidden": 7,
+  "history_site_preferred": 485,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "tenno-cup フリースタイル 2024 74kg: サイト「高田 熙」/ 歴代記録「高田 煕」",
+   "tenno-cup フリースタイル 2021 65kg: サイト「山口 海輝」/ 歴代記録「山口 輝海」",
+   "tenno-cup フリースタイル 2021 79kg: サイト「髙橋 夢大」/ 歴代記録「高橋 夢大」",
+   "tenno-cup フリースタイル 2020 65kg: サイト「山口 海輝」/ 歴代記録「山口 輝海」",
+   "tenno-cup フリースタイル 2017 61kg: サイト「小栁和也有」/ 歴代記録「小栁 和也」",
+   "tenno-cup フリースタイル 2017 70kg: サイト「乙黒圭祐木」/ 歴代記録「乙黒 圭祐」",
+   "tenno-cup フリースタイル 2017 86kg: サイト「白井勝太松」/ 歴代記録「白井 勝太」",
+   "tenno-cup フリースタイル 2016 86kg: サイト「松坂誠應白」/ 歴代記録「松坂 誠應」",
+   "tenno-cup グレコローマン 2020 72kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
+   "tenno-cup グレコローマン 2019 67kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
+   "tenno-cup グレコローマン 2018 67kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
+   "tenno-cup グレコローマン 2016 66kg: サイト「髙橋昭」/ 歴代記録「高橋 昭五」",
+   "tenno-cup グレコローマン 2016 85kg: サイト「松本篤史塩」/ 歴代記録「松本 篤史」",
+   "tenno-cup グレコローマン 2015 98kg: サイト「齋川哲克」/ 歴代記録「斎川 哲克」",
+   "tenno-cup グレコローマン 2014 98kg: サイト「齋川哲克」/ 歴代記録「斎川 哲克」",
+   "tenno-cup 女子 2018 76kg: サイト「皆川博恵」/ 歴代記録「鈴木 博恵」",
+   "tenno-cup 女子 2017 65kg: サイト「源平彩南森」/ 歴代記録「源平 彩南」",
+   "tenno-cup 女子 2017 68kg: サイト「土性沙」/ 歴代記録「土性 沙羅」",
+   "tenno-cup 女子 2017 76kg: サイト「鈴木博恵松」/ 歴代記録「鈴木 博恵」",
+   "tenno-cup 女子 2016 69kg: サイト「土性沙」/ 歴代記録「土性 沙羅」",
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」"
   ],
@@ -207,8 +226,8 @@
   ]
  },
  "en": {
-  "pages": 1055,
-  "names": 478,
+  "pages": 1248,
+  "names": 521,
   "machine_translations": 3723,
   "missing_names": []
  }
