@@ -569,4 +569,18 @@ def build(root, data, ctx, bp):
     pages = [(*player_page(p, ctx, bp, cards.url(p, ctx, bp, sys.modules[__name__])), data.get("as_of")) for p in players]
     ctx.setdefault("og_cards", {})["en" if i18n.en() else "ja"] = cards.finish()
     pages.append((*index_page(players, ctx, bp), data.get("as_of")))
+    remove_old_pages(root, players)
     return pages
+
+
+def remove_old_pages(root, players):
+    """公開をやめた選手(players.csv で消えた・「公開」がいいえ・未成年)の前のページを消す。
+    消さないと、選手一覧からは消えても、前のアドレスでページが開けてしまう"""
+    import shutil
+    keep = {p["id"] for p in players}
+    base = os.path.join(root, U("/players/").strip("/"))
+    if not keep or not os.path.isdir(base):
+        return
+    for name in os.listdir(base):
+        if ID_RE.match(name) and name.startswith("p-") and name not in keep and os.path.isdir(os.path.join(base, name)):
+            shutil.rmtree(os.path.join(base, name), ignore_errors=True)

@@ -1,5 +1,122 @@
 [
  {
+  "event": "wre-2014-meiji-cup-0614",
+  "series": "meiji-cup",
+  "year": 2014,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2014/06/16/51984/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2014/0614meiji/ichiran_FF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2014/0614meiji/ichiran_Fe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2014/0614meiji/ichiran_GR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
+ },
+ {
+  "event": "wre-2015-meiji-cup-0619",
+  "series": "meiji-cup",
+  "year": 2015,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2015/06/22/72347/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2015/0621meiji/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2015/0621meiji/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2015/0621meiji/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
+ },
+ {
+  "event": "wre-2016-meiji-cup-0527",
+  "series": "meiji-cup",
+  "year": 2016,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2016/05/30/91881/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2016/0529meiji/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2016/0529meiji/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2016/0529meiji/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
+ },
+ {
+  "event": "wre-2017-meiji-cup-0616",
+  "series": "meiji-cup",
+  "year": 2017,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2017/06/19/109862/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2017/01618_meiji/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2017/01618_meiji/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2017/01618_meiji/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
+ },
+ {
+  "event": "wre-2018-meiji-cup-0614",
+  "series": "meiji-cup",
+  "year": 2018,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2018/06/18/127511/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2018/0617_meiji/ichiranFF.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2018/0617_meiji/ichiranFe.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2018/0617_meiji/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
+ },
+ {
+  "event": "wre-2021-meiji-cup-0527",
+  "series": "meiji-cup",
+  "year": 2021,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2021/05/31/172721/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/0530_meiji4/ichiran1_8_FS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/0530_meiji4/ichiran1_8_GR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/0530_meiji4/ichiran1_8_WW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2022-meiji-cup-0616",
+  "series": "meiji-cup",
+  "year": 2022,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2022/06/20/190001/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0619_meiji4/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0619_meiji4/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0619_meiji4/ichiranWW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2023-meiji-cup-0615",
+  "series": "meiji-cup",
+  "year": 2023,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2023/06/19/209307/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0618_meiji/ichiran_FS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0618_meiji/ichiran_GR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0618_meiji/ichiran_WW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
   "event": "wre-2014-tenno-cup-1221",
   "series": "tenno-cup",
   "year": 2014,
@@ -11,7 +128,8 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2014/1223/ichiranGR.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
  },
  {
   "event": "wre-2015-tenno-cup-1221",
@@ -25,7 +143,8 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2015/1223alljapan/ichiran_GR.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
  },
  {
   "event": "wre-2016-tenno-cup-1221",
@@ -39,7 +158,8 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2016/1223alljapan/ichiranGR.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
  },
  {
   "event": "wre-2017-tenno-cup-1220",
@@ -53,7 +173,8 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2017/1223alljapan/ichiranGR.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
  },
  {
   "event": "wre-2018-tenno-cup-1220",
@@ -67,7 +188,8 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2018/1223alljapan4/ichiranGR_new.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
  },
  {
   "event": "wre-2019-tenno-cup-1219",
@@ -84,7 +206,8 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2019/1222_alljapan4/ichiranWW1_8.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "skip": "2014〜2019年の入賞者一覧は名前が1文字ずつ空けて書かれていて、今の読み取りでは名前が切れたり隣の行とくっついたりするため、使わない(#54)"
  },
  {
   "event": "wre-2020-tenno-cup-1217",

@@ -13,6 +13,8 @@ SER = {"tenno-cup": "天皇杯", "meiji-cup": "明治杯", "shakaijin": "全日�
        "east-autumn": "東日本学生秋季", "university-championship": "全日本大学", "university-greco": "全日本大学グレコ"}
 res, minor = [], 0
 for x in idx:
+    if x.get("skip"):  # 使わない一覧(理由は jwf_index.json の skip に書く)
+        continue
     for u in x["winners"]:
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
         rows = (parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]})
@@ -55,7 +57,8 @@ for key, rs in by.items():
     if len(orgs) > 1: memo.append("所属が複数: " + " / ".join(orgs))
     # 重量級(86kg 以上)どうしの移動は、階級の区分の変わり目(97・125・130kg など)で幅が大きく見えるだけなので印を付けない
     if max(ws) - min(ws) >= 20 and min(ws) < 86: memo.append(f"階級の幅が大きい({min(ws)}〜{max(ws)}kg)。同じ名前の別の人かもしれない")
-    if all(r.get("unsplit") for r in rs): memo.append("姓と名の区切りが分からない(古い入賞者一覧にだけ出てくる)")
+    if all(r.get("unsplit") for r in rs) or " " not in max((r["name"] for r in rs), key=len):
+        memo.append("姓と名の区切りが分からない(古い入賞者一覧にだけ出てくる)")
     P.append(dict(pid="p-" + hashlib.sha1(key.encode()).hexdigest()[:6], name=max((r["name"] for r in rs), key=lambda n: (len(n.split()) == 2, " " in n, len(n))),
                   org=next((r["org"] for r in reversed(rs) if r["org"]), ""), n=len(rs),  # 所属はいちばん新しい大会のもの
                   best=min(int(r["place"]) for r in rs), club=club, memo=memo, rs=rs))
