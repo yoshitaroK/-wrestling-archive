@@ -46,7 +46,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
   color-scheme:dark;
   --bg:#000000; --bg2:#0d0d10; --surface:#16161a; --surface-2:#222228; --ink:#ffffff; --ink2:#b9b8c0; --ink3:#86858e; --line:#2a2a31;
   /* 紺と赤のテーマ。--pink は名前だけ前のままで、中身はアクセントの赤 */
-  --pink:#ff4458; --pink-deep:#ff8591; --pink-tint:rgba(255,68,88,.16); --pink-line:#5e2128; --grad-a:#13294b; --grad-b:#2b4f8a;
+  --pink:#ff4458; --pink-fill:#d91f36; --pink-deep:#ff8591; --pink-tint:rgba(255,68,88,.16); --pink-line:#5e2128; --grad-a:#13294b; --grad-b:#2b4f8a;
   --navy:#0c1d38; --navy-2:#07111f; --on-navy:#ffffff; --on-navy-2:#c3cde0; --brand-pink:#ff2e7e;
   --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
   --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
@@ -59,6 +59,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font
 a{color:var(--pink-deep)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--pink);outline-offset:2px;border-radius:6px}
+/* キーボードで操作する人がメニューを飛ばして本文へ行けるリンク(フォーカスしたときだけ見える) */
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--pink-fill);color:#fff;font-weight:700;padding:10px 16px;border-radius:0 0 8px 0;text-decoration:none}
+.skip:focus{left:0}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tabnum,.num{font-variant-numeric:tabular-nums}
@@ -71,7 +74,7 @@ button,input,select{font:inherit;color:inherit}
 .official .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:32px}
 .official-t{display:flex;align-items:center;gap:8px;min-width:0}
 .official-t::before{content:"";flex:0 0 auto;width:4px;height:14px;border-radius:1px;background:var(--pink)}
-.official a.lang{flex:0 0 auto;color:#fff;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,.4);border-radius:4px;padding:1px 10px;font-size:12px}
+.official a.lang{flex:0 0 auto;color:#fff;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,.4);border-radius:4px;padding:4px 10px;font-size:12px;line-height:1.3}
 .official a.lang:hover{background:rgba(255,255,255,.12);border-color:#fff}
 .top{position:sticky;top:0;z-index:20;background:var(--navy);color:var(--on-navy);border-bottom:3px solid var(--pink)}
 .home{display:flex;align-items:center;gap:10px;color:var(--on-navy);text-decoration:none;padding-bottom:10px}
@@ -87,7 +90,7 @@ button,input,select{font:inherit;color:inherit}
 .hsearch input::placeholder{color:#6b6b75}
 .hsearch input:focus{outline:none}
 .hsearch:focus-within{box-shadow:0 0 0 3px var(--pink)}
-.hsearch button{flex:0 0 auto;width:38px;border:0;background:var(--pink);color:#fff;cursor:pointer;display:grid;place-items:center}
+.hsearch button{flex:0 0 auto;width:38px;border:0;background:var(--pink-fill);color:#fff;cursor:pointer;display:grid;place-items:center}
 .hsearch button:hover{filter:brightness(1.12)}
 .hsearch svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
@@ -97,7 +100,7 @@ button,input,select{font:inherit;color:inherit}
 :root[data-theme="light"]{
     color-scheme:light;
     --bg:#ffffff; --bg2:#f4f4f7; --surface:#f4f4f7; --surface-2:#e6e6eb; --ink:#16161a; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e1e1e7;
-    --pink:#c8102e; --pink-deep:#a50d26; --pink-tint:rgba(200,16,46,.08); --pink-line:#f0bcc4;
+    --pink:#c8102e; --pink-fill:#c8102e; --pink-deep:#a50d26; --pink-tint:rgba(200,16,46,.08); --pink-line:#f0bcc4;
     --navy:#13294b; --navy-2:#0d1f3c;
     --st-cancel:#b3261e; --st-cancel-bg:#fdecea; --st-plan:#1d4f91; --st-plan-bg:#e7effa; --st-post:#7a5500; --st-post-bg:#fdf3d6;
     --st-unk:#4a4a55; --st-unk-bg:#efeff2; --unl:#6e5200; --unl-bg:#fff6dc; --unl-line:#ecd79a;
@@ -129,8 +132,8 @@ button,input,select{font:inherit;color:inherit}
 .jhero .searchrow input{border:0;border-radius:6px;padding:15px 18px;font-size:17px;background:#fff;color:#16161a;box-shadow:0 8px 28px rgba(0,0,0,.35)}
 .jhero .searchrow input::placeholder{color:#6b6b75}
 .jhero .searchrow input:focus{outline:none;box-shadow:0 0 0 4px var(--pink),0 8px 28px rgba(0,0,0,.35)}
-.jhero .hint{color:#d3dbea;margin-top:8px}
-.jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:3px 9px;text-decoration:none}
+.jhero .hint{color:#e8edf6;margin-top:8px;display:inline-block;background:rgba(7,17,31,.62);padding:3px 8px;border-radius:6px}
+.jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:5px 9px;text-decoration:none}
 .jcredit:hover{text-decoration:underline}
 .jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .jcredit[hidden]{display:none}
@@ -140,6 +143,9 @@ button,input,select{font:inherit;color:inherit}
 .searchrow input{width:100%;border:1px solid var(--surface-2);border-radius:10px;padding:13px 16px;font-size:16px;background:var(--surface);color:var(--ink)}
 .searchrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
 .hint{margin:6px 2px 0;font-size:12px;color:var(--ink3)}
+.ftoggle{display:none;align-items:center;gap:6px;margin-top:12px;min-height:40px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.ftoggle::after{content:"▾";font-size:12px;transition:transform .2s}
+.ftoggle[aria-expanded="true"]::after{transform:rotate(180deg)}
 .filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;gap:8px;margin-top:12px;align-items:end}
 .filters label{display:flex;flex-direction:column;font-size:11.5px;color:var(--ink2);gap:3px;min-width:0}
 .filters select{border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
@@ -180,11 +186,11 @@ main{padding:10px 0 60px}
 .hero .rings{position:absolute;top:-40px;right:-40px;opacity:.35}
 .hero .rings circle{fill:none;stroke:#fff}
 .hero > *:not(img):not(.scrim):not(.rings){position:relative}
-.hero .badge-l{display:inline-block;width:fit-content;font-size:11.5px;font-weight:700;background:var(--pink);color:#fff;border-radius:4px;padding:1px 8px;margin-bottom:10px}
+.hero .badge-l{display:inline-block;width:fit-content;font-size:11.5px;font-weight:700;background:var(--pink-fill);color:#fff;border-radius:4px;padding:1px 8px;margin-bottom:10px}
 .hero .hn{font-size:32px;font-weight:900;line-height:1.35;max-width:720px;text-shadow:0 1px 10px rgba(0,0,0,.3)}
 .hero .hm{font-size:13px;opacity:.92;margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
 .hero .hm .num{font-size:18px}
-.hero .cta{margin-top:18px;display:inline-block;background:var(--pink);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px;width:fit-content}
+.hero .cta{margin-top:18px;display:inline-block;background:var(--pink-fill);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px;width:fit-content}
 .hero:hover .cta{filter:brightness(1.12)}
 
 /* 横並びの棚 */
@@ -266,8 +272,8 @@ main{padding:10px 0 60px}
 .sources .st{color:var(--ink3);margin-right:6px;word-break:normal}
 
 .vgroup{margin-top:20px}
-.vgroup h4{margin:0 0 8px;font-size:14px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.vgroup h4 small{font-weight:400;color:var(--ink3);font-size:12px}
+.vgroup h3,.vgroup h4{margin:0 0 8px;font-size:14px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.vgroup h3 small,.vgroup h4 small{font-weight:400;color:var(--ink3);font-size:12px}
 .vlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
 .v{display:grid;grid-template-columns:136px 1fr;gap:14px;padding:8px;border-radius:10px}
 .v:hover{background:var(--surface)}
@@ -308,6 +314,9 @@ footer p{margin:0 0 6px;max-width:76ch}
   .top{position:static}
   .hsearch input{font-size:16px;padding:9px 4px 9px 12px}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* スマホでは絞り込みをたたんで、結果をすぐ見られるようにする(条件を選んでいるときは開いておく) */
+  .ftoggle{display:inline-flex}
+  .filters:not(.open){display:none}
   .filters .check{grid-column:1/-1}
   .hero{min-height:200px;padding:22px 20px}
   .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
@@ -316,7 +325,7 @@ footer p{margin:0 0 6px;max-width:76ch}
   .jlead .num{font-size:17px}
   .jhero .searchrow input{padding:13px 14px;font-size:16px}
   .jhero .hint{font-size:11.5px}
-  .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px)}
+  .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px);padding:6px 9px}
   .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
   .row{grid-auto-columns:66%}
@@ -345,6 +354,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
 </style>
 </head>
 <body>
+<a class="skip" href="#q">Skip to search</a>
 <div class="official"><div class="wrap"><span class="official-t">Official site of Japan Wrestling Channel</span><a class="lang" href="/" hreflang="ja" lang="ja" title="日本語版を表示" onclick="try{localStorage.setItem('lang','ja')}catch(x){}this.href=this.getAttribute('href').split('#')[0]+location.hash">日本語</a></div></div>
 <header class="top">
   <div class="wrap">
@@ -364,7 +374,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
     <script src="/assets/uww-count.js"></script>
     <div class="searchrow" role="search">
       <label for="q" class="sr">Search by tournament name, player name or video title</label>
-      <input id="q" type="search" autocomplete="off" placeholder="Search tournaments or players (e.g. Emperor's Cup, Fumita)">
+      <input id="q" type="search" autocomplete="off" placeholder="Search tournaments or players">
     </div>
     <p class="hint">Search tournament names (English or Japanese) or player names. Separate words with spaces to narrow down (e.g. Emperor 2022). Video titles are in Japanese.</p>
   </div>
@@ -385,7 +395,8 @@ fetch('/assets/hero.json',{cache:'no-cache'}).then(function(r){return r.ok?r.jso
 })();</script>
 <div class="wrap">
     <div class="searchbox" role="group" aria-label="Filters">
-      <div class="filters">
+      <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filters">Filters</button>
+      <div class="filters" id="filters">
         <label>Year<select id="f-year"><option value="">All</option></select></label>
         <label>Category<select id="f-cat"><option value="">All</option></select></label>
         <label>Style<select id="f-style"><option value="">All</option></select></label>
@@ -622,7 +633,19 @@ function renderControls(){
   document.getElementById('f-all').checked = st.all;
   var q = document.getElementById('q'); if(document.activeElement!==q) q.value = st.q;
 }
+// スマホの「絞り込み」ボタン:選んでいる条件の数を出し、条件があるときは開いておく
+function updateFilterToggle(){
+  var b = document.getElementById('ftoggle'), f = document.getElementById('filters'); if(!b || !f) return;
+  var n = [st.y, st.c, st.sty, st.sc, st.k, st.all].filter(Boolean).length;
+  b.textContent = L('絞り込み','Filters') + (n ? L('('+n+')',' ('+n+')') : '');
+  if(n && !f.classList.contains('open')){ f.classList.add('open'); b.setAttribute('aria-expanded','true'); }
+}
+document.addEventListener('click', function(ev){
+  var b = ev.target.closest && ev.target.closest('#ftoggle'); if(!b) return;
+  var f = document.getElementById('filters'), open = f.classList.toggle('open'); b.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
 function renderStatus(list, nVid, nPl){
+  updateFilterToggle();
   var chips = [];
   if(st.q) chips.push(['q',L('検索:','Search: ')+st.q]); if(st.y) chips.push(['y',yl(st.y)]); if(st.c) chips.push(['c',L('区分:','Category: ')+N(st.c)]);
   if(st.sty) chips.push(['sty',L('スタイル:','Style: ')+N(st.sty)]); if(st.sc) chips.push(['sc',N(st.sc)]); if(st.k) chips.push(['k',L('種類:','Type: ')+kindLabel(st.k)]);
@@ -693,10 +716,10 @@ function videoRow(v, showBasis){
     '<div><div class="vt"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener"'+L('',' lang="ja"')+'>'+esc(v.t)+'</a></div>'+trLine(v.t)+
     '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">'+L('根拠:','Basis: ')+(TR[v.b]&&LANG==='en' ? esc(TR[v.b])+' <span class="mt">auto-translated</span>' : '<span'+L('',' lang="ja"')+'>'+esc(v.b)+'</span>')+'</div>':'')+'</div></li>';
 }
-function vgroup(title, sub, vids, showBasis, id){
+function vgroup(title, sub, vids, showBasis, id, lv){
   if(!vids.length) return '';
   var LIMIT = 40, more = vids.length>LIMIT;
-  return '<div class="vgroup"'+(id?' id="'+id+'"':'')+'><h4>'+esc(title)+(sub?'<small>'+esc(sub)+'</small>':'')+'</h4><ul class="vlist">'+
+  return '<div class="vgroup"'+(id?' id="'+id+'"':'')+'><h'+(lv||4)+'>'+esc(title)+(sub?'<small>'+esc(sub)+'</small>':'')+'</h'+(lv||4)+'><ul class="vlist">'+
     vids.slice(0,LIMIT).map(function(v){return videoRow(v,showBasis);}).join('')+'</ul>'+
     (more?'<button type="button" class="more" data-more="'+esc(id||'')+'">'+L('残り'+(vids.length-LIMIT)+'本を表示','Show '+(vids.length-LIMIT)+' more')+'</button>':'')+'</div>';
 }
@@ -832,7 +855,7 @@ function videoSearch(r, first){
   return '<section class="section" style="margin-top:'+(first?'8':'34')+'px"><h2>'+L('動画タイトルで一致した動画','Videos matching the title')+'<small class="hint" style="margin-left:8px">'+L('条件に一致 '+r.hits.length+'本', plural(r.hits.length,'match','matches'))+'</small></h2>'+
     (r.unknownYear?'<p class="hint">'+L('開催年が確定していない動画'+r.unknownYear+'本は、開催年の条件を判定できないため除いています。', plural(r.unknownYear,'video')+' with an unconfirmed year are excluded because the year filter cannot be applied.')+'</p>':'')+
     (LANG==='en'?'<p class="hint">Video titles are shown in Japanese as published.</p>':'')+
-    vgroup(L('公開日の新しい順','Newest first'), '', r.hits, false, 'vs')+'</section>';
+    vgroup(L('公開日の新しい順','Newest first'), '', r.hits, false, 'vs', 3)+'</section>';
 }
 /* ---------- 選手(選手ページの一覧 assets/players.json。検索語が入ったときだけ読む) ---------- */
 var PL = null, plLoading = false;
@@ -898,7 +921,7 @@ function uwwSection(us){
 function looseSection(){
   var list = loose.filter(vidOk); if(!list.length) return '';
   moreCache['loose']=list;
-  return '<details class="loose"><summary>'+L('大会を特定できていない動画('+list.length+'本)','Videos with no identified tournament ('+list.length+')')+'</summary><p class="hint">'+L('タイトルに大会名がない動画です。候補がある場合は根拠とともに示しています。','Their titles do not name a tournament. Possible matches are shown with the basis.')+'</p>'+vgroup(L('公開日の新しい順','Newest first'),'',list.slice().sort(function(a,b){return a.p<b.p?1:-1;}),true,'loose')+'</details>';
+  return '<details class="loose"><summary>'+L('大会を特定できていない動画('+list.length+'本)','Videos with no identified tournament ('+list.length+')')+'</summary><p class="hint">'+L('タイトルに大会名がない動画です。候補がある場合は根拠とともに示しています。','Their titles do not name a tournament. Possible matches are shown with the basis.')+'</p>'+vgroup(L('公開日の新しい順','Newest first'),'',list.slice().sort(function(a,b){return a.p<b.p?1:-1;}),true,'loose',3)+'</details>';
 }
 function render(){
   renderControls();
