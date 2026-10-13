@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-13T20:02:53+09:00",
+ "built_at": "2026-10-13T20:17:07+09:00",
  "as_of": "2026-10-13",
  "video_count": 3360,
  "raw_count": 3360,
@@ -70,26 +70,26 @@
   ]
  },
  "players": {
-  "total": 961,
-  "published": 915,
+  "total": 962,
+  "published": 916,
   "hidden_minor": 0,
   "hidden_private": 46,
   "errors": [],
   "video_excluded": 2,
-  "video_links": 1049,
+  "video_links": 1050,
   "event_results": 128,
-  "event_results_linked": 49,
+  "event_results_linked": 52,
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 915,
+    "made": 2,
+    "kept": 914,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 915,
+    "made": 2,
+    "kept": 914,
     "removed": 0,
     "errors": []
    }
@@ -234,8 +234,8 @@
   ]
  },
  "en": {
-  "pages": 1255,
-  "names": 532,
+  "pages": 1256,
+  "names": 533,
   "machine_translations": 3723,
   "missing_names": []
  }
