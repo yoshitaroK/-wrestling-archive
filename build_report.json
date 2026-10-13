@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-13T10:03:58+09:00",
+ "built_at": "2026-10-13T20:02:53+09:00",
  "as_of": "2026-10-13",
  "video_count": 3360,
  "raw_count": 3360,
@@ -77,18 +77,20 @@
   "errors": [],
   "video_excluded": 2,
   "video_links": 1049,
+  "event_results": 128,
+  "event_results_linked": 49,
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 272,
-    "kept": 643,
-    "removed": 24,
+    "made": 0,
+    "kept": 915,
+    "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 272,
-    "kept": 643,
-    "removed": 24,
+    "made": 0,
+    "kept": 915,
+    "removed": 0,
     "errors": []
    }
   }
