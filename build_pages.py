@@ -1185,7 +1185,7 @@ def faq_items(data, series_list):
         (L("英語版はありますか?", "Is there a Japanese version?"),
          L("あります。すべてのページに英語版があり、大会名・会場名は英語で表示されます(動画タイトルは日本語の原題のままです)。",
            "Yes. Every page has a Japanese version at the same address without /en/. English pages show tournament and venue names in English; video titles stay in Japanese as originally published."),
-         (L("/en/", "/"), L("English version", "日本語版"))),
+         (L("/en/", "/"), L("English version", "Japanese version"))),
     ]
 
 
