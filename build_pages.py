@@ -560,6 +560,7 @@ def event_page(ev, ctx):
 
     import players
     import sys
+    h += players.event_results_html(ev, ctx, sys.modules[__name__])
     h += players.winners_html(ev, ctx, sys.modules[__name__])
     h += info_details(ev)
     h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}&amp;e={e(ev["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
@@ -1307,7 +1308,7 @@ PRIVACY_BODY = r"""<main id="content" class="wrap page policy">
 
 <h2>5. 選手の情報と写真</h2>
 <ul>
-<li>選手のお名前や成績は、大会の公式の結果など、公開されている情報をもとに載せています。<b>未成年の選手は、掲載の許可が確認できた方だけ</b>を載せています。</li>
+<li>選手のお名前や成績は、大会の公式の結果など、公開されている情報をもとに載せています。<b>選手ページは、未成年の選手については掲載の許可が確認できた方だけ</b>作っています。大会の結果(速報)の欄には、公表されている結果のとおりに高校生などの名前も載せています。</li>
 <li>写真は、撮影した方の許可を得て載せています。写っているご本人や保護者の方から依頼があれば、取り下げます。</li>
 <li>掲載内容の訂正・削除のご依頼は、下の窓口へお送りください。</li>
 </ul>
@@ -1364,7 +1365,7 @@ PRIVACY_BODY_EN = r"""<main id="content" class="wrap page policy">
 
 <h2>5. Player information and photos</h2>
 <ul>
-<li>Player names and results are based on public information such as official tournament results. <b>Minors are listed only when permission has been confirmed.</b></li>
+<li>Player names and results are based on public information such as official tournament results. <b>Player pages for minors are created only when permission has been confirmed.</b> The live results on tournament pages list names, including high school students, as published.</li>
 <li>Photos are published with the photographer's permission. We will take a photo down at the request of the person in it or their guardian.</li>
 <li>For corrections or removal requests, please contact us below.</li>
 </ul>

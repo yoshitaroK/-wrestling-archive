@@ -48,6 +48,13 @@ COMING_SOON_EN = ""
 PLAYERS_CSV = "players.csv"
 RESULTS_CSV = "player_results.csv"
 VIDEO_EXCLUDE_CSV = "player_video_exclude.csv"
+# 開催回ごとの結果(速報など)。1行 = 1人の成績。選手検索の選手と名前が一致すれば選手ページへリンクする
+#   開催回ID, 種別, 階級, 成績, 氏名, 都道府県, 所属, 出典URL
+EVENT_RESULTS_CSV = "event_results.csv"
+# 種別の英語名(無いものは日本語のまま)
+DIVISION_EN = {"成年男子フリースタイル": "Men's freestyle (senior)", "成年男子グレコローマン": "Men's Greco-Roman (senior)",
+               "女子": "Women", "少年男子フリースタイル": "Boys' freestyle (high school)",
+               "少年男子グレコローマン": "Boys' Greco-Roman (high school)"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
 # オリンピックの大会名(player_results.csv)→ 名前の下の印(日本語・英語)と英語の大会名。新しい大会を上に足す
@@ -425,6 +432,57 @@ def winners_html(ev, ctx, bp):
     return (f'<details class="more-box winners-box"><summary>{summary}</summary><p class="hint">{hint}</p>' + body + "</details>")
 
 
+def load_event_results(root, players, report):
+    """event_results.csv を読む。{開催回ID: [行]}。名前が1人の選手とだけ一致すれば、その行に "player" を付ける"""
+    by_key = defaultdict(list)
+    for p in players:
+        for k in p["keys"]:
+            by_key[k].append(p)
+    out = defaultdict(list)
+    linked = 0
+    for r in read_csv(os.path.join(root, EVENT_RESULTS_CSV)):
+        if not r.get("開催回ID") or not r.get("氏名"):
+            continue
+        hits = {p["id"]: p for p in by_key.get(norm(r["氏名"]), [])}
+        r = dict(r, player=next(iter(hits.values())) if len(hits) == 1 else None)
+        linked += bool(r["player"])
+        out[r["開催回ID"]].append(r)
+    report["event_results"] = sum(len(v) for v in out.values())
+    report["event_results_linked"] = linked
+    return out
+
+
+def event_results_html(ev, ctx, bp):
+    """開催回ページの「結果(速報)」の欄。種別ごと・階級の軽い順に、1位から"""
+    rows = ctx.get("event_results", {}).get(ev["id"])
+    if not rows:
+        return ""
+    e = bp.e
+    divs = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        divs[r.get("種別", "")][r.get("階級", "")].append(r)
+    body = ""
+    for d in divs:  # CSV に書いた順
+        trs = ""
+        for w in sorted(divs[d], key=weight_key):
+            cells = []
+            for r in sorted(divs[d][w], key=lambda r: weight_key(r.get("成績", ""))):
+                p = r["player"]
+                name = (f'<a href="{U("/players/" + p["id"] + "/")}">{e(pname(p))}</a>' if p
+                        else f'<span lang="ja">{e(r["氏名"])}</span>')
+                where = "・".join(x for x in (r.get("都道府県"), r.get("所属")) if x)
+                cells.append(f'<span class="wr"><b>{e(rank(r.get("成績", "")))}</b> {name}'
+                             + (f' <small lang="ja">{e(where)}</small>' if where else "") + "</span>")
+            trs += f"<tr><th>{e(w)}</th><td>{''.join(cells)}</td></tr>"
+        body += f'<h3>{e(L(d, DIVISION_EN.get(d, d)))}</h3><div class="rtable"><table class="winners"><tbody>{trs}</tbody></table></div>'
+    srcs = list(dict.fromkeys(r.get("出典URL") for r in rows if r.get("出典URL")))
+    src = "".join(f' <a href="{e(u)}" target="_blank" rel="noopener">{L("出典", "Source")} ↗</a>' for u in srcs)
+    hint = L("決勝・準決勝に進んだ選手と5位の選手です(3位・5位は複数)。選手名にリンクがある人は選手ページへ移れます。",
+             "Finalists, semifinalists and 5th-place finishers (3rd and 5th are shared). Linked names open the player page.")
+    return (f'<section class="section event-results"><h2>{L("結果(速報)", "Results (live)")}</h2>'
+            f'<p class="hint">{hint}{src}</p>{body}</section>')
+
+
 def coming_soon_page(ctx, bp):
     e, SITE = bp.e, bp.SITE
     path = "/players/"
@@ -527,6 +585,7 @@ def prepare(root, data, ctx):
             if r.get("開催回ID"):
                 winners[r["開催回ID"]].append((p, r))
     ctx["players"], ctx["winners"] = players, winners
+    ctx["event_results"] = load_event_results(root, players, report)
     # 国際大会(UWW)の動画を選手ごとに(/uww/ のページに出しているものと同じ。新しい順)
     import uww_page
     uww = defaultdict(list)
