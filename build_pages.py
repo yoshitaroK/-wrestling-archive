@@ -968,6 +968,14 @@ def index_page(ctx, series_list):
 
 
 CONTACT_EMAIL = "kitamura@japanwrestlingchannel.com"
+
+
+def email_html():
+    """ページにメールアドレスをそのまま書かない(迷惑メールを送るロボットに集められにくくする)。
+    HTML には「名前」と「ドメイン」を分けて置き、見る人のブラウザで組み立てる。JavaScript が無いときは [at] 表記で見せる"""
+    u, d = CONTACT_EMAIL.split("@")
+    return (f'<a class="eml" href="{U("/contact.html")}" data-u="{e(u)}" data-d="{e(d)}">{e(u)} [at] {e(d)}</a>'
+            '<script>(function(a){a.href="mailto:"+a.dataset.u+"@"+a.dataset.d;a.textContent=a.dataset.u+"@"+a.dataset.d;})(document.currentScript.previousElementSibling)</script>')
 # Formspree に登録したら発行された ID(例: xabcdefg)をここに入れる。空なら送信時にメールアプリが開く
 FORMSPREE_ID = ""
 
@@ -979,7 +987,8 @@ def contact_page(ctx):
              "/contact.html", "",
              {"@context": "https://schema.org", "@type": "ContactPage", "name": L("お問い合わせ", "Contact"),
               "url": SITE + U("/contact.html")}, ctx["css"])
-    body = L(CONTACT_BODY, CONTACT_BODY_EN).replace("__EMAIL__", CONTACT_EMAIL).replace("__FORMSPREE_ID__", FORMSPREE_ID)
+    body = (L(CONTACT_BODY, CONTACT_BODY_EN).replace("__EMAIL_LINK__", email_html()).replace("__FORMSPREE_ID__", FORMSPREE_ID)
+            .replace("__EMAIL_U__", CONTACT_EMAIL.split("@")[0]).replace("__EMAIL_D__", CONTACT_EMAIL.split("@")[1]))
     return h + body + footer(ctx["as_of"])
 
 
@@ -987,7 +996,7 @@ CONTACT_BODY = r"""<main id="content" class="wrap page contact">
 <nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>お問い合わせ</li></ol></nav>
 <h1>お問い合わせ</h1>
 <p class="lead">動画の掲載・非表示のご依頼、掲載内容の誤りのご指摘、サイトの不具合のご報告、お仕事のご相談など、お気軽にお送りください。内容を確認のうえ、ご返信いたします。</p>
-<div class="direct"><span>メールで直接お送りいただくこともできます</span><a href="mailto:__EMAIL__">__EMAIL__</a></div>
+<div class="direct"><span>メールで直接お送りいただくこともできます</span>__EMAIL_LINK__</div>
 <form id="contact-form" class="cform" novalidate>
 <div class="field"><label for="c-name">お名前<span class="req">必須</span></label>
 <input type="text" id="c-name" name="name" autocomplete="name" required></div>
@@ -1014,7 +1023,7 @@ CONTACT_BODY = r"""<main id="content" class="wrap page contact">
 </main>
 <script>
 (function(){
-  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = "__EMAIL__";
+  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = ["__EMAIL_U__", "__EMAIL_D__"].join("@");
   var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
       btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
   function half(s){
@@ -1059,7 +1068,7 @@ CONTACT_BODY_EN = r"""<main id="content" class="wrap page contact">
 <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li>Contact</li></ol></nav>
 <h1>Contact</h1>
 <p class="lead">Requests to list or hide videos, corrections, bug reports, business inquiries — feel free to get in touch. We will reply after reviewing your message. English is welcome.</p>
-<div class="direct"><span>You can also email us directly</span><a href="mailto:__EMAIL__">__EMAIL__</a></div>
+<div class="direct"><span>You can also email us directly</span>__EMAIL_LINK__</div>
 <form id="contact-form" class="cform" novalidate>
 <div class="field"><label for="c-name">Name<span class="req">Required</span></label>
 <input type="text" id="c-name" name="name" autocomplete="name" required></div>
@@ -1086,7 +1095,7 @@ CONTACT_BODY_EN = r"""<main id="content" class="wrap page contact">
 </main>
 <script>
 (function(){
-  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = "__EMAIL__";
+  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = ["__EMAIL_U__", "__EMAIL_D__"].join("@");
   var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
       btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
   function half(s){
@@ -1187,7 +1196,8 @@ def about_page(data, series_list, ctx):
     y0 = min(years) if years else ""
     crumbs = [(L("トップ", "Home"), "/"), (L("運営者情報", "About"), None)]
     org = {"@type": "Organization", "@id": SITE + "/#organization", "name": "Japan Wrestling Channel", "url": SITE + "/",
-           "logo": SITE + "/assets/logo.png", "email": CONTACT_EMAIL}
+           "logo": SITE + "/assets/logo.png",
+           "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "url": SITE + U("/contact.html")}}
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), org, {
         "@type": "AboutPage", "url": SITE + U("/about/"), "name": L("運営者情報", "About"),
         "about": {"@id": SITE + "/#organization"}, "publisher": {"@id": SITE + "/#organization"}}]}
@@ -1252,7 +1262,7 @@ def privacy_page(ctx):
              "/privacy/", "",
              {"@context": "https://schema.org", "@type": "WebPage", "name": L("プライバシーポリシー", "Privacy Policy"),
               "url": SITE + U("/privacy/"), "dateModified": PRIVACY_UPDATED}, ctx["css"])
-    body = (L(PRIVACY_BODY, PRIVACY_BODY_EN).replace("__EMAIL__", CONTACT_EMAIL).replace("__UPDATED__", fmt_date(PRIVACY_UPDATED))
+    body = (L(PRIVACY_BODY, PRIVACY_BODY_EN).replace("__EMAIL_LINK__", email_html()).replace("__UPDATED__", fmt_date(PRIVACY_UPDATED))
             .replace("__CONTACT__", U("/contact.html")))
     return "/privacy/", h + body + footer(ctx["as_of"])
 
@@ -1310,7 +1320,7 @@ PRIVACY_BODY = r"""<main id="content" class="wrap page policy">
 
 <h2>8. お問い合わせ</h2>
 <p>運営:Japan Wrestling Channel 公式<br>
-情報の扱いについてのご質問、削除・訂正のご依頼は、<a href="__CONTACT__">お問い合わせ</a>、またはメール(<a href="mailto:__EMAIL__">__EMAIL__</a>)へお送りください。</p>
+情報の扱いについてのご質問、削除・訂正のご依頼は、<a href="__CONTACT__">お問い合わせ</a>、またはメール(__EMAIL_LINK__)へお送りください。</p>
 </main>
 """
 
@@ -1367,7 +1377,7 @@ PRIVACY_BODY_EN = r"""<main id="content" class="wrap page policy">
 
 <h2>8. Contact</h2>
 <p>Operated by: Japan Wrestling Channel (official)<br>
-For questions about how information is handled, or for removal and correction requests, please use the <a href="__CONTACT__">contact form</a> or email <a href="mailto:__EMAIL__">__EMAIL__</a>.</p>
+For questions about how information is handled, or for removal and correction requests, please use the <a href="__CONTACT__">contact form</a> or email __EMAIL_LINK__.</p>
 </main>
 """
 
