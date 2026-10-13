@@ -30,6 +30,8 @@ from i18n import U
 import players as P
 
 STYLES = ["フリースタイル", "グレコローマン", "女子"]
+# 歴代優勝者のページを作らない大会(選手ページ用に一部の選手の成績しか入れていないもの)
+NO_CHAMPIONS = {"kokutai"}
 # まとめページでの大会の並び順(ここにない大会は後ろに、名前順で並ぶ)
 ORDER = ["tenno-cup", "meiji-cup", "intercollegiate", "university-championship", "university-greco",
          "east-spring", "east-autumn", "shakaijin"]
@@ -77,7 +79,7 @@ def load(root, data):
             report["skipped_unknown_event"] += 1
             continue
         s = S.get(ev["series"])
-        if not s or s.get("scope") == "海外":
+        if not s or s.get("scope") == "海外" or s["id"] in NO_CHAMPIONS:
             continue
         p = people.get(r.get("選手ID", ""), {})
         minor = P.is_yes(p.get("未成年"))

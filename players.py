@@ -398,7 +398,8 @@ PLAYER_SEARCH_JS = r"""<script>
 def winners_html(ev, ctx, bp):
     """開催回ページの「入賞者」の欄(公開している選手だけ)"""
     lst = ctx.get("winners", {}).get(ev["id"])
-    if not lst:
+    # 「結果(速報)」の欄(event_results.csv)がある開催回は、同じ選手が二重に出ないように出さない
+    if not lst or ctx.get("event_results", {}).get(ev["id"]):
         return ""
     e = bp.e
     by_style = defaultdict(lambda: defaultdict(list))
@@ -432,18 +433,26 @@ def winners_html(ev, ctx, bp):
     return (f'<details class="more-box winners-box"><summary>{summary}</summary><p class="hint">{hint}</p>' + body + "</details>")
 
 
+# 結果の名前と選手の名前を比べるときに同じ字として扱う異体字(髙橋と高橋、德原と徳原など)
+VARIANTS = str.maketrans("髙德﨑嵜𠮷濵濱邊邉齋齊斎冨", "高徳崎崎吉浜浜辺辺斉斉斉富")
+
+
+def same_name(s):
+    return norm(s).translate(VARIANTS)
+
+
 def load_event_results(root, players, report):
     """event_results.csv を読む。{開催回ID: [行]}。名前が1人の選手とだけ一致すれば、その行に "player" を付ける"""
     by_key = defaultdict(list)
     for p in players:
         for k in p["keys"]:
-            by_key[k].append(p)
+            by_key[same_name(k)].append(p)
     out = defaultdict(list)
     linked = 0
     for r in read_csv(os.path.join(root, EVENT_RESULTS_CSV)):
         if not r.get("開催回ID") or not r.get("氏名"):
             continue
-        hits = {p["id"]: p for p in by_key.get(norm(r["氏名"]), [])}
+        hits = {p["id"]: p for p in by_key.get(same_name(r["氏名"]), [])}
         r = dict(r, player=next(iter(hits.values())) if len(hits) == 1 else None)
         linked += bool(r["player"])
         out[r["開催回ID"]].append(r)
