@@ -51,7 +51,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 <nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>お問い合わせ</li></ol></nav>
 <h1>お問い合わせ</h1>
 <p class="lead">動画の掲載・非表示のご依頼、掲載内容の誤りのご指摘、サイトの不具合のご報告、お仕事のご相談など、お気軽にお送りください。内容を確認のうえ、ご返信いたします。</p>
-<div class="direct"><span>メールで直接お送りいただくこともできます</span><a href="mailto:kitamura@japanwrestlingchannel.com">kitamura@japanwrestlingchannel.com</a></div>
+<div class="direct"><span>メールで直接お送りいただくこともできます</span><a class="eml" href="/contact.html" data-u="kitamura" data-d="japanwrestlingchannel.com">kitamura [at] japanwrestlingchannel.com</a><script>(function(a){a.href="mailto:"+a.dataset.u+"@"+a.dataset.d;a.textContent=a.dataset.u+"@"+a.dataset.d;})(document.currentScript.previousElementSibling)</script></div>
 <form id="contact-form" class="cform" novalidate>
 <div class="field"><label for="c-name">お名前<span class="req">必須</span></label>
 <input type="text" id="c-name" name="name" autocomplete="name" required></div>
@@ -78,7 +78,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 </main>
 <script>
 (function(){
-  var FORMSPREE_ID = "", TO = "kitamura@japanwrestlingchannel.com";
+  var FORMSPREE_ID = "", TO = ["kitamura", "japanwrestlingchannel.com"].join("@");
   var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
       btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
   function half(s){

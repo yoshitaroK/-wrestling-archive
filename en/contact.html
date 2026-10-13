@@ -51,7 +51,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li>Contact</li></ol></nav>
 <h1>Contact</h1>
 <p class="lead">Requests to list or hide videos, corrections, bug reports, business inquiries — feel free to get in touch. We will reply after reviewing your message. English is welcome.</p>
-<div class="direct"><span>You can also email us directly</span><a href="mailto:kitamura@japanwrestlingchannel.com">kitamura@japanwrestlingchannel.com</a></div>
+<div class="direct"><span>You can also email us directly</span><a class="eml" href="/en/contact.html" data-u="kitamura" data-d="japanwrestlingchannel.com">kitamura [at] japanwrestlingchannel.com</a><script>(function(a){a.href="mailto:"+a.dataset.u+"@"+a.dataset.d;a.textContent=a.dataset.u+"@"+a.dataset.d;})(document.currentScript.previousElementSibling)</script></div>
 <form id="contact-form" class="cform" novalidate>
 <div class="field"><label for="c-name">Name<span class="req">Required</span></label>
 <input type="text" id="c-name" name="name" autocomplete="name" required></div>
@@ -78,7 +78,7 @@ window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catc
 </main>
 <script>
 (function(){
-  var FORMSPREE_ID = "", TO = "kitamura@japanwrestlingchannel.com";
+  var FORMSPREE_ID = "", TO = ["kitamura", "japanwrestlingchannel.com"].join("@");
   var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
       btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
   function half(s){
