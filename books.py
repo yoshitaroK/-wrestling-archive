@@ -103,28 +103,80 @@ def page_url(url, n):
     return url + ("&" if "?" in url else "?") + f"page={n}"
 
 
-def fetch_shelf(url, requests):
-    """ブクログの本棚を1ページ目から順に読み、本の ISBN を全部集める"""
+def items_from_api(data):
+    """ブクログの本棚の API の答え(JSON)から、本を {isbn, title, authors, cover} の形で取り出す。
+    答えの形が少し変わっても読めるよう、url / id / asin に ISBN-10 を持つものを全部探す"""
+    out, seen = [], set()
+
+    def walk(x):
+        if isinstance(x, dict):
+            key = " ".join(str(x.get(k) or "") for k in ("id", "asin", "isbn", "url", "item_url"))
+            m = re.search(r"(?<![0-9A-Za-z])([0-9]{9}[0-9Xx]|97[89][0-9]{10})(?![0-9A-Za-z])", key)
+            isbn = norm_isbn(m.group(1)) if m else ""
+            if isbn and isbn not in seen:
+                seen.add(isbn)
+                out.append({"isbn": isbn, "title": str(x.get("title") or "").strip(),
+                            "authors": str(x.get("author") or x.get("authors") or "").strip(),
+                            "cover": str(x.get("image") or x.get("image_url") or x.get("large_image") or "").strip()})
+                return
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(data)
+    return out
+
+
+def fetch_shelf(url, requests, report):
+    """ブクログの本棚の本を全部集める。まずブログ用の本棚 API を使い、だめならページを読む。
+    うまくいかなかったときに直せるよう、試したことを report["shelf_tries"] に残す"""
     import time
     m = re.match(r"https://booklog\.jp/users/([^/?#]+)", url)
     if not m:
         raise ValueError("ブクログの本棚の URL(https://booklog.jp/users/…)ではありません")
+    user = m.group(1)
+    q = re.search(r"[?&]status=(\d+)", url)
+    status = f"&status={q.group(1)}" if q else ""
+    tries = report.setdefault("shelf_tries", [])
+    for api in (f"https://api.booklog.jp/v2/json/{user}?count=1000{status}", f"https://api.booklog.jp/json/{user}?count=1000{status}"):
+        try:
+            r = requests.get(api, headers=UA, timeout=30)
+            note = {"url": api, "status": r.status_code, "bytes": len(r.content)}
+            if r.ok:
+                items = items_from_api(r.json())
+                note["books"] = len(items)
+                tries.append(note)
+                if items:
+                    return items
+            else:
+                tries.append(note)
+        except Exception as ex:
+            tries.append({"url": api, "error": str(ex)[:200]})
     found = []
     for n in range(1, SHELF_MAX_PAGES + 1):
         r = requests.get(page_url(url, n), headers=UA, timeout=30)
         r.raise_for_status()
-        new = [i for i in shelf_isbns(r.text, m.group(1)) if i not in found]
+        new = [i for i in shelf_isbns(r.text, user) if i not in found]
+        if n == 1:
+            tries.append({"url": page_url(url, 1), "status": r.status_code, "bytes": len(r.text), "books": len(new),
+                          "links": re.findall(r'href="([^"]*(?:item|archives)[^"]*)"', r.text)[:5]})
         if not new:
             if n == 1:
                 raise ValueError("本棚の1ページ目に本が見つかりませんでした(ブクログのページの作りが変わったかもしれません)")
             break
         found += new
         time.sleep(1)
-    return found
+    return [{"isbn": i} for i in found]
 
 
 def shelf_list(cache):
     return (cache.get("_shelf") or {}).get("isbns") or []
+
+
+def shelf_item(cache, isbn):
+    """ブクログの本棚 API で取れた、その本の題名・著者・表紙(openBD に無い本の代わりに使う)"""
+    return ((cache.get("_shelf") or {}).get("items") or {}).get(isbn) or {}
 
 
 def fetch(root="."):
@@ -143,9 +195,11 @@ def fetch(root="."):
     shelf = str(cfg.get("booklog_shelf") or "").strip()
     if shelf.startswith("https://booklog.jp/"):
         try:
-            isbns = fetch_shelf(shelf, requests)
+            items = fetch_shelf(shelf, requests, report)
+            isbns = [x["isbn"] for x in items]
             if isbns or not shelf_list(cache):
-                cache["_shelf"] = {"url": shelf, "isbns": isbns, "fetched": datetime.date.today().isoformat()}
+                cache["_shelf"] = {"url": shelf, "isbns": isbns, "fetched": datetime.date.today().isoformat(),
+                                   "items": {x["isbn"]: {k: v for k, v in x.items() if k != "isbn" and v} for x in items if x.get("title")}}
             report["shelf"] = len(isbns)
         except Exception as ex:
             report["shelf_error"] = str(ex)
@@ -197,6 +251,11 @@ def load(root, ctx, report):
             continue
         seen.add(isbn)
         d = dict(cache.get(isbn) or {})
+        alt = shelf_item(cache, isbn)
+        if not d.get("title"):
+            d.update(alt)
+        elif not d.get("cover") and alt.get("cover"):
+            d["cover"] = alt["cover"]
         for k in ("title", "authors", "publisher", "pubdate", "cover", "description"):
             if b.get(k):
                 d[k] = b[k]
