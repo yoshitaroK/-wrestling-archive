@@ -180,6 +180,13 @@ def main():
     print(f"動画 {report['video_count']} 本 / 照合 {report['link_counts']}")
     print(f"手動修正 {report['overrides_applied']} 件 / 今回取得できなかった動画 {len(report['unavailable_now'])} 本")
 
+    # 書籍(books.json)のうち、まだ題名などを取っていない本を openBD から取る。失敗しても更新は続ける
+    try:
+        import books
+        print(f"[書籍] {books.fetch('.')}")
+    except Exception as ex:
+        print(f"[書籍] スキップしました: {ex}")
+
     # 大会・開催回ごとのページ(events/)と sitemap.xml を作り直す
     import build_pages
     build_pages.build()

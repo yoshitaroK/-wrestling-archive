@@ -287,6 +287,8 @@ def player_page(p, ctx, bp, card=""):
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
     if uww:
         h += uww_videos_html(p, uww, bp)
+    import books
+    h += books.player_section(p, ctx, bp)
     h += optout_note()
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
