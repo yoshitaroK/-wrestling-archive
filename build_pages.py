@@ -202,14 +202,15 @@ def official_bar(lang_link=""):
             f'{lang_link}</div></div>')
 
 
-NAV = [("/", "大会を検索", "Search"), ("/players/", "選手", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos"), ("/uww/", "国際大会", "International")]
+NAV = [("/", "大会を検索", "Search"), ("/news/", "ニュース", None), ("/players/", "選手", "Players"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos"), ("/uww/", "国際大会", "International")]
 
 
 def nav_links(path):
     """上のメニュー。今いるページの項目に下線を引く(aria-current)"""
     cur = "/events/calendar/" if path.startswith("/events/calendar/") else next((p for p, _, _ in NAV[1:] if path.startswith(p)), "")
     here = ' aria-current="page"'
-    return "".join(f'<a href="{U(p)}"{here if p == cur else ""}>{L(ja, en)}</a>' for p, ja, en in NAV)
+    # 英語名が None の項目(ニュース)は日本語版だけ
+    return "".join(f'<a href="{U(p)}"{here if p == cur else ""}>{L(ja, en)}</a>' for p, ja, en in NAV if en or not i18n.en())
 
 
 def header_search():
@@ -289,7 +290,7 @@ def footer(as_of):
 </html>
 """
     return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
+<p><a href="/news/">ニュース</a>・<a href="/events/">大会一覧</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
 <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>
 <p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
 <p>データ更新:{e(fmt_date(as_of))}</p>
@@ -1622,7 +1623,8 @@ def extract_css(index_path):
     import photo_gallery
     import champions
     import uww_page
-    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS + uww_page.UWW_CSS
+    import news
+    return (m.group(1) if m else "") + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS + uww_page.UWW_CSS + news.NEWS_CSS
 
 
 def build(root=HERE, inline_css=False, only=None):
@@ -1729,6 +1731,12 @@ def build(root=HERE, inline_css=False, only=None):
             pages.extend(players.build(root, data, ctx, me))
             # 歴代優勝者のページ(/champions/)。日本語版だけ
             pages.extend((path, doc, data.get("as_of")) for path, doc in champions.build(ctx, me))
+            # ニュース(/news/)。news.json と articles/ から。日本語版だけ
+            import news
+            news_report = {"errors": [], "warnings": []}
+            pages.extend(news.build(root, ctx, me, news_report))
+            for w in news_report["errors"] + news_report["warnings"]:
+                print(f"[ニュース] {w}")
             path, doc = index_page(ctx, listed)
             pages.append((path, doc, data.get("as_of")))
             # 大会カレンダー(events/calendar/ に作るので update.yml の変更は不要)
@@ -1754,6 +1762,7 @@ def build(root=HERE, inline_css=False, only=None):
                 report["players"] = preport
                 report["champions"] = creport
                 report["photos"] = photo_report
+                report["news"] = news_report
                 report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
                                   "unclassified_count": len(unclassified),
                                   "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}
