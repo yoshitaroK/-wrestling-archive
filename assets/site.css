@@ -549,7 +549,16 @@ a.yr{text-decoration:none}
 .psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}
 .psearch .pcount{margin:6px 2px 0;font-size:13px;color:var(--ink3)}
-.pgroup{margin:18px 0}
+.pgroup{margin:0;border-bottom:1px solid var(--line)}
+.pgroup:first-child{border-top:1px solid var(--line)}
+.pgroup summary{display:flex;align-items:baseline;gap:10px;padding:14px 4px;cursor:pointer;list-style:none;font-size:16px;font-weight:700}
+.pgroup summary::-webkit-details-marker{display:none}
+.pgroup summary::after{content:"+";margin-left:auto;align-self:center;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink2);font-size:20px;font-weight:400;line-height:1}
+.pgroup[open] summary::after{content:"−";color:var(--pink);border-color:var(--pink)}
+.pgroup summary:hover .pg-n{color:var(--pink)}
+.pgroup .pg-c{font-size:13px;font-weight:500;color:var(--ink3)}
+.pgroup ol{margin:0 0 14px}
+#plist{margin-top:10px}
 #plist .occ a{grid-template-columns:1fr auto}
 .pgroup[hidden],#plist li[hidden]{display:none}
 .optout{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
