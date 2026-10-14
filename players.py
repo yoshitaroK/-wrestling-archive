@@ -348,7 +348,9 @@ def index_page(players, ctx, bp):
     for c in order:
         ps = sorted(groups[c], key=lambda p: (-len(p["results"]), norm(p["roman"] or p["name"])))
         cname = N(c) or L("所属なし", "No club listed")
-        h += f'<section class="pgroup"><h2 class="vh">{e(cname)} <small>{L(f"{len(ps)}人", i18n.plural(len(ps), "player"))}</small></h2><ol class="occ slist-static">'
+        # 所属ごとに1行にたたむ。押すと開き、検索したときは当てはまる選手がいる所属だけ開く
+        h += (f'<details class="pgroup"><summary><span class="pg-n">{e(cname)}</span>'
+              f'<span class="pg-c">{L(f"{len(ps)}人", i18n.plural(len(ps), "player"))}</span></summary><ol class="occ slist-static">')
         for p in ps:
             key = " ".join(norm(x).lower() for x in [p["name"], p["roman"], p["kana"], p["club"], N(p["club"]) if i18n.en() else ""] if x)
             # 日本語版では、確かめていないローマ字は出さない(英語版は名前そのものがローマ字)
@@ -360,7 +362,7 @@ def index_page(players, ctx, bp):
                    if any(r.get("大会名", "") in OLYMPICS for r in p["results"]) else "")
             h += (f'<li data-k="{e(key)}"><a href="{U("/players/" + p["id"] + "/")}"><span class="ob"><span class="od sname">{e(pname(p))}{oly}</span>'
                   f'<span class="ov">{e(sub)}</span></span><span class="on">{e(stat)}</span></a></li>')
-        h += "</ol></section>"
+        h += "</ol></details>"
     h += "</div>"
     h += '<p class="hint">' + L("日本レスリング協会が公開している、大人の大会(天皇杯・明治杯・全日本社会人・大学の大会など)の入賞者一覧から作っています。",
                                 "Compiled from the medalist lists the Japan Wrestling Federation publishes for senior tournaments (Emperor's Cup, Meiji Cup, university championships and more).")
@@ -387,7 +389,8 @@ PLAYER_SEARCH_JS = r"""<script>
   function run(){
     var t=n(q.value),hit=0;
     items.forEach(function(li){var ok=!t||li._k.indexOf(t)>=0;li.hidden=!ok;if(ok)hit++;});
-    groups.forEach(function(g){g.hidden=!g.querySelector('li:not([hidden])');});
+    groups.forEach(function(g){var has=!!g.querySelector('li:not([hidden])');g.hidden=!has;if(t)g.open=has;else if(q._was)g.open=false;});
+    q._was=!!t;
     c.textContent=t?(hit?'__HIT__'.replace('{n}',hit):'__NONE__'):'__ALL__'.replace('{n}',items.length);
     try{history.replaceState(null,'',t?'#q='+encodeURIComponent(q.value):location.pathname);}catch(x){}
   }
@@ -557,7 +560,16 @@ PLAYER_CSS = """
 .psearch input{width:100%;box-sizing:border-box;font-size:16px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .psearch input:focus{outline:2px solid var(--pink);outline-offset:1px}
 .psearch .pcount{margin:6px 2px 0;font-size:13px;color:var(--ink3)}
-.pgroup{margin:18px 0}
+.pgroup{margin:0;border-bottom:1px solid var(--line)}
+.pgroup:first-child{border-top:1px solid var(--line)}
+.pgroup summary{display:flex;align-items:baseline;gap:10px;padding:14px 4px;cursor:pointer;list-style:none;font-size:16px;font-weight:700}
+.pgroup summary::-webkit-details-marker{display:none}
+.pgroup summary::after{content:"+";margin-left:auto;align-self:center;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink2);font-size:20px;font-weight:400;line-height:1}
+.pgroup[open] summary::after{content:"−";color:var(--pink);border-color:var(--pink)}
+.pgroup summary:hover .pg-n{color:var(--pink)}
+.pgroup .pg-c{font-size:13px;font-weight:500;color:var(--ink3)}
+.pgroup ol{margin:0 0 14px}
+#plist{margin-top:10px}
 #plist .occ a{grid-template-columns:1fr auto}
 .pgroup[hidden],#plist li[hidden]{display:none}
 .optout{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
