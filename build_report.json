@@ -1,19 +1,19 @@
 {
- "built_at": "2026-10-14T11:27:16+09:00",
+ "built_at": "2026-10-14T12:15:11+09:00",
  "as_of": "2026-10-14",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
  "link_counts": {
-  "matched": 2428,
+  "matched": 2427,
   "derived": 302,
-  "manual": 41,
+  "manual": 42,
   "livedate": 177,
   "candidate": 193,
   "series_only": 29,
   "unmatched": 190
  },
- "overrides_applied": 41,
+ "overrides_applied": 42,
  "master_events": 443,
  "derived_events": 41,
  "event_dates_applied": [
@@ -28,14 +28,14 @@
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
-  "total": 3723,
-  "translated": 3723,
-  "new": 0,
+  "total": 3725,
+  "translated": 3725,
+  "new": 2,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 182,
   "error": "",
   "name_fixed": 0,
-  "name_suspects": 6,
+  "name_suspects": 10,
   "name_suspect_examples": [
    {
     "ja": "2021年ジュニアクイーンズカップ(カデット) 46kg級 決勝 太田真蓉（青＝埼玉・埼玉栄高）○［フォール、4:00=4-4］●小川凜佳（中津川ジュニア）",
@@ -66,6 +66,26 @@
     "ja": "令和３年度第65回風間杯全国高校選抜レスリング大会決勝戦 　【65kg級】　細川周（京都・丹後緑風）○［Ｔフォール、3:52=14-2］●平井友真（山梨・甲府城西）",
     "en": "Reiwa 3, 65th Kazama Cup National High School Select Wrestling Tournament Finals  [65kg Class] Shu Hosokawa (Tango Ryokufu, Kyoto) ○ [Technical Fall, 3:52 = 14-2] ● Tomoma Hirai (Kofu Josai, Yamanashi)",
     "expected": "Makoto Hosokawa"
+   },
+   {
+    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
+    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [GR 72kg Class] Final: Kazuhiro Motona ○ – ● Teishin Motona",
+    "expected": "Issei Honna"
+   },
+   {
+    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
+    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [GR 72kg Class] Final: Kazuhiro Motona ○ – ● Teishin Motona",
+    "expected": "Taishin Honna"
+   },
+   {
+    "ja": "手動確認: YouTube のタイトルは女子72kg級決勝(藤倉優花-中村旭)と同じだが、映像はグレコローマン72kg級決勝の本名一晟-本名帝心(運営者が確認)。日本協会の入賞者一覧でもこの階級の1位が本名一晟、2位が本名帝心(確認日 2026-10-14)",
+    "en": "Manual verification: Although the YouTube title is the same as that of the Women’s 72kg Final (Yuka Fujikura vs. Asahi Nakamura), the video actually shows the Greco-Roman 72kg Final between Issei Honmyo and Teishin Honmyo (verified by the site administrator). In the Japan Federation’s list of medalists, the first-place finisher in this weight class is Ichisei Honmyo, and the second-place finisher is Teishin Honmyo (verified on October 14, 2026).",
+    "expected": "Issei Honna"
+   },
+   {
+    "ja": "手動確認: YouTube のタイトルは女子72kg級決勝(藤倉優花-中村旭)と同じだが、映像はグレコローマン72kg級決勝の本名一晟-本名帝心(運営者が確認)。日本協会の入賞者一覧でもこの階級の1位が本名一晟、2位が本名帝心(確認日 2026-10-14)",
+    "en": "Manual verification: Although the YouTube title is the same as that of the Women’s 72kg Final (Yuka Fujikura vs. Asahi Nakamura), the video actually shows the Greco-Roman 72kg Final between Issei Honmyo and Teishin Honmyo (verified by the site administrator). In the Japan Federation’s list of medalists, the first-place finisher in this weight class is Ichisei Honmyo, and the second-place finisher is Teishin Honmyo (verified on October 14, 2026).",
+    "expected": "Taishin Honna"
    }
   ]
  },
@@ -82,14 +102,14 @@
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 977,
+    "made": 4,
+    "kept": 973,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 977,
+    "made": 4,
+    "kept": 973,
     "removed": 0,
     "errors": []
    }
@@ -238,7 +258,7 @@
  "en": {
   "pages": 1317,
   "names": 536,
-  "machine_translations": 3723,
+  "machine_translations": 3725,
   "missing_names": []
  }
 }
