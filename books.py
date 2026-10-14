@@ -5,6 +5,8 @@
   {"books": [{"isbn": "9784…", "category": "技術書", "players": ["p-xxxxxx"], "comment": "運営者のひとこと", "added": "2026-10-14"}]}
   - isbn は 13 けた(ハイフンなしでもありでもよい)。10 けたでもよい
   - isbn の代わりに、ブクログの本のページの URL(https://booklog.jp/item/1/4062880326 など)を "booklog" に書いてもよい。URL の中の ISBN を使う
+  - "booklog_shelf" にブクログの本棚の URL を書くと、毎日の自動更新でその本棚の本を全部読み、この本棚に入れる
+    (books に書いた本はそちらの設定が優先。本棚にだけある本は棚の名前が SHELF_CATEGORY になる。Kindle 本など ISBN の無い本は入らない)
   - category は本棚の棚の名前(技術書・自伝・雑誌など)。書かないと「その他」
   - players に選手ID(players.csv)を書くと、本のページから選手ページへ、選手ページから本へリンクする
   - title・authors・publisher・pubdate・cover を書くと、取ってきた内容より優先する(データが無い本や、直したいとき)
@@ -23,6 +25,9 @@ from i18n import U
 BOOKS_JSON = "books.json"
 CACHE_JSON = "books_cache.json"
 OPENBD = "https://api.openbd.jp/v1/get?isbn="
+SHELF_CATEGORY = "本棚"
+SHELF_MAX_PAGES = 50
+UA = {"User-Agent": "Mozilla/5.0 (compatible; japanwrestlingchannel.com books)"}
 
 
 def norm_isbn(s):
@@ -82,17 +87,73 @@ def parse_openbd(rec):
     return out
 
 
+def shelf_isbns(html_text, user):
+    """ブクログの本棚のページから、その人の本(/users/<user>/archives/1/<ISBN-10>)の ISBN(13 けた)を順に取り出す。
+    おすすめ・ランキングなど、ほかの本へのリンク(/item/…)は数えない"""
+    out = []
+    for m in re.finditer(r"/users/" + re.escape(user) + r"/archives/\d+/([0-9]{9}[0-9Xx])\b", html_text):
+        i = norm_isbn(m.group(1))
+        if i and i not in out:
+            out.append(i)
+    return out
+
+
+def page_url(url, n):
+    url = re.sub(r"([?&])page=\d+&?", r"\1", url).rstrip("?&")
+    return url + ("&" if "?" in url else "?") + f"page={n}"
+
+
+def fetch_shelf(url, requests):
+    """ブクログの本棚を1ページ目から順に読み、本の ISBN を全部集める"""
+    import time
+    m = re.match(r"https://booklog\.jp/users/([^/?#]+)", url)
+    if not m:
+        raise ValueError("ブクログの本棚の URL(https://booklog.jp/users/…)ではありません")
+    found = []
+    for n in range(1, SHELF_MAX_PAGES + 1):
+        r = requests.get(page_url(url, n), headers=UA, timeout=30)
+        r.raise_for_status()
+        new = [i for i in shelf_isbns(r.text, m.group(1)) if i not in found]
+        if not new:
+            if n == 1:
+                raise ValueError("本棚の1ページ目に本が見つかりませんでした(ブクログのページの作りが変わったかもしれません)")
+            break
+        found += new
+        time.sleep(1)
+    return found
+
+
+def shelf_list(cache):
+    return (cache.get("_shelf") or {}).get("isbns") or []
+
+
 def fetch(root="."):
-    """books.json の本のうち、まだ取ってきていないものを openBD から取る。失敗してもサイトの更新は止めない"""
-    books = load_json(os.path.join(root, BOOKS_JSON), {}).get("books", [])
+    """ブクログの本棚と、books.json の本のうち、まだ取ってきていないものを openBD から取る。失敗してもサイトの更新は止めない"""
+    import datetime
+    cfg = load_json(os.path.join(root, BOOKS_JSON), {})
+    books = cfg.get("books", [])
     cache_path = os.path.join(root, CACHE_JSON)
     cache = load_json(cache_path, {})
-    want = [i for i in (book_isbn(b) for b in books) if i and not cache.get(i, {}).get("title")]
-    report = {"asked": len(want), "found": 0, "missing": []}
-    if not want:
-        return report
+    report = {"asked": 0, "found": 0, "missing": []}
     try:
         import requests
+    except ImportError as ex:
+        report["error"] = str(ex)
+        return report
+    shelf = str(cfg.get("booklog_shelf") or "").strip()
+    if shelf.startswith("https://booklog.jp/"):
+        try:
+            isbns = fetch_shelf(shelf, requests)
+            if isbns or not shelf_list(cache):
+                cache["_shelf"] = {"url": shelf, "isbns": isbns, "fetched": datetime.date.today().isoformat()}
+            report["shelf"] = len(isbns)
+        except Exception as ex:
+            report["shelf_error"] = str(ex)
+            print(f"[書籍] ブクログの本棚を読めませんでした(前回の内容を使います): {ex}")
+    want = [i for i in list(dict.fromkeys([book_isbn(b) for b in books] + shelf_list(cache)))
+            if i and not (cache.get(i) or {}).get("title") and not (cache.get(i) or {}).get("tries", 0) >= 3]
+    report["asked"] = len(want)
+    try:
         for k in range(0, len(want), 100):
             part = want[k:k + 100]
             r = requests.get(OPENBD + ",".join(part), timeout=30)
@@ -102,6 +163,8 @@ def fetch(root="."):
                     cache[isbn] = parse_openbd(rec)
                     report["found"] += 1
                 else:
+                    # openBD に無い本。3回試してだめなら、books.json に title を書くまで聞かない
+                    cache[isbn] = {"tries": (cache.get(isbn) or {}).get("tries", 0) + 1}
                     report["missing"].append(isbn)
     except Exception as ex:
         report["error"] = str(ex)
@@ -120,7 +183,11 @@ def load(root, ctx, report):
     cache = load_json(os.path.join(root, CACHE_JSON), {})
     by_id = {p["id"]: p for p in ctx.get("players", [])}
     out, seen = [], set()
-    for i, b in enumerate(raw.get("books", []), 1):
+    listed = {book_isbn(b) for b in raw.get("books", [])}
+    fetched = (cache.get("_shelf") or {}).get("fetched") or ""
+    # ブクログの本棚にだけある本(本棚の並び順を保つため、新しい順の日付を少しずつずらす)
+    extra = [{"isbn": x, "category": SHELF_CATEGORY, "added": fetched, "_order": k} for k, x in enumerate(shelf_list(cache)) if x not in listed]
+    for i, b in enumerate(list(raw.get("books", [])) + extra, 1):
         isbn = book_isbn(b)
         if not isbn:
             report["errors"].append(f"books.json {i}件目: ISBN「{b.get('isbn') or b.get('booklog') or ''}」の形が正しくありません(ブクログの URL は本のページのものを書いてください)")
@@ -134,6 +201,9 @@ def load(root, ctx, report):
             if b.get(k):
                 d[k] = b[k]
         if not d.get("title"):
+            if b.get("_order") is not None:
+                report["shelf_without_data"] = report.get("shelf_without_data", 0) + 1
+                continue
             report["warnings"].append(f"{isbn}: 題名がまだ分かりません(次の自動更新で openBD から取ります。データが無い本は books.json に title を書いてください)")
             continue
         players = []
@@ -143,8 +213,9 @@ def load(root, ctx, report):
             else:
                 report["warnings"].append(f"{isbn}: 選手 {pid} は公開していないか、ありません")
         out.append(dict(d, isbn=isbn, category=b.get("category") or "その他", comment=b.get("comment") or "",
-                        added=b.get("added") or "", players=players))
-    out.sort(key=lambda x: (x["added"], x["isbn"]), reverse=True)
+                        added=b.get("added") or "", players=players, order=b.get("_order", -1)))
+    # 新しく足した順。ブクログの本棚の本は本棚の並び順(上ほど新しい)
+    out.sort(key=lambda x: (x["added"], -x["order"]), reverse=True)
     report["books"] = len(out)
     return out
 
