@@ -1,0 +1,5 @@
+{
+ "about": "書籍の本棚。booklog_shelf のブクログの本棚にある本は、毎日の自動更新で全部入ります。books に ISBN かブクログの本の URL を1冊ずつ書くと、棚の名前・関係する選手・ひとことを付けられます(本棚の本にも付けられます)。書き方は books.py の先頭の説明を見てください。題名・著者・表紙などは openBD から取ります。",
+ "books": [],
+ "booklog_shelf": "https://booklog.jp/users/taro0726/all?rank=all&status=1"
+}
