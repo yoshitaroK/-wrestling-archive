@@ -1686,7 +1686,12 @@ def build(root=HERE, inline_css=False, only=None):
     # 書籍(books.json と books_cache.json)。選手ページの「関連する本」でも使うので先に読む
     import books
     books_report = {"errors": [], "warnings": []}
-    ctx["books"] = books.load(root, ctx, books_report)
+    try:
+        ctx["books"] = books.load(root, ctx, books_report)
+    except Exception as ex:
+        # 書籍で何かあっても、ほかのページの更新は止めない
+        ctx["books"] = []
+        books_report["errors"].append(f"書籍を読めませんでした: {ex!r}")
     for w in books_report["errors"] + books_report["warnings"]:
         print(f"[書籍] {w}")
     # 大会ごとの歴代優勝者(player_results.csv の1位)。大会ページのリンクでも使うので先に読む
@@ -1743,7 +1748,11 @@ def build(root=HERE, inline_css=False, only=None):
             news_report = {"errors": [], "warnings": []}
             pages.extend(news.build(root, ctx, me, news_report))
             # 書籍(/books/)。日本語版だけ
-            pages.extend(books.build(root, ctx, me, books_report))
+            try:
+                pages.extend(books.build(root, ctx, me, books_report))
+            except Exception as ex:
+                books_report["errors"].append(f"書籍のページを作れませんでした: {ex!r}")
+                print(f"[書籍] ページを作れませんでした(ほかのページの更新は続けます): {ex!r}")
             for w in news_report["errors"] + news_report["warnings"]:
                 print(f"[ニュース] {w}")
             path, doc = index_page(ctx, listed)

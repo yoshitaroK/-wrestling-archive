@@ -250,10 +250,12 @@ def load(root, ctx, report):
             report["warnings"].append(f"books.json {i}件目: ISBN {isbn} が2回書かれているので、2回目は無視しました")
             continue
         seen.add(isbn)
-        d = dict(cache.get(isbn) or {})
+        # 取れなかった項目は空にそろえる(ブクログの本棚にだけある本は、著者などが無いことがある)
+        d = {k: "" for k in ("title", "authors", "publisher", "pubdate", "cover", "description")}
+        d.update({k: v for k, v in (cache.get(isbn) or {}).items() if k in d and v})
         alt = shelf_item(cache, isbn)
         if not d.get("title"):
-            d.update(alt)
+            d.update({k: v for k, v in alt.items() if k in d and v})
         elif not d.get("cover") and alt.get("cover"):
             d["cover"] = alt["cover"]
         for k in ("title", "authors", "publisher", "pubdate", "cover", "description"):
