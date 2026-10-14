@@ -645,7 +645,8 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
         if vid in seen:  # 同一YouTube IDのみ重複として整理する
             continue
         seen.add(vid)
-        title = raw.get("title", "")
+        # YouTube のタイトルが間違っている動画は、overrides.json の video_overrides に正しい title を書いて直す
+        title = (ov_by_video.get(vid) or {}).get("title") or raw.get("title", "")
         meta = extract_meta(title)
         k = match_key(title)
         live_iso = raw.get("actual_start") or raw.get("scheduled_start")

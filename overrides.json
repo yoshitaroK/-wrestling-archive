@@ -1,5 +1,5 @@
 {
- "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。 大会の公式サイトなどへのリンクは event_links に、event_id(開催回ID)・url・label(省略すると「大会公式サイト」)を書きます。結果のページへのリンクは label を「結果」にします(英語版では Results と表示)。日本レスリング協会の大会ページ(japan-wrestling.jp/competition/…)が出典にある開催回は、書かなくても自動で「結果を見る」ボタンが出ます。 公式の資料で確かめた開催日・開催地は event_dates に、event_id・start・end(YYYY-MM-DD)・venue・source_url(公式の資料)・basis・checked_on を書きます。動画の公開日から推定していた日付が、この内容に置きかわります(開催回のアドレスは変わりません)。",
+ "about": "手動で確認した動画の紐付け。再取得・再ビルドしても常にこの内容が優先されます。1件ずつ video_overrides に追加してください。event_id(開催回ID) か series_id(系列ID) のどちらかを指定します。kind には match / interview / announcement / highlight / other を指定できます(任意)。 大会の公式サイトなどへのリンクは event_links に、event_id(開催回ID)・url・label(省略すると「大会公式サイト」)を書きます。結果のページへのリンクは label を「結果」にします(英語版では Results と表示)。日本レスリング協会の大会ページ(japan-wrestling.jp/competition/…)が出典にある開催回は、書かなくても自動で「結果を見る」ボタンが出ます。 公式の資料で確かめた開催日・開催地は event_dates に、event_id・start・end(YYYY-MM-DD)・venue・source_url(公式の資料)・basis・checked_on を書きます。動画の公開日から推定していた日付が、この内容に置きかわります(開催回のアドレスは変わりません)。 YouTube のタイトルが間違っている動画は、video_overrides に title(正しいタイトル)を書くと、そのタイトルで大会・スタイル・選手を照合し、サイトにもそのタイトルで表示します。",
  "video_overrides": [
   {
    "video_id": "rOpJGEOqWIM",
@@ -246,6 +246,14 @@
    "event_id": "wre-2022-kids-0730",
    "basis": "GOLDKIDS WRESTLING の動画。タイトルの『2022年全国少年少女レスリング大会』(選抜ではない)と公開日2022/8/28から、2022年7月の全国少年少女選手権と判断(仕分け表で確認)",
    "checked_on": "2026-09-26"
+  },
+  {
+   "video_id": "UAPhBoAZAKA",
+   "event_id": "wre-2025-intercollegiate-0821",
+   "title": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
+   "kind": "match",
+   "basis": "YouTube のタイトルは女子72kg級決勝(藤倉優花-中村旭)と同じだが、映像はグレコローマン72kg級決勝の本名一晟-本名帝心(運営者が確認)。日本協会の入賞者一覧でもこの階級の1位が本名一晟、2位が本名帝心",
+   "checked_on": "2026-10-14"
   }
  ],
  "event_links": [
