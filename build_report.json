@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-14T06:27:33+09:00",
+ "built_at": "2026-10-14T11:17:34+09:00",
  "as_of": "2026-10-14",
  "video_count": 3360,
  "raw_count": 3360,
@@ -70,40 +70,40 @@
   ]
  },
  "players": {
-  "total": 962,
-  "published": 916,
+  "total": 1081,
+  "published": 977,
   "hidden_minor": 0,
-  "hidden_private": 46,
+  "hidden_private": 104,
   "errors": [],
   "video_excluded": 2,
-  "video_links": 1050,
+  "video_links": 1054,
   "event_results": 128,
-  "event_results_linked": 52,
+  "event_results_linked": 53,
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 916,
+    "made": 192,
+    "kept": 785,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 916,
+    "made": 192,
+    "kept": 785,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 477,
+  "rows": 523,
   "hidden_minor": 0,
-  "no_link": 6,
+  "no_link": 9,
   "skipped_unknown_event": 31,
-  "history_rows": 5691,
-  "history_linked": 967,
+  "history_rows": 5645,
+  "history_linked": 946,
   "history_hidden": 7,
-  "history_site_preferred": 418,
+  "history_site_preferred": 464,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
@@ -116,7 +116,9 @@
    "tenno-cup フリースタイル 2020 65kg: サイト「山口 海輝」/ 歴代記録「山口 輝海」",
    "tenno-cup グレコローマン 2020 72kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
-   "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」"
+   "university-championship フリースタイル 2020 125kg: サイト「アルメンタイバグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
+   "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」",
+   "university-greco グレコローマン 2022 82kg: サイト「谷﨑 大造」/ 歴代記録「谷崎 大造」"
   ],
   "series": 8
  },
@@ -234,8 +236,8 @@
   ]
  },
  "en": {
-  "pages": 1256,
-  "names": 533,
+  "pages": 1317,
+  "names": 536,
   "machine_translations": 3723,
   "missing_names": []
  }
