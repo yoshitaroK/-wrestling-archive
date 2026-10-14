@@ -24,6 +24,7 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 | `tech_overrides.json` | 技術動画の手動修正(区分の指定・非表示) |
 | `legacy_map.json` | 以前のURL(`#series/…`・`#occurrence/…`)を新しいページへ案内する対応表 |
 | `event_results.csv` | **手で編集**。開催回ごとの結果(速報など)。1行 = 1人の成績(開催回ID・種別・階級・成績・氏名・都道府県・所属・出典URL)。開催回ページに「結果(速報)」の欄が出て、選手検索の選手と名前が一致する人は選手ページへリンクします |
+| `news.json`・`articles/` | **手で編集**。ニュースの記事。`news.json` に記事の一覧(slug・日付・題名など)、`articles/<slug>.md` に本文を書くと、`news.py` が `/news/` の一覧と記事のページを作ります(日本語版だけ)。書き方は `news.py` の先頭の説明にあります |
 | `photos/` | 大会ページ・開催回ページに載せる写真(JPG/PNG/WebP)の置き場所 |
 | `photos.json` | **手で編集**。どの写真をどのページに載せるかの設定 |
 | `photo_gallery.py` | 写真の縮小・サムネイル作成とギャラリー表示(`build_pages.py` から使われます) |
