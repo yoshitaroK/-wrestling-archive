@@ -40,7 +40,10 @@ for x in idx:
             if MINOR.search(r["org"]) and not STAFF.search(r["org"]):
                 minor += 1
                 continue
-            st = (r["div"] + " " if r["div"] else "") + (r["style"] or DEF.get(x["series"], ""))
+            style = r["style"] or DEF.get(x["series"], "")
+            if re.search(r"WW", u.rsplit("/", 1)[-1]) and style == "フリースタイル":
+                style = "女子"  # 女子の一覧(ファイル名が WW)なのに見出しから「フリースタイル」と読まれることがある(全日本社会人 2022・2023)
+            st = (r["div"] + " " if r["div"] else "") + style
             res.append(dict(event=x["event"], series=x["series"], year=x["year"], ename=x["name"], style=st, weight=r["weight"],
                             place=r["place"], name=nm, org=r["org"], src=u, unsplit=unsplit))
 seen, U = set(), []
@@ -60,7 +63,9 @@ for key, rs in by.items():
             orgs.append(r["org"])
     ws = [int(r["weight"][:-2]) for r in rs]
     memo = []
-    club = any(CLUB.search(o) for o in orgs) and not any(re.search(r"大学|自衛隊|株式会社|㈱|\(株\)|警|庁|役所", o) for o in orgs)
+    # 全日本社会人選手権は大人だけの大会なので、そこに出ている人には「年齢を確認」の印を付けない
+    club = (any(CLUB.search(o) for o in orgs) and not any(re.search(r"大学|自衛隊|株式会社|㈱|\(株\)|警|庁|役所", o) for o in orgs)
+            and not any(r["series"] == "shakaijin" for r in rs))
     if club: memo.append("所属がクラブ・教室だけ(年齢を確認)")
     if len(orgs) > 1: memo.append("所属が複数: " + " / ".join(orgs))
     # 重量級(86kg 以上)どうしの移動は、階級の区分の変わり目(97・125・130kg など)で幅が大きく見えるだけなので印を付けない

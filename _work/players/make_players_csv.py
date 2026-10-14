@@ -99,7 +99,8 @@ def main():
         if kana and not is_yes(ok) and not foreign:
             roma = romaji(kana, name)
         roma = " ".join(re.sub(r"[()()]", "", roma).split())
-        memo = [m for m in (r.get("確認メモ") or "").split("・") if m]
+        # メモは「・」でつないである。所属名の中の「・」(「ポゴナ・クラブ」など)では区切らない
+        memo = [m for m in re.split(r"・(?=所属が|階級の幅|姓と名)", r.get("確認メモ") or "") if m]
         public = "はい" if memo and all(m.startswith("所属が複数") for m in memo) else r["公開"]
         risky = any(not m.startswith("所属が複数") for m in memo)  # 年齢の確認が必要・別の人かもしれない
         row = {"選手ID": r["選手ID"], "氏名": name, "ふりがな": kana or r["ふりがな"], "別表記": r["別表記"], "所属": club,
