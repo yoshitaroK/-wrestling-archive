@@ -11,7 +11,7 @@ BAD = re.compile(r"賞|#N/A|N/A|優勝|団体|位$|^該当|なし|棄権|不戦|
 DEF = {"university-championship": "フリースタイル", "university-greco": "グレコローマン"}
 SER = {"tenno-cup": "天皇杯", "meiji-cup": "明治杯", "shakaijin": "全日本社会人", "intercollegiate": "インカレ", "east-spring": "東日本学生春季",
        "east-autumn": "東日本学生秋季", "university-championship": "全日本大学", "university-greco": "全日本大学グレコ"}
-res, minor = [], 0
+res, minor, skipped_merged = [], 0, []
 for x in idx:
     if x.get("skip"):  # 使わない一覧(理由は jwf_index.json の skip に書く)
         continue
@@ -19,14 +19,22 @@ for x in idx:
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
         rows = (parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]})
                 if x.get("rotated") else parsewin.parse(fn))
+        award = False
         for r in rows:
             nm = re.sub(r"\s+", " ", r["name"]).strip()
+            # 一覧のいちばん下の「最優秀選手」などの賞の欄から後は入賞者ではない(重量級の2位などと読まれてしまう)
+            if re.search(r"最優秀|優秀選手|敢闘賞|技能賞", nm) or award:
+                award = True
+                continue
             # 古い入賞者一覧(2014〜2019年ごろ)は「高 橋 侑 希」のように1文字ずつ空ける書き方で、姓と名の区切りが分からない。
             # 空白を取って比べ、名前の形は新しい一覧のもの(「高橋 侑希」)を使う。古い一覧にしか出ない人は区切りが分からないので公開しない
             toks = nm.split()
             unsplit = len(toks) >= 3 and sum(len(t) == 1 for t in toks) >= len(toks) - 1
             if unsplit:
                 nm = "".join(toks)
+            elif len(toks) > 2:
+                skipped_merged.append((x["event"], r["weight"], nm))  # 2人分の名前がくっついた行など(「宮内 勇真バドバヤル ナンバルダグワ山本」)
+                continue
             if BAD.search(nm) or not re.search(r"[一-龥ぁ-んァ-ヶ]", nm):
                 continue
             if MINOR.search(r["org"]) and not STAFF.search(r["org"]):
@@ -79,3 +87,4 @@ with open("player_results_candidates.csv", "w", encoding="utf-8-sig", newline=""
 print(len(P), "players", len(U), "results", "minor-excluded", minor, "flag-weight", sum(1 for p in P if any("階級" in m for m in p["memo"])),
       "club", sum(p["club"] for p in P), "multiorg", sum(1 for p in P if any("複数" in m for m in p["memo"])), "best1", sum(1 for p in P if p["best"] == 1))
 print(Counter(SER[r["series"]] + str(r["year"]) for r in U))
+print("名前がくっついた・3つ以上に分かれた行(取り込まない):", skipped_merged)

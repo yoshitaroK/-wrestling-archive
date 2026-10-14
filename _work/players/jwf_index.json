@@ -1,5 +1,65 @@
 [
  {
+  "event": "wre-2020-university-championship-1107",
+  "series": "university-championship",
+  "year": 2020,
+  "name": "全日本大学選手権",
+  "page": "https://wrestling-spirits.jp/2020/11/09/164903/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2020/1108_daigaku/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2021-university-championship-1113",
+  "series": "university-championship",
+  "year": 2021,
+  "name": "全日本大学選手権",
+  "page": "https://wrestling-spirits.jp/2021/11/15/181547/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1114_daigaku00/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2021-university-greco-1009",
+  "series": "university-greco",
+  "year": 2021,
+  "name": "全日本大学グレコローマン選手権",
+  "page": "https://wrestling-spirits.jp/2021/10/11/180198/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1010_daigakuG2/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2022-university-greco-1019",
+  "series": "university-greco",
+  "year": 2022,
+  "name": "全日本大学グレコローマン選手権",
+  "page": "https://wrestling-spirits.jp/2022/10/21/197466/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/1020_greco2/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2023-university-greco-1018",
+  "series": "university-greco",
+  "year": 2023,
+  "name": "全日本大学グレコローマン選手権",
+  "page": "https://wrestling-spirits.jp/2023/10/20/216353/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/1019_daigkuG/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
   "event": "wre-2014-meiji-cup-0614",
   "series": "meiji-cup",
   "year": 2014,

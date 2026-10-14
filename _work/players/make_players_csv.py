@@ -14,9 +14,11 @@
   「クラブ・教室だけ(年齢を確認)」「階級の幅が大きい」の人は「いいえ」のまま
 - 新しい大会を足して「クラブ・教室だけ」「階級の幅が大きい」のメモが付いた人は、前の players.csv で公開でも「いいえ」に戻す
 - すでに players.csv があるときは、運営者が変えた「公開」「未成年」「ローマ字」「ローマ字確認」をそのまま残す
-- player_results.csv にある UWW の行(オリンピック・世界選手権・U23世界選手権。uww_results.py で足したもの)は、作り直しても残す
+- player_results.csv にある UWW の行(オリンピック・世界選手権・U23世界選手権。uww_results.py で足したもの)と、
+  国体など手で足した行(jwf_index.json に無い開催回の行)は、作り直しても残す。手で足した選手・別表記も残す
 """
 import csv
+import json
 import os
 import re
 import unicodedata
@@ -26,7 +28,7 @@ from make_romaji import romaji
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 COLS = ["選手ID", "氏名", "ふりがな", "別表記", "所属", "公開", "未成年", "ローマ字", "ローマ字確認"]
-KEEP = ["公開", "未成年", "ローマ字", "ローマ字確認"]
+KEEP = ["公開", "未成年", "ローマ字", "ローマ字確認", "別表記"]
 
 
 def read(path):
@@ -60,6 +62,17 @@ def main():
                 bits = line.rstrip("\n").split("\t")
                 fix[bits[0]] = (bits[1], bits[2] if len(bits) > 2 else "")
     old = {r["選手ID"]: r for r in read(os.path.join(ROOT, "players.csv"))}
+    # 入賞者一覧(jwf_index.json)からは作れない成績(UWW の結果、国体など手で足したもの)は、前の player_results.csv から残す
+    index_events = {x["event"] for x in json.load(open(os.path.join(HERE, "jwf_index.json"), encoding="utf-8")) if x["event"]}
+    extra = [r for r in read(os.path.join(ROOT, "player_results.csv")) if r.get("開催回ID", "") not in index_events]
+    extra_year = {}
+    for r in extra:
+        if (r.get("開催年") or "").isdigit():
+            extra_year[r["選手ID"]] = max(extra_year.get(r["選手ID"], 0), int(r["開催年"]))
+    cand_year = {}
+    for r in results:
+        if (r.get("開催年") or "").isdigit():
+            cand_year[r["選手ID"]] = max(cand_year.get(r["選手ID"], 0), int(r["開催年"]))
     kanas = {}
     for r in read(os.path.join(HERE, "kana_entries.csv")):
         kanas.setdefault(name_key(r["氏名"]), set()).add(r["ふりがな"])
@@ -91,6 +104,8 @@ def main():
         risky = any(not m.startswith("所属が複数") for m in memo)  # 年齢の確認が必要・別の人かもしれない
         row = {"選手ID": r["選手ID"], "氏名": name, "ふりがな": kana or r["ふりがな"], "別表記": r["別表記"], "所属": club,
                "公開": public, "未成年": r["未成年"], "ローマ字": roma, "ローマ字確認": ok}
+        if r["選手ID"] in old and extra_year.get(r["選手ID"], 0) > cand_year.get(r["選手ID"], 0) and old[r["選手ID"]].get("所属"):
+            row["所属"] = old[r["選手ID"]]["所属"]  # 手で足した成績(国体など)のほうが新しい人は、そのときの所属を残す
         if r["選手ID"] in old:
             for k in KEEP:
                 if k == "公開" and (risky or (public != r["公開"] and old[r["選手ID"]].get(k) == r["公開"])):
@@ -100,15 +115,16 @@ def main():
                 if old[r["選手ID"]].get(k):
                     row[k] = old[r["選手ID"]][k]
         out.append(row)
+    # 候補の表に無い選手(手で足した人)は、前の players.csv のまま残す
+    done = {r["選手ID"] for r in out} | set(merged)
+    out += [o for pid, o in old.items() if pid not in done]
     with open(os.path.join(ROOT, "players.csv"), "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLS)
         w.writeheader()
         w.writerows(out)
-    # オリンピック・世界選手権・U23世界選手権の成績(UWW の結果)は候補の表に無いので、前の player_results.csv から持ってくる
-    olympics = [r for r in read(os.path.join(ROOT, "player_results.csv")) if r.get("出典URL", "").startswith("https://cdn.uww.org/")]
     seen = set()
     rows = []
-    for r in results + olympics:
+    for r in results + extra:
         r = dict(r, 選手ID=merged.get(r["選手ID"], r["選手ID"]))
         key = tuple(r.values())
         if key not in seen:
