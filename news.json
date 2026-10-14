@@ -1,5 +1,5 @@
 {
- "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。",
+ "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
    "slug": "2026-kokutai-day2",
@@ -8,7 +8,16 @@
    "category": "国民スポーツ大会",
    "event_id": "wre-2026-kokutai-1012",
    "lead": "国スポのレスリング第2日は16階級の決勝。女子62kg級は元木咲良、53kg級は村山春菜が優勝し、成年男子86kg級は髙橋夢大が頂点に立った。",
-   "tags": ["国スポ2026", "元木咲良", "村山春菜", "髙橋夢大", "白井達也"]
+   "tags": [
+    "国スポ2026",
+    "元木咲良",
+    "村山春菜",
+    "髙橋夢大",
+    "白井達也"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/10/13/295728/"
+   ]
   }
  ]
 }
