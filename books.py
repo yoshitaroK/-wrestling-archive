@@ -43,12 +43,25 @@ def norm_isbn(s):
     return ""
 
 
+def book_key(s):
+    """本を見分ける番号。ISBN なら 13 けた、ISBN の無い本(Kindle 本・雑誌など)は Amazon の番号(B で始まる 10 文字)"""
+    i = norm_isbn(s)
+    if i:
+        return i
+    s = str(s or "").strip().upper()
+    return s if re.fullmatch(r"B[0-9A-Z]{9}", s) else ""
+
+
+def is_isbn(key):
+    return key.isdigit()
+
+
 def book_isbn(b):
     """books.json の1件の ISBN(13 けた)。isbn が無ければ、ブクログの URL の中の ISBN-10 から作る"""
     if b.get("isbn"):
-        return norm_isbn(b["isbn"])
-    m = re.search(r"booklog\.jp/(?:item/\d+|users/[^/]+/archives/\d+)/([0-9]{9}[0-9Xx])", str(b.get("booklog") or ""))
-    return norm_isbn(m.group(1)) if m else ""
+        return book_key(b["isbn"])
+    m = re.search(r"booklog\.jp/(?:item/\d+|users/[^/]+/archives/\d+)/([0-9A-Za-z]{10})", str(b.get("booklog") or ""))
+    return book_key(m.group(1)) if m else ""
 
 
 def isbn10(isbn13):
@@ -113,6 +126,10 @@ def items_from_api(data):
             key = " ".join(str(x.get(k) or "") for k in ("id", "asin", "isbn", "url", "item_url"))
             m = re.search(r"(?<![0-9A-Za-z])([0-9]{9}[0-9Xx]|97[89][0-9]{10})(?![0-9A-Za-z])", key)
             isbn = norm_isbn(m.group(1)) if m else ""
+            if not isbn and x.get("title"):
+                # ISBN の無い本(Kindle 本・雑誌など)は Amazon の番号で
+                m = re.search(r"booklog\.jp/item/\d+/(B[0-9A-Z]{9})(?![0-9A-Za-z])", key) or re.search(r"(?<![0-9A-Za-z])(B[0-9A-Z]{9})(?![0-9A-Za-z])", key)
+                isbn = m.group(1) if m else ""
             if isbn and isbn not in seen:
                 seen.add(isbn)
                 out.append({"isbn": isbn, "title": str(x.get("title") or "").strip(),
@@ -146,6 +163,7 @@ def fetch_shelf(url, requests, report):
             if r.ok:
                 items = items_from_api(r.json())
                 note["books"] = len(items)
+                note["without_isbn"] = sum(1 for x in items if not is_isbn(x["isbn"]))
                 tries.append(note)
                 if items:
                     return items
@@ -205,7 +223,7 @@ def fetch(root="."):
             report["shelf_error"] = str(ex)
             print(f"[書籍] ブクログの本棚を読めませんでした(前回の内容を使います): {ex}")
     want = [i for i in list(dict.fromkeys([book_isbn(b) for b in books] + shelf_list(cache)))
-            if i and not (cache.get(i) or {}).get("title") and not (cache.get(i) or {}).get("tries", 0) >= 3]
+            if i and is_isbn(i) and not (cache.get(i) or {}).get("title") and not (cache.get(i) or {}).get("tries", 0) >= 3]
     report["asked"] = len(want)
     try:
         for k in range(0, len(want), 100):
@@ -326,16 +344,21 @@ def build(root, ctx, bp, report):
         crumbs = [("トップ", "/"), ("書籍", "/books/"), (b["title"], None)]
         desc = f"{b['title']}" + (f"({b['authors']})" if b["authors"] else "") + "。レスリングの本の紹介。"
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), dict({
-            "@type": "Book", "name": b["title"], "isbn": b["isbn"], "url": bp.SITE + path},
+            "@type": "Book", "name": b["title"], "url": bp.SITE + path},
+            **({"isbn": b["isbn"]} if is_isbn(b["isbn"]) else {}),
             **({"author": b["authors"]} if b["authors"] else {}), **({"publisher": b["publisher"]} if b["publisher"] else {}),
             **({"image": b["cover"]} if b.get("cover") else {}))]}
         h = bp.head(f"{b['title']}|書籍|{bp.SITE_NAME}", desc, path, b.get("cover") or "", jsonld, ctx["css"], alternates=False)
-        facts = [("著者", b["authors"]), ("出版社", b["publisher"]), ("発売日", fmt_pubdate(b["pubdate"])), ("ISBN", b["isbn"]), ("棚", b["category"])]
+        facts = [("著者", b["authors"]), ("出版社", b["publisher"]), ("発売日", fmt_pubdate(b["pubdate"])), ("ISBN" if is_isbn(b["isbn"]) else "Amazon の番号", b["isbn"]), ("棚", b["category"])]
         h += '<main id="content" class="wrap page bk-page">' + bp.breadcrumb_html(crumbs)
         h += f'<div class="bk-detail">{cover_html(b, e, "bk-cover bk-big")}<div class="bk-info"><h1>{e(b["title"])}</h1>'
         h += '<dl class="facts">' + "".join(f"<dt>{k}</dt><dd>{e(v)}</dd>" for k, v in facts if v) + "</dl>"
-        a10 = isbn10(b["isbn"])
-        links = [(f"https://www.hanmoto.com/bd/isbn/{b['isbn']}", "版元ドットコム"), (f"https://calil.jp/book/{a10 or b['isbn']}", "図書館で探す(カーリル)")]
+        if is_isbn(b["isbn"]):
+            a10 = isbn10(b["isbn"])
+            links = [(f"https://www.hanmoto.com/bd/isbn/{b['isbn']}", "版元ドットコム"), (f"https://calil.jp/book/{a10 or b['isbn']}", "図書館で探す(カーリル)")]
+        else:
+            # ISBN の無い本(Kindle 本・雑誌など)は、ブクログと Amazon だけ
+            a10, links = b["isbn"], []
         if a10:
             links.append((f"https://booklog.jp/item/1/{a10}", "ブクログ"))
             links.append((f"https://www.amazon.co.jp/dp/{a10}", "Amazon"))
@@ -357,7 +380,7 @@ def build(root, ctx, bp, report):
     desc = f"レスリングの技術書・選手の本・雑誌など{len(books)}冊を、表紙の本棚で紹介しています。"
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": "書籍", "url": bp.SITE + path,
-        "hasPart": [{"@type": "Book", "name": b["title"], "isbn": b["isbn"], "url": bp.SITE + f"/books/{b['isbn']}/"} for b in books]}]}
+        "hasPart": [{"@type": "Book", "name": b["title"], "url": bp.SITE + f"/books/{b['isbn']}/"} for b in books]}]}
     h = bp.head(f"書籍({len(books)}冊)|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
     h += '<main id="content" class="wrap page bk-page">' + bp.breadcrumb_html(crumbs) + f'<h1>書籍 <small class="bk-n"><b class="num">{len(books)}</b>冊</small></h1>'
     if books:
