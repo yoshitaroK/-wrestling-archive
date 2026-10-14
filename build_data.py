@@ -855,6 +855,8 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
             "sessions": e.get("sessions"), "notes": [display_note(n) for n in e.get("notes", [])] or None,
             "group": e.get("event_group_id"),
             "schedule_history": e.get("schedule_history"),
+            # 構造化データ(SportsEvent の主催・会場の住所)に使う。大会データに書いてあるものだけ
+            "organizers": {k: v for k, v in (e.get("organizers") or {}).items() if k in ("主催", "会場")} or None,
             "links": links_by_event.get(e["id"]),
             "n": counts_by_event.get(e["id"], 0),
         }

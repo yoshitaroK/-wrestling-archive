@@ -401,6 +401,25 @@ LINK_LABELS_EN = {"大会公式サイト": "Official tournament website", "結�
 JWF_COMPETITION = re.compile(r"^https://www\.japan-wrestling\.jp/competition/\d{4}/\d+")
 
 
+def video_ld(vids, limit=10):
+    """開催回ページの動画を VideoObject として Google に伝える(検索結果に動画として出やすくする)。
+    配信前・配信中のものは除き、試合配信を先にして最大 limit 本"""
+    out = []
+    for v in sorted(vids, key=lambda v: (v.get("k") != "match", v.get("dh") or "", v.get("m") or "")):
+        if v.get("vs") in ("upcoming", "live") or not v.get("p"):
+            continue
+        o = {"@type": "VideoObject", "name": v.get("t") or "", "uploadDate": v["p"],
+             "thumbnailUrl": f"https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg",
+             "contentUrl": f"https://www.youtube.com/watch?v={v['id']}", "embedUrl": f"https://www.youtube.com/embed/{v['id']}",
+             "description": v.get("t") or ""}
+        if v.get("du") and v["du"] not in ("P0D", "PT0S"):
+            o["duration"] = v["du"]
+        out.append(o)
+        if len(out) >= limit:
+            break
+    return out
+
+
 def event_page(ev, ctx):
     S, slugs, by_event, cand_by_event = ctx["S"], ctx["slugs"], ctx["by_event"], ctx["cand"]
     s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
@@ -480,7 +499,16 @@ def event_page(ev, ctx):
               "eventStatus": "https://schema.org/" + SCHEMA_STATUS.get(status, "EventScheduled")}
         if venue:
             se["location"] = {"@type": "Place", "name": venue}
+            hall = (ev.get("organizers") or {}).get("会場", "")
+            if hall and not i18n.en():
+                se["location"]["address"] = hall  # 例:「駒沢オリンピック公園総合運動場体育館 〒154-0013 世田谷区駒沢公園1-1」
+        org = (ev.get("organizers") or {}).get("主催", "")
+        if org and not i18n.en():
+            se["organizer"] = [{"@type": "Organization", "name": o.strip()} for o in re.split(r"[、,]", org) if o.strip()]
+        if first:
+            se["image"] = f"https://i.ytimg.com/vi/{first['id']}/hqdefault.jpg"
         ld.append(se)
+    ld.extend(video_ld(vids))
     jsonld = {"@context": "https://schema.org", "@graph": ld}
 
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first['id']}/hqdefault.jpg" if first else "", jsonld, ctx["css"])
