@@ -2,6 +2,18 @@
  "_shelf": {
   "url": "https://booklog.jp/users/taro0726/all?rank=all&status=1",
   "isbns": [
+   "B01EIWE49I",
+   "B00T9M126Q",
+   "B017H3OU9Y",
+   "B01CG97MGM",
+   "B010N0XU9O",
+   "B010ULGXIG",
+   "B00IHUGQBW",
+   "B00IHUGQBM",
+   "B00N28N9MI",
+   "B00JJBDVUC",
+   "B00IHUGQCQ",
+   "B017NLTJUU",
    "9784253211895",
    "9784253211864",
    "9784253211857",
@@ -41,6 +53,54 @@
   ],
   "fetched": "2026-10-14",
   "items": {
+   "B01EIWE49I": {
+    "title": "弾丸タックル コミック 1-10巻セット (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/61J+2gSdvPL._SL75_.jpg"
+   },
+   "B00T9M126Q": {
+    "title": "弾丸タックル　6 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/61r0CFoi30L._SL75_.jpg"
+   },
+   "B017H3OU9Y": {
+    "title": "弾丸タックル　9 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/61EBBx-qolL._SL75_.jpg"
+   },
+   "B01CG97MGM": {
+    "title": "弾丸タックル　10 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/517qgpSzD-L._SL75_.jpg"
+   },
+   "B010N0XU9O": {
+    "title": "弾丸タックル　7 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/613VzHN1cTL._SL75_.jpg"
+   },
+   "B010ULGXIG": {
+    "title": "弾丸タックル　8 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/617t9YXF9SL._SL75_.jpg"
+   },
+   "B00IHUGQBW": {
+    "title": "弾丸タックル　3 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/51GnM1JPwdL._SL75_.jpg"
+   },
+   "B00IHUGQBM": {
+    "title": "弾丸タックル　2 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/516aEhg9Z9L._SL75_.jpg"
+   },
+   "B00N28N9MI": {
+    "title": "弾丸タックル　5 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/61dsE0CTS1L._SL75_.jpg"
+   },
+   "B00JJBDVUC": {
+    "title": "弾丸タックル　4 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/511O73bcdzL._SL75_.jpg"
+   },
+   "B00IHUGQCQ": {
+    "title": "弾丸タックル　1 (少年チャンピオン・コミックス)",
+    "cover": "https://m.media-amazon.com/images/I/515bPkOeKbL._SL75_.jpg"
+   },
+   "B017NLTJUU": {
+    "title": "弾丸タックル　１【期間限定　無料お試し版】 (少年チャンピオン・コミックス)",
+    "cover": "https://images-fe.ssl-images-amazon.com/images/I/61DGM22gguL._SL75_.jpg"
+   },
    "9784253211895": {
     "title": "弾丸タックル 9 (少年チャンピオン・コミックス)",
     "cover": "https://image.st-booklog.jp/V2VlK2QwTlZqaHovYnd2VGY5dmY4QT09.jpg"
@@ -233,34 +293,34 @@
   "description": ""
  },
  "9784253211772": {
-  "tries": 1
+  "tries": 2
  },
  "9784583038117": {
-  "tries": 1
+  "tries": 2
  },
  "9784583039121": {
-  "tries": 1
+  "tries": 2
  },
  "9784415001319": {
-  "tries": 1
+  "tries": 2
  },
  "9784062004121": {
-  "tries": 1
+  "tries": 2
  },
  "9784483001563": {
-  "tries": 1
+  "tries": 2
  },
  "9784469262964": {
-  "tries": 1
+  "tries": 2
  },
  "9784764820197": {
-  "tries": 1
+  "tries": 2
  },
  "9784873899770": {
-  "tries": 1
+  "tries": 2
  },
  "9784408453293": {
-  "tries": 1
+  "tries": 2
  },
  "9784000242929": {
   "title": "日本レスリングの物語",
@@ -303,7 +363,7 @@
   "description": ""
  },
  "9784811323459": {
-  "tries": 1
+  "tries": 2
  },
  "9784052046193": {
   "title": "まんがNHKアスリートの魂 : 進化する技と心 : レスリング吉田沙保里 ラグビー五郎丸歩 体操白井健三",
@@ -370,19 +430,19 @@
   "description": ""
  },
  "9784331503485": {
-  "tries": 1
+  "tries": 2
  },
  "9784620314235": {
-  "tries": 1
+  "tries": 2
  },
  "9784862950123": {
-  "tries": 1
+  "tries": 2
  },
  "9784061415010": {
-  "tries": 1
+  "tries": 2
  },
  "9784891963965": {
-  "tries": 1
+  "tries": 2
  },
  "9784891963767": {
   "title": "レスリング [1994]",
