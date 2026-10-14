@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-14T12:15:11+09:00",
+ "built_at": "2026-10-14T12:56:48+09:00",
  "as_of": "2026-10-14",
  "video_count": 3360,
  "raw_count": 3360,
@@ -30,9 +30,9 @@
  "translation": {
   "total": 3725,
   "translated": 3725,
-  "new": 2,
+  "new": 0,
   "pending": 0,
-  "chars_used": 182,
+  "chars_used": 0,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 10,
@@ -46,6 +46,16 @@
     "ja": "2021年ジュニアクイーンズカップ(カデット) 57kg級 決勝 太田早也香（赤＝埼玉・埼玉栄高）○［2-1］●山下叶夢（香川・高松北高）",
     "en": "2021 Junior Queens Cup (Cadets) 57kg Class Final: Sayaka Ota (Red = Saitama Ei High School, Saitama) ○ [2-1] ● Kamui Yamashita (Takamatsu Kita High School, Kagawa)",
     "expected": "Kanon Yamashita"
+   },
+   {
+    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
+    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [GR 72kg Class] Final: Kazuhiro Motona ○ – ● Teishin Motona",
+    "expected": "Issei Honna"
+   },
+   {
+    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
+    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [GR 72kg Class] Final: Kazuhiro Motona ○ – ● Teishin Motona",
+    "expected": "Taishin Honna"
    },
    {
     "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【W50kg級】決勝　森川晴凪（至学館大）○［VSU、5:59=11-0］●太田真蓉（東洋大）",
@@ -66,16 +76,6 @@
     "ja": "令和３年度第65回風間杯全国高校選抜レスリング大会決勝戦 　【65kg級】　細川周（京都・丹後緑風）○［Ｔフォール、3:52=14-2］●平井友真（山梨・甲府城西）",
     "en": "Reiwa 3, 65th Kazama Cup National High School Select Wrestling Tournament Finals  [65kg Class] Shu Hosokawa (Tango Ryokufu, Kyoto) ○ [Technical Fall, 3:52 = 14-2] ● Tomoma Hirai (Kofu Josai, Yamanashi)",
     "expected": "Makoto Hosokawa"
-   },
-   {
-    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
-    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [GR 72kg Class] Final: Kazuhiro Motona ○ – ● Teishin Motona",
-    "expected": "Issei Honna"
-   },
-   {
-    "ja": "2025年文部科学大臣杯UNIVASカップ全日本学生選手権 【GR72kg級】決勝　本名一晟○－●本名帝心",
-    "en": "2025 Minister of Education, Culture, Sports, Science and Technology Cup UNIVAS Cup All-Japan Student Championships [GR 72kg Class] Final: Kazuhiro Motona ○ – ● Teishin Motona",
-    "expected": "Taishin Honna"
    },
    {
     "ja": "手動確認: YouTube のタイトルは女子72kg級決勝(藤倉優花-中村旭)と同じだが、映像はグレコローマン72kg級決勝の本名一晟-本名帝心(運営者が確認)。日本協会の入賞者一覧でもこの階級の1位が本名一晟、2位が本名帝心(確認日 2026-10-14)",
@@ -102,14 +102,14 @@
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 4,
-    "kept": 973,
+    "made": 0,
+    "kept": 977,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 4,
-    "kept": 973,
+    "made": 0,
+    "kept": 977,
     "removed": 0,
     "errors": []
    }
@@ -183,6 +183,11 @@
   "unlisted_files": [],
   "albums": 31,
   "from_manifest": 301
+ },
+ "news": {
+  "errors": [],
+  "warnings": [],
+  "articles": 1
  },
  "tech": {
   "shown": 59,

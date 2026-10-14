@@ -37,14 +37,14 @@ button,input,select{font:inherit;color:inherit}
 .official a.lang:hover{background:rgba(255,255,255,.12);border-color:#fff}
 .top{position:sticky;top:0;z-index:20;background:rgba(11,11,14,.96);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);color:var(--on-navy);border-bottom:1px solid rgba(255,255,255,.08)}
 .home{display:flex;align-items:center;gap:10px;color:var(--on-navy);text-decoration:none;padding-bottom:10px}
-.topnav{display:flex;gap:26px;margin-left:auto;align-self:stretch;align-items:stretch}
+.topnav{display:flex;gap:18px;margin-left:auto;align-self:stretch;align-items:stretch}
 .topnav a{display:flex;align-items:center;font-size:14px;font-weight:500;letter-spacing:.03em;color:var(--on-navy-2);transition:color .15s;text-decoration:none;white-space:nowrap;padding:8px 0 10px;border-bottom:3px solid transparent}
 .topnav a:hover{color:#fff}
 .topnav a[aria-current]{color:#fff;font-weight:700;border-bottom-color:var(--pink)}
 .topnav a:focus-visible,.home:focus-visible,.official a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .brand .theme-btn{align-self:center;margin-bottom:10px}
 /* どのページにもあるヘッダーの検索欄(トップページは写真の上の大きな検索欄を使う) */
-.hsearch{display:flex;align-self:center;margin-bottom:10px;width:230px;background:#fff;border-radius:6px;overflow:hidden}
+.hsearch{display:flex;align-self:center;margin-bottom:10px;width:200px;background:#fff;border-radius:6px;overflow:hidden}
 .hsearch input{flex:1;min-width:0;border:0;background:transparent;color:#16161a;font-size:14px;padding:8px 4px 8px 12px}
 .hsearch input::placeholder{color:#6b6b75}
 .hsearch input:focus{outline:none}
@@ -697,3 +697,45 @@ table.champs td.none{color:var(--ink3)}
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
 .uww-who a{margin-right:10px;font-weight:700}
 .vm .uww-ev{font-weight:700;color:var(--ink2)}
+
+.nw{--bg:#f2f3f5;--surface:#ffffff;--surface-2:#eef0f4;--ink:#1d1f23;--ink2:#4a4f58;--ink3:#626873;--line:#e2e4e8;--line-hi:#c4c8d0;
+  --pink:#c8102e;--pink-deep:#a50d26;--pink-line:#f0bcc4;--link:#0b57c2;background:var(--bg);color:var(--ink);padding:18px 0 48px;color-scheme:light}
+.nw-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:860px){.nw-grid{grid-template-columns:1fr}}
+.nw-main{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px 28px 28px;min-width:0}
+@media (max-width:520px){.nw-main{padding:16px 16px 22px}}
+.nw .crumbs a{color:var(--ink2)}
+.nw h1{font-size:26px;line-height:1.5;margin:4px 0 10px;font-weight:700;letter-spacing:.01em;text-wrap:balance}
+@media (max-width:520px){.nw h1{font-size:21px}}
+.nw-cat{display:inline-block;margin:0;font-size:12px;font-weight:700;color:var(--pink)}
+.nw-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--ink3);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.nw-meta b{color:var(--ink)}
+.nw-body{font-size:16px;line-height:1.95;max-width:680px}
+.nw-body p{margin:0 0 1.2em}
+.nw-body a{color:var(--link);text-decoration:none}
+.nw-body a:hover{text-decoration:underline}
+.nw-body h2{font-size:17px;line-height:1.5;margin:1.8em 0 .7em;padding-left:10px;border-left:4px solid var(--pink)}
+.nw-tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin:0 0 1.2em}
+.nw-tbl table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px;line-height:1.6}
+.nw-tbl th,.nw-tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.nw-tbl th{background:var(--surface-2);color:var(--ink2);font-weight:500;font-size:12.5px;white-space:nowrap}
+.nw-tbl td:first-child{white-space:nowrap;color:var(--ink2);font-variant-numeric:tabular-nums}
+.nw-tags{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 0}
+.nw-tags span{background:var(--surface-2);font-size:12.5px;padding:3px 10px;border-radius:999px;color:var(--ink2)}
+.nw-side{display:grid;gap:16px;min-width:0}
+.nw-side section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.nw-side h3{font-size:14px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--pink)}
+.nw-side ul{list-style:none;margin:0;padding:0}
+.nw-side li+li{border-top:1px solid var(--line)}
+.nw-side a{display:block;padding:9px 0;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.55}
+.nw-side a:hover{color:var(--link)}
+.nw-side small{display:block;color:var(--ink3);font-size:12px}
+.nw-lead{color:var(--ink2);margin:0 0 10px}
+.nw-list{list-style:none;margin:0;padding:0}
+.nw-list li{border-top:1px solid var(--line)}
+.nw-list a{display:grid;gap:3px;padding:14px 0;color:var(--ink);text-decoration:none}
+.nw-list a:hover .nw-t{color:var(--link);text-decoration:underline}
+.nw-list .nw-t{font-size:17px;font-weight:700;line-height:1.5}
+.nw-list .nw-l{font-size:14px;color:var(--ink2);line-height:1.7}
+.nw-list time{font-size:12.5px;color:var(--ink3)}
+.nw :focus-visible{outline-color:var(--pink)}
