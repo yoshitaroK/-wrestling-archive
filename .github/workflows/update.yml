@@ -25,6 +25,10 @@ on:
       - 'translations_en.json'
       - 'photos.json'
       - 'tech_*.json'
+      - 'event_results.csv'
+      - 'news.json'
+      - 'articles/**'
+      - 'books.json'
 
 permissions:
   contents: write
