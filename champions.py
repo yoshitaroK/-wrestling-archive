@@ -208,7 +208,7 @@ def style_tables(sid, by_year, ctx, e):
 
 
 RANK_MIN = 3     # ランキングに載せるのは優勝この回数以上の選手
-RANK_TOP = 20    # 上位この順位まで(同じ回数の人は全員)
+RANK_TOP = 100   # 上位この順位まで(同じ回数の人は全員)
 
 
 def ranking(t):
