@@ -207,6 +207,56 @@ def style_tables(sid, by_year, ctx, e):
     return h
 
 
+RANK_MIN = 3     # ランキングに載せるのは優勝この回数以上の選手
+RANK_TOP = 20    # 上位この順位まで(同じ回数の人は全員)
+
+
+def ranking(t):
+    """優勝回数のランキング。表の1マス(スタイル・年・階級)を1回と数え、名前が同じ人をまとめる。
+    名前を載せていない人(未成年など)は数えない。[(順位, 名前, 選手ID, 回数, {スタイル: 回数}, 最初の年, 最後の年), …]"""
+    people = {}
+    for st, by_year in t.items():
+        for y, ws in by_year.items():
+            for w, winners in ws.items():
+                for x in winners:
+                    if x["hidden"] or not name_key(x["name"]):
+                        continue
+                    p = people.setdefault(name_key(x["name"]), {"name": x["name"], "id": None, "n": 0, "st": defaultdict(int), "ys": set()})
+                    p["id"] = p["id"] or x["id"]
+                    p["n"] += 1
+                    p["st"][st] += 1
+                    p["ys"].add(y)
+    rows = sorted((p for p in people.values() if p["n"] >= RANK_MIN), key=lambda p: (-p["n"], min(p["ys"]), p["name"]))
+    out, rank = [], 0
+    for i, p in enumerate(rows):
+        if i == 0 or p["n"] != rows[i - 1]["n"]:
+            rank = i + 1
+            if rank > RANK_TOP:
+                break
+        out.append((rank, p["name"], p["id"], p["n"], dict(p["st"]), min(p["ys"]), max(p["ys"])))
+    return out
+
+
+def ranking_html(s, t, e):
+    rows = ranking(t)
+    if len(rows) < 3:
+        return ""
+    body = ""
+    for rank, name, pid, n, sts, y0, y1 in rows:
+        nm = f'<a href="{U("/players/" + pid + "/")}">{e(name)}</a>' if pid else e(name)
+        short = {"フリースタイル": "フリー", "グレコローマン": "グレコ", "女子": "女子"}  # スマホで1行に収まるよう短く
+        style = "・".join(f"{short[st]}{c}" if len(sts) > 1 else short[st] for st, c in sorted(sts.items(), key=lambda x: STYLES.index(x[0])))
+        years = f"{y0}年" if y0 == y1 else f"{y0}〜{y1}年"
+        body += (f'<tr><th scope="row">{rank}</th><td class="rn">{nm}</td><td class="rc"><b>{n}</b>回</td>'
+                 f'<td class="rs">{e(style)}</td><td class="ry">{years}</td></tr>')
+    return (f'<section class="section" id="rank"><h2>優勝回数ランキング</h2>'
+            f'<p class="hint">{e(s["name"])}で{RANK_MIN}回以上優勝した選手(上位{RANK_TOP}位まで)。'
+            '1つの大会で1つの階級に優勝したら1回と数えています。名前の表記が同じ人を同じ選手として数えています。</p>'
+            f'<div class="ctable"><table class="champs rank"><thead><tr><th scope="col">順位</th><th scope="col">選手</th>'
+            f'<th scope="col">優勝回数</th><th scope="col">スタイル</th><th scope="col">優勝した年</th></tr></thead>'
+            f'<tbody>{body}</tbody></table></div></section>')
+
+
 def series_page(s, t, src, hist, ctx, bp):
     e = bp.e
     path = f"/champions/{s['id']}/"
@@ -223,9 +273,12 @@ def series_page(s, t, src, hist, ctx, bp):
     h += f"<h1>{e(name)} 歴代優勝者</h1>"
     h += (f'<p class="lead">{e(name)}の優勝者を、スタイル・階級ごとに年別にまとめています。いま載せているのは{e(span)}の記録です。'
           f'選手名を押すと、その選手のページへ移れます。</p>')
-    nav = "".join(f'<a href="#{["fs", "gr", "ww"][STYLES.index(st)]}">{e(st)}</a>' for st in STYLES if st in t)
-    if len([st for st in STYLES if st in t]) > 1:
+    rank = ranking_html(s, t, e)
+    nav = ('<a href="#rank">優勝回数ランキング</a>' if rank else "") + "".join(
+        f'<a href="#{["fs", "gr", "ww"][STYLES.index(st)]}">{e(st)}</a>' for st in STYLES if st in t)
+    if len([st for st in STYLES if st in t]) > 1 or rank:
         h += f'<nav class="catnav" aria-label="スタイル">{nav}</nav>'
+    h += rank
     for st in STYLES:
         if st not in t:
             continue
@@ -327,6 +380,10 @@ table.champs tbody th a{color:var(--pink);text-decoration:none}
 table.champs tbody th a:hover{text-decoration:underline}
 table.champs td .cw{display:block;font-weight:700}
 table.champs td .cw+.cw{margin-top:6px}
+table.rank tbody th{text-align:center;min-width:3em}
+table.rank td.rn{font-weight:700;font-size:15px}
+table.rank td.rc b{font-family:var(--num);font-size:20px;color:var(--pink);margin-right:2px}
+table.rank td.rs,table.rank td.ry{color:var(--ink2)}
 table.champs td a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--pink-line);text-underline-offset:3px}
 table.champs td a:hover{color:var(--pink)}
 table.champs td small{display:block;font-weight:400;font-size:11px;color:var(--ink3)}
