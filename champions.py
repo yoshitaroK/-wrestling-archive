@@ -274,11 +274,10 @@ def series_page(s, t, src, hist, ctx, bp):
     h += (f'<p class="lead">{e(name)}の優勝者を、スタイル・階級ごとに年別にまとめています。いま載せているのは{e(span)}の記録です。'
           f'選手名を押すと、その選手のページへ移れます。</p>')
     rank = ranking_html(s, t, e)
-    nav = ('<a href="#rank">優勝回数ランキング</a>' if rank else "") + "".join(
-        f'<a href="#{["fs", "gr", "ww"][STYLES.index(st)]}">{e(st)}</a>' for st in STYLES if st in t)
+    nav = "".join(f'<a href="#{["fs", "gr", "ww"][STYLES.index(st)]}">{e(st)}</a>' for st in STYLES if st in t) + (
+        '<a href="#rank">優勝回数ランキング</a>' if rank else "")
     if len([st for st in STYLES if st in t]) > 1 or rank:
         h += f'<nav class="catnav" aria-label="スタイル">{nav}</nav>'
-    h += rank
     for st in STYLES:
         if st not in t:
             continue
@@ -286,6 +285,8 @@ def series_page(s, t, src, hist, ctx, bp):
         h += style_tables(s["id"], t[st], ctx, e) + "</section>"
     h += ('<p class="hint">「—」はその年にその階級の記録がないか、名前を載せていないことを表します。'
           '所属は大会のときのものです。リンクのない名前は、選手ページを作っていない選手です。' + HERE_NOTE_MINOR + "</p>")
+    # 優勝回数ランキングは表の下(出典の前)に置く
+    h += rank
     # 出典(年ごと)
     items = ""
     for y in sorted(src, reverse=True):
