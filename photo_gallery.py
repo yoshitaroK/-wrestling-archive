@@ -505,6 +505,28 @@ def home_cards(ctx, photos_by_page, bp, limit=30):
     return out
 
 
+def photographer(credit):
+    """「撮影:Kotone NARIKUNI(@__kotograph__)」→「Kotone NARIKUNI」(撮影者の名前だけ)"""
+    m = re.match(r"^(?:撮影|写真|提供)?\s*[:：]?\s*([^(（@]+)", (credit or "").strip())
+    return m.group(1).strip() if m else ""
+
+
+def image_ld(ph, bp):
+    """写真の構造化データ。Google 画像検索に撮影者と権利の情報を出す(creator・creditText・copyrightNotice・acquireLicensePage)"""
+    o = {"@type": "ImageObject", "contentUrl": bp.SITE + ph["full"], "thumbnailUrl": bp.SITE + ph["thumb"]}
+    if ph["credit"]:
+        o["creditText"] = credit_text(ph["credit"])
+        name = photographer(ph["credit"])
+        if name:
+            o["creator"] = {"@type": "Person", "name": name}
+            o["copyrightNotice"] = f"© {name}"
+        # 写真の利用・取り下げの相談先(お問い合わせの「写真の掲載・取り下げについて」)
+        o["acquireLicensePage"] = bp.SITE + U("/contact.html") + "?kind=photo"
+    if ph["caption"]:
+        o["caption"] = ph["caption"]
+    return o
+
+
 def photo_pages(ctx, photos_by_page, bp):
     """写真トップ(/photos/)と、大会ごとの写真ページ(/photos/…/)を作る。[(path, html, lastmod)]"""
     e, N = bp.e, bp.N
@@ -566,9 +588,7 @@ def photo_pages(ctx, photos_by_page, bp):
                  f"{len(lst)} photos from the {name}" + (f" ({when}" + (f", {venue}" if venue else "") + ")" if when else "") + "." + (f" {cr}." if cr else ""))
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
             "@type": "ImageGallery", "name": L(f"{name}の写真", f"{name} photos"), "url": bp.SITE + U(path),
-            "associatedMedia": [dict({"@type": "ImageObject", "contentUrl": bp.SITE + ph["full"], "thumbnailUrl": bp.SITE + ph["thumb"]},
-                                     **({"creditText": credit_text(ph["credit"])} if ph["credit"] else {}),
-                                     **({"caption": ph["caption"]} if ph["caption"] else {})) for ph in lst]}]}
+            "associatedMedia": [image_ld(ph, bp) for ph in lst]}]}
         h = bp.head(title, desc, path, bp.SITE + lst[0]["full"], jsonld, ctx["css"])
         h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
         h += f'<h1>{e(x["series"])} <span class="yr-h">{e(bp.year_label(x["year"]) if x["year"] else "")}</span><span class="badge ph">{photos_t}</span></h1>'
