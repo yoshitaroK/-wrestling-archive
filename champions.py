@@ -209,6 +209,7 @@ def style_tables(sid, by_year, ctx, e):
 
 RANK_MIN = 3     # ランキングに載せるのは優勝この回数以上の選手
 RANK_TOP = 100   # 上位この順位まで(同じ回数の人は全員)
+RANK_SERIES = {"tenno-cup", "meiji-cup"}  # ランキングを出す大会(天皇杯・明治杯だけ)
 
 
 def ranking(t):
@@ -238,6 +239,8 @@ def ranking(t):
 
 
 def ranking_html(s, t, e):
+    if s["id"] not in RANK_SERIES:
+        return ""
     rows = ranking(t)
     if len(rows) < 3:
         return ""
