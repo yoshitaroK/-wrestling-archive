@@ -1,5 +1,61 @@
 [
  {
+  "event": "wre-2022-shakaijin-0702",
+  "series": "shakaijin",
+  "year": 2022,
+  "name": "全日本社会人選手権",
+  "page": "https://wrestling-spirits.jp/2022/07/04/190919/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0703_shakaijin2/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0703_shakaijin2/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0703_shakaijin2/ichiranWW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2023-shakaijin-0701",
+  "series": "shakaijin",
+  "year": 2023,
+  "name": "全日本社会人選手権",
+  "page": "https://wrestling-spirits.jp/2023/07/03/210014/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0701_shakaijin1/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0702_shakaijin2/ichiran_GR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0702_shakaijin2/ichiran_WW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2022-intercollegiate-0815",
+  "series": "intercollegiate",
+  "year": 2022,
+  "name": "全日本学生選手権",
+  "page": "https://wrestling-spirits.jp/2022/08/19/193138/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0816_intercollege2/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0816_intercollege2/ichiranWW.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/0818_intercollege4/ichiranFS.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2023-intercollegiate-0826",
+  "series": "intercollegiate",
+  "year": 2023,
+  "name": "全日本学生選手権",
+  "page": "https://wrestling-spirits.jp/2023/08/30/212839/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0827_intercollege２/ichiran_FS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0828_intercollege3/ichiran_WW.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/0829_intercollege4/ichiranGR.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
   "event": "wre-2020-university-championship-1107",
   "series": "university-championship",
   "year": 2020,
