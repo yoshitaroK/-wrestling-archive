@@ -210,10 +210,13 @@ def style_tables(sid, by_year, ctx, e):
 RANK_MIN = 3     # ランキングに載せるのは優勝この回数以上の選手
 RANK_TOP = 100   # 上位この順位まで(同じ回数の人は全員)
 RANK_SERIES = {"tenno-cup", "meiji-cup"}  # ランキングを出す大会(天皇杯・明治杯だけ)
+# ランキングで同じ字として数える旧字・異体字(players.VARIANTS に足りないもの。成國と成国、金澤と金沢など)
+RANK_VARIANTS = str.maketrans("國澤嶋龍實廣瀨櫻惠榮", "国沢島竜実広瀬桜恵栄")
 
 
 def ranking(t):
     """優勝回数のランキング。表の1マス(スタイル・年・階級)を1回と数え、名前が同じ人をまとめる。
+    異体字(須崎と須﨑、高橋と髙橋など)は同じ名前として数え、表示は一番新しい年の書き方にする。
     名前を載せていない人(未成年など)は数えない。[(順位, 名前, 選手ID, 回数, {スタイル: 回数}, 最初の年, 最後の年), …]"""
     people = {}
     for st, by_year in t.items():
@@ -222,7 +225,10 @@ def ranking(t):
                 for x in winners:
                     if x["hidden"] or not name_key(x["name"]):
                         continue
-                    p = people.setdefault(name_key(x["name"]), {"name": x["name"], "id": None, "n": 0, "st": defaultdict(int), "ys": set()})
+                    p = people.setdefault(name_key(x["name"]).translate(P.VARIANTS).translate(RANK_VARIANTS),
+                                          {"name": x["name"], "id": None, "n": 0, "st": defaultdict(int), "ys": set()})
+                    if not p["ys"] or y > max(p["ys"]):
+                        p["name"] = x["name"]
                     p["id"] = p["id"] or x["id"]
                     p["n"] += 1
                     p["st"][st] += 1
