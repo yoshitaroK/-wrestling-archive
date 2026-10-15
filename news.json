@@ -2,6 +2,24 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-kokutai-final",
+   "date": "2026-10-15",
+   "title": "国スポ・グレコ 櫻庭功大が77kg級制す 鶴田峻大・奥村総太も優勝",
+   "category": "国民スポーツ大会",
+   "event_id": "wre-2026-kokutai-1012",
+   "lead": "国スポのレスリング最終日はグレコローマン14階級の決勝。成年男子77kg級は櫻庭功大、97kg級は鶴田峻大、130kg級は奥村総太が優勝した。",
+   "tags": [
+    "国スポ2026",
+    "櫻庭功大",
+    "鶴田峻大",
+    "奥村総太",
+    "澤田幸明"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/10/15/295885/"
+   ]
+  },
+  {
    "slug": "2026-kokutai-day3",
    "date": "2026-10-15",
    "title": "国スポ・グレコは最終日に決勝 77kg級は櫻庭功大と清水賢亮が準決勝で激突",
