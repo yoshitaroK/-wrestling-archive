@@ -497,7 +497,8 @@ def apply_event_dates(out_events, overrides):
         if o.get("venue"):
             e["venue"] = o["venue"]
         e["status"], e["date_quality"] = "held", "source_date"
-        e["sources"] = [{"url": o["source_url"], "type": source_type(o["source_url"], "")}]
+        # 旧協会サイトから移された記事(「本記事は日本レスリング協会公式サイトに掲載されていたもの」)は evidence_level を "former_jwf_archive" にする
+        e["sources"] = [{"url": o["source_url"], "type": source_type(o["source_url"], o.get("evidence_level", ""))}]
         for k in ("derived", "notes"):
             e.pop(k, None)
         applied.append(e["id"])

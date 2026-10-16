@@ -297,6 +297,36 @@
    "source_url": "https://cdn.uww.org/2026-01/results_09_belgrade_upd_doping_case_2.pdf",
    "basis": "UWW の公式結果冊子の表紙「Belgrade, RS / 10 Sep - 18 Sep 2022」",
    "checked_on": "2026-10-07"
+  },
+  {
+   "event_id": "x-para-2023-01-25",
+   "start": "2023-01-22",
+   "end": "2023-01-22",
+   "venue": "千葉・佐倉市民体育館",
+   "source_url": "https://wrestling-spirits.jp/2023/01/26/202463/",
+   "evidence_level": "former_jwf_archive",
+   "basis": "日本レスリング協会の公式サイトに載っていた記事「谷津嘉章さんが“障がい者レスリング”を披露」に「1月22日、千葉・佐倉市民体育館で行われた2023年全日本マスターズ選手権の開始式後」",
+   "checked_on": "2026-10-15"
+  },
+  {
+   "event_id": "x-shinjuku-lions-2023-02-26",
+   "start": "2023-02-11",
+   "end": "2023-02-11",
+   "venue": "東京・新宿スポーツセンター",
+   "source_url": "https://wrestling-spirits.jp/2023/02/16/203187/",
+   "evidence_level": "former_jwf_archive",
+   "basis": "日本レスリング協会の公式サイトに載っていた記事に「2023年2月11日、東京・新宿スポーツセンター」「第34回少年少女選手権／東京新宿ライオンズクラブ旗争奪戦」。3年ぶりの開催で、2022年度はこの1回だけ",
+   "checked_on": "2026-10-15"
+  },
+  {
+   "event_id": "x-kansai-camp-2023-03-12",
+   "start": "2023-03-10",
+   "end": "2023-03-12",
+   "venue": "奈良・天理大",
+   "source_url": "https://wrestling-spirits.jp/2023/03/13/204159/",
+   "evidence_level": "former_jwf_archive",
+   "basis": "日本レスリング協会の公式サイトに載っていた記事に「3月10～12日に奈良・天理大(天理市)に」「関西オープン合宿」",
+   "checked_on": "2026-10-15"
   }
  ]
 }
