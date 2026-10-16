@@ -18,6 +18,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
 import i18n
+import site_js
 import video_player
 from i18n import L, U, N, T
 
@@ -172,10 +173,6 @@ def page_worthy(ev):
 
 # ---------------------------------------------------------------- 共通パーツ
 
-THUMB_JS = ("<script>function thumbFail(i){var o=['mqdefault','hqdefault','default'],m=/\\/vi\\/([^/]+)\\/([a-z]+)\\.jpg/.exec(i.src);"
-            "if(m){var n=o[o.indexOf(m[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+m[1]+'/'+n+'.jpg';return;}}i.remove();}</script>")
-
-
 OG_DEFAULT = SITE + "/ogp.png?v=2"
 OG_DEFAULT_EN = SITE + "/ogp-en.png?v=1"
 
@@ -193,7 +190,7 @@ def lang_switch(path):
     else:
         href, code, label, title = "/en" + path, "en", "English", "English version"
     return (f'<a class="lang" href="{e(href)}" hreflang="{code}" lang="{code}" title="{title}" '
-            f'onclick="try{{localStorage.setItem(\'lang\',\'{code}\')}}catch(x){{}}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">{label}</a>')
+            f'data-lang="{code}">{label}</a>')
 
 
 def official_bar(lang_link=""):
@@ -216,8 +213,7 @@ def nav_links(path):
 def header_search():
     """どのページにもある検索欄。送るとトップページ(大会の検索)に移り、入れた言葉で検索する"""
     label = L("大会名・選手名で検索", "Search tournaments & players")
-    return (f'<form class="hsearch" role="search" action="{U("/")}" method="get" '
-            f'onsubmit="var v=this.q.value.trim();if(!v){{event.preventDefault();this.q.focus();return;}}event.preventDefault();location.href=this.action+\'#q=\'+encodeURIComponent(v)">'
+    return (f'<form class="hsearch" role="search" action="{U("/")}" method="get">'
             f'<label class="sr" for="hq">{label}</label><input id="hq" name="q" type="search" autocomplete="off" placeholder="{label}">'
             f'<button type="submit" aria-label="{L("検索", "Search")}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button></form>')
 
@@ -233,8 +229,6 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 <html lang="{L('ja', 'en')}">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{GA_ID}');</script>
-{'' if i18n.en() or not alternates else LANG_REDIRECT_JS}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)}</title>
@@ -253,18 +247,12 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#08080a">
-<script>(function(){{var d=document.documentElement,m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
-try{{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}}catch(e){{}}
-function set(v){{d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#0b0b0e':'#08080a';}}
-set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
-if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){{try{{if(sessionStorage.getItem('theme'))return;}}catch(x){{}}set(e.matches?'light':'dark');}});
-window.__setTheme=function(v){{set(v);try{{sessionStorage.setItem('theme',v);}}catch(e){{}}}};}})();</script>
+{site_js.script_tag(redirect=not i18n.en() and alternates)}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
 {css}
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
-{THUMB_JS}
 {video_player.SCRIPT_TAG}
 </head>
 <body>
@@ -317,7 +305,7 @@ def breadcrumb_ld(items):
 
 def thumb(vid, w=320, h=180):
     return (f'<div class="thumb"><img src="https://i.ytimg.com/vi/{e(vid)}/mqdefault.jpg" alt="" width="{w}" height="{h}" '
-            f'loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="thumbFail(this)"></div>')
+            f'loading="lazy" decoding="async" referrerpolicy="no-referrer" data-thumb></div>')
 
 
 def styles_text(st):
@@ -1637,6 +1625,7 @@ def build(root=HERE, inline_css=False, only=None):
     with open(os.path.join(root, "assets", "site.css"), "w", encoding="utf-8") as f:
         f.write(css_text)
     video_player.write_asset(root)
+    site_js.write_asset(root, GA_ID)
     # CSSの中身が変わるたびにURLの末尾(?v=…)も変わるので、ブラウザやCloudflareに古いCSSが残らない
     import hashlib
     ver = hashlib.md5(css_text.encode("utf-8")).hexdigest()[:8]
