@@ -5,6 +5,7 @@
   news.json            … 記事の一覧。1件 = {"slug", "date", "title", "category", "event_id", "lead", "tags", "file"}
                           slug は URL(/news/<slug>/)に使う半角英小文字・数字・ハイフン。date は YYYY-MM-DD。
                           event_id(開催回ID)を書くと、右の欄に大会ページへのリンクが出る。
+                          photo = {"src": "/assets/photos/….jpg", "caption": "説明", "credit": "撮影:…"} を書くと、見出しの下に写真が出る。
   articles/<slug>.md   … 記事の本文。次の書き方が使える
       空行            … 段落の区切り
       ## 見出し       … 小見出し
@@ -104,11 +105,21 @@ def render_body(text, ctx, report, slug):
         if all(l.startswith("|") for l in lines):
             rows = [[c.strip() for c in l.strip("|").split("|")] for l in lines if not re.match(r"^\|[\s:|-]+\|$", l)]
             th = "".join(f"<th>{inline(c)}</th>" for c in rows[0])
-            trs = "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in rows[1:])
+            trs = "".join("<tr>" + "".join(f'<td data-l="{e(rows[0][i]) if i < len(rows[0]) else ""}">{inline(c)}</td>' for i, c in enumerate(r)) + "</tr>" for r in rows[1:])
             out.append(f'<div class="nw-tbl"><table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table></div>')
         else:
             out.append("<p>" + "<br>".join(inline(l) for l in lines) + "</p>")
     return "".join(out), seen
+
+
+def photo_html(a, e):
+    """記事の最初の写真。news.json の photo = {"src": "/assets/photos/….jpg", "caption": "…", "credit": "撮影:…"}"""
+    ph = a.get("photo") or {}
+    if not ph.get("src"):
+        return ""
+    cap = " ".join(x for x in (ph.get("caption", ""), ph.get("credit", "")) if x)
+    return (f'<figure class="nw-fig"><img src="{e(ph["src"])}" alt="{e(ph.get("caption") or a["title"])}" loading="eager">'
+            + (f"<figcaption>{e(cap)}</figcaption>" if cap else "") + "</figure>")
 
 
 def build(root, ctx, bp, report):
@@ -159,6 +170,7 @@ def build(root, ctx, bp, report):
               + (f'<p class="nw-cat">{e(a["category"])}</p>' if a.get("category") else "")
               + f'<h1>{e(a["title"])}</h1>'
               + f'<p class="nw-meta"><b>{e(bp.SITE_NAME)}</b><time datetime="{e(a["date"])}">{e(fmt_day(a["date"]))}</time></p>'
+              + photo_html(a, e)
               + f'<div class="nw-body">{body}</div>'
               + (f'<p class="nw-tags">{tags}</p>' if tags else "")
               + f'</main><aside class="nw-side">{side(a, players)}</aside></div></div>')
@@ -201,16 +213,26 @@ NEWS_CSS = """
 .nw-cat{display:inline-block;margin:0;font-size:12px;font-weight:700;color:var(--pink)}
 .nw-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--ink3);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .nw-meta b{color:var(--ink)}
-.nw-body{font-size:16px;line-height:1.95;max-width:680px}
-.nw-body p{margin:0 0 1.2em}
-.nw-body a{color:var(--link);text-decoration:none}
-.nw-body a:hover{text-decoration:underline}
+.nw-body{font-size:17px;line-height:1.95;max-width:680px}
+@media (max-width:520px){.nw-body{font-size:16px}}
+.nw-body p{margin:0 0 1.5em}
+.nw-body a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line-hi)}
+.nw-body a:hover{color:var(--link);border-bottom-color:var(--link)}
+.nw-body a[target]{color:var(--link);font-weight:400;border-bottom:0}
+.nw-fig{margin:0 0 20px;max-width:680px}
+.nw-fig img{display:block;width:100%;height:auto;border-radius:4px;background:var(--surface-2)}
+.nw-fig figcaption{font-size:13px;color:var(--ink3);line-height:1.6;margin-top:6px}
 .nw-body h2{font-size:17px;line-height:1.5;margin:1.8em 0 .7em;padding-left:10px;border-left:4px solid var(--pink)}
 .nw-tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin:0 0 1.2em}
 .nw-tbl table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px;line-height:1.6}
 .nw-tbl th,.nw-tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .nw-tbl th{background:var(--surface-2);color:var(--ink2);font-weight:500;font-size:12.5px;white-space:nowrap}
 .nw-tbl td:first-child{white-space:nowrap;color:var(--ink2);font-variant-numeric:tabular-nums}
+@media (max-width:520px){.nw-tbl{border:0;overflow:visible}.nw-tbl table{min-width:0}.nw-tbl thead{display:none}
+  .nw-tbl tr{display:block;border:1px solid var(--line);border-radius:4px;padding:8px 12px;margin-bottom:8px}
+  .nw-tbl td{display:flex;gap:10px;border:0;padding:2px 0}
+  .nw-tbl td::before{content:attr(data-l);flex:0 0 4.5em;color:var(--ink3);font-size:12px;padding-top:2px}
+  .nw-tbl td:nth-child(2){font-weight:700}}
 .nw-tags{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 0}
 .nw-tags span{background:var(--surface-2);font-size:12.5px;padding:3px 10px;border-radius:999px;color:var(--ink2)}
 .nw-side{display:grid;gap:16px;min-width:0}
