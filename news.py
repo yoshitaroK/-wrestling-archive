@@ -11,6 +11,7 @@
       | a | b |       … 表(1行目が見出しの行)
       [[p-xxxxxx|元木咲良]]                 … 選手ページへのリンク(選手IDは players.csv。公開していない選手は文字だけになる)
       [[event:wre-2026-kokutai-1012|国スポ]] … 開催回ページへのリンク
+      [[news:2026-kokutai-day2|第2日]]       … ほかのニュース記事へのリンク
       [[https://…|出典]]                     … 外のサイトへのリンク
 
 見た目は白地のニュース記事(ヘッダー・フッターはほかのページと同じ黒)。右の欄に、大会ページ・記事に出てくる選手・新着ニュースを出す。
@@ -84,6 +85,12 @@ def render_body(text, ctx, report, slug):
                 report["warnings"].append(f"{slug}: 開催回 {eid} のページがありません(文字だけにしました)")
                 return e(label)
             return f'<a href="{U("/events/" + ctx["slugs"][eid] + "/")}">{e(label)}</a>'
+        if target.startswith("news:"):
+            ns = target[5:]
+            if ns not in ctx.get("news_slugs", ()):
+                report["warnings"].append(f"{slug}: ニュース {ns} がありません(文字だけにしました)")
+                return e(label)
+            return f'<a href="{U("/news/" + ns + "/")}">{e(label)}</a>'
         if target.startswith("https://"):
             return f'<a href="{e(target)}" target="_blank" rel="noopener">{e(label)} ↗</a>'
         report["warnings"].append(f"{slug}: リンク先「{target}」が分かりません")
@@ -121,6 +128,7 @@ def build(root, ctx, bp, report):
         return []
     e = bp.e
     pages = []
+    ctx = dict(ctx, news_slugs={a["slug"] for a in arts})
     rendered = {a["slug"]: render_body(a["body"], ctx, report, a["slug"]) for a in arts}
 
     def side(a, players):
