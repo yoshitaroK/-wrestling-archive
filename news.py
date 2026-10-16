@@ -111,7 +111,7 @@ def render_body(text, ctx, report, slug):
         if all(l.startswith("|") for l in lines):
             rows = [[c.strip() for c in l.strip("|").split("|")] for l in lines if not re.match(r"^\|[\s:|-]+\|$", l)]
             th = "".join(f"<th>{inline(c)}</th>" for c in rows[0])
-            trs = "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in rows[1:])
+            trs = "".join("<tr>" + "".join(f'<td data-l="{e(rows[0][i]) if i < len(rows[0]) else ""}">{inline(c)}</td>' for i, c in enumerate(r)) + "</tr>" for r in rows[1:])
             out.append(f'<div class="nw-tbl"><table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table></div>')
         else:
             out.append("<p>" + "<br>".join(inline(l) for l in lines) + "</p>")
@@ -219,6 +219,12 @@ NEWS_CSS = """
 .nw-tbl th,.nw-tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .nw-tbl th{background:var(--surface-2);color:var(--ink2);font-weight:500;font-size:12.5px;white-space:nowrap}
 .nw-tbl td:first-child{white-space:nowrap;color:var(--ink2);font-variant-numeric:tabular-nums}
+/* スマートフォンでは表を1行ずつのカードにする(横にはみ出さない) */
+@media (max-width:520px){.nw-tbl{border:0;overflow:visible}.nw-tbl table{min-width:0}.nw-tbl thead{display:none}
+  .nw-tbl tr{display:block;border:1px solid var(--line);border-radius:4px;padding:8px 12px;margin-bottom:8px}
+  .nw-tbl td{display:flex;gap:10px;border:0;padding:2px 0}
+  .nw-tbl td::before{content:attr(data-l);flex:0 0 4.5em;color:var(--ink3);font-size:12px;padding-top:2px}
+  .nw-tbl td:nth-child(2){font-weight:700}}
 .nw-tags{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 0}
 .nw-tags span{background:var(--surface-2);font-size:12.5px;padding:3px 10px;border-radius:999px;color:var(--ink2)}
 .nw-side{display:grid;gap:16px;min-width:0}
