@@ -43,6 +43,100 @@ def groups(ws, gap):
             g.append(dict(t=w["t"], x0=w["x0"], x1=w["x1"], parts=1))
     return g
 
+
+def spaced_names(cand):
+    """2014〜2019年(と2021年明治杯の1〜8位)の一覧は、名前が「高 橋 侑 希」のように1文字ずつ空けて書かれている。
+    1人分の欄は4文字分の幅で、左の2文字分が姓、右の2文字分が名(3文字の姓・名は2文字分に詰めてある)。
+    そういう行なら、欄ごとの (欄の中心, "姓 名" か 入賞者なしの None) を返す。この形の行でなければ None、
+    この形だが読み取りに自信が無ければ False を返す(その行は使わない)"""
+    one = [w for w in cand if len(w["t"]) == 1]
+    if len(cand) < 4 or len(one) < 0.6 * len(cand):
+        return None
+    gw = sorted(w["x1"] - w["x0"] for w in one)[len(one) // 2]
+    ds = sorted(b["x0"] - a["x0"] for a, b in zip(cand, cand[1:])
+                if len(a["t"]) == 1 and len(b["t"]) == 1 and 0.2 * gw < b["x0"] - a["x1"] < 1.2 * gw)
+    if len(ds) < 3:
+        return False
+    step = ds[len(ds) // 2]
+    # 詰めて書いた姓・名(「長谷川」「ケイワン」「吉田」)は、ひとかたまりで扱う。
+    # pdftotext は隣の人の文字とつなげて1語にすることもある(「き伊」)ので、姓か名の始まる位置に無い語は1文字ずつに分ける
+    cells = []
+    def put(x, t, unit):
+        if not cells or cells[-1]["empty"] or (x - cells[-1]["x"]) / step > 3.5:  # 姓は欄の左端から始まる
+            cells.append(dict(x=x, toks=[], empty=False))
+        if (x - cells[-1]["x"]) / step > 3.4:
+            return False
+        cells[-1]["toks"].append((x, t, unit))
+        return True
+    for w in sorted(cand, key=lambda w: w["x0"]):
+        if w["t"] == "#N/A":  # 入賞者のいない欄
+            cells.append(dict(x=(w["x0"] + w["x1"]) / 2 - 1.5 * step - gw / 2, toks=[], empty=True)); continue
+        n = len(w["t"]); cw = (w["x1"] - w["x0"]) / n
+        if n >= 2 and cw <= 1.15 * gw and w["x1"] - w["x0"] <= 2.3 * step:
+            new = not cells or cells[-1]["empty"] or (w["x0"] - cells[-1]["x"]) / step > 3.5
+            rel = 0 if new else (w["x0"] - cells[-1]["x"]) / step
+            if rel < 0.5 or 1.5 < rel < 2.6:
+                if not put(w["x0"], w["t"], True):
+                    return False
+                continue
+        for i, ch in enumerate(w["t"]):
+            if not put(w["x0"] + i * cw, ch, False):
+                return False
+    out = []
+    for c in cells:
+        cx = c["x"] + 1.5 * step + gw / 2
+        if c["empty"]:
+            out.append((cx, None)); continue
+        ts = c["toks"]
+        # 姓は左詰め・名は右詰めなので、すき間のいちばん大きいところが姓と名の境目
+        if len(ts) == 2:
+            cut = 1
+        elif len(ts) == 3 and (ts[0][2] or ts[2][2]):
+            cut = 1 if ts[0][2] else 2  # 詰めて書いた語の側が、姓か名の全部
+        elif len(ts) == 3:
+            g1, g2 = ts[1][0] - ts[0][0], ts[2][0] - ts[1][0]
+            if max(g1, g2) < 1.3 * min(g1, g2):
+                return False  # 3文字が等しい間隔で並んでいて、姓と名の境目が分からない
+            cut = 1 if g1 > g2 else 2
+        elif len(ts) == 4 and not any(u for _, _, u in ts):
+            cut = 2
+        else:
+            return False
+        out.append((cx, "".join(t for _, t, _ in ts[:cut]) + " " + "".join(t for _, t, _ in ts[cut:])))
+    return out
+
+
+def places_by_header(hdr, centers):
+    """順位の見出しは、受け持つ欄(「3位」なら2人分、「5位」なら2人分や4人分)の真ん中にある。
+    見出しの位置から、欄ごとの順位を決める。合わなければ None(後ろの欄に入賞者がいないのはよい)"""
+    hs = sorted(hdr)
+    if len(centers) < 2:
+        return None
+    pitch = sorted(b - a for a, b in zip(centers, centers[1:]))[(len(centers) - 1) // 2]
+    out, j = [], 0
+    for hx, lab in hs:
+        if j >= len(centers):
+            if hx < centers[-1]:
+                return None
+            continue
+        best = min(range(j + 1, len(centers) + 1), key=lambda k: abs(sum(centers[j:k]) / (k - j) - hx))
+        if abs(sum(centers[j:best]) / (best - j) - hx) > 0.3 * pitch:
+            return None
+        out += [lab] * (best - j); j = best
+    if j != len(centers):
+        return None
+    # 順位の数字の並びが合うか(3位が2人なら次は5位、のように)
+    labs = []  # 同じ順位の見出しが並んでいる(「5位」「5位」)ときは1つにまとめる
+    for _, lab in hs:
+        if not labs or labs[-1] != lab:
+            labs.append(lab)
+    for a, b in zip(labs, labs[1:]):
+        n = out.count(a)
+        # 入賞者がいる見出しは、ちょうど続きの数字(3位が2人なら5位)。後ろの入賞者がいない見出しも、それより小さくはならない
+        if n and (int(b) < int(a) + n or (out.count(b) and int(b) != int(a) + n)):
+            return None
+    return out
+
 STYLE_PRE = {"FS": "フリースタイル", "F": "フリースタイル", "FA": "フリースタイル", "FB": "フリースタイル", "GR": "グレコローマン",
              "G": "グレコローマン", "WW": "女子", "W": "女子", "女子": "女子"}
 
@@ -77,6 +171,9 @@ def parse(pdf):
                     ph.append(((w["x0"] + w["x1"]) / 2, m.group(1)))
                 elif re.fullmatch(r"[1-8]", w["t"]) and j + 1 < len(r["w"]) and r["w"][j + 1]["t"].startswith("位"):
                     ph.append((w["x1"], w["t"]))
+                elif w["t"] == "優勝" or (w["t"] == "優" and j + 1 < len(r["w"]) and r["w"][j + 1]["t"] == "勝"):
+                    # 「優 勝」と1文字ずつ空けた見出し(2016年明治杯など)は1位
+                    ph.append(((w["x0"] + w["x1"]) / 2 if w["t"] == "優勝" else w["x1"], "1"))
             if len(ph) >= 3:
                 places = ph; body.append(("H", r, ph)); continue
             rest = []
@@ -105,6 +202,25 @@ def parse(pdf):
             elif above:
                 wt = max(above, key=lambda w: w[0])
             else:
+                continue
+            sp = spaced_names(cand)
+            if sp is False:
+                continue  # 1文字ずつ空けた名前の行だが、読み取りに自信が無いので使わない
+            if sp:
+                # 1文字ずつ空けた名前:欄ごとに名前を作り、順位は見出しの位置から、所属はいちばん近いものと組にする
+                pls = places_by_header(hdr, [cx for cx, _ in sp])
+                if pls is None:
+                    continue  # 順位の見出しと欄が合わない行は使わない
+                # 所属は、近い所属どうしがくっつかないよう、1語ずつ いちばん近い欄に入れる
+                ow = {i: [] for i in range(len(sp))}
+                for w in orgs:
+                    ox = (w["x0"] + w["x1"]) / 2
+                    ow[min(range(len(sp)), key=lambda i: abs(sp[i][0] - ox))].append(w["t"])
+                for i, ((cx, nm), pl) in enumerate(zip(sp, pls)):
+                    if not nm:
+                        continue
+                    org = " ".join(ow[i]) if re.search(r"[A-Za-z] [A-Za-z]", " ".join(ow[i])) else "".join(ow[i])
+                    res.append(dict(div=div, style=wt[1], weight=wt[2], place=pl, name=nm, org=org))
                 continue
             if len(og) <= len(hdr):
                 # 見出しが列ごとにある表:名前と所属を、いちばん近い見出しの列に入れる
