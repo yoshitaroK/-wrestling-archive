@@ -2,6 +2,25 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-kokutai-summary",
+   "date": "2026-10-16",
+   "title": "【総括】国スポ・レスリング 京都と東京が6人ずつ優勝 成年グレコは自衛隊が5階級制す",
+   "category": "国民スポーツ大会",
+   "event_id": "wre-2026-kokutai-1012",
+   "lead": "青森・八戸で4日間行われた国スポのレスリングは30階級で優勝者が決定。京都と東京が6人ずつ優勝者を出し、女子は世界女王の元木咲良と村山春菜が制した。",
+   "tags": [
+    "国スポ2026",
+    "元木咲良",
+    "村山春菜",
+    "櫻庭功大",
+    "髙橋夢大"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/10/13/295728/",
+    "https://wrestling-spirits.jp/2026/10/15/295885/"
+   ]
+  },
+  {
    "slug": "2026-kokutai-final",
    "date": "2026-10-15",
    "title": "国スポ・グレコ 櫻庭功大が77kg級制す 鶴田峻大・奥村総太も優勝",
