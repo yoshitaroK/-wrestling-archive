@@ -72,8 +72,8 @@
 - [U23日本代表選考会・U23全日本選手権](https://japanwrestlingchannel.com/events/u23-selection/): 2023年 動画2本
 - [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/): 2016〜2023年 動画41本
 - [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/): 2023年 動画4本
-- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/): 2022年 動画20本
 - [U13ジャパンオープン・レスリングトーナメント](https://japanwrestlingchannel.com/events/u13/): 2023年 動画15本
+- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/): 2022年 動画20本
 - [全国少年少女選抜選手権](https://japanwrestlingchannel.com/events/kids-senbatsu/): 2023年 動画4本
 - [近畿少年少女選手権・兵庫県ジュニアオープン](https://japanwrestlingchannel.com/events/x-kinki-kids/): 2022年 動画4本
 - [野田オープン大会](https://japanwrestlingchannel.com/events/x-noda-open/): 2022年 動画42本
@@ -297,7 +297,7 @@
 ### 障がい者レスリング エキシビションマッチ
 - 大会ページ: https://japanwrestlingchannel.com/events/x-para/
 - [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/2025/): 2025年9月6日・動画1本
-- [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/2023/): 2023年1月25日・動画1本
+- [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/2023/): 2023年1月22日・千葉・佐倉市民体育館・動画1本
 
 ### BUNSUGI International Wrestling Friendly Match
 - 大会ページ: https://japanwrestlingchannel.com/events/x-bunsugi/
@@ -429,15 +429,15 @@
 
 ### 関西オープン合宿
 - 大会ページ: https://japanwrestlingchannel.com/events/x-kansai-camp/
-- [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/2023/): 2023年3月12日・動画4本
-
-### 新宿ライオンズ杯
-- 大会ページ: https://japanwrestlingchannel.com/events/x-shinjuku-lions/
-- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/2022/): 2023年2月26日・動画20本
+- [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/2023/): 2023年3月10日〜12日・奈良・天理大・動画4本
 
 ### U13ジャパンオープン・レスリングトーナメント
 - 大会ページ: https://japanwrestlingchannel.com/events/u13/
 - [U13ジャパン・オープン・トーナメント](https://japanwrestlingchannel.com/events/u13/2023/): 2023年2月25日〜26日・東京・板橋区立植村記念加賀スポーツセンター・動画15本
+
+### 新宿ライオンズ杯
+- 大会ページ: https://japanwrestlingchannel.com/events/x-shinjuku-lions/
+- [新宿ライオンズ杯](https://japanwrestlingchannel.com/events/x-shinjuku-lions/2022/): 2023年2月11日・東京・新宿スポーツセンター・動画20本
 
 ### 全国少年少女選抜選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/kids-senbatsu/
