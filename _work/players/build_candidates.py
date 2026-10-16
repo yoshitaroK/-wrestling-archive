@@ -17,13 +17,14 @@ for x in idx:
         continue
     for u in x["winners"]:
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
-        rows = (parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]})
-                if x.get("rotated") else parsewin.parse(fn))
+        rows = (parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]}) if x.get("rotated")
+                else parsewin.parse_table(fn) if x.get("table")  # 1行に1人ずつ並んだ表(2020年全日本大学グレコなど)
+                else parsewin.parse(fn))
         award = False
         for r in rows:
             nm = re.sub(r"\s+", " ", r["name"]).strip()
             # 一覧のいちばん下の「最優秀選手」などの賞の欄から後は入賞者ではない(重量級の2位などと読まれてしまう)
-            if re.search(r"最優秀|優秀選手|敢闘賞|技能賞", nm) or award:
+            if re.search(r"最優秀|優秀選手|敢闘賞|技能賞", nm + r["org"]) or award:  # 「最優秀選手」が所属の欄にある一覧もある(2021年インカレ)
                 award = True
                 continue
             # 古い入賞者一覧(2014〜2019年ごろ)は「高 橋 侑 希」のように1文字ずつ空ける書き方で、姓と名の区切りが分からない。
