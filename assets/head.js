@@ -25,7 +25,9 @@ window.thumbFail=function(i){
 };
 document.addEventListener('error',function(ev){
   var i=ev.target;
-  if(i&&i.tagName==='IMG'&&i.hasAttribute('data-thumb'))thumbFail(i);
+  if(!i||i.tagName!=='IMG')return;
+  if(i.hasAttribute('data-thumb'))thumbFail(i);
+  else if(i.hasAttribute('data-gone'))i.remove();
 },true);
 document.addEventListener('click',function(ev){
   var a=ev.target.closest&&ev.target.closest('a.lang[data-lang]');
