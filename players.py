@@ -295,18 +295,7 @@ def player_page(p, ctx, bp, card=""):
 
 
 UWW_PER_PAGE = 10
-# 国際大会の動画を UWW_PER_PAGE 本ずつのページに分ける。JavaScript が動かないときは全部出したまま
-PAGER_JS = ("<script>(function(){var s=document.currentScript.previousElementSibling,l=s.querySelector('.vlist'),"
-            "it=[].slice.call(l.children),n=+s.dataset.per,pg=Math.ceil(it.length/n),nav=document.createElement('nav'),cur=0;"
-            "if(pg<2)return;nav.className='pager';nav.setAttribute('aria-label',s.dataset.label);"
-            "function show(k,go){cur=k;it.forEach(function(x,i){x.hidden=i<k*n||i>=(k+1)*n;});"
-            "var h='<button type=\"button\" data-k=\"'+(k-1)+'\"'+(k?'':' disabled')+' aria-label=\"'+s.dataset.prev+'\">‹</button>';"
-            "for(var i=0;i<pg;i++)h+='<button type=\"button\" data-k=\"'+i+'\"'+(i==k?' aria-current=\"page\"':'')+'>'+(i+1)+'</button>';"
-            "h+='<button type=\"button\" data-k=\"'+(k+1)+'\"'+(k<pg-1?'':' disabled')+' aria-label=\"'+s.dataset.next+'\">›</button>';"
-            "h+='<span class=\"pg-n\">'+s.dataset.range.replace('{a}',k*n+1).replace('{b}',Math.min((k+1)*n,it.length))+'</span>';"
-            "nav.innerHTML=h;if(go)s.scrollIntoView({block:'start'});}"
-            "nav.addEventListener('click',function(ev){var b=ev.target.closest('button');if(b&&!b.disabled)show(+b.dataset.k,1);});"
-            "l.after(nav);show(0);})();</script>")
+# 国際大会の動画を UWW_PER_PAGE 本ずつのページに分ける(assets/site.js)。JavaScript が動かないときは全部出したまま
 
 
 def uww_videos_html(p, vids, bp):
@@ -323,7 +312,7 @@ def uww_videos_html(p, vids, bp):
             f'<ul class="vlist">{"".join(uww_page.row(v, bp, p["id"]) for v in vids)}</ul>'
             f'<p class="hint">{L("動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。", "Titles are shown as published by UWW.")}'
             f' <a href="{U("/uww/")}">{L("国際大会の動画をすべて見る", "See all international videos")}</a></p>'
-            f'</section>' + PAGER_JS)
+            f'</section>')
 
 
 def index_page(players, ctx, bp):
