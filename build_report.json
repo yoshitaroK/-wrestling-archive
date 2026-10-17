@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-17T06:26:30+09:00",
+ "built_at": "2026-10-17T21:20:35+09:00",
  "as_of": "2026-10-17",
  "video_count": 3360,
  "raw_count": 3360,
@@ -93,40 +93,40 @@
   ]
  },
  "players": {
-  "total": 1422,
-  "published": 1325,
+  "total": 1447,
+  "published": 1349,
   "hidden_minor": 0,
-  "hidden_private": 97,
+  "hidden_private": 98,
   "errors": [],
   "video_excluded": 2,
-  "video_links": 1115,
+  "video_links": 1121,
   "event_results": 240,
   "event_results_linked": 101,
   "uww_video_links": 1541,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1325,
+    "made": 164,
+    "kept": 1185,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1325,
+    "made": 164,
+    "kept": 1185,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 896,
+  "rows": 935,
   "hidden_minor": 0,
-  "no_link": 13,
+  "no_link": 14,
   "skipped_unknown_event": 31,
-  "history_rows": 5272,
-  "history_linked": 1282,
+  "history_rows": 5233,
+  "history_linked": 1247,
   "history_hidden": 7,
-  "history_site_preferred": 837,
+  "history_site_preferred": 876,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
@@ -149,9 +149,10 @@
    "tenno-cup グレコローマン 2015 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
    "tenno-cup グレコローマン 2014 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
-   "university-championship フリースタイル 2020 125kg: サイト「アルメンタイバグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
+   "university-championship フリースタイル 2020 125kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
    "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」",
-   "university-greco グレコローマン 2022 82kg: サイト「谷﨑 大造」/ 歴代記録「谷崎 大造」"
+   "university-greco グレコローマン 2022 82kg: サイト「谷﨑 大造」/ 歴代記録「谷崎 大造」",
+   "university-greco グレコローマン 2020 130kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」"
   ],
   "series": 8
  },
@@ -279,7 +280,7 @@
   ]
  },
  "en": {
-  "pages": 1665,
+  "pages": 1689,
   "names": 611,
   "machine_translations": 3725,
   "missing_names": []
