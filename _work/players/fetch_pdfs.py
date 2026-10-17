@@ -1,5 +1,5 @@
 """jwf_index.json に書いた「入賞者一覧」の PDF を、日本レスリング協会のサイトから jwf/ に取ってくる(1秒に1件ずつ)"""
-import hashlib, json, os, time, urllib.parse, urllib.request
+import hashlib, json, os, subprocess, sys, time, urllib.parse, urllib.request
 
 UA = {"User-Agent": "JapanWrestlingChannelArchive/1.0 (+https://japanwrestlingchannel.com/)"}
 os.makedirs("jwf", exist_ok=True)
@@ -14,6 +14,8 @@ for x in json.load(open("jwf_index.json", encoding="utf-8")):
                 with open(fn, "wb") as f:
                     f.write(urllib.request.urlopen(req, timeout=40).read())
                 print("ok", fn)
+                if x.get("fix_tounicode"):  # 文字の対応表が空の PDF は、フォントの対応表から作り直す(fix_tounicode.py)
+                    subprocess.run([sys.executable, "fix_tounicode.py", fn, fn], check=True)
                 break
             except Exception as ex:
                 print("retry", u, ex)

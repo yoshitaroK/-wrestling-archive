@@ -49,6 +49,7 @@ def spaced_names(cand):
     1人分の欄は4文字分の幅で、左の2文字分が姓、右の2文字分が名(3文字の姓・名は2文字分に詰めてある)。
     そういう行なら、欄ごとの (欄の中心, "姓 名" か 入賞者なしの None) を返す。この形の行でなければ None、
     この形だが読み取りに自信が無ければ False を返す(その行は使わない)"""
+    cand = [w for w in cand if not re.fullmatch(r"\d+", w["t"])]  # 名前の前の「参加人数」の欄(2019年明治杯)
     one = [w for w in cand if len(w["t"]) == 1]
     if len(cand) < 4 or len(one) < 0.6 * len(cand):
         return None
@@ -213,8 +214,11 @@ def parse(pdf):
                     continue  # 順位の見出しと欄が合わない行は使わない
                 # 所属は、近い所属どうしがくっつかないよう、1語ずつ いちばん近い欄に入れる
                 ow = {i: [] for i in range(len(sp))}
+                left = sp[0][0] - (sp[1][0] - sp[0][0]) / 2 if len(sp) > 1 else -1
                 for w in orgs:
                     ox = (w["x0"] + w["x1"]) / 2
+                    if ox < left:
+                        continue  # 1人目の欄より左(「参加人数」の欄の「棄権1」など。2019年明治杯)
                     ow[min(range(len(sp)), key=lambda i: abs(sp[i][0] - ox))].append(w["t"])
                 for i, ((cx, nm), pl) in enumerate(zip(sp, pls)):
                     if not nm:

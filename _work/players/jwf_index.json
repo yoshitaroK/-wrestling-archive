@@ -886,5 +886,20 @@
   ],
   "n_weight_pdfs": 0,
   "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+ },
+ {
+  "event": "wre-2019-meiji-cup-0613",
+  "series": "meiji-cup",
+  "year": 2019,
+  "name": "明治杯全日本選抜選手権",
+  "page": "https://wrestling-spirits.jp/2019/06/17/145997/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/0616_meiji/ichiranFS.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/0616_meiji/ichiranGR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2019/0616_meiji/ichiranWW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "fix_tounicode": true
  }
 ]
