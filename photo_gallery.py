@@ -351,35 +351,9 @@ def credit_text(c):
 
 
 LIGHTBOX = """<dialog class="plb" aria-label="写真の拡大表示"><figure><img alt=""><figcaption></figcaption></figure>
-<button type="button" class="plb-x" aria-label="閉じる">×</button><button type="button" class="plb-p" aria-label="前の写真">‹</button><button type="button" class="plb-n" aria-label="次の写真">›</button></dialog>
-<script>(function(){var s=document.currentScript,d=s.previousElementSibling,g=d.previousElementSibling,mb=g.querySelector('.pshow');
-if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll('.pgrid li[hidden]'),function(li){li.hidden=false;});mb.remove();});
-if(!d.showModal)return;
-var as=[].slice.call(g.querySelectorAll('.pgrid a')),im=d.querySelector('img'),fc=d.querySelector('figcaption'),i=0,x0=null;
-function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img');
-im.src=a.getAttribute('data-full');im.alt=t.alt;fc.textContent=a.getAttribute('data-cap')||'';var cr=a.getAttribute('data-credit');if(cr){var sp=document.createElement('span');sp.className='pcredit';sp.textContent=cr;fc.appendChild(sp);}d.classList.toggle('one',as.length<2);}
-as.forEach(function(a,k){a.addEventListener('click',function(ev){ev.preventDefault();show(k);d.showModal();});});
-d.querySelector('.plb-x').onclick=function(){d.close();};d.querySelector('.plb-p').onclick=function(){show(i-1);};d.querySelector('.plb-n').onclick=function(){show(i+1);};
-d.addEventListener('click',function(ev){if(ev.target===d||ev.target.tagName==='FIGURE')d.close();});
-d.addEventListener('keydown',function(ev){if(ev.key==='ArrowLeft')show(i-1);if(ev.key==='ArrowRight')show(i+1);});
-d.addEventListener('touchstart',function(ev){x0=ev.touches[0].clientX;},{passive:true});
-d.addEventListener('touchend',function(ev){if(x0===null)return;var dx=ev.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);});
-d.addEventListener('close',function(){im.removeAttribute('src');});})();</script>"""
+<button type="button" class="plb-x" aria-label="閉じる">×</button><button type="button" class="plb-p" aria-label="前の写真">‹</button><button type="button" class="plb-n" aria-label="次の写真">›</button></dialog>"""
 LIGHTBOX_EN = """<dialog class="plb" aria-label="Enlarged photo"><figure><img alt=""><figcaption></figcaption></figure>
-<button type="button" class="plb-x" aria-label="Close">×</button><button type="button" class="plb-p" aria-label="Previous photo">‹</button><button type="button" class="plb-n" aria-label="Next photo">›</button></dialog>
-<script>(function(){var s=document.currentScript,d=s.previousElementSibling,g=d.previousElementSibling,mb=g.querySelector('.pshow');
-if(mb)mb.addEventListener('click',function(){[].forEach.call(g.querySelectorAll('.pgrid li[hidden]'),function(li){li.hidden=false;});mb.remove();});
-if(!d.showModal)return;
-var as=[].slice.call(g.querySelectorAll('.pgrid a')),im=d.querySelector('img'),fc=d.querySelector('figcaption'),i=0,x0=null;
-function show(k){i=(k+as.length)%as.length;var a=as[i],t=a.querySelector('img');
-im.src=a.getAttribute('data-full');im.alt=t.alt;fc.textContent=a.getAttribute('data-cap')||'';var cr=a.getAttribute('data-credit');if(cr){var sp=document.createElement('span');sp.className='pcredit';sp.textContent=cr;fc.appendChild(sp);}d.classList.toggle('one',as.length<2);}
-as.forEach(function(a,k){a.addEventListener('click',function(ev){ev.preventDefault();show(k);d.showModal();});});
-d.querySelector('.plb-x').onclick=function(){d.close();};d.querySelector('.plb-p').onclick=function(){show(i-1);};d.querySelector('.plb-n').onclick=function(){show(i+1);};
-d.addEventListener('click',function(ev){if(ev.target===d||ev.target.tagName==='FIGURE')d.close();});
-d.addEventListener('keydown',function(ev){if(ev.key==='ArrowLeft')show(i-1);if(ev.key==='ArrowRight')show(i+1);});
-d.addEventListener('touchstart',function(ev){x0=ev.touches[0].clientX;},{passive:true});
-d.addEventListener('touchend',function(ev){if(x0===null)return;var dx=ev.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);});
-d.addEventListener('close',function(){im.removeAttribute('src');});})();</script>"""
+<button type="button" class="plb-x" aria-label="Close">×</button><button type="button" class="plb-p" aria-label="Previous photo">‹</button><button type="button" class="plb-n" aria-label="Next photo">›</button></dialog>"""
 
 
 PHOTO_CSS = """

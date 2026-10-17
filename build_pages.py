@@ -254,6 +254,7 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 {css}
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
 {video_player.SCRIPT_TAG}
+{site_js.SITE_TAG}
 </head>
 <body>
 <a class="skip" href="#content">{L("本文へ移動", "Skip to main content")}</a>
@@ -652,9 +653,7 @@ def year_rail(s, current_id, ctx):
             items.append(f'<a class="yr {cls}" href="{U("/events/" + ctx["slugs"][x["id"]] + "/")}" aria-label="{e(sr)}">{inner}</a>')
         else:
             items.append(f'<span class="yr {cls} off" aria-label="{e(sr)}{L("(動画なし)", " (no videos)")}">{inner}</span>')
-    return (f'<nav class="rail" aria-label="{L("開催年", "Years")}">{"".join(items)}</nav>'
-            '<script>(function(){var r=document.currentScript.previousElementSibling,c=r.querySelector("[aria-current]");'
-            'if(c)r.scrollLeft=Math.max(0,c.offsetLeft-r.clientWidth/2+c.offsetWidth/2);})();</script>')
+    return (f'<nav class="rail" aria-label="{L("開催年", "Years")}">{"".join(items)}</nav>')
 
 
 # ---------------------------------------------------------------- 大会ページ
@@ -992,8 +991,7 @@ def email_html():
     """ページにメールアドレスをそのまま書かない(迷惑メールを送るロボットに集められにくくする)。
     HTML には「名前」と「ドメイン」を分けて置き、見る人のブラウザで組み立てる。JavaScript が無いときは [at] 表記で見せる"""
     u, d = CONTACT_EMAIL.split("@")
-    return (f'<a class="eml" href="{U("/contact.html")}" data-u="{e(u)}" data-d="{e(d)}">{e(u)} [at] {e(d)}</a>'
-            '<script>(function(a){a.href="mailto:"+a.dataset.u+"@"+a.dataset.d;a.textContent=a.dataset.u+"@"+a.dataset.d;})(document.currentScript.previousElementSibling)</script>')
+    return (f'<a class="eml" href="{U("/contact.html")}" data-u="{e(u)}" data-d="{e(d)}">{e(u)} [at] {e(d)}</a>')
 # Formspree に登録したら発行された ID(例: xabcdefg)をここに入れる。空なら送信時にメールアプリが開く
 FORMSPREE_ID = ""
 

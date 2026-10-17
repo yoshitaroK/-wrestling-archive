@@ -313,7 +313,7 @@ def cover_html(b, e, cls="bk-cover"):
     if not b.get("cover"):
         return f'<span class="{cls} none">{title}</span>'
     return (f'<span class="{cls}">{title}<img src="{e(b["cover"])}" alt="" loading="lazy" decoding="async" '
-            f'referrerpolicy="no-referrer" onerror="this.remove()"></span>')
+            f'referrerpolicy="no-referrer" data-gone></span>')
 
 
 def books_for_player(ctx, pid):
