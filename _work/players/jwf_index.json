@@ -859,5 +859,32 @@
   "entry_lists_known_only": [
    "https://www.japan-wrestling.jp/wp-content/uploads/2026/03/エントリー_U23_260303.pdf"
   ]
+ },
+ {
+  "event": "wre-2020-university-greco-1015",
+  "series": "university-greco",
+  "year": 2020,
+  "name": "文部科学大臣杯全日本大学グレコローマン選手権",
+  "page": "https://wrestling-spirits.jp/2020/10/17/164021/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2020/1016_greco2/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "table": true
+ },
+ {
+  "event": "wre-2021-intercollegiate-1013",
+  "series": "intercollegiate",
+  "year": 2021,
+  "name": "全日本学生選手権（インカレ）",
+  "page": "https://wrestling-spirits.jp/2021/11/06/181252/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1014_intercollege2/ichiran.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1105intercollege2/ichiran_GR.pdf",
+   "https://wrestling-spirits.jp/www/wp-content/data/2021/1105intercollege2/ichiran_WW.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
  }
 ]

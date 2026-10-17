@@ -281,3 +281,17 @@ def parse_rotated(pdf, pages, six=()):
                 org = "".join(w["t"] for w in sorted(c["org"], key=lambda w: -w["y0"]))
                 res.append(dict(div="", style=style, weight=wt["t"], place=place, name=name, org=org))
     return res
+
+
+def parse_table(pdf):
+    """1行に1人ずつ「階級 順位 姓 名 所属」と並んだ表(2020年全日本大学グレコローマン選手権の個人成績表など)から取り出す。
+    スタイルは書かれていないので空にする(大会の決まったスタイルを使う)"""
+    text = subprocess.run(["pdftotext", "-layout", pdf, "-"], capture_output=True, text=True).stdout
+    res = []
+    for line in text.split("\n"):
+        m = re.match(r"^\s*(\d{2,3})\s+(優勝|第([1-8])位)\s+(.+?)\s{2,}(\S+)\s*$", unicodedata.normalize("NFKC", line))
+        if not m:
+            continue
+        name = " ".join(m.group(4).split())
+        res.append(dict(div="", style="", weight=m.group(1) + "kg", place=m.group(3) or "1", name=name, org=m.group(5)))
+    return res
