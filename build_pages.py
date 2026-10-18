@@ -1624,6 +1624,8 @@ def build(root=HERE, inline_css=False, only=None):
         f.write(css_text)
     video_player.write_asset(root)
     site_js.write_asset(root, GA_ID)
+    import calendar_page
+    calendar_page.write_asset(root)
     # CSSの中身が変わるたびにURLの末尾(?v=…)も変わるので、ブラウザやCloudflareに古いCSSが残らない
     import hashlib
     ver = hashlib.md5(css_text.encode("utf-8")).hexdigest()[:8]

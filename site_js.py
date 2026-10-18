@@ -19,17 +19,18 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 - メールアドレスのリンクを組み立てる(<a class="eml" data-u data-d>)
 - 選手ページの国際大会の動画を、何本かずつのページに分ける(<section data-per>)
 - 写真の拡大表示(<dialog class="plb">)と「写真をもっと見る」ボタン
+- 選手一覧の検索欄(#pq)。ひらがなはカタカナに、名前の異体字(髙・﨑・德)はふつうの字にしてくらべる
 
 - build_pages.py が assets/head.js に書き出し、すべてのページの <head> から読み込む。
   色の切り替えが画面に出る前に終わるよう、defer や async は付けない
 - 中身を変えたときは HEAD_VER・SITE_VER を上げる(ブラウザに古いファイルを使わせないため)
-- index.html(トップページ)と、開催回ページの動画の並べ替え・選手一覧・カレンダー・お問い合わせフォームの
-  JavaScript は、まだページの中に書いたまま。次の作業で移す
+- カレンダーの JavaScript は calendar_page.py が assets/calendar.js に書き出す
+- index.html(トップページ)と、お問い合わせフォームの JavaScript は、まだページの中に書いたまま。次の作業で移す
 """
 import os
 
 HEAD_VER = "2"
-SITE_VER = "1"
+SITE_VER = "2"
 
 
 def script_tag(redirect=False):
@@ -137,6 +138,28 @@ each('dialog.plb',function(d){
   d.addEventListener('touchend',function(ev){if(x0===null)return;var dx=ev.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);});
   d.addEventListener('close',function(){im.removeAttribute('src');});
 });
+(function(){
+var q=document.getElementById('pq'),c=document.getElementById('pcount');
+if(!q||!c)return;
+var items=[].slice.call(document.querySelectorAll('#plist li')),groups=[].slice.call(document.querySelectorAll('#plist .pgroup'));
+function n(s){
+  s=(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
+  s=s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
+  s=s.replace(/[\u9ad9\ufa11\u5fb7]/g,function(c){return {'\u9ad9':'\u9ad8','\ufa11':'\u5d0e','\u5fb7':'\u5fb3'}[c];});
+  return s.replace(/[\s\u30fb\uff65]/g,'');
+}
+items.forEach(function(li){li._k=n(li.getAttribute('data-k'));});
+function run(){
+  var t=n(q.value),hit=0;
+  items.forEach(function(li){var ok=!t||li._k.indexOf(t)>=0;li.hidden=!ok;if(ok)hit++;});
+  groups.forEach(function(g){var has=!!g.querySelector('li:not([hidden])');g.hidden=!has;if(t)g.open=has;else if(q._was)g.open=false;});
+  q._was=!!t;
+  c.textContent=t?(hit?c.dataset.hit.replace('{n}',hit):c.dataset.none):c.dataset.all.replace('{n}',items.length);
+  try{history.replaceState(null,'',t?'#q='+encodeURIComponent(q.value):location.pathname);}catch(x){}
+}
+var m=/[#&]q=([^&]*)/.exec(location.hash);if(m){try{q.value=decodeURIComponent(m[1]);}catch(x){}}
+q.addEventListener('input',run);run();
+})();
 })();
 """
 

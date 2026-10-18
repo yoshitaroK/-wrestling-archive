@@ -11,6 +11,7 @@ events/ フォルダの中に作るので、自動更新の保存対象(update.y
 """
 import hashlib
 import json
+import os
 import re
 from urllib.parse import urlencode
 from datetime import datetime, timedelta, timezone
@@ -168,9 +169,10 @@ def calendar_page(data, ctx, bp):
     if not soon:
         h += f'<li class="cal-empty">{L("登録されている予定の大会はありません。", "No upcoming tournaments are listed.")}</li>'
     h += "</ol></main>"
-    h += "<script>var CAL_T=" + json.dumps(JS_TEXT[i18n.LANG], ensure_ascii=False) + ";</script>"
-    h += "<script>var CAL_EVENTS=" + json.dumps(items, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";</script>"
-    h += CAL_JS + bp.footer(ctx["as_of"])
+    # データは実行しない JSON として置き、動かす処理は assets/calendar.js から読む(Issue #18。CSP で止まらないように)
+    h += '<script type="application/json" id="cal-t">' + json.dumps(JS_TEXT[i18n.LANG], ensure_ascii=False).replace("</", "<\\/") + "</script>"
+    h += '<script type="application/json" id="cal-ev">' + json.dumps(items, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>"
+    h += SCRIPT_TAG + bp.footer(ctx["as_of"])
     return path, h
 
 
@@ -247,9 +249,12 @@ CAL_CSS = """
 }
 """
 
-CAL_JS = r"""<script>
-(function(){
-  var EV = window.CAL_EVENTS || [], T = window.CAL_T, MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+CAL_VER = "1"
+SCRIPT_TAG = f'<script src="/assets/calendar.js?v={CAL_VER}"></script>'
+
+CAL_JS = r"""(function(){
+  function data(id){ try{ return JSON.parse(document.getElementById(id).textContent); }catch(x){ return null; } }
+  var EV = data("cal-ev") || [], T = data("cal-t"), MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   function t(k, o){ return T[k].replace(/\{(\w)\}/g, function(_, x){ return x === "M" ? MON[o.m - 1] : o[x]; }); }
   var grid = document.getElementById("cal-grid"), title = document.getElementById("cal-title"),
       list = document.getElementById("cal-list"), ltitle = document.getElementById("cal-listtitle"),
@@ -324,4 +329,10 @@ CAL_JS = r"""<script>
   cur = h ? new Date(+h[1], +h[2] - 1, 1) : new Date(now.getFullYear(), now.getMonth(), 1);
   render();
 })();
-</script>"""
+"""
+
+
+def write_asset(root):
+    """カレンダーの JavaScript を assets/calendar.js に書き出す。中身を変えたときは CAL_VER を上げる"""
+    with open(os.path.join(root, "assets", "calendar.js"), "w", encoding="utf-8") as f:
+        f.write(CAL_JS)

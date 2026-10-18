@@ -332,7 +332,8 @@ def index_page(players, ctx, bp):
     h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{L('選手検索', 'Player search')}</h1>"
     h += f'<p class="lead">{e(desc)}</p>'
     h += (f'<div class="psearch"><input type="search" id="pq" placeholder="{L("選手名・所属で検索", "Search by name or club")}" '
-          f'aria-label="{L("選手名・所属で検索", "Search by name or club")}" autocomplete="off"><p class="pcount" id="pcount" aria-live="polite"></p></div>')
+          f'aria-label="{L("選手名・所属で検索", "Search by name or club")}" autocomplete="off"><p class="pcount" id="pcount" aria-live="polite" '
+          f'data-all="{L("全{n}人", "{n} players")}" data-hit="{L("{n}人が見つかりました", "{n} found")}" data-none="{L("見つかりませんでした", "No players found")}"></p></div>')
     h += '<div id="plist">'
     for c in order:
         ps = sorted(groups[c], key=lambda p: (-len(p["results"]), norm(p["roman"] or p["name"])))
@@ -358,35 +359,10 @@ def index_page(players, ctx, bp):
     h += L("英語版の選手名は、大会のエントリーリストの読みがなからローマ字にしています。読みがなが分からない人は、漢字から機械で読みを推測しています。",
            " Player names are romanized from the readings in official entry lists; where no reading is available, they are romanized automatically.") + "</p>"
     h += optout_note(listing=True)
-    h += PLAYER_SEARCH_JS.replace("__ALL__", L("全{n}人", "{n} players")).replace("__HIT__", L("{n}人が見つかりました", "{n} found")).replace("__NONE__", L("見つかりませんでした", "No players found"))
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
 
 
-PLAYER_SEARCH_JS = r"""<script>
-(function(){
-  var q=document.getElementById('pq'),c=document.getElementById('pcount');
-  var items=[].slice.call(document.querySelectorAll('#plist li')),groups=[].slice.call(document.querySelectorAll('#plist .pgroup'));
-  // 大きい検索(トップページの skey)と同じく、ひらがなはカタカナに、名前の異体字(髙・﨑・德)はふつうの字にしてくらべる
-  function n(s){
-    s=(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
-    s=s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
-    s=s.replace(/[髙﨑德]/g,function(c){return {'髙':'高','﨑':'崎','德':'徳'}[c];});
-    return s.replace(/[\s・･]/g,'');
-  }
-  items.forEach(function(li){li._k=n(li.getAttribute('data-k'));});
-  function run(){
-    var t=n(q.value),hit=0;
-    items.forEach(function(li){var ok=!t||li._k.indexOf(t)>=0;li.hidden=!ok;if(ok)hit++;});
-    groups.forEach(function(g){var has=!!g.querySelector('li:not([hidden])');g.hidden=!has;if(t)g.open=has;else if(q._was)g.open=false;});
-    q._was=!!t;
-    c.textContent=t?(hit?'__HIT__'.replace('{n}',hit):'__NONE__'):'__ALL__'.replace('{n}',items.length);
-    try{history.replaceState(null,'',t?'#q='+encodeURIComponent(q.value):location.pathname);}catch(x){}
-  }
-  var m=/[#&]q=([^&]*)/.exec(location.hash);if(m){try{q.value=decodeURIComponent(m[1]);}catch(x){}}
-  q.addEventListener('input',run);run();
-})();
-</script>"""
 
 
 def winners_html(ev, ctx, bp):
