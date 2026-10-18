@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-19T06:24:09+09:00",
+ "built_at": "2026-10-19T07:18:09+09:00",
  "as_of": "2026-10-19",
  "video_count": 3360,
  "raw_count": 3360,
@@ -93,8 +93,8 @@
   ]
  },
  "players": {
-  "total": 1461,
-  "published": 1363,
+  "total": 1462,
+  "published": 1364,
   "hidden_minor": 0,
   "hidden_private": 98,
   "errors": [],
@@ -105,28 +105,28 @@
   "uww_video_links": 2075,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1363,
+    "made": 114,
+    "kept": 1250,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1363,
+    "made": 114,
+    "kept": 1250,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 963,
+  "rows": 993,
   "hidden_minor": 0,
   "no_link": 14,
   "skipped_unknown_event": 31,
-  "history_rows": 5205,
-  "history_linked": 1231,
+  "history_rows": 5175,
+  "history_linked": 1202,
   "history_hidden": 7,
-  "history_site_preferred": 904,
+  "history_site_preferred": 934,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
@@ -135,6 +135,7 @@
    "meiji-cup グレコローマン 2017 66kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "meiji-cup グレコローマン 2017 85kg: サイト「塩川 貫太」/ 歴代記録「松本 篤史」",
    "meiji-cup グレコローマン 2016 66kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
+   "meiji-cup 女子 2025 57kg: サイト「德原 姫花」/ 歴代記録「徳原姫花」",
    "meiji-cup 女子 2023 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2022 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2022 55kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
@@ -282,7 +283,7 @@
   ]
  },
  "en": {
-  "pages": 1703,
+  "pages": 1704,
   "names": 615,
   "machine_translations": 3725,
   "missing_names": []
