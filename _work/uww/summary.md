@@ -1,15 +1,15 @@
 ## UWW の日本人選手の動画の一覧(チャンネル: United World Wrestling・UCi8PYovluicFUUD_YxJIcMA)
 
 - **完了**:読める動画は全部読みました
-- 調べた動画: 67225本(チャンネルの動画は 70071本)・まだ調べていない動画: 0本・読んだ再生リスト: 1041/1041個
-- **日本人選手が出ている動画: 3674本**(長時間の配信 3本は外した)
+- 調べた動画: 67279本(チャンネルの動画は 70125本)・まだ調べていない動画: 0本・読んだ再生リスト: 1041/1041個
+- **日本人選手が出ている動画: 3677本**(長時間の配信 3本は外した)
 - 一覧: `uww_videos.csv`(サイトの /uww/ のページの元)
 - YouTube API はアップロードの一覧を新しい順に 20,000本までしか返さない(いちばん古いもの 2021-04-02)。それより前で、どの再生リストにも入っていない動画は取れない
-- 今回の API の呼び出し: 2回
+- 今回の API の呼び出し: 5回
 
 ### 種類ごと
-- 試合: 3421本
-- ショート: 115本
+- 試合: 3423本
+- ショート: 116本
 - その他: 78本
 - ハイライト・特集: 26本
 - 試合まとめ: 24本
@@ -17,16 +17,16 @@
 - 表彰式: 1本
 
 ### 年代ごと
-- シニア(または不明): 2214本
+- シニア(または不明): 2215本
 - U17: 582本
 - U20: 582本
-- U23: 288本
+- U23: 290本
 - U15: 8本
 
 ### 大会ごと
-- 世界選手権: 1809本
+- 世界選手権: 1810本
 - アジア選手権: 860本
-- (分からない): 571本
+- (分からない): 573本
 - ランキングシリーズ等: 191本
 - オリンピック予選: 124本
 - ワールドカップ: 114本
@@ -34,9 +34,9 @@
 - ユース五輪: 1本
 
 ### 確かさごと
-- 高: 3587本
-- 低(要確認): 57本
-- 中: 30本
+- 高: 3589本
+- 低(要確認): 56本
+- 中: 32本
 
 ### 年ごと
 - 2019: 694本
@@ -51,11 +51,12 @@
 - 2020: 124本
 - 2025: 96本
 - 2014: 56本
-- 2026: 40本
+- 2026: 43本
 - 2012: 1本
 - 2013: 1本
 
-### 見分けに自信がない動画(57本。最初の30本)
+### 見分けに自信がない動画(56本。最初の30本)
+- [This headbutt nearly cost Azat SARIYAR (TUR) the 67kg U23 world finals spot 😱🤯](https://www.youtube.com/watch?v=gYLCUB2cP7A) … 説明にJPN/Japan・低(要確認)
 - [Rahman AMOUZADKHALILI (IRI) strikes gold | 2025 World Championships Highlight | Freestyle | Day Four](https://www.youtube.com/watch?v=ehSai8JowWo) … 説明にJPN/Japan・低(要確認)
 - [A Decade of Dominance: Freestyle Wrestling's Top World Championship Highlights](https://www.youtube.com/watch?v=tQXgQDPu2nw) … 説明にJPN/Japan・低(要確認)
 - [Women's Wrestling Recap from the U20 World Championships in Samokov, Bulgaria 🇧🇬](https://www.youtube.com/watch?v=JtfMkwjIgWc) … 説明にJPN/Japan・低(要確認)
@@ -65,7 +66,6 @@
 - [Roundup Show | 2023 Belgrade Wrestling World Championships | Day 8](https://www.youtube.com/watch?v=-FH5gHBpyuY) … 説明にJPN/Japan・低(要確認)
 - [Roundup Show | 2023 Belgrade Wrestling World Championships | Day 5](https://www.youtube.com/watch?v=djNri_zFkkc) … 説明にJPN/Japan・低(要確認)
 - [Roundup Show | 2023 Belgrade Wrestling World Championships | Day 4](https://www.youtube.com/watch?v=dlABd2EX1IY) … 説明にJPN/Japan・低(要確認)
-- [#TBT: Women's wrestling legend Saori Yoshida wins 13th and final career world title](https://www.youtube.com/watch?v=PSaOY5WTgds) … 説明にJPN/Japan・低(要確認)
 - [UWW Embedded: USA and Iran renew rivalry at Freestyle World Cup](https://www.youtube.com/watch?v=3byZZK4anGs) … 説明にJPN/Japan・低(要確認)
 - [Ozaki Earns Women’s Wrestler of the Year honors](https://www.youtube.com/watch?v=TMb0YkI_F9g) … 説明にJPN/Japan・低(要確認)
 - [Amouzad, Elor, Nazaryan Tabbed as UWW's Rising Stars of 2022](https://www.youtube.com/watch?v=G2oywMXB_Xk) … 説明にJPN/Japan・低(要確認)
