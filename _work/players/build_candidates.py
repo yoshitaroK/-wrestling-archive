@@ -36,7 +36,7 @@ for x in idx:
             elif len(toks) > 2:
                 skipped_merged.append((x["event"], r["weight"], nm))  # 2人分の名前がくっついた行など(「宮内 勇真バドバヤル ナンバルダグワ山本」)
                 continue
-            if BAD.search(nm) or not re.search(r"[一-龥ぁ-んァ-ヶ]", nm):
+            if BAD.search(nm) or not re.search(r"[一-龥ぁ-んァ-ヶ]", nm) or "〓" in nm + r["org"]:  # 〓=fix_glyphs.py で分からなかった字
                 continue
             if MINOR.search(r["org"]) and not STAFF.search(r["org"]):
                 minor += 1
