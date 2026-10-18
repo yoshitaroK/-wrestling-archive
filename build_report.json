@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-18T06:23:46+09:00",
+ "built_at": "2026-10-18T17:45:42+09:00",
  "as_of": "2026-10-18",
  "video_count": 3360,
  "raw_count": 3360,
@@ -93,50 +93,52 @@
   ]
  },
  "players": {
-  "total": 1447,
-  "published": 1349,
+  "total": 1461,
+  "published": 1363,
   "hidden_minor": 0,
   "hidden_private": 98,
   "errors": [],
   "video_excluded": 2,
-  "video_links": 1121,
+  "video_links": 1125,
   "event_results": 240,
   "event_results_linked": 101,
-  "uww_video_links": 1541,
+  "uww_video_links": 2075,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1349,
+    "made": 198,
+    "kept": 1165,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1349,
+    "made": 198,
+    "kept": 1165,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 935,
+  "rows": 963,
   "hidden_minor": 0,
   "no_link": 14,
   "skipped_unknown_event": 31,
-  "history_rows": 5233,
-  "history_linked": 1247,
+  "history_rows": 5205,
+  "history_linked": 1231,
   "history_hidden": 7,
-  "history_site_preferred": 876,
+  "history_site_preferred": 904,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "meiji-cup フリースタイル 2016 61kg: サイト「有元 伸悟」/ 歴代記録「有元 伸吾」",
+   "meiji-cup グレコローマン 2019 67kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "meiji-cup グレコローマン 2017 66kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "meiji-cup グレコローマン 2017 85kg: サイト「塩川 貫太」/ 歴代記録「松本 篤史」",
    "meiji-cup グレコローマン 2016 66kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "meiji-cup 女子 2023 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2022 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2022 55kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
+   "meiji-cup 女子 2019 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2018 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "tenno-cup フリースタイル 2024 74kg: サイト「高田 熙」/ 歴代記録「高田 煕」",
    "tenno-cup フリースタイル 2021 65kg: サイト「山口 海輝」/ 歴代記録「山口 輝海」",
@@ -280,8 +282,8 @@
   ]
  },
  "en": {
-  "pages": 1689,
-  "names": 611,
+  "pages": 1703,
+  "names": 615,
   "machine_translations": 3725,
   "missing_names": []
  }
