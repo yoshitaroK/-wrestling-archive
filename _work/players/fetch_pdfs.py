@@ -4,7 +4,7 @@ import hashlib, json, os, subprocess, sys, time, urllib.parse, urllib.request
 UA = {"User-Agent": "JapanWrestlingChannelArchive/1.0 (+https://japanwrestlingchannel.com/)"}
 os.makedirs("jwf", exist_ok=True)
 for x in json.load(open("jwf_index.json", encoding="utf-8")):
-    for u in x["winners"] + x.get("entry_lists", []) + x.get("entry_lists_known_only", []):
+    for u in x["winners"] + x.get("entry_lists", []) + x.get("entry_lists_known_only", []) + x.get("glyph_refs", []):
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
         if os.path.exists(fn) and os.path.getsize(fn) > 0:
             continue
@@ -21,3 +21,12 @@ for x in json.load(open("jwf_index.json", encoding="utf-8")):
                 print("retry", u, ex)
                 time.sleep(5)
         time.sleep(1)
+
+# 文字の対応表もフォントの cmap も無い入賞者一覧(明治杯 2025 など)は、jwf/ のほかの PDF の字形と照らし合わせて直す(fix_glyphs.py)
+for x in json.load(open("jwf_index.json", encoding="utf-8")):
+    if not x.get("fix_glyphs"):
+        continue
+    for u in x["winners"]:
+        fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
+        refs = sorted(f"jwf/{n}" for n in os.listdir("jwf") if n.endswith(".pdf") and f"jwf/{n}" != fn)
+        subprocess.run([sys.executable, "fix_glyphs.py", fn, fn] + refs, check=True)
