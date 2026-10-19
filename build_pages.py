@@ -1003,10 +1003,31 @@ def contact_page(ctx):
              "/contact.html", "",
              {"@context": "https://schema.org", "@type": "ContactPage", "name": L("お問い合わせ", "Contact"),
               "url": SITE + U("/contact.html")}, ctx["css"])
-    body = (L(CONTACT_BODY, CONTACT_BODY_EN).replace("__EMAIL_LINK__", email_html()).replace("__FORMSPREE_ID__", FORMSPREE_ID)
-            .replace("__EMAIL_U__", CONTACT_EMAIL.split("@")[0]).replace("__EMAIL_D__", CONTACT_EMAIL.split("@")[1]))
+    u, d = CONTACT_EMAIL.split("@")
+    body = (L(CONTACT_BODY, CONTACT_BODY_EN).replace("__EMAIL_LINK__", email_html())
+            .replace("__CONTACT_JS__", site_js.contact_tags(FORMSPREE_ID, u, d, L(CONTACT_TEXT, CONTACT_TEXT_EN))))
     return h + body + footer(ctx["as_of"])
 
+
+# お問い合わせフォームで出す文言(動かす処理は site_js.py の CONTACT_JS。Issue #18)
+CONTACT_TEXT = {
+    "page": "対象のページ: ", "required": "お名前・メールアドレス・お問い合わせ内容を入力してください。",
+    "format": "メールアドレスの形式を確認してください。",
+    "body": "お名前: {name}\n返信先: {email}\n種類: {kind}\n\n{msg}", "subject": "【お問い合わせ】{kind}",
+    "mailapp": "メールアプリが開きます。内容を確認して送信してください。開かない場合は {to} へ直接お送りください。",
+    "sending": "送信しています…", "sent": "送信しました。内容を確認のうえ、ご返信いたします。",
+    "failed": "送信できませんでした。時間をおいて再度お試しいただくか、{to} へ直接お送りください。",
+    "network": "通信に失敗しました。インターネット接続を確認するか、{to} へ直接お送りください。", "send": "送信する",
+}
+CONTACT_TEXT_EN = {
+    "page": "Page: ", "required": "Please enter your name, email address and message.",
+    "format": "Please check the email address format.",
+    "body": "Name: {name}\nReply to: {email}\nTopic: {kind}\n\n{msg}", "subject": "[Contact] {kind}",
+    "mailapp": "Your email app will open. Please review and send the message. If it does not open, email {to} directly.",
+    "sending": "Sending…", "sent": "Sent. We will reply after reviewing your message.",
+    "failed": "Could not send. Please try again later or email {to} directly.",
+    "network": "Network error. Check your connection or email {to} directly.", "send": "Send",
+}
 
 CONTACT_BODY = r"""<main id="content" class="wrap page contact">
 <nav class="crumbs" aria-label="パンくずリスト"><ol><li><a href="/">トップ</a></li><li>お問い合わせ</li></ol></nav>
@@ -1037,47 +1058,7 @@ CONTACT_BODY = r"""<main id="content" class="wrap page contact">
 <div class="cresult" id="c-result" role="status"></div>
 </form>
 </main>
-<script>
-(function(){
-  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = ["__EMAIL_U__", "__EMAIL_D__"].join("@");
-  var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
-      btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
-  function half(s){
-    return s.replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
-            .replace(/[\u3000\s]/g, "").replace(/[ー－―‐]/g, "-");
-  }
-  em.addEventListener("compositionstart", function(){ composing = true; });
-  em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
-  em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
-  em.addEventListener("blur", function(){ em.value = half(em.value); });
-  // 写真ページの「取り下げのご依頼」から来たときは、種類と対象ページを入れておく
-  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
-    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "対象のページ: " + location.origin + pg + "\n"; } }catch(x){}
-  function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
-  form.addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var name = form.name.value.trim(), email = half(form.email.value.trim()),
-        kind = form.kind.value, msg = form.message.value.trim();
-    form.email.value = email;
-    if (!name || !email || !msg){ show("ng", "お名前・メールアドレス・お問い合わせ内容を入力してください。"); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ show("ng", "メールアドレスの形式を確認してください。"); return; }
-    if (!FORMSPREE_ID){
-      var body = "お名前: " + name + "\n返信先: " + email + "\n種類: " + kind + "\n\n" + msg;
-      location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("【お問い合わせ】" + kind) + "&body=" + encodeURIComponent(body);
-      show("ok", "メールアプリが開きます。内容を確認して送信してください。開かない場合は " + TO + " へ直接お送りください。");
-      return;
-    }
-    btn.disabled = true; btn.textContent = "送信しています…";
-    fetch("https://formspree.io/f/" + FORMSPREE_ID, {method: "POST", headers: {"Accept": "application/json"}, body: new FormData(form)})
-      .then(function(r){
-        if (r.ok){ form.reset(); show("ok", "送信しました。内容を確認のうえ、ご返信いたします。"); }
-        else { show("ng", "送信できませんでした。時間をおいて再度お試しいただくか、" + TO + " へ直接お送りください。"); }
-      })
-      .catch(function(){ show("ng", "通信に失敗しました。インターネット接続を確認するか、" + TO + " へ直接お送りください。"); })
-      .then(function(){ btn.disabled = false; btn.textContent = "送信する"; });
-  });
-})();
-</script>
+__CONTACT_JS__
 """
 
 CONTACT_BODY_EN = r"""<main id="content" class="wrap page contact">
@@ -1109,47 +1090,7 @@ CONTACT_BODY_EN = r"""<main id="content" class="wrap page contact">
 <div class="cresult" id="c-result" role="status"></div>
 </form>
 </main>
-<script>
-(function(){
-  var FORMSPREE_ID = "__FORMSPREE_ID__", TO = ["__EMAIL_U__", "__EMAIL_D__"].join("@");
-  var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
-      btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
-  function half(s){
-    return s.replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
-            .replace(/[\u3000\s]/g, "").replace(/[ー－―‐]/g, "-");
-  }
-  em.addEventListener("compositionstart", function(){ composing = true; });
-  em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
-  em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
-  em.addEventListener("blur", function(){ em.value = half(em.value); });
-  // Coming from a photo page's removal link: preselect the topic and the page
-  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
-    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "Page: " + location.origin + pg + "\n"; } }catch(x){}
-  function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
-  form.addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var name = form.name.value.trim(), email = half(form.email.value.trim()),
-        kind = form.kind.value, msg = form.message.value.trim();
-    form.email.value = email;
-    if (!name || !email || !msg){ show("ng", "Please enter your name, email address and message."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ show("ng", "Please check the email address format."); return; }
-    if (!FORMSPREE_ID){
-      var body = "Name: " + name + "\nReply to: " + email + "\nTopic: " + kind + "\n\n" + msg;
-      location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Contact] " + kind) + "&body=" + encodeURIComponent(body);
-      show("ok", "Your email app will open. Please review and send the message. If it does not open, email " + TO + " directly.");
-      return;
-    }
-    btn.disabled = true; btn.textContent = "Sending…";
-    fetch("https://formspree.io/f/" + FORMSPREE_ID, {method: "POST", headers: {"Accept": "application/json"}, body: new FormData(form)})
-      .then(function(r){
-        if (r.ok){ form.reset(); show("ok", "Sent. We will reply after reviewing your message."); }
-        else { show("ng", "Could not send. Please try again later or email " + TO + " directly."); }
-      })
-      .catch(function(){ show("ng", "Network error. Check your connection or email " + TO + " directly."); })
-      .then(function(){ btn.disabled = false; btn.textContent = "Send"; });
-  });
-})();
-</script>
+__CONTACT_JS__
 """
 
 
