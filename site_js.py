@@ -12,6 +12,7 @@
 - ヘッダーの言語切り替え(<a class="lang" data-lang>)で、選んだ言語を覚える
 - ヘッダーの検索欄(<form class="hsearch">)で、トップページの検索に移る
 - 画像が読み込めないときに消す(<img data-gone>。書籍の表紙など)
+- トップページを開いた最初の1回だけ、ロゴの動き(intro)を出す(<script data-intro>)
 
 assets/site.js(defer で読み込む)には、ページを読み終えてから動けばよい処理をまとめる。
 
@@ -26,17 +27,20 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 - 中身を変えたときは HEAD_VER・SITE_VER を上げる(ブラウザに古いファイルを使わせないため)
 - カレンダーの JavaScript は calendar_page.py が assets/calendar.js に書き出す
 - お問い合わせフォームの JavaScript は assets/contact.js。文言・送り先は実行しない JSON としてページに置く
-- index.html(トップページ)の JavaScript は、まだページの中に書いたまま。次の作業で移す
+- index.html(トップページ)の JavaScript は、手で書いた assets/top.js にある(ビルドでは作らない)
 """
 import os
 
-HEAD_VER = "2"
+HEAD_VER = "3"
 SITE_VER = "2"
 CONTACT_VER = "1"
 
 
-def script_tag(redirect=False):
-    return f'<script src="/assets/head.js?v={HEAD_VER}"{" data-redirect" if redirect else ""}></script>'
+def script_tag(redirect=False, intro=False):
+    """index.html(手で書いたトップページ)には script_tag(redirect=True, intro=True) と同じタグを書いておく。
+    HEAD_VER を上げたら index.html の番号も直す(合っていないと en_index.py がビルドを止める)"""
+    return (f'<script src="/assets/head.js?v={HEAD_VER}"{" data-redirect" if redirect else ""}'
+            f'{" data-intro" if intro else ""}></script>')
 
 
 # ページを読み終えてから動けばよい処理は assets/site.js にまとめ、defer で読み込む
@@ -63,6 +67,11 @@ function set(v){d.setAttribute('data-theme',v);var c=document.querySelector('met
 set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
 if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){try{if(sessionStorage.getItem('theme'))return;}catch(x){}set(e.matches?'light':'dark');});
 window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catch(e){}};
+if(me&&me.hasAttribute('data-intro'))(function(){
+  try{if(location.hash||location.search||sessionStorage.getItem('intro'))return;sessionStorage.setItem('intro','1');}catch(e){return;}
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  d.classList.add('intro');
+})();
 window.thumbFail=function(i){
   var o=['mqdefault','hqdefault','default'],r=/\/vi\/([^/]+)\/([a-z]+)\.jpg/.exec(i.src);
   if(r){var n=o[o.indexOf(r[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+r[1]+'/'+n+'.jpg';return;}}
