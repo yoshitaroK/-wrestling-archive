@@ -485,7 +485,8 @@ def source_type(url: str, evidence_level: str) -> str:
 
 def apply_event_dates(out_events, overrides):
     """overrides.json の event_dates で、公式の資料で確かめた開催日・開催地を開催回に入れる。
-    マスター未収録(動画の公開日から推定)の回を、推定ではない日付にするためのもの。開催回ID(ページのアドレス)は変えない"""
+    マスター未収録(動画の公開日から推定)の回を推定ではない日付にするほか、マスターで「開催予定」のまま終わった回を
+    結果の資料で「開催済み」にするのにも使う。開催回ID(ページのアドレス)は変えない"""
     by_id = {e["id"]: e for e in out_events}
     applied = []
     for o in overrides.get("event_dates", []):
@@ -498,7 +499,10 @@ def apply_event_dates(out_events, overrides):
             e["venue"] = o["venue"]
         e["status"], e["date_quality"] = "held", "source_date"
         # 旧協会サイトから移された記事(「本記事は日本レスリング協会公式サイトに掲載されていたもの」)は evidence_level を "former_jwf_archive" にする
-        e["sources"] = [{"url": o["source_url"], "type": source_type(o["source_url"], o.get("evidence_level", ""))}]
+        src = {"url": o["source_url"], "type": source_type(o["source_url"], o.get("evidence_level", ""))}
+        # マスターにある回は、もとの出典(協会の大会ページなど)を先に残し、確かめた資料を後ろに足す(カレンダーのリンク先は変えない)
+        keep = [] if e.get("derived") else [x for x in e.get("sources", []) if x.get("url") != src["url"]]
+        e["sources"] = keep + [src]
         for k in ("derived", "notes"):
             e.pop(k, None)
         applied.append(e["id"])
