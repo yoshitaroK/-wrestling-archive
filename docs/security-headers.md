@@ -58,9 +58,16 @@ default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanag
 - 済み(第2段):開催年の帯・メールアドレスのリンク・選手ページの国際大会の動画のページ分け・写真の拡大表示・書籍の表紙が読み込めないときの処理は `assets/site.js` に移しました。これで約3,400ページのうち、ページの中の JavaScript が残っているのは8ページだけです
 - 済み(第3段):選手一覧の検索欄は `assets/site.js` に、カレンダーは `assets/calendar.js` に移しました。カレンダーのデータは、実行しない JSON(`<script type="application/json">`)として置いています。これは CSP の対象外です
 - 済み(第4段):お問い合わせのフォームは `assets/contact.js` に移しました。文言・送り先は、実行しない JSON としてページに置いています
-- まだ:トップページ(`index.html` と英語版)
+- 済み(第5段):トップページ(`index.html` と英語版)の JavaScript は、手で書いた `assets/top.js` に移しました。アクセス解析・英語版への自動移動・テーマ・最初の1回のロゴの動きは `assets/head.js` です。英語版で使う英語名は、実行しない JSON としてページに置いています
+- これで、サイトのどのページにも、ページの中に直接書いた JavaScript はありません。`'unsafe-inline'` を `script-src` から外せます(下の「外し方」)
 
-全部移し終わるまでは、`'unsafe-inline'` は外さないでください。
+#### `'unsafe-inline'` の外し方(👤 運営者・Cloudflare の画面)
+
+1. 上の CSP の値の `script-src` から `'unsafe-inline'` だけを消します(`style-src` の `'unsafe-inline'` はそのまま残します)
+2. まず `Content-Security-Policy-Report-Only` という名前で1週間ほど付けて、Chrome の F12 →「Console」に赤いエラーが出ないか見ます
+3. 問題が無ければ、名前を `Content-Security-Policy` に替えます
+
+これからページに JavaScript を足すときは、ページの中に直接書かず、`assets/` の .js ファイルに書いてください(`site_js.py` の説明を参照)。
 
 ## 4. HTTPS 関連(Cloudflare の「SSL/TLS」→「エッジ証明書」)
 
