@@ -2,6 +2,28 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-u23-worlds",
+   "date": "2026-10-20",
+   "title": "U23世界選手権、日本は金1・銀3・銅8 森川晴凪が2年連続優勝",
+   "category": "U23世界選手権",
+   "lead": "米国・ラスベガスで行われたU23世界選手権で、日本は金メダル1、銀メダル3、銅メダル8を獲得。女子50kg級の森川晴凪が2年連続で優勝した。",
+   "tags": [
+    "U23世界選手権2026",
+    "森川晴凪",
+    "中村真翔",
+    "荻野海志",
+    "澤谷ゆな"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/10/14/295783/",
+    "https://wrestling-spirits.jp/2026/10/15/295878/",
+    "https://wrestling-spirits.jp/2026/10/16/295961/",
+    "https://wrestling-spirits.jp/2026/10/17/296044/",
+    "https://wrestling-spirits.jp/2026/10/18/296117/",
+    "https://wrestling-spirits.jp/2026/10/19/296199/"
+   ]
+  },
+  {
    "slug": "2026-kokutai-summary",
    "date": "2026-10-16",
    "title": "【総括】国スポ・レスリング 天皇杯は京都が81.5点で優勝 成年グレコは自衛隊が5階級制す",
