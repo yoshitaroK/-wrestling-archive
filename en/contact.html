@@ -69,52 +69,12 @@
 <div class="cresult" id="c-result" role="status"></div>
 </form>
 </main>
-<script>
-(function(){
-  var FORMSPREE_ID = "", TO = ["kitamura", "japanwrestlingchannel.com"].join("@");
-  var form = document.getElementById("contact-form"), result = document.getElementById("c-result"),
-      btn = document.getElementById("c-send"), em = document.getElementById("c-email"), composing = false;
-  function half(s){
-    return s.replace(/[\uFF01-\uFF5E]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
-            .replace(/[\u3000\s]/g, "").replace(/[ー－―‐]/g, "-");
-  }
-  em.addEventListener("compositionstart", function(){ composing = true; });
-  em.addEventListener("compositionend", function(){ composing = false; em.value = half(em.value); });
-  em.addEventListener("input", function(){ if (!composing) em.value = half(em.value); });
-  em.addEventListener("blur", function(){ em.value = half(em.value); });
-  // Coming from a photo page's removal link: preselect the topic and the page
-  try{ var q = new URLSearchParams(location.search), o = form.kind.querySelector('option[data-k="' + q.get("kind") + '"]');
-    if (o) { o.selected = true; var pg = q.get("page"); if (pg && /^\/[\w\-\/%.\u3040-\u30ff\u4e00-\u9fff]*$/.test(pg) && !form.message.value) form.message.value = "Page: " + location.origin + pg + "\n"; } }catch(x){}
-  function show(t, msg){ result.className = "cresult " + t; result.textContent = msg; }
-  form.addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var name = form.name.value.trim(), email = half(form.email.value.trim()),
-        kind = form.kind.value, msg = form.message.value.trim();
-    form.email.value = email;
-    if (!name || !email || !msg){ show("ng", "Please enter your name, email address and message."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ show("ng", "Please check the email address format."); return; }
-    if (!FORMSPREE_ID){
-      var body = "Name: " + name + "\nReply to: " + email + "\nTopic: " + kind + "\n\n" + msg;
-      location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Contact] " + kind) + "&body=" + encodeURIComponent(body);
-      show("ok", "Your email app will open. Please review and send the message. If it does not open, email " + TO + " directly.");
-      return;
-    }
-    btn.disabled = true; btn.textContent = "Sending…";
-    fetch("https://formspree.io/f/" + FORMSPREE_ID, {method: "POST", headers: {"Accept": "application/json"}, body: new FormData(form)})
-      .then(function(r){
-        if (r.ok){ form.reset(); show("ok", "Sent. We will reply after reviewing your message."); }
-        else { show("ng", "Could not send. Please try again later or email " + TO + " directly."); }
-      })
-      .catch(function(){ show("ng", "Network error. Check your connection or email " + TO + " directly."); })
-      .then(function(){ btn.disabled = false; btn.textContent = "Send"; });
-  });
-})();
-</script>
+<script type="application/json" id="c-conf">{"formspree": "", "u": "kitamura", "d": "japanwrestlingchannel.com", "t": {"page": "Page: ", "required": "Please enter your name, email address and message.", "format": "Please check the email address format.", "body": "Name: {name}\nReply to: {email}\nTopic: {kind}\n\n{msg}", "subject": "[Contact] {kind}", "mailapp": "Your email app will open. Please review and send the message. If it does not open, email {to} directly.", "sending": "Sending…", "sent": "Sent. We will reply after reviewing your message.", "failed": "Could not send. Please try again later or email {to} directly.", "network": "Network error. Check your connection or email {to} directly.", "send": "Send"}}</script><script src="/assets/contact.js?v=1"></script>
 <footer class="site-foot"><div class="wrap">
 <p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/about/">About</a> · <a href="/en/faq/">FAQ</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
 <p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. Videos play right on this site in the YouTube player. Video titles are shown as originally published, in Japanese.</p>
 <p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
-<p>Data updated: Oct 19, 2026</p>
+<p>Data updated: Oct 20, 2026</p>
 </div></footer>
 </body>
 </html>
