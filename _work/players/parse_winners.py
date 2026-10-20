@@ -19,6 +19,66 @@ def words(pdf):
     return pages
 
 
+def marks(pdf):
+    """「斜字体は4位」「網掛けは4位」のように、字の形や欄の色で順位を分けている一覧の、印の付いた場所をページごとに返す。
+    斜字体は字の位置 ("pt", x, y)、網掛けは塗った四角 ("rect", x0, y0, x1, y1)。座標は pdftotext と同じ(左上が原点)。印の注記が無い一覧は空"""
+    text = subprocess.run(["pdftotext", pdf, "-"], capture_output=True, text=True).stdout
+    italic, shade = "斜字体は" in text, "網掛けは" in text
+    if not (italic or shade):
+        return []
+    import pypdf  # 印のある一覧だけで使う(pip install pypdf)
+    from pypdf.generic import ContentStream
+
+    def mul(m, n):
+        a, b, c, d, e, f = m; A, B, C, D, E, F = n
+        return [a * A + b * C, a * B + b * D, c * A + d * C, c * B + d * D, e * A + f * C + E, e * B + f * D + F]
+    rd, out = pypdf.PdfReader(pdf), []
+    for pg in rd.pages:
+        H, ms = float(pg.mediabox.top), []
+        if italic:
+            def vis(t, cm, tm, fd, fs):
+                m = mul(tm, cm)
+                if t.strip() and m[3] and abs(m[2] / m[3]) > 0.1:  # 字を斜めに傾けて書いている
+                    ms.append(("pt", m[4], H - m[5]))
+            pg.extract_text(visitor_text=vis)
+        if shade:
+            ctm, st, col, rects = [1, 0, 0, 1, 0, 0], [], None, []
+            for ops, op in ContentStream(pg.get_contents(), rd).operations:
+                op = op.decode() if isinstance(op, bytes) else op
+                if op == "q": st.append(ctm[:])
+                elif op == "Q": ctm = st.pop() if st else ctm
+                elif op == "cm": ctm = mul([float(x) for x in ops], ctm)
+                elif op in ("g", "rg", "k", "sc", "scn"):
+                    try: col = [float(x) for x in ops]
+                    except (TypeError, ValueError): col = None
+                elif op == "re":
+                    x, y, w, h = [float(v) for v in ops]
+                    rects.append([(x, y), (x + w, y + h)])
+                elif op == "m": rects.append([tuple(float(v) for v in ops)])
+                elif op == "l" and rects: rects[-1].append(tuple(float(v) for v in ops))
+                elif op in ("f", "f*", "F", "B", "B*"):
+                    # 薄い灰色(白でも黒でもなく、色味の無いもの)で塗った四角(re でも、m・l で囲んだ形でもよい)
+                    if col and (len(col) == 1 or (len(col) == 3 and max(col) - min(col) < 0.02)) and 0.5 < col[0] < 0.97:
+                        for pts in rects:
+                            xs = [ctm[0] * px + ctm[2] * py + ctm[4] for px, py in pts]
+                            ys = [H - (ctm[1] * px + ctm[3] * py + ctm[5]) for px, py in pts]
+                            ms.append(("rect", min(xs), min(ys), max(xs), max(ys)))
+                    rects = []
+                elif op in ("n", "S", "s"): rects = []
+        out.append(ms)
+    return out
+
+
+def marked(ms, cx, cy, half):
+    """欄の真ん中 cx・行の高さ cy の名前に、印が付いているか"""
+    for m in ms:
+        if m[0] == "pt" and cx - half <= m[1] < cx + half and abs(m[2] - cy) < 8:
+            return True
+        if m[0] == "rect" and m[1] <= cx <= m[3] and m[2] <= cy <= m[4]:
+            return True
+    return False
+
+
 def rows(ws, tol=3.5):
     out = []
     for w in sorted(ws, key=lambda w: (w["y0"], w["x0"])):
@@ -107,9 +167,10 @@ def spaced_names(cand):
     return out
 
 
-def places_by_header(hdr, centers):
+def places_by_header(hdr, centers, filled=None):
     """順位の見出しは、受け持つ欄(「3位」なら2人分、「5位」なら2人分や4人分)の真ん中にある。
-    見出しの位置から、欄ごとの順位を決める。合わなければ None(後ろの欄に入賞者がいないのはよい)"""
+    見出しの位置から、欄ごとの順位を決める。合わなければ None(後ろの欄に入賞者がいないのはよい)
+    filled(欄ごとに入賞者がいるか)を渡したときは、表全体の欄で見出しを合わせ、数字の並びはその行の入賞者で確かめる"""
     hs = sorted(hdr)
     if len(centers) < 2:
         return None
@@ -132,6 +193,13 @@ def places_by_header(hdr, centers):
         if not labs or labs[-1] != lab:
             labs.append(lab)
     for a, b in zip(labs, labs[1:]):
+        if filled is not None:
+            # 表の欄が「1位・2位・3位・3位・4位」のとき(2018年天皇杯の女子):トーナメントの階級は3位が2人、
+            # 総当たりの階級は3位が1人と4位。入賞者がいる見出しは、その行の前の順位の人数か欄の数の続きの数字
+            nf = sum(1 for o, f in zip(out, filled) if f and o == a)
+            if nf and any(f and o == b for o, f in zip(out, filled)) and int(b) not in (int(a) + nf, int(a) + out.count(a)):
+                return None
+            continue
         n = out.count(a)
         # 入賞者がいる見出しは、ちょうど続きの数字(3位が2人なら5位)。後ろの入賞者がいない見出しも、それより小さくはならない
         if n and (int(b) < int(a) + n or (out.count(b) and int(b) != int(a) + n)):
@@ -153,9 +221,37 @@ def place_list(headers, n):
 
 def parse(pdf):
     res = []
+    grid, pending = {}, []  # 1文字ずつ空けた名前の表の、見出しごとの欄の位置/見出しと合わなかった行
+
+    def emit(sp, pls, orgs, wt, div, ms=(), cy=0):
+        # 印(斜字体・網掛け)の付いた欄は、順位が1人ずつ:前の欄の順位の次の数字(「網掛けは各順位1名 4位/5位/6位/7位」。2018年天皇杯・2019年)
+        if ms and len(sp) > 1:
+            half = min(b[0] - a[0] for a, b in zip(sp, sp[1:])) / 2
+            pls, prev = list(pls), 0
+            for i, (cx, nm) in enumerate(sp):
+                if nm and prev and marked(ms, cx, cy, half):
+                    pls[i] = str(prev + 1)
+                if nm:
+                    prev = int(pls[i])
+        # 所属は、近い所属どうしがくっつかないよう、1語ずつ いちばん近い欄に入れる
+        ow = {i: [] for i in range(len(sp))}
+        left = sp[0][0] - (sp[1][0] - sp[0][0]) / 2 if len(sp) > 1 else -1
+        for w in orgs:
+            ox = (w["x0"] + w["x1"]) / 2
+            if ox < left:
+                continue  # 1人目の欄より左(「参加人数」の欄の「棄権1」など。2019年明治杯)
+            ow[min(range(len(sp)), key=lambda i: abs(sp[i][0] - ox))].append(w["t"])
+        for i, ((cx, nm), pl) in enumerate(zip(sp, pls)):
+            if not nm:
+                continue
+            org = " ".join(ow[i]) if re.search(r"[A-Za-z] [A-Za-z]", " ".join(ow[i])) else "".join(ow[i])
+            res.append(dict(div=div, style=wt[1], weight=wt[2], place=pl, name=nm, org=org))
+
     style = ""
     div = ""
-    for ws in words(pdf):
+    mk = marks(pdf)
+    for pno, ws in enumerate(words(pdf)):
+        ms = mk[pno] if pno < len(mk) else []
         rs = rows(ws)
         places, weights, body = [], [], []
         for r in rs:
@@ -210,21 +306,11 @@ def parse(pdf):
             if sp:
                 # 1文字ずつ空けた名前:欄ごとに名前を作り、順位は見出しの位置から、所属はいちばん近いものと組にする
                 pls = places_by_header(hdr, [cx for cx, _ in sp])
+                grid.setdefault(id(hdr), []).extend(cx for cx, _ in sp)
                 if pls is None:
-                    continue  # 順位の見出しと欄が合わない行は使わない
-                # 所属は、近い所属どうしがくっつかないよう、1語ずつ いちばん近い欄に入れる
-                ow = {i: [] for i in range(len(sp))}
-                left = sp[0][0] - (sp[1][0] - sp[0][0]) / 2 if len(sp) > 1 else -1
-                for w in orgs:
-                    ox = (w["x0"] + w["x1"]) / 2
-                    if ox < left:
-                        continue  # 1人目の欄より左(「参加人数」の欄の「棄権1」など。2019年明治杯)
-                    ow[min(range(len(sp)), key=lambda i: abs(sp[i][0] - ox))].append(w["t"])
-                for i, ((cx, nm), pl) in enumerate(zip(sp, pls)):
-                    if not nm:
-                        continue
-                    org = " ".join(ow[i]) if re.search(r"[A-Za-z] [A-Za-z]", " ".join(ow[i])) else "".join(ow[i])
-                    res.append(dict(div=div, style=wt[1], weight=wt[2], place=pl, name=nm, org=org))
+                    pending.append((hdr, sp, orgs, wt, div, ms, r["cy"]))  # あとで表全体の欄で合わせ直す
+                    continue
+                emit(sp, pls, orgs, wt, div, ms, r["cy"])
                 continue
             if len(og) <= len(hdr):
                 # 見出しが列ごとにある表:名前と所属を、いちばん近い見出しの列に入れる
@@ -248,6 +334,24 @@ def parse(pdf):
             pls = place_list(hdr, len(cols))
             for c, pl in zip(cols, pls):
                 res.append(dict(div=div, style=wt[1], weight=wt[2], place=pl, name=" ".join(c["names"]), org=c["t"].replace(" ", "")))
+    # 見出しと欄が合わなかった行は、同じ表のほかの行も合わせた欄の位置で、もう一度見出しと合わせる。
+    # 入賞者のいない欄があると、その行だけでは欄の位置が分からないため(2018年天皇杯の女子)。合わなければ使わない
+    for hdr, sp, orgs, wt, dv, ms, cy in pending:
+        cs = sorted(grid[id(hdr)])
+        cols = []
+        for cx in cs:
+            if cols and cx - cols[-1][-1] < 15:
+                cols[-1].append(cx)
+            else:
+                cols.append([cx])
+        cols = [sum(c) / len(c) for c in cols]
+        at = [min(range(len(cols)), key=lambda k: abs(cols[k] - cx)) for cx, _ in sp]
+        if len(set(at)) != len(at) or any(abs(cols[k] - cx) > 15 for k, (cx, _) in zip(at, sp)):
+            continue
+        pls = places_by_header(hdr, cols, [k in at for k in range(len(cols))])
+        if pls is None:
+            continue
+        emit(sp, [pls[k] for k in at], orgs, wt, dv, ms, cy)
     return res
 
 
