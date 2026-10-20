@@ -30,8 +30,8 @@ PAIRS = [
     ('<meta property="og:url" content="https://japanwrestlingchannel.com/">', '<meta property="og:url" content="https://japanwrestlingchannel.com/en/">'),
     ('<meta property="og:image" content="https://japanwrestlingchannel.com/ogp.png?v=2">', '<meta property="og:image" content="https://japanwrestlingchannel.com/ogp-en.png?v=1">'),
     ('aria-label="レスリング配信アーカイブ(トップへ)"', 'aria-label="Japan Wrestling Archive (home)"'),
-    ('<span class="official-t">Japan Wrestling Channel 公式サイト</span><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem(\'lang\',\'en\')}catch(x){}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">English</a>',
-     '<span class="official-t">Official site of Japan Wrestling Channel</span><a class="lang" href="/" hreflang="ja" lang="ja" title="日本語版を表示" onclick="try{localStorage.setItem(\'lang\',\'ja\')}catch(x){}this.href=this.getAttribute(\'href\').split(\'#\')[0]+location.hash">日本語</a>'),
+    ('<span class="official-t">Japan Wrestling Channel 公式サイト</span><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" data-lang="en">English</a>',
+     '<span class="official-t">Official site of Japan Wrestling Channel</span><a class="lang" href="/" hreflang="ja" lang="ja" title="日本語版を表示" data-lang="ja">日本語</a>'),
     ('<nav class="topnav" aria-label="メニュー"><a href="/events/">大会一覧</a><a href="/news/">ニュース</a><a href="/players/">選手</a><a href="/books/">書籍</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a href="/photos/">写真</a><a href="/uww/">国際大会</a></nav>',
      '<nav class="topnav" aria-label="Menu"><a href="/en/events/">Tournaments</a><a href="/en/players/">Players</a><a href="/en/events/calendar/">Calendar</a><a href="/en/technique/">Technique</a><a href="/en/photos/">Photos</a><a href="/en/uww/">International</a></nav>'),
     ('<h1 id="jhero-h">レスリング配信アーカイブ</h1>', '<h1 id="jhero-h">Japan Wrestling Archive</h1>'),
@@ -72,9 +72,11 @@ JSONLD_EN = ('<script type="application/ld+json">' + json.dumps({"@context": "ht
 def write(root, data, slugs):
     with open(os.path.join(root, "index.html"), encoding="utf-8") as f:
         s = f.read()
-    from build_pages import LANG_REDIRECT_JS
+    import site_js
     missing = []
-    for ja, en in [(LANG_REDIRECT_JS + "\n", "")] + PAIRS:
+    # 英語版では、英語版への自動移動(data-redirect)を外す
+    head_tag = (site_js.script_tag(redirect=True, intro=True), site_js.script_tag(intro=True))
+    for ja, en in [head_tag] + PAIRS:
         if s.count(ja) != 1:
             missing.append(ja[:60])
             continue
@@ -90,8 +92,11 @@ def write(root, data, slugs):
     for ev in data.get("events", []):
         if ev.get("fy_label") and ev["fy_label"] not in names:
             names[ev["fy_label"]] = i18n.fy_label(ev["fy_label"])
-    inject = "<script>window.__EN=" + json.dumps(names, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";</script>\n"
-    s = s.replace("<script>\nwindow.thumbFail", inject + "<script>\nwindow.thumbFail", 1)
+    # 実行しない JSON として置き、assets/top.js が読む(Issue #18。CSP で止まらないように)
+    inject = '<script type="application/json" id="en-names">' + json.dumps(names, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "</script>\n"
+    if s.count('<script src="/assets/top.js') != 1:
+        raise SystemExit("英語版の検索ページを作れませんでした。index.html に assets/top.js を読み込むタグが見つかりません")
+    s = s.replace('<script src="/assets/top.js', inject + '<script src="/assets/top.js', 1)
     os.makedirs(os.path.join(root, "en"), exist_ok=True)
     with open(os.path.join(root, "en", "index.html"), "w", encoding="utf-8") as f:
         f.write(s)
