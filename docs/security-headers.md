@@ -57,7 +57,8 @@ default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanag
 - 済み(第1段 #153):どのページにも共通の処理(アクセス解析の初期設定・英語版への自動移動・テーマ切り替え・サムネイルの読み込み失敗時の処理・言語切り替え・ヘッダーの検索欄)は `assets/head.js` に移しました(`site_js.py`)
 - 済み(第2段):開催年の帯・メールアドレスのリンク・選手ページの国際大会の動画のページ分け・写真の拡大表示・書籍の表紙が読み込めないときの処理は `assets/site.js` に移しました。これで約3,400ページのうち、ページの中の JavaScript が残っているのは8ページだけです
 - 済み(第3段):選手一覧の検索欄は `assets/site.js` に、カレンダーは `assets/calendar.js` に移しました。カレンダーのデータは、実行しない JSON(`<script type="application/json">`)として置いています。これは CSP の対象外です
-- まだ:トップページ(`index.html` と英語版)、お問い合わせ(日本語・英語)
+- 済み(第4段):お問い合わせのフォームは `assets/contact.js` に移しました。文言・送り先は、実行しない JSON としてページに置いています
+- まだ:トップページ(`index.html` と英語版)
 
 全部移し終わるまでは、`'unsafe-inline'` は外さないでください。
 
