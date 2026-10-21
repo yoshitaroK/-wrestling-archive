@@ -394,7 +394,11 @@
   "year": 2024,
   "name": "第71回 全日本社会人レスリング選手権大会",
   "page": "https://www.japan-wrestling.jp/competition/2024/1384",
-  "winners": [],
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranFS-2.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranGR-2.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranWW-1.pdf"
+  ],
   "n_weight_pdfs": 0,
   "files": []
  },
@@ -841,9 +845,29 @@
   "year": 2024,
   "name": "第41回全国社会人オープンレスリング選手権大会",
   "page": "https://www.japan-wrestling.jp/competition/2024/1442",
-  "winners": [],
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranFS-4.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranGR-4.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/ichiranWW-4.pdf"
+  ],
   "n_weight_pdfs": 0,
-  "files": []
+  "files": [],
+  "note": "ベテランズの部(ichiranVeterans.pdf)は年齢別の部なので入れない"
+ },
+ {
+  "event": "wre-2025-shakaijin-open-1101",
+  "series": "shakaijin-open",
+  "year": 2025,
+  "name": "第42回全国社会人オープンレスリング選手権大会",
+  "page": "https://www.japan-wrestling.jp/news/competition/%E5%85%A8%E5%9B%BD%E7%A4%BE%E4%BC%9A%E4%BA%BA%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%E3%83%AC%E3%82%B9%E3%83%AA%E3%83%B3%E3%82%B0%E9%81%B8%E6%89%8B%E6%A8%A9%E5%A4%A7%E4%BC%9A%E2%80%972",
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/11/フリー入賞者一覧.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/11/グレコローマン入賞者一覧.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/11/女子入賞者一覧.pdf"
+  ],
+  "n_weight_pdfs": 0,
+  "files": [],
+  "note": "ベテランズの部(ベテランズ入賞者一覧.pdf)は年齢別の部なので入れない"
  },
  {
   "event": "wre-2024-university-championship-1109",

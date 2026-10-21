@@ -10,7 +10,8 @@ CLUB = re.compile(r"クラブ|教室|club|Club|CLUB|道場|スクール|アカ�
 BAD = re.compile(r"賞|#N/A|N/A|優勝|団体|位$|^該当|なし|棄権|不戦|選手$")
 DEF = {"university-championship": "フリースタイル", "university-greco": "グレコローマン"}
 SER = {"tenno-cup": "天皇杯", "meiji-cup": "明治杯", "shakaijin": "全日本社会人", "intercollegiate": "インカレ", "east-spring": "東日本学生春季",
-       "east-autumn": "東日本学生秋季", "university-championship": "全日本大学", "university-greco": "全日本大学グレコ"}
+       "east-autumn": "東日本学生秋季", "university-championship": "全日本大学", "university-greco": "全日本大学グレコ",
+       "shakaijin-open": "全国社会人オープン"}
 res, minor, skipped_merged = [], 0, []
 for x in idx:
     if x.get("skip"):  # 使わない一覧(理由は jwf_index.json の skip に書く)
@@ -41,7 +42,10 @@ for x in idx:
             if MINOR.search(r["org"]) and not STAFF.search(r["org"]):
                 minor += 1
                 continue
-            style = r["style"] or DEF.get(x["series"], "")
+            fname = u.rsplit("/", 1)[-1]
+            # 見出しにスタイルが書かれていない一覧(2024年全日本社会人の ichiranFS-2.pdf など)は、ファイル名から
+            by_name = "女子" if re.search(r"WW|女子", fname) else "グレコローマン" if re.search(r"GR|グレコ", fname) else "フリースタイル" if re.search(r"FS|フリー", fname) else ""
+            style = r["style"] or DEF.get(x["series"], "") or by_name
             if re.search(r"WW", u.rsplit("/", 1)[-1]) and style == "フリースタイル":
                 style = "女子"  # 女子の一覧(ファイル名が WW)なのに見出しから「フリースタイル」と読まれることがある(全日本社会人 2022・2023)
             st = (r["div"] + " " if r["div"] else "") + style
