@@ -298,11 +298,22 @@ def album_html(albums, e):
     return "".join(out)
 
 
+# 写真ページでは、AI の学習に使わないよう求める指定を入れる(Issue #19)。
+# 守るかどうかは各社しだいで、Google の検索には影響しない(知らない値は無視される)
+NOAI_META = '<meta name="robots" content="noai, noimageai">'
+
+
+def with_noai(h):
+    return h.replace('<meta name="viewport"', NOAI_META + '\n<meta name="viewport"', 1)
+
+
 def takedown_html(path, e):
-    """写真の掲載・取り下げのご依頼への案内(お問い合わせの種類と対象ページを入れた状態で開く)"""
+    """写真の利用についての注意(撮影者の方針で無断転載・AI 学習は不可。Issue #19)と、
+    掲載・取り下げのご依頼への案内(お問い合わせの種類と対象ページを入れた状態で開く)"""
     page = photo_path(path) if path and path.startswith("/events/") else (path or "")
     href = U("/contact.html") + "?kind=photo" + (f"&page={quote(U(page))}" if page else "")
-    return (f'<p class="ptakedown">{L("写真の掲載について・取り下げのご依頼は", "To ask about a photo or request its removal,")} '
+    return (f'<p class="ptakedown">{L("写真の著作権は撮影者にあります。無断転載や、AI の学習への利用はご遠慮ください。", "Photos are copyrighted by the photographer. Please do not repost them or use them for AI training.")}'
+            f'<br>{L("写真の掲載について・取り下げのご依頼は", "To ask about a photo or request its removal,")} '
             f'<a href="{e(href)}">{L("こちら", "contact us")}</a>{L("。", ".")}</p>')
 
 
@@ -527,7 +538,7 @@ def photo_pages(ctx, photos_by_page, bp):
         "@type": "CollectionPage", "name": photos_t, "url": bp.SITE + U(path),
         "hasPart": [{"@type": "ImageGallery", "name": label(p), "url": bp.SITE + U(photo_path(p))} for p in paths]}]}
     cover = photos_by_page[paths[0]][0] if paths else None
-    h = bp.head(title, desc, path, (bp.SITE + cover["full"]) if cover else "", jsonld, ctx["css"])
+    h = with_noai(bp.head(title, desc, path, (bp.SITE + cover["full"]) if cover else "", jsonld, ctx["css"]))
     h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{e(photos_t)}</h1>"
     h += '<p class="lead">' + e(L(f"レスリング大会で撮影された写真です。大会を選ぶと、その大会の写真をまとめて見られます。写真は撮影者の許可を得て掲載しています。現在{len(paths)}大会・{total}枚。",
                                   f"Photos taken at wrestling tournaments. Choose a tournament to see all of its photos. Photos are published with the photographers' permission. {i18n.plural(len(paths), 'tournament')}, {i18n_plural(total)}.")) + "</p>"
@@ -563,7 +574,7 @@ def photo_pages(ctx, photos_by_page, bp):
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
             "@type": "ImageGallery", "name": L(f"{name}の写真", f"{name} photos"), "url": bp.SITE + U(path),
             "associatedMedia": [image_ld(ph, bp) for ph in lst]}]}
-        h = bp.head(title, desc, path, bp.SITE + lst[0]["full"], jsonld, ctx["css"])
+        h = with_noai(bp.head(title, desc, path, bp.SITE + lst[0]["full"], jsonld, ctx["css"]))
         h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
         h += f'<h1>{e(x["series"])} <span class="yr-h">{e(bp.year_label(x["year"]) if x["year"] else "")}</span><span class="badge ph">{photos_t}</span></h1>'
         lead = L((f"{when}" + (f"、{venue}で" if venue else "に") + "開催。" if when else "") + f"写真{len(lst)}枚を掲載しています。",
