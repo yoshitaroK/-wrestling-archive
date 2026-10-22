@@ -889,9 +889,14 @@
   "year": 2025,
   "name": "令和7年度 西日本学生レスリング新人選手権大会",
   "page": "https://www.japan-wrestling.jp/competition/2025/2925",
-  "winners": [],
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/07/FS順位表.pdf",
+   "https://www.japan-wrestling.jp/wp-content/uploads/2025/07/GR順位表.pdf"
+  ],
   "n_weight_pdfs": 0,
-  "files": []
+  "files": [],
+  "manual": "manual/west-rookie-2025.tsv",
+  "note": "順位表の PDF は字が図形で読めないので、画像を見て書き写した表(manual/)を使う。階級ごとのトーナメント表で名前と所属を確かめた"
  },
  {
   "event": "wre-2025-west-championship-0918",
