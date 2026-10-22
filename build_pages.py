@@ -218,6 +218,35 @@ def header_search():
             f'<button type="submit" aria-label="{L("検索", "Search")}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button></form>')
 
 
+ORG_ID = SITE + "/#organization"
+# 公式アカウント(YouTube・Instagram・X など)の URL。運営者が Issue #22 に書いたら、ここに足す
+ORG_SAME_AS = []
+
+
+def org_ld():
+    """運営者(Organization)の構造化データ。どのページにも入れる(Issue #22)。
+    Google や AI が「誰が運営している公式のサイトか」を知る材料になる"""
+    o = {"@type": "Organization", "@id": ORG_ID, "name": "Japan Wrestling Channel", "url": SITE + "/",
+         "logo": SITE + "/assets/logo.png",
+         "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "url": SITE + U("/contact.html")}}
+    if ORG_SAME_AS:
+        o["sameAs"] = ORG_SAME_AS
+    return o
+
+
+def with_org(jsonld):
+    """構造化データに運営者(Organization)を足す。すでに入っているページ(運営者情報)はそのまま"""
+    if not isinstance(jsonld, dict):
+        return jsonld
+    if isinstance(jsonld.get("@graph"), list):
+        graph = jsonld["@graph"]
+        if any(isinstance(x, dict) and x.get("@id") == ORG_ID for x in graph):
+            return jsonld
+        return {**jsonld, "@graph": graph + [org_ld()]}
+    rest = {k: v for k, v in jsonld.items() if k != "@context"}
+    return {"@context": jsonld.get("@context", "https://schema.org"), "@graph": ([rest] if rest else []) + [org_ld()]}
+
+
 def head(title, desc, path, og_image, jsonld, css, alternates=True):
     """path は日本語版のパス(/events/…/)。英語版では /en を付けたURLにする"""
     url = SITE + U(path)
@@ -252,7 +281,7 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
 {css}
-<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
+<script type="application/ld+json">{json.dumps(with_org(jsonld), ensure_ascii=False)}</script>
 {video_player.SCRIPT_TAG}
 {site_js.SITE_TAG}
 </head>
@@ -1152,10 +1181,7 @@ def about_page(data, series_list, ctx):
     years = [x["year"] for x in data.get("events", []) if x.get("n")]
     y0 = min(years) if years else ""
     crumbs = [(L("トップ", "Home"), "/"), (L("運営者情報", "About"), None)]
-    org = {"@type": "Organization", "@id": SITE + "/#organization", "name": "Japan Wrestling Channel", "url": SITE + "/",
-           "logo": SITE + "/assets/logo.png",
-           "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "url": SITE + U("/contact.html")}}
-    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), org, {
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), org_ld(), {
         "@type": "AboutPage", "url": SITE + U("/about/"), "name": L("運営者情報", "About"),
         "about": {"@id": SITE + "/#organization"}, "publisher": {"@id": SITE + "/#organization"}}]}
     h = head(L(f"運営者情報|{SITE_NAME}", f"About | {site_name()}"),

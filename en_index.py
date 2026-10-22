@@ -62,7 +62,11 @@ PAIRS = [
 
 JSONLD_JA_START = '<script type="application/ld+json">{"@context":"https://schema.org","@graph":['
 JSONLD_EN = ('<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": [
-    {"@type": "WebSite", "@id": SITE + "/en/#website", "name": "Japan Wrestling Archive", "url": SITE + "/en/", "inLanguage": "en", "description": DESC},
+    {"@type": "WebSite", "@id": SITE + "/en/#website", "name": "Japan Wrestling Archive", "url": SITE + "/en/", "inLanguage": "en", "description": DESC,
+     "publisher": {"@id": SITE + "/#organization"}},
+    {"@type": "Organization", "@id": SITE + "/#organization", "name": "Japan Wrestling Channel", "url": SITE + "/",
+     "logo": SITE + "/assets/logo.png",
+     "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "url": SITE + "/en/contact.html"}},
     {"@type": "CollectionPage", "name": "Japan Wrestling Archive", "url": SITE + "/en/", "isPartOf": {"@id": SITE + "/en/#website"},
      "hasPart": [{"@type": "WebPage", "name": "Tournaments", "url": SITE + "/en/events/"},
                  {"@type": "WebPage", "name": "Technique videos", "url": SITE + "/en/technique/"},
