@@ -9,7 +9,7 @@
 - 「ふりがな」列:エントリーリストの読み(kana_entries.csv)。同じ名前で読みが1つに決まる人だけ
 - 読みが分かった人は、ローマ字をその読みから作る(romaji_fix.tsv で「はい」の綴りがある人はそちら)
 - 「ローマ字確認」列:romaji_fix.tsv で「はい」の人だけ「はい」(英語版で注記を出さない。読みが分かった人も注記を出さない)
-- PDF で「(氏名)」とかっこ付きで載っている人や、「髙/高」「﨑/崎」など字の違いだけの人は、1人にまとめる(すでに公開している選手IDを残す)
+- PDF で「(氏名)」とかっこ付きで載っている人や、「髙/高」「﨑/崎」「栁瀨/柳瀬」など字の違いだけの人は、1人にまとめる(すでに公開している選手IDを残す)
 - 確認メモが「所属が複数」だけの人は「公開=はい」にする(移籍や「(株)」の書き方の違いがほとんどのため。運営者が決定)。
   「クラブ・教室だけ(年齢を確認)」「階級の幅が大きい」の人は「いいえ」のまま
 - 新しい大会を足して「クラブ・教室だけ」「階級の幅が大きい」のメモが付いた人は、前の players.csv で公開でも「いいえ」に戻す
@@ -43,7 +43,7 @@ def is_yes(v):
 
 
 def name_key(name):
-    s = unicodedata.normalize("NFKC", name or "").translate(str.maketrans("髙﨑德", "高崎徳"))
+    s = unicodedata.normalize("NFKC", name or "").translate(str.maketrans("髙﨑德栁瀨", "高崎徳柳瀬"))
     return re.sub(r"\s+", "", s)
 
 
@@ -113,6 +113,8 @@ def main():
                     continue  # 新しく「年齢の確認」などのメモが付いた人は、前に公開でも隠す  # 上の「所属が複数」の決定を、前の players.csv の値で打ち消さない
                 if k in ("ローマ字", "ローマ字確認") and (r["選手ID"] in fix or kana) and not is_yes(old[r["選手ID"]].get("ローマ字確認")):
                     continue  # 直した綴り・読みから作った綴りを使う(運営者が確かめた綴りは残す)
+                if k == "ローマ字" and " " not in old[r["選手ID"]].get(k, "").strip() and " " in roma and not is_yes(old[r["選手ID"]].get("ローマ字確認")):
+                    continue  # 姓と名の区切りが分からなかったころの綴り(「Furuseryo」)は、区切りが分かった名前の綴りにする
                 if old[r["選手ID"]].get(k):
                     row[k] = old[r["選手ID"]][k]
         out.append(row)

@@ -274,6 +274,9 @@ def parse(pdf):
             if len(ph) >= 3:
                 places = ph; body.append(("H", r, ph)); continue
             rest = []
+            # 行の左に「氏 名」「所 属」と書いた表(2024年からの協会の一覧):どちらの行かが分かる
+            lab = {"氏": "name", "名": "name", "氏名": "name", "所": "org", "属": "org", "所属": "org"}
+            labs = {lab[w["t"]] for w in r["w"] if w["x0"] < 200 and w["t"] in lab}
             for w in r["w"]:
                 m = WEIGHT.match(w["t"].replace(" ", ""))
                 if m and w["x0"] < 130:
@@ -281,16 +284,17 @@ def parse(pdf):
                 elif not re.match(r"^\d+名$", w["t"]) and not (w["x0"] < 200 and w["t"] in ("氏", "名", "所", "属", "氏名", "所属", "氏名・所属")):
                     rest.append(w)
             if rest:
-                body.append(("R", dict(cy=r["cy"], w=rest), places))
+                body.append(("R", dict(cy=r["cy"], w=rest, lab=labs.pop() if len(labs) == 1 else ""), places))
         for i in range(len(body) - 1):
             k1, r, hdr = body[i]; k2, nxt, _ = body[i + 1]
             if k1 != "R" or k2 != "R" or not hdr:
                 continue
             cand, orgs = r["w"], nxt["w"]
             og = groups(orgs, 6)
-            if sum(1 for o in og if ORG_HINT.search(o["t"])) < max(1, len(og) // 2):
+            labeled = r["lab"] == "name" and nxt["lab"] == "org"  # 「氏 名」「所 属」の行の組。所属らしい言葉が無くても所属の行
+            if not labeled and sum(1 for o in og if ORG_HINT.search(o["t"])) < max(1, len(og) // 2):
                 continue
-            if sum(1 for w in cand if ORG_HINT.search(w["t"])) > len(cand) // 3:
+            if not labeled and sum(1 for w in cand if ORG_HINT.search(w["t"])) > len(cand) // 3:
                 continue
             mid = [w for w in weights if r["cy"] - 2 <= w[0] <= nxt["cy"] + 2]
             above = [w for w in weights if r["cy"] - 45 <= w[0] < r["cy"] - 2]
@@ -312,16 +316,20 @@ def parse(pdf):
                     continue
                 emit(sp, pls, orgs, wt, div, ms, r["cy"])
                 continue
-            if len(og) <= len(hdr):
+            if len(og) <= len(hdr) or labeled:  # 「氏 名」「所 属」の表は、英語の所属(「Sports Design Lab」)が離れて書かれていても列で分ける
                 # 見出しが列ごとにある表:名前と所属を、いちばん近い見出しの列に入れる
                 hs = sorted(hdr)
                 cols = [dict(names=[], orgs=[], pl=h[1]) for h in hs]
+                ext = [[] for _ in hs]  # 列ごとの名前の左右の端
                 for w in cand:
                     cx = (w["x0"] + w["x1"]) / 2
-                    cols[min(range(len(hs)), key=lambda k: abs(hs[k][0] - cx))]["names"].append(w["t"])
+                    k = min(range(len(hs)), key=lambda k: abs(hs[k][0] - cx))
+                    cols[k]["names"].append(w["t"]); ext[k] += [w["x0"], w["x1"]]
+                # 「氏 名」「所 属」の表は、所属を名前の真ん中にいちばん近い列に入れる(見出しの「1 位」の位置は列の真ん中からずれている)
+                cen = [(min(e) + max(e)) / 2 if labeled and e else h[0] for e, h in zip(ext, hs)]
                 for w in orgs:
                     cx = (w["x0"] + w["x1"]) / 2
-                    cols[min(range(len(hs)), key=lambda k: abs(hs[k][0] - cx))]["orgs"].append(w["t"])
+                    cols[min(range(len(hs)), key=lambda k: abs(cen[k] - cx))]["orgs"].append(w["t"])
                 for c in cols:
                     if c["names"]:
                         res.append(dict(div=div, style=wt[1], weight=wt[2], place=c["pl"], name=" ".join(c["names"]), org=re.sub(r"(?<=[A-Za-z]) (?=[A-Za-z])", " ", " ".join(c["orgs"])).replace(" ", "") if not re.search(r"[A-Za-z] [A-Za-z]", " ".join(c["orgs"])) else " ".join(c["orgs"])))
