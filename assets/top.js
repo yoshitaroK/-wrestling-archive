@@ -256,8 +256,12 @@ function renderStatus(list, nVid, nPl){
 function tileEvent(e){
   var vs = (byEvent[e.id]||[]).slice().sort(function(a,b){ return a.k==='match' ? -1 : 1; });
   var first = vs[0]; var s = S[e.series];
-  return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ thumb(first?first.id:'', s?s.name:'') +
-    '<div class="tt">'+esc(N(s?s.name:e.name))+'</div><div class="tm"><span class="num">'+e.n+'</span>'+L('本 '+e.year+'年 ',' videos · '+e.year+' · ')+fmtShort(e.start)+(e.end&&e.end!==e.start?L('〜','–')+fmtShort(e.end):'')+'</div></a>';
+  // 配信動画のない大会(国スポなど)は、大会ごとの絵(FEATURE_ART)があればそれを、数の代わりに「結果あり」を出す
+  var art = !first && FEATURE_ART[e.id];
+  var th = art ? '<div class="thumb"><img src="'+esc(art.src)+'" alt="" loading="lazy" decoding="async" style="object-position:'+esc(art.pos||'50% 50%')+'"></div>' : thumb(first?first.id:'', s?s.name:'');
+  var cnt = e.n ? '<span class="num">'+e.n+'</span>'+L('本 '+e.year+'年 ',' videos · '+e.year+' · ') : L(e.year+'年 結果あり ',e.year+' · Results · ');
+  return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ th +
+    '<div class="tt">'+esc(N(s?s.name:e.name))+'</div><div class="tm">'+cnt+fmtShort(e.start)+(e.end&&e.end!==e.start?L('〜','–')+fmtShort(e.end):'')+'</div></a>';
 }
 function tileSeries(s){
   var lastE = s.events.filter(function(e){return e.n>0;}).pop(), lv = lastE ? (byEvent[lastE.id]||[]) : [];
@@ -357,7 +361,8 @@ function showFeature(i){
 function linkTo(sid,eid){ var p = new URLSearchParams(); p.set('s',sid); if(eid) p.set('e',eid); return '#'+p.toString(); }
 function renderShelves(){
   shelfN = 0;
-  var past = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start<=TODAY_ISO && e.status!=='cancelled'; })
+  // 配信動画のある大会に加えて、結果・速報のリンク(event_links)と大会ページがある大会(国スポなど)も入れる
+  var past = DATA.events.filter(function(e){ return (e.n>0 || (e.links && e.links.length && PAGES[e.id])) && e.start && e.start<=TODAY_ISO && e.status!=='cancelled'; })
     .sort(function(a,b){ return a.start<b.start?1:-1; }).slice(0,12);
   var future = DATA.events.filter(function(e){ return e.n>0 && e.start && e.start>TODAY_ISO; })
     .sort(function(a,b){ return a.start<b.start?-1:1; });
