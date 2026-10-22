@@ -288,6 +288,8 @@ var SHELF_CATS = L([['大学','大学の大会'],['高校','高校の大会'],['
 /* ---------- 特集(トップの大きな写真。‹ › で切り替える) ---------- */
 // 大きな枠に出さない大会(主催者の希望)。下の列には出る
 var NO_HERO = {'x-fujinami-cup':1};
+// 特集の一番前に出さない開催回(国スポは終わったので、次の大会に席を譲る)。大会ページや下の列には今までどおり出る
+var HIDE_FEAT = {'wre-2026-kokutai-1012':1};
 // 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
 var FEATURE_ART = {'wre-2026-kokutai-1012': {src:'/assets/feature/kokutai-2026.jpg', pos:'22% 50%'}};
 var FEAT = [], featI = 0;
@@ -309,12 +311,12 @@ function buildFeature(){
       meta:'<span><span class="num">'+e.n+'</span>'+L('本',' videos')+'</span><span>'+esc(fmtRange(e.start,e.end))+'</span>'+(e.venue?'<span>'+esc(N(e.venue))+'</span>':''),
       photo:photoFor(e), vid:v?v.id:''};
   }
-  // 開催中(終わってから7日まで)で、結果・速報のリンク(overrides.json の event_links)がある大会を一番前に出す
-  var today = jstDate(new Date().toISOString()), weekAgo = jstDate(new Date(Date.now()-7*864e5).toISOString());
-  var live = DATA.events.filter(function(e){ return e.links && e.links.length && PAGES[e.id] && e.start && e.start<=today && (e.end||e.start)>=weekAgo && e.status!=='cancelled' && !NO_HERO[e.series]; })
+  // 始まる3日前から終わって7日までの大会で、結果・公式サイトのリンク(overrides.json の event_links)がある大会を一番前に出す
+  var today = jstDate(new Date().toISOString()), weekAgo = jstDate(new Date(Date.now()-7*864e5).toISOString()), soonTo = jstDate(new Date(Date.now()+3*864e5).toISOString());
+  var live = DATA.events.filter(function(e){ return e.links && e.links.length && PAGES[e.id] && e.start && e.start<=soonTo && (e.end||e.start)>=weekAgo && e.status!=='cancelled' && !NO_HERO[e.series] && !HIDE_FEAT[e.id]; })
     .sort(function(a,b){ return a.start<b.start?1:-1; });
   var out = live.map(function(e){
-    var x = evSlide(e, (e.end||e.start)>=today ? 'live' : 'result');
+    var x = evSlide(e, e.start>today ? 'soon' : (e.end||e.start)>=today ? 'live' : 'result');
     // 配信動画がまだない大会は、同じ大会の前の年の試合動画を背景にする
     if(!x.photo && FEATURE_ART[e.id]) x.art = FEATURE_ART[e.id];
     if(!x.photo && !x.art && !x.vid){ var s = S[e.series], pv = s ? s.events.filter(function(o){ return o.n>0; }).pop() : null, vs = pv ? (byEvent[pv.id]||[]) : [];
@@ -328,8 +330,8 @@ function buildFeature(){
   HERO.forEach(function(p,i){ if(!used[i] && out.length<5){ used[i]=1; out.push({kind:'photo', href:p.href, name:p.label, meta:'', photo:p, vid:''}); } });
   return out;
 }
-var FEAT_TXT = L({live:['開催中','結果・速報を見る'], result:['結果が出ています','結果を見る'], recent:['最近開催された大会','配信一覧を見る'], upcoming:['これから開催される大会','配信予定を見る'], photo:['新しく載った写真','写真を見る']},
-                 {live:['Happening now','See the live results'], result:['Results are in','See the results'], recent:['Latest tournament','Watch the streams'], upcoming:['Upcoming tournament','See the stream schedule'], photo:['New photos','See the photos']});
+var FEAT_TXT = L({soon:['まもなく開催','大会公式サイトを見る'], live:['開催中','結果・速報を見る'], result:['結果が出ています','結果を見る'], recent:['最近開催された大会','配信一覧を見る'], upcoming:['これから開催される大会','配信予定を見る'], photo:['新しく載った写真','写真を見る']},
+                 {soon:['Starting soon','See the official site'], live:['Happening now','See the live results'], result:['Results are in','See the results'], recent:['Latest tournament','Watch the streams'], upcoming:['Upcoming tournament','See the stream schedule'], photo:['New photos','See the photos']});
 function showFeature(i){
   if(!FEAT.length) return;
   featI = (i + FEAT.length) % FEAT.length;
