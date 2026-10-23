@@ -14,14 +14,14 @@ SER = {"tenno-cup": "天皇杯", "meiji-cup": "明治杯", "shakaijin": "全日�
        "shakaijin-open": "全国社会人オープン", "west-rookie": "西日本学生新人"}
 
 
-def manual_rows(path, url):
-    """書き写した表(タブ区切り。# の行は説明)から、この PDF のスタイルの行だけを返す"""
+def manual_rows(path, url, single):
+    """書き写した表(タブ区切り。# の行は説明)から、この PDF のスタイルの行だけを返す(一覧が1つだけの大会は全部)"""
     st = {"FS": "フリースタイル", "GR": "グレコローマン", "WW": "女子"}
     lines = [l.rstrip("\n") for l in open(path, encoding="utf-8") if l.strip() and not l.startswith("#")]
     rows = [dict(zip(lines[0].split("\t"), l.split("\t"))) for l in lines[1:]]
     pdf = url.rsplit("/", 1)[-1]  # FS順位表.pdf・GR順位表.pdf
     return [dict(div="", style=st[r["スタイル"]], weight=r["階級"], place=r["順位"], name=r["氏名"], org=r["所属"])
-            for r in rows if pdf.startswith(r["スタイル"])]
+            for r in rows if single or pdf.startswith(r["スタイル"])]
 
 
 res, minor, skipped_merged = [], 0, []
@@ -30,7 +30,7 @@ for x in idx:
         continue
     for u in x["winners"]:
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
-        rows = (manual_rows(x["manual"], u) if x.get("manual")  # 文字として読めない一覧を、画像を見て書き写した表(manual/)
+        rows = (manual_rows(x["manual"], u, len(x["winners"]) == 1) if x.get("manual")  # 文字として読めない一覧を、画像を見て書き写した表(manual/)
                 else parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]}) if x.get("rotated")
                 else parsewin.parse_table(fn) if x.get("table")  # 1行に1人ずつ並んだ表(2020年全日本大学グレコなど)
                 else parsewin.parse(fn))

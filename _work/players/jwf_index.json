@@ -418,7 +418,9 @@
   "year": 2024,
   "name": "文部科学大臣杯 令和6年度全日本大学レスリンググレコローマンレスリング選手権大会",
   "page": "https://www.japan-wrestling.jp/competition/2024/1435",
-  "winners": [],
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2024/12/《各階級1～8位一覧表》.pdf"
+  ],
   "n_weight_pdfs": 0,
   "files": []
  },
@@ -881,7 +883,9 @@
   "n_weight_pdfs": 0,
   "files": [
    "jwf/7332950e27.pdf"
-  ]
+  ],
+  "manual": "manual/university-2024.tsv",
+  "note": "入賞者一覧表は画像なので、拡大して書き写した表(manual/)を使う。階級ごとのトーナメント表で名前と所属を確かめた"
  },
  {
   "event": "wre-2025-west-rookie-0705",

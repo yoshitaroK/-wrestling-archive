@@ -42,9 +42,14 @@ def is_yes(v):
     return (v or "").strip() in ("はい", "yes", "1", "○", "〇")
 
 
+# 一覧によってカタカナの書き方が違う同じ人(所属・階級が同じ)。左の書き方を右の人にまとめる
+ALIAS = {"バドバヤルナンバルダグワ": "バトバヤルナンバルダグワ"}  # 育英大学・125/130kg(2024年全日本大学グレコの一覧の書き方)
+
+
 def name_key(name):
     s = unicodedata.normalize("NFKC", name or "").translate(str.maketrans("髙﨑德栁瀨", "高崎徳柳瀬"))
-    return re.sub(r"\s+", "", s)
+    s = re.sub(r"\s+", "", s)
+    return ALIAS.get(s, s)
 
 
 def unparen(s):
