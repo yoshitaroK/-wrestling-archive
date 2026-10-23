@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-22T23:20:01+09:00",
- "as_of": "2026-10-22",
+ "built_at": "2026-10-24T07:11:16+09:00",
+ "as_of": "2026-10-24",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
@@ -94,10 +94,10 @@
   ]
  },
  "players": {
-  "total": 1497,
+  "total": 1529,
   "published": 1400,
   "hidden_minor": 0,
-  "hidden_private": 97,
+  "hidden_private": 129,
   "errors": [],
   "video_excluded": 2,
   "video_links": 1125,
@@ -106,23 +106,23 @@
   "uww_video_links": 2075,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1400,
+    "made": 22,
+    "kept": 1378,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1400,
+    "made": 22,
+    "kept": 1378,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 1081,
+  "rows": 1101,
   "hidden_minor": 0,
-  "no_link": 15,
+  "no_link": 22,
   "skipped_unknown_event": 31,
   "history_rows": 5135,
   "history_linked": 1165,
@@ -159,7 +159,7 @@
    "university-greco グレコローマン 2022 82kg: サイト「谷﨑 大造」/ 歴代記録「谷崎 大造」",
    "university-greco グレコローマン 2020 130kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」"
   ],
-  "series": 9
+  "series": 10
  },
  "photos": {
   "entries": 841,
