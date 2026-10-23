@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-24T07:11:16+09:00",
+ "built_at": "2026-10-24T07:32:22+09:00",
  "as_of": "2026-10-24",
  "video_count": 3360,
  "raw_count": 3360,
@@ -106,14 +106,14 @@
   "uww_video_links": 2075,
   "og_cards": {
    "ja": {
-    "made": 22,
-    "kept": 1378,
+    "made": 0,
+    "kept": 1400,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 22,
-    "kept": 1378,
+    "made": 0,
+    "kept": 1400,
     "removed": 0,
     "errors": []
    }
@@ -206,7 +206,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 5
+  "articles": 6
  },
  "books": {
   "errors": [],
