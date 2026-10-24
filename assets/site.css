@@ -545,6 +545,11 @@ a.yr{text-decoration:none}
 .soon .soon-list b{display:block;font-size:16px}
 .soon .soon-list span{font-size:13px;color:var(--ink3)}
 .soon .soon-note{font-size:14px;color:var(--ink2)}
+.pl-news{list-style:none;padding:0;margin:10px 0 18px;display:grid;gap:8px;max-width:760px}
+.pl-news li{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:10px;padding:10px 14px}
+.pl-news a{display:block;font-weight:700;color:var(--ink);text-decoration:none;line-height:1.5}
+.pl-news a:hover{color:var(--pink)}
+.pl-news small{display:block;margin-top:2px;font-size:12px;color:var(--ink3)}
 .page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
 .olys{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 12px}
 .olys .oly{display:inline-flex;align-items:center;gap:7px;padding:4px 14px 4px 10px;border-radius:999px;font-size:13px;font-weight:700;
