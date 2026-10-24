@@ -294,7 +294,7 @@ var SHELF_CATS = L([['大学','大学の大会'],['高校','高校の大会'],['
 var NO_HERO = {'x-fujinami-cup':1};
 // 特集の一番前に出さない開催回(国スポは終わったので、次の大会に席を譲る)。大会ページや下の列には今までどおり出る
 var HIDE_FEAT = {'wre-2026-kokutai-1012':1};
-// 特集の一番前に並べる順番(ここに書いた開催回が先、あとは開催日の新しい順)
+// 特集の一番前に並べる順番(開催中→まもなく開催→結果の順に分けたうえで、ここに書いた開催回が先、あとは開催日の新しい順)
 var FEAT_ORDER = ['wre-2026-university-greco-1023', 'wre-2026-women-open-1024'];
 // 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
 var FEATURE_ART = {'wre-2026-kokutai-1012': {src:'/assets/feature/kokutai-2026.jpg', pos:'22% 50%'}};
@@ -332,6 +332,9 @@ function buildFeature(){
     x.ext = e.links[0].url; x.extLabel = e.links[0].label;
     return x;
   });
+  // 開催中の大会を先に、次に「まもなく開催」、終わった大会(結果)はそのあと。同じ種類どうしは上の並び(FEAT_ORDER・開催日)のまま
+  var KIND_RANK = {live:0, soon:1, result:2};
+  out = out.map(function(x,i){ return [x,i]; }).sort(function(a,b){ return (KIND_RANK[a[0].kind]-KIND_RANK[b[0].kind]) || (a[1]-b[1]); }).map(function(p){ return p[0]; });
   out = out.concat(past.slice(0,2).map(function(e){ return evSlide(e,'recent'); }));
   if(future[0]) out.push(evSlide(future[0],'upcoming'));
   HERO.forEach(function(p,i){ if(!used[i] && out.length<5){ used[i]=1; out.push({kind:'photo', href:p.href, name:p.label, meta:'', photo:p, vid:''}); } });
