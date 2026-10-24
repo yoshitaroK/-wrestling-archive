@@ -137,6 +137,7 @@ var WL = (function () {
     declineOther: 2,     // 31歳以降、年末にほかの3能力が下がる量
     olyStep: 5.5,        // オリンピックの相手が4年ごとに強くなる量(基準68)
     trialsStep: 5,       // 代表選考会の相手が4年ごとに強くなる量(基準67)
+    topBonus: 3,         // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
     randomEventRate: 0.35
   };
 
@@ -420,11 +421,11 @@ var WL = (function () {
     if (age < 10) return null;
     var t = TOURNAMENTS[age];
     if (t) return { name: t[0], str: t[1], rounds: t[2], kind: 'normal' };
-    if (OLYMPIC_AGES.indexOf(age) >= 0) return { name: 'オリンピック代表選考会', str: 67 + (age - 24) / 4 * BAL.trialsStep, rounds: 3, kind: 'trials' };
+    if (OLYMPIC_AGES.indexOf(age) >= 0) return { name: 'オリンピック代表選考会', str: 67 + BAL.topBonus + (age - 24) / 4 * BAL.trialsStep, rounds: 3, kind: 'trials' };
     return { name: '全日本選手権', str: 65 + Math.min(5, age - 24), rounds: 4, kind: 'national' };
   }
   function followUp(g, t) {
-    if (t.kind === 'trials') return { name: 'オリンピック', str: 68 + (g.age - 24) / 4 * BAL.olyStep, rounds: 4, kind: 'olympics' };
+    if (t.kind === 'trials') return { name: 'オリンピック', str: 68 + BAL.topBonus + (g.age - 24) / 4 * BAL.olyStep, rounds: 4, kind: 'olympics' };
     if (t.kind === 'national' || (t.name === '全日本選手権')) return { name: '世界選手権', str: t.str + 4, rounds: 4, kind: 'world' };
     return null;
   }
