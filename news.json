@@ -2,6 +2,25 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-worlds-women-preview",
+   "date": "2026-10-24",
+   "title": "【展望】世界選手権・女子 石井亜海が第1シードで連覇に挑む 須﨑優衣・尾﨑野乃香も出場",
+   "category": "世界選手権",
+   "lead": "カザフスタン・アスタナで行われる世界選手権の女子は10月27日から。68kg級の石井亜海が第1シードで連覇を狙い、金メダル経験者の須﨑優衣と尾﨑野乃香も出場する。",
+   "tags": [
+    "世界選手権2026",
+    "石井亜海",
+    "須﨑優衣",
+    "尾﨑野乃香",
+    "池畑菜々"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/10/24/296500/",
+    "https://wrestling-spirits.jp/2026/10/22/296336/",
+    "https://wrestling-spirits.jp/2026/10/23/296387/"
+   ]
+  },
+  {
    "slug": "2026-univ-greco-final",
    "date": "2026-10-24",
    "title": "全日本大学グレコ、育英大が2年ぶり団体優勝 長谷川虎次郎が3連覇で最優秀選手",
