@@ -33,7 +33,7 @@ KIND_ORDER = ["match", "interview", "announcement", "highlight", "other"]
 _KIND = {"match": ("試合配信", "Match streams"), "interview": ("インタビュー", "Interviews"),
          "announcement": ("告知・抽選会", "Announcements & draws"), "highlight": ("ダイジェスト", "Highlights"),
          "other": ("その他", "Other")}
-_STATUS = {"cancelled": ("中止", "Cancelled"), "postponed": ("延期", "Postponed"), "scheduled": ("開催予定", "Upcoming"),
+_STATUS = {"cancelled": ("中止", "Cancelled"), "postponed": ("延期", "Postponed"), "scheduled": ("開催予定", "Upcoming"), "live": ("開催中", "In progress"),
            "unverified": ("開催日は動画の公開日からの推定", "Date estimated from video publish dates")}
 _LINK = {"manual": ("手動で確認済み", "Manually verified"), "livedate": ("配信日で照合", "Matched by stream date"),
          "candidate": ("確認待ち", "Pending review"), "series_only": ("開催回を確認中", "Edition unconfirmed"),
@@ -445,6 +445,17 @@ def video_ld(vids, limit=10):
     return out
 
 
+def view_status(ev):
+    """ページに出す開催の状態。「開催予定」の大会は、開催期間に入ったら「開催中」と出す(毎日の自動更新で切り替わる)"""
+    st = ev.get("status")
+    if st == "scheduled" and ev.get("start") and not ev.get("derived"):
+        import calendar_page
+        today = calendar_page.today_jst()
+        if ev["start"] <= today <= (ev.get("end") or ev["start"]):
+            return "live"
+    return st
+
+
 def event_page(ev, ctx):
     S, slugs, by_event, cand_by_event = ctx["S"], ctx["slugs"], ctx["by_event"], ctx["cand"]
     s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
@@ -457,7 +468,7 @@ def event_page(ev, ctx):
     matches = [v for v in vids if v.get("k") == "match"]
     first = (matches or vids or [None])[0]
     counts = counts_text(vids)
-    status = ev.get("status")
+    status = view_status(ev)
     venue = N(ev.get("venue"))
     others = sorted({N(v["ch"]) for v in vids if v.get("ch")})
     # 配信動画がない開催回は、写真があれば写真へ、なければ結果・公式サイトのボタンへ案内する
@@ -471,7 +482,7 @@ def event_page(ev, ctx):
             lead_parts.append(f"The {ev['year']} {series_name(s)} is recorded as cancelled.")
         elif ev.get("start"):
             lead_parts.append(f"Video publish dates: {rng} (official dates not yet confirmed)." if ev.get("derived")
-                              else f"{'Scheduled for' if status == 'scheduled' else 'Held on'} {rng}{(' at ' + venue) if venue else ''}.")
+                              else f"{'Scheduled for' if status == 'scheduled' else 'Being held' if status == 'live' else 'Held on'} {rng}{(' at ' + venue) if venue else ''}.")
         src = "Japan Wrestling Channel streams" if not others else "YouTube streams and videos"
         if vids:
             lead_parts.append(f" {i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
@@ -484,7 +495,7 @@ def event_page(ev, ctx):
         if status == "cancelled":
             lead_parts.append(f"{ev['year']}年の{s['name']}は中止の記録があります。")
         elif ev.get("start"):
-            verb = "開催予定" if status == "scheduled" else "開催"
+            verb = "開催予定" if status == "scheduled" else "開催中" if status == "live" else "開催"
             lead_parts.append(f"{rng}{('、' + ev['venue'] + 'で') if ev.get('venue') else 'に'}{verb}。"
                               if not ev.get("derived") else f"動画の配信日は{rng}です(公式の開催日は確認中)。")
         src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
@@ -789,7 +800,8 @@ def series_page(s, ctx):
     sl = status_label()
     h += f'<section class="section"><h2>{L("開催年から選ぶ", "Choose a year")}</h2><ol class="occ">'
     for x in reversed(evs):
-        badge = f'<span class="badge {e(x.get("status"))}">{e(sl[x["status"]])}</span>' if x.get("status") in sl else ""
+        xs = view_status(x)
+        badge = f'<span class="badge {e(xs)}">{e(sl[xs])}</span>' if xs in sl else ""
         when = fmt_range(x.get("start"), x.get("end")) if x.get("start") else L("日付未確認", "Date TBC")
         cnt = (L("<b class=num>" + str(x.get("n")) + "</b>本", "<b class=num>" + str(x.get("n")) + "</b> " + ("video" if x.get("n") == 1 else "videos"))
                if x.get("n") else L("動画なし", "No videos"))
