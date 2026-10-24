@@ -22,6 +22,7 @@ import os
 import re
 
 import i18n
+import players
 from i18n import U
 
 NEWS_JSON = "news.json"
@@ -100,6 +101,30 @@ def render_body(text, ctx, report, slug):
         parts = re.split(r"(\[\[[^\]|]+\|[^\]]+\]\])", s)
         return "".join(link(re.match(r"\[\[([^\]|]+)\|([^\]]+)\]\]", p)) if p.startswith("[[") else e(p) for p in parts)
 
+    # 表のセルの「名前(所属)」は、選手検索にいる選手(公開・成人)と名前が1人だけ合えば選手ページへリンクする
+    def name_key(x):
+        return players.same_name(x).replace("・", "").replace("･", "").replace("=", "")
+    by_name = {}
+    for p in ctx.get("players", []):
+        by_name.setdefault(name_key(p["name"]), []).append(p)
+
+    def cell(c):
+        if "[[" in c:
+            return inline(c)
+        if " − " in c:  # 「A(所属) − B(所属)」の対戦カードは、1人ずつリンクする
+            return " − ".join(cell(x) for x in c.split(" − "))
+        m = re.match(r"^([^(（|]+?)([(（].*)?$", c.strip())
+        # 高校・中学の選手(未成年)はリンクしない(同じ名前の大人の選手ページへ誤ってつながないように)
+        if m and re.search(r"(高|高校|中|中学|学園)[)）]|高等学校|中学校", m.group(2) or ""):
+            return inline(c)
+        hit = by_name.get(name_key(m.group(1))) if m and m.group(1).strip() else None
+        if not hit or len(hit) != 1:
+            return inline(c)
+        p = hit[0]
+        if p not in seen:
+            seen.append(p)
+        return f'<a href="{U("/players/" + p["id"] + "/")}">{e(m.group(1).strip())}</a>{e(m.group(2) or "")}'
+
     out = []
     for block in re.split(r"\n\s*\n", text.strip()):
         lines = [l.rstrip() for l in block.strip().split("\n")]
@@ -111,7 +136,7 @@ def render_body(text, ctx, report, slug):
         if all(l.startswith("|") for l in lines):
             rows = [[c.strip() for c in l.strip("|").split("|")] for l in lines if not re.match(r"^\|[\s:|-]+\|$", l)]
             th = "".join(f"<th>{inline(c)}</th>" for c in rows[0])
-            trs = "".join("<tr>" + "".join(f'<td data-l="{e(rows[0][i]) if i < len(rows[0]) else ""}">{inline(c)}</td>' for i, c in enumerate(r)) + "</tr>" for r in rows[1:])
+            trs = "".join("<tr>" + "".join(f'<td data-l="{e(rows[0][i]) if i < len(rows[0]) else ""}">{cell(c)}</td>' for i, c in enumerate(r)) + "</tr>" for r in rows[1:])
             out.append(f'<div class="nw-tbl"><table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table></div>')
         else:
             out.append("<p>" + "<br>".join(inline(l) for l in lines) + "</p>")
