@@ -228,6 +228,36 @@ def optout_note(listing=False):
         'We will remove it after confirming the request.') + "</p>")
 
 
+# 説明文の「いちばん良い成績」で先に選ぶ大会(国際大会のあと)
+TOP_NATIONAL = ("天皇杯", "明治杯")
+
+
+def best_result(p, ctx, bp):
+    """説明文に入れる、いちばん良い成績(例: 2025年全日本学生選手権 優勝)。
+    オリンピック → 世界選手権・U23世界選手権のメダル → 順位 → 天皇杯・明治杯 → 新しい年 の順に選ぶ。日本語版だけ"""
+    def key(r):
+        m = re.match(r"^(\d+)位$", r.get("成績", ""))
+        name = r.get("大会名", "")
+        n = int(m.group(1)) if m else 99
+        group = 0 if name in OLYMPICS else 1 + list(WORLDS).index(name) if name in WORLDS and n <= 3 else 9
+        return (group, n,
+                0 if name.startswith(TOP_NATIONAL) else 1, -int(r.get("開催年") or 0))
+    rows = [r for r in p["results"] if re.match(r"^\d+位$", r.get("成績", ""))]
+    if not rows:
+        return ""
+    r = min(rows, key=key)
+    name = r.get("大会名", "")
+    ev = ctx["events_by_id"].get(r.get("開催回ID", ""))
+    if name not in OLYMPICS and name not in WORLDS and ev and ev["series"] in ctx["S"]:
+        name = bp.series_name(ctx["S"][ev["series"]])
+    name = re.sub(r"[（(](インカレ)[）)]$", "", N(name))
+    if name in OLYMPICS:
+        rk = {"1位": "金メダル", "2位": "銀メダル", "3位": "銅メダル"}.get(r["成績"], r["成績"])
+        return OLYMPICS[name][0].replace("代表", "") + " " + rk
+    rk = {"1位": "優勝", "2位": "準優勝"}.get(r["成績"], r["成績"])
+    return f"{r.get('開催年', '')}年{name} {rk}"
+
+
 def player_page(p, ctx, bp, card=""):
     e, SITE = bp.e, bp.SITE
     path = f"/players/{p['id']}/"
@@ -245,7 +275,9 @@ def player_page(p, ctx, bp, card=""):
         parts = [f"{name}選手"]
         if club:
             parts.append(f"({club})")
-        parts.append(f"の大会成績{nr}件と試合動画{nv}本" if nr else f"の試合動画{nv}本")
+        best = best_result(p, ctx, bp)
+        parts.append(f"のレスリングの成績。{best}など" if best else "の")
+        parts.append((f"大会成績{nr}件" + (f"と試合動画{nv}本" if nv else "")) if nr else f"試合動画{nv}本")
         parts.append(f"、国際大会の動画{nu}本。" if nu else "。")
         desc = "".join(parts)
     person = {"@type": "Person", "name": name, "url": SITE + U(path)}
@@ -258,7 +290,8 @@ def player_page(p, ctx, bp, card=""):
     # SNS 用画像(og_cards.py で作ったもの)。作れなかったときは試合動画のサムネイル
     first = (p["videos"] or uww)[:1]
     og = card or (f"https://i.ytimg.com/vi/{first[0]['id']}/hqdefault.jpg" if first else "")
-    h = bp.head(L(f"{name} 選手 大会成績・試合動画|{bp.SITE_NAME}", f"{name} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
+    title_ja = name.replace(" ", "").replace("\u3000", "") + (f"({club})" if club else "") + "レスリング 大会成績・試合動画"
+    h = bp.head(L(f"{title_ja}|{bp.SITE_NAME}", f"{name} – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
     h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
     if i18n.en():
         # 読みがな(大会のエントリーリスト)が分かっている人は、その読みからローマ字にしているので注記を出さない
@@ -287,6 +320,11 @@ def player_page(p, ctx, bp, card=""):
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
     if uww:
         h += uww_videos_html(p, uww, bp)
+    arts = ctx.get("news_by_player", {}).get(p["id"], []) if not i18n.en() else []
+    if arts:
+        import news
+        h += ('<h2>この選手が出てくるニュース</h2><ul class="pl-news">' + "".join(
+            f'<li><a href="{U("/news/" + a["slug"] + "/")}">{e(a["title"])}</a><small>{e(news.fmt_day(a["date"]))}</small></li>' for a in arts) + "</ul>")
     import books
     h += books.player_section(p, ctx, bp)
     h += optout_note()
@@ -511,6 +549,11 @@ PLAYER_CSS = """
 .soon .soon-list b{display:block;font-size:16px}
 .soon .soon-list span{font-size:13px;color:var(--ink3)}
 .soon .soon-note{font-size:14px;color:var(--ink2)}
+.pl-news{list-style:none;padding:0;margin:10px 0 18px;display:grid;gap:8px;max-width:760px}
+.pl-news li{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:10px;padding:10px 14px}
+.pl-news a{display:block;font-weight:700;color:var(--ink);text-decoration:none;line-height:1.5}
+.pl-news a:hover{color:var(--pink)}
+.pl-news small{display:block;margin-top:2px;font-size:12px;color:var(--ink3)}
 .page h1 .kana{font-size:.5em;font-weight:500;color:var(--ink3);margin-left:10px}
 .olys{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 12px}
 .olys .oly{display:inline-flex;align-items:center;gap:7px;padding:4px 14px 4px 10px;border-radius:999px;font-size:13px;font-weight:700;
@@ -610,6 +653,9 @@ def build(root, data, ctx, bp):
     players = ctx.get("players") or []
     if not players:
         return [(*coming_soon_page(ctx, bp), data.get("as_of"))]
+    if not i18n.en():
+        import news
+        ctx["news_by_player"] = news.by_player(root, ctx)
     import og_cards
     year = int((data.get("as_of") or "")[:4] or 0) or __import__("datetime").date.today().year
     cards = og_cards.Cards(root, year)
