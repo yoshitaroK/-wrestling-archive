@@ -143,6 +143,18 @@ def render_body(text, ctx, report, slug):
     return "".join(out), seen
 
 
+def by_player(root, ctx):
+    """選手ID → その選手が出てくる記事(新しい順)。選手ページの「この選手が出てくるニュース」に使う"""
+    quiet = {"errors": [], "warnings": []}
+    arts = load(root, quiet)
+    ctx = dict(ctx, news_slugs={a["slug"] for a in arts})
+    out = {}
+    for a in arts:
+        for p in render_body(a["body"], ctx, quiet, a["slug"])[1]:
+            out.setdefault(p["id"], []).append(a)
+    return out
+
+
 def build(root, ctx, bp, report):
     """ニュースのページ [(path, html, lastmod)]。日本語版だけ"""
     if i18n.en():
