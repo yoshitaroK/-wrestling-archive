@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-24T18:59:16+09:00",
+ "built_at": "2026-10-24T19:06:41+09:00",
  "as_of": "2026-10-24",
  "video_count": 3360,
  "raw_count": 3360,
@@ -207,7 +207,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 7
+  "articles": 8
  },
  "books": {
   "errors": [],
@@ -286,7 +286,7 @@
   ]
  },
  "en": {
-  "pages": 1757,
+  "pages": 1758,
   "names": 637,
   "machine_translations": 3725,
   "missing_names": []
