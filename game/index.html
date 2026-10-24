@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#120d0c">
+<title>レスリング人生 〜オリンピックへの道〜</title>
+<style>
+:root {
+  --bg: #120d0c;
+  --panel: #1f1715;
+  --panel2: #2a1f1c;
+  --line: #3d2d28;
+  --text: #f3ece6;
+  --muted: #b3a49b;
+  --red: #c8102e;
+  --red2: #8e0b20;
+  --gold: #d9ad3c;
+  --gold2: #f3d27a;
+  --green: #4caf7a;
+  --blue: #5b9bd5;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg) radial-gradient(ellipse at top, #2b1512 0%, var(--bg) 60%) no-repeat;
+  color: var(--text);
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+#app { max-width: 480px; margin: 0 auto; padding: 12px 12px 40px; }
+h1, h2, h3 { margin: 0; line-height: 1.3; }
+.title-logo { text-align: center; padding: 36px 0 18px; }
+.title-logo .sub { color: var(--gold); letter-spacing: .2em; font-size: 13px; }
+.title-logo h1 { font-size: 30px; margin: 6px 0; text-shadow: 0 2px 0 var(--red2); }
+.title-logo .road { color: var(--gold2); font-size: 17px; }
+.mat { width: 120px; height: 120px; margin: 18px auto; border-radius: 50%;
+  background: radial-gradient(circle, var(--red) 0 38%, var(--gold) 38% 42%, var(--red2) 42% 100%);
+  box-shadow: 0 0 30px rgba(200,16,46,.35); display: flex; align-items: center; justify-content: center; font-size: 46px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin: 10px 0; }
+.card.gold { border-color: var(--gold); box-shadow: 0 0 18px rgba(217,173,60,.25); }
+.card.red { border-color: var(--red); }
+.label { color: var(--muted); font-size: 12px; }
+.big { font-size: 22px; font-weight: bold; }
+.gold-t { color: var(--gold2); }
+.red-t { color: #ff5a6e; }
+.green-t { color: var(--green); }
+.muted { color: var(--muted); }
+.center { text-align: center; }
+input[type=text] {
+  width: 100%; font-size: 17px; padding: 12px; border-radius: 10px; border: 1px solid var(--line);
+  background: #0c0908; color: var(--text); outline: none;
+}
+input[type=text]:focus { border-color: var(--gold); }
+.btn {
+  display: block; width: 100%; border: 0; border-radius: 12px; padding: 14px 12px; margin: 10px 0 0;
+  font-size: 17px; font-weight: bold; color: #fff; background: linear-gradient(180deg, var(--red), var(--red2));
+  cursor: pointer; font-family: inherit; touch-action: manipulation;
+}
+.btn:active { transform: translateY(1px); filter: brightness(.9); }
+.btn.gold { background: linear-gradient(180deg, var(--gold2), var(--gold)); color: #2a1a00; }
+.btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); font-weight: normal; font-size: 14px; padding: 10px; }
+.btn:disabled { opacity: .35; cursor: default; }
+.choice { text-align: left; background: var(--panel2); border: 1px solid var(--line); font-weight: normal; }
+.choice b { display: block; font-size: 16px; color: var(--gold2); }
+.choice span { font-size: 13px; color: var(--muted); }
+.hdr { display: flex; justify-content: space-between; align-items: flex-end; gap: 8px; padding: 4px 2px 8px; border-bottom: 2px solid var(--red); }
+.hdr .nm { font-size: 18px; font-weight: bold; word-break: break-all; }
+.hdr .st { font-size: 12px; color: var(--muted); }
+.hdr .age { font-size: 26px; font-weight: bold; color: var(--gold2); white-space: nowrap; }
+.hdr .age small { font-size: 13px; color: var(--muted); }
+.seasons { display: flex; gap: 6px; margin: 8px 0; }
+.seasons div { flex: 1; text-align: center; font-size: 12px; padding: 4px 0; border-radius: 6px; background: var(--panel2); color: var(--muted); }
+.seasons .now { background: var(--red); color: #fff; font-weight: bold; }
+.seasons .done { background: #3a2a25; color: #8a7a70; text-decoration: line-through; }
+.seasons .tour { background: #3b2e10; color: var(--gold2); }
+.stat { display: grid; grid-template-columns: 72px 1fr 34px; gap: 6px; align-items: center; margin: 5px 0; font-size: 13px; }
+.stat .nm small { display: block; color: var(--gold); font-size: 10px; letter-spacing: -1px; line-height: 1; }
+.bar { height: 12px; background: #0b0807; border-radius: 6px; overflow: hidden; border: 1px solid #2f2320; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--red2), var(--red)); border-radius: 6px; }
+.bar.fat i { background: linear-gradient(90deg, #3b7a57, #d9ad3c 60%, #c8102e); }
+.stat .v { text-align: right; font-weight: bold; }
+.power { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); font-size: 13px; }
+.msg { background: #0e0a09; border-left: 3px solid var(--gold); padding: 8px 10px; border-radius: 6px; font-size: 13px; margin: 8px 0; white-space: pre-line; }
+.menus { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.menus .btn { margin: 0; padding: 10px 8px; text-align: left; background: var(--panel2); border: 1px solid var(--line); font-weight: normal; }
+.menus .btn b { display: block; font-size: 15px; color: var(--text); }
+.menus .btn span { display: block; font-size: 11px; color: var(--muted); line-height: 1.4; }
+.menus .btn.rest { background: #18241d; border-color: #2c4636; }
+.menus .btn.rest b { color: #9fe0b8; }
+.menus .btn.spar { border-color: #5a2a2a; }
+.vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: center; text-align: center; }
+.vs .side { background: var(--panel2); border-radius: 10px; padding: 8px 4px; word-break: break-all; }
+.vs .side.me { border: 1px solid var(--red); }
+.vs .side .p { font-size: 11px; color: var(--muted); }
+.vs .x { font-weight: bold; color: var(--gold); }
+.score { font-size: 34px; font-weight: bold; text-align: center; letter-spacing: .1em; margin: 8px 0; }
+.period { font-size: 13px; margin: 6px 0; padding: 6px 8px; background: #0e0a09; border-radius: 6px; }
+.period .ph { color: var(--gold); font-weight: bold; }
+.result { text-align: center; font-size: 22px; font-weight: bold; margin: 6px 0; }
+.win { color: var(--gold2); }
+.lose { color: #9a8a82; }
+.tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--red); color: #fff; margin-left: 4px; vertical-align: middle; }
+.tag.gold { background: var(--gold); color: #2a1a00; }
+ul.plain { list-style: none; padding: 0; margin: 6px 0; }
+ul.plain li { padding: 4px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+.medal { font-size: 64px; text-align: center; line-height: 1.2; }
+.small { font-size: 12px; }
+.row { display: flex; gap: 8px; }
+.row > * { flex: 1; }
+.foot { text-align: center; margin-top: 20px; }
+.foot a { color: var(--muted); font-size: 12px; }
+@keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.pop { animation: pop .25s ease-out; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ==LOGIC START==
+// ゲームの計算ロジック(画面処理とは分けてある。game/sim.js から Node.js で読み込んで自動プレイできる)
+var WL = (function () {
+  var STATS = ['str', 'sta', 'tec', 'spd', 'men'];
+  var STAT_NAMES = { str: '筋力', sta: 'スタミナ', tec: '技術', spd: 'スピード', men: 'メンタル' };
+
+  // バランス調整用のつまみ(node game/sim.js で自動プレイして決めた値。仕様書の初期案からの変更点はここに集約)
+  var BAL = {
+    gainScale: 0.88,     // 練習の上昇量の全体倍率
+    oppScale: 1.0,       // 大会の相手の強さの全体倍率
+    capDiv: 120,         // 伸びにくさ (1 − 現在値/capDiv)。小さいほど高い能力が伸びにくい
+    declineSS: 4,        // 31歳以降、年末にスタミナ・スピードが下がる量
+    declineOther: 2,     // 31歳以降、年末にほかの3能力が下がる量
+    olyStep: 5.5,        // オリンピックの相手が4年ごとに強くなる量(基準68)
+    trialsStep: 5,       // 代表選考会の相手が4年ごとに強くなる量(基準67)
+    randomEventRate: 0.35
+  };
+
+  var MENUS = [
+    { id: 'muscle', name: '筋トレ', gain: { str: 8, spd: 1 }, fat: 14 },
+    { id: 'run', name: '走り込み', gain: { sta: 8, spd: 1 }, fat: 12 },
+    { id: 'tech', name: '技の練習', gain: { tec: 8 }, fat: 10 },
+    { id: 'dash', name: 'ダッシュ・敏捷', gain: { spd: 8, tec: 1 }, fat: 10 },
+    { id: 'spar', name: 'スパーリング', gain: { tec: 4, men: 5, str: 1 }, fat: 18, injury: 0.08 },
+    { id: 'mind', name: 'メンタル修行', gain: { men: 8 }, fat: 4 },
+    { id: 'rest', name: '休養', gain: {}, fat: -40 }
+  ];
+  var MENU_BY_ID = {};
+  MENUS.forEach(function (m) { MENU_BY_ID[m.id] = m; });
+
+  var INFANCY = [
+    { id: 'outdoor', label: '外で元気に遊ばせる', desc: 'スタミナ・スピードが伸びる', gain: { sta: 4, spd: 4 } },
+    { id: 'grapple', label: '家族と組み合って遊ぶ', desc: '筋力・技術が伸びる', gain: { str: 4, tec: 4 } },
+    { id: 'books', label: '本や音楽にふれさせる', desc: 'メンタルが伸びる', gain: { men: 8 } }
+  ];
+
+  var COURSES = {
+    hs: {
+      elite: { name: '強豪高校', mul: 1.15, fat: 3, desc: '成長×1.15 / 練習のたびに疲労+3' },
+      public: { name: '地元の公立高校', mul: 1.0, fat: -2, desc: '成長×1.0 / 練習のたびに疲労−2' }
+    },
+    after: {
+      univ: { name: '強豪大学', mul: 1.15, fat: 3, desc: '成長×1.15 / 練習のたびに疲労+3' },
+      corp: { name: '実業団', mul: 1.1, fat: 0, desc: '成長×1.1 / 疲労の増減なし' },
+      abroad: { name: '海外留学', mul: 1.2, fat: 4, desc: '成長×1.2 / 練習のたびに疲労+4 / メンタル+5' }
+    }
+  };
+
+  var OLYMPIC_AGES = [24, 28, 32, 36];
+  var LAST_AGE = 36;
+
+  var TOURNAMENTS = {
+    10: ['地区少年大会', 12, 2], 11: ['県少年大会', 17, 2], 12: ['全国少年大会', 22, 3],
+    13: ['中学地区大会', 27, 2], 14: ['中学県大会', 31, 2], 15: ['全国中学大会', 36, 3],
+    16: ['高校新人大会', 41, 3], 17: ['インターハイ', 47, 4], 18: ['全国高校選抜', 52, 4],
+    19: ['インカレ', 56, 4], 20: ['全日本学生選手権', 59, 4], 21: ['全日本選抜', 62, 4],
+    22: ['全日本選手権', 64, 4], 23: ['全日本選手権', 65, 4]
+  };
+
+  // 技術値で解放される得意技
+  var MOVES = [
+    { tec: 15, name: '片足タックル', pts: 2 },
+    { tec: 35, name: 'ダブルレッグタックル', pts: 2 },
+    { tec: 55, name: 'ローリング', pts: 2 },
+    { tec: 75, name: 'ガットレンチ', pts: 2 },
+    { tec: 90, name: 'スープレックス', pts: 4 }
+  ];
+
+  var PREFS = ['北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県',
+    '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県',
+    '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+    '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県',
+    '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'];
+  var SURNAMES = ['佐藤', '鈴木', '高橋', '田中', '渡辺', '伊藤', '山本', '中村', '小林', '加藤', '吉田', '山田',
+    '佐々木', '山口', '松本', '井上', '木村', '林', '清水', '山崎', '森', '池田', '橋本', '阿部', '石川', '前田',
+    '藤田', '小川', '岡田', '後藤', '長谷川', '村上', '近藤', '石井', '坂本', '遠藤', '青木', '藤井', '西村', '福田',
+    '太田', '三浦', '岡本', '松田', '中川', '原田', '小野', '竹内', '金子', '和田', '中山', '上田', '森田', '柴田'];
+  var GIVEN = ['翔', '大輝', '蓮', '颯太', '拓海', '悠斗', '陽翔', '海斗', '健太', '隼人', '龍之介', '剛', '大和',
+    '慎吾', '翼', '雄大', '亮', '圭佑', '航', '駿', '豪', '直樹', '一真', '虎太郎', '武蔵', '源', '鉄平', '勇気',
+    '凌', '陸', '光', '樹', '湊', '玲央', '烈', '迅', '岳', '轟'];
+  var FOREIGN = [
+    { c: 'アメリカ', g: ['ジェイク', 'タイラー', 'マイケル', 'ブランドン', 'コール'], f: ['ハリソン', 'ミッチェル', 'ブルックス', 'ウォーカー', 'グレイ'] },
+    { c: 'イラン', g: ['アミール', 'レザ', 'ハサン', 'メフディ', 'アリ'], f: ['ヤズダニ', 'ガセミ', 'ラフマニ', 'カリミ', 'サデギ'] },
+    { c: 'ジョージア', g: ['ギオルギ', 'ダヴィト', 'レヴァン', 'イラクリ', 'ニコ'], f: ['ベリゼ', 'カパナゼ', 'ゴギア', 'ツィクラウリ', 'マチャヴァリアニ'] },
+    { c: 'トルコ', g: ['ムスタファ', 'エムレ', 'ブラク', 'ケマル', 'オメル'], f: ['ユルドゥズ', 'デミル', 'カヤ', 'アルスラン', 'チェリク'] },
+    { c: 'モンゴル', g: ['バトバヤル', 'ガンバータル', 'テムジン', 'ボルド', 'エルデネ'], f: ['ツェレン', 'ナランバートル', 'ダワー', 'オユン', 'ガンゾリグ'] },
+    { c: 'キューバ', g: ['ヨアン', 'ルイス', 'アレハンドロ', 'ラウル', 'ミゲル'], f: ['ペレス', 'ロドリゲス', 'ガルシア', 'モリーナ', 'エレーラ'] },
+    { c: 'カザフスタン', g: ['ヌルスルタン', 'ダニヤル', 'アルマン', 'エルラン', 'サケン'], f: ['ベクボラトフ', 'ジュマバエフ', 'オスパノフ', 'カシモフ', 'ヌルラノフ'] },
+    { c: 'アゼルバイジャン', g: ['エルヴィン', 'ラシャド', 'トグルル', 'ハジ', 'ムラド'], f: ['アリエフ', 'ママドフ', 'グセイノフ', 'ハサノフ', 'イスマイロフ'] },
+    { c: 'インド', g: ['ラヴィ', 'アマン', 'ディーパク', 'スニル', 'ヴィノド'], f: ['クマール', 'シン', 'ダヒヤ', 'マリク', 'ヤダヴ'] },
+    { c: 'ブルガリア', g: ['ゲオルギ', 'イヴァン', 'ストヤン', 'ディミタル', 'ニコライ'], f: ['ペトロフ', 'イリエフ', 'ストイコフ', 'ディモフ', 'ゲオルギエフ'] },
+    { c: 'ハンガリー', g: ['バーリント', 'ジョルト', 'ペーテル', 'ラースロー', 'タマーシュ'], f: ['ナジ', 'コヴァーチ', 'サボー', 'ホルヴァート', 'ヴァルガ'] },
+    { c: 'ウズベキスタン', g: ['ルスタム', 'ジャスル', 'ウルグベク', 'ボブル', 'シェルゾド'], f: ['トゥルスノフ', 'ラヒモフ', 'ユスポフ', 'カリモフ', 'アブドゥラエフ'] }
+  ];
+
+  var rand = Math.random;
+  function setRandom(fn) { rand = fn; }
+  function rnd(a, b) { return a + rand() * (b - a); }
+  function ri(a, b) { return Math.floor(rnd(a, b + 1)); }
+  function pick(arr) { return arr[Math.floor(rand() * arr.length)]; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function r1(v) { return Math.round(v * 10) / 10; }
+
+  function stars(mul) { return mul < 1.0 ? 1 : mul < 1.15 ? 2 : 3; }
+  function japaneseName() { return pick(SURNAMES) + ' ' + pick(GIVEN); }
+  function foreignName() {
+    var f = pick(FOREIGN);
+    return { name: pick(f.g) + '・' + pick(f.f), country: f.c };
+  }
+
+  // ---- 新しい人生 ----
+  function newGame(name) {
+    var g = {
+      v: 1, name: name, pref: pick(PREFS), age: 0, phase: 'birth',
+      talent: {}, stats: {}, fatigue: 0, season: 0, injured: false,
+      hs: null, after: null, master: 1, rival: null,
+      titles: [], medals: [], log: [], lastMsg: '', event: null,
+      tour: null, tourStep: 0, yearNotes: [], ending: null
+    };
+    STATS.forEach(function (s) {
+      g.talent[s] = Math.round(rnd(0.85, 1.3) * 100) / 100;
+      g.stats[s] = ri(3, 8);
+    });
+    return g;
+  }
+
+  function ageCoef(age) {
+    if (age <= 7) return 0.7;
+    if (age <= 11) return 0.9;
+    if (age <= 17) return 1.15;
+    if (age <= 26) return 1.0;
+    if (age <= 30) return 0.85;
+    return 0.7;
+  }
+  function fatigueCoef(f) { return f > 85 ? 0.5 : f > 65 ? 0.8 : 1.0; }
+  function course(g) {
+    if (g.age >= 18 && g.after) return COURSES.after[g.after];
+    if (g.age >= 15 && g.hs) return COURSES.hs[g.hs];
+    return null;
+  }
+  function courseMul(g) { var c = course(g); return c ? c.mul : 1; }
+  function courseFat(g) { var c = course(g); return c ? c.fat : 0; }
+
+  function stageName(g) {
+    var a = g.age;
+    if (a < 6) return '幼児';
+    if (a <= 11) return '小学生';
+    if (a <= 14) return '中学生';
+    if (a <= 17) return (g.hs === 'elite' ? '強豪高校' : '公立高校') + 'の高校生';
+    if (a <= 21) return g.after === 'univ' ? '強豪大学の大学生' : g.after === 'corp' ? '実業団の選手' : '海外留学中';
+    if (g.after === 'corp') return '実業団の選手';
+    if (g.after === 'abroad') return '海外を拠点に戦う選手';
+    return '社会人選手';
+  }
+
+  function power(g) {
+    var s = g.stats;
+    return (s.str + s.sta * 0.8 + s.tec * 1.3 + s.spd + s.men * 0.9) / 5;
+  }
+  function matchPower(g) { return power(g) * (1 - Math.max(0, g.fatigue - 50) / 150); }
+
+  // 練習による上昇(式は仕様書4章)
+  function growth(g, stat, base, fatCoef) {
+    var cur = g.stats[stat];
+    var gain = base * g.talent[stat] * ageCoef(g.age) * fatCoef * courseMul(g) * g.master *
+      BAL.gainScale * (1 - cur / BAL.capDiv);
+    gain = Math.max(0, gain);
+    g.stats[stat] = clamp(cur + gain, 0, 100);
+    return g.stats[stat] - cur;
+  }
+  function addStat(g, stat, v) { g.stats[stat] = clamp(g.stats[stat] + v, 0, 100); }
+  function addFatigue(g, v) { g.fatigue = clamp(g.fatigue + v, 0, 100); }
+
+  // ---- 幼少期 ----
+  function chooseInfancy(g, id) {
+    var c = INFANCY.filter(function (x) { return x.id === id; })[0];
+    if (!c || g.phase !== 'infancy') return;
+    var parts = [];
+    for (var s in c.gain) {
+      var v = c.gain[s] * g.talent[s];
+      addStat(g, s, v);
+      parts.push(STAT_NAMES[s] + '+' + r1(v));
+    }
+    g.age = 6;
+    g.lastMsg = c.label + '育った。(' + parts.join('、') + ')';
+    beginYear(g);
+  }
+
+  // ---- 年初イベント ----
+  var RANDOM_EVENTS = [
+    { id: 'master', title: '良い師匠との出会い', text: '名門クラブ出身の師匠に声をかけられた。「お前には光るものがある」\nこの1年の練習の成長が×1.3になる!',
+      ok: function () { return true; }, apply: function (g) { g.master = 1.3; } },
+    { id: 'cold', title: '風邪をひいた', text: '季節の変わり目にひどい風邪をひいてしまった…。\n疲労+25',
+      ok: function () { return true; }, apply: function (g) { addFatigue(g, 25); } },
+    { id: 'friends', title: '仲間と特訓', text: '道場の仲間と夜遅くまで打ち込みをした。\n技術+3、メンタル+2',
+      ok: function () { return true; }, apply: function (g) { addStat(g, 'tec', 3); addStat(g, 'men', 2); } },
+    { id: 'food', title: 'おいしいごはん', text: '家族がスタミナたっぷりの料理を作ってくれた。\n筋力+2、疲労−10',
+      ok: function () { return true; }, apply: function (g) { addStat(g, 'str', 2); addFatigue(g, -10); } },
+    { id: 'tv', title: 'オリンピックをテレビで観た', text: '日本代表が金メダルを取る瞬間をテレビで観た。「いつか自分も…!」\nメンタル+3',
+      ok: function (g) { return g.age >= 6 && g.age <= 13; }, apply: function (g) { addStat(g, 'men', 3); } },
+    { id: 'slump', title: 'スランプ', text: '何をやってもうまくいかない時期が来てしまった…。\nメンタル−3',
+      ok: function (g) { return g.age >= 12; }, apply: function (g) { addStat(g, 'men', -3); } },
+    { id: 'method', title: '新しいトレーニング法', text: '海外で話題の新しいトレーニング法を取り入れた。\nスピード+3',
+      ok: function () { return true; }, apply: function (g) { addStat(g, 'spd', 3); } }
+  ];
+
+  function makeEvent(g) {
+    var a = g.age;
+    if (a === 6) return { id: 'school', title: '小学校に入学', text: g.name + 'は小学生になった。\n体を動かすのが大好きな毎日。春・夏・秋に何をするか選ぼう。' };
+    if (a === 8) return { id: 'meet', title: 'レスリングとの出会い', text: '近所の体育館で、レスリング教室の練習を見かけた。\nマットの上でぶつかり合う子どもたちの姿に、胸が熱くなる。\n' + g.name + 'はその日のうちに入門した!\n(10歳から大会に出られるようになる)' };
+    if (a === 10) {
+      g.rival = { name: japaneseName(), pref: pick(PREFS), w: 0, l: 0 };
+      return { id: 'rival', title: '宿命のライバル出現', text: '初めての大会の会場で、ひときわ鋭い目をした同い年の選手がいた。\n' + g.rival.pref + 'の「' + g.rival.name + '」。\n「おまえには負けない」——この男とは、これから何度も戦うことになる。\n(3回戦以上ある大会の決勝では、必ずライバルと当たる)' };
+    }
+    if (a === 15) {
+      var hs = COURSES.hs;
+      return { id: 'hs', title: '進路選択:高校', text: '中学卒業。どの高校に進む?',
+        options: [{ id: 'elite', label: hs.elite.name, desc: hs.elite.desc }, { id: 'public', label: hs.public.name, desc: hs.public.desc }] };
+    }
+    if (a === 18) {
+      var af = COURSES.after;
+      return { id: 'after', title: '進路選択:高校卒業後', text: '高校卒業。これからどこで強くなる?',
+        options: ['univ', 'corp', 'abroad'].map(function (k) { return { id: k, label: af[k].name, desc: af[k].desc }; }) };
+    }
+    if (a >= 8 && rand() < BAL.randomEventRate) {
+      var pool = RANDOM_EVENTS.filter(function (e) { return e.ok(g); });
+      var e = pick(pool);
+      e.apply(g);
+      return { id: e.id, title: e.title, text: e.text };
+    }
+    return null;
+  }
+
+  function beginYear(g) {
+    g.season = 0;
+    g.injured = false;
+    g.master = 1;
+    g.yearNotes = [];
+    g.tour = null;
+    g.event = makeEvent(g);
+    g.phase = g.event ? 'event' : 'train';
+  }
+
+  function resolveEvent(g, optionId) {
+    if (g.phase !== 'event' || !g.event) return;
+    var e = g.event;
+    if (e.options) {
+      var valid = e.options.some(function (o) { return o.id === optionId; });
+      if (!valid) return;
+      if (e.id === 'hs') {
+        g.hs = optionId;
+        g.lastMsg = COURSES.hs[optionId].name + 'に進学した!';
+      } else if (e.id === 'after') {
+        g.after = optionId;
+        g.lastMsg = COURSES.after[optionId].name + 'の道を選んだ!';
+        if (optionId === 'abroad') { addStat(g, 'men', 5); g.lastMsg += '(メンタル+5)'; }
+      }
+    }
+    g.event = null;
+    g.phase = 'train';
+  }
+
+  // ---- 練習 ----
+  function train(g, menuId) {
+    var m = MENU_BY_ID[menuId];
+    if (!m || g.phase !== 'train') return null;
+    var fc = fatigueCoef(g.fatigue);
+    var parts = [];
+    for (var s in m.gain) {
+      var d = growth(g, s, m.gain[s], fc);
+      parts.push(STAT_NAMES[s] + '+' + r1(d));
+    }
+    var before = g.fatigue;
+    addFatigue(g, m.fat + (menuId === 'rest' ? 0 : courseFat(g)));
+    var fd = Math.round(g.fatigue - before);
+    var msg = m.name + 'をした!' + (parts.length ? ' ' + parts.join('、') : '') + '(疲労' + (fd >= 0 ? '+' : '') + fd + ')';
+    if (fc < 1) msg += '\n疲れていて、思うように身につかなかった…';
+    var injured = false;
+    if (menuId !== 'rest') {
+      var rate = (m.injury || 0) + Math.max(0, g.fatigue - 80) / 100;
+      if (rand() < rate) injured = true;
+    }
+    g.season++;
+    if (injured) {
+      g.injured = true;
+      msg += '\n💥 ケガをしてしまった! 残りの練習はリハビリになり、今年の大会は欠場…';
+      while (g.season < 3) { addFatigue(g, -25); g.season++; }
+    }
+    g.lastMsg = msg;
+    if (g.season >= 3) afterSeasons(g);
+    return { msg: msg, injured: injured };
+  }
+
+  // ---- 大会 ----
+  function tournamentFor(age) {
+    if (age < 10) return null;
+    var t = TOURNAMENTS[age];
+    if (t) return { name: t[0], str: t[1], rounds: t[2], kind: 'normal' };
+    if (OLYMPIC_AGES.indexOf(age) >= 0) return { name: 'オリンピック代表選考会', str: 67 + (age - 24) / 4 * BAL.trialsStep, rounds: 3, kind: 'trials' };
+    return { name: '全日本選手権', str: 65 + Math.min(5, age - 24), rounds: 4, kind: 'national' };
+  }
+  function followUp(g, t) {
+    if (t.kind === 'trials') return { name: 'オリンピック', str: 68 + (g.age - 24) / 4 * BAL.olyStep, rounds: 4, kind: 'olympics' };
+    if (t.kind === 'national' || (t.name === '全日本選手権')) return { name: '世界選手権', str: t.str + 4, rounds: 4, kind: 'world' };
+    return null;
+  }
+  function isIntl(t) { return t.kind === 'world' || t.kind === 'olympics'; }
+
+  function roundName(r, R) {
+    if (r === R) return '決勝';
+    if (r === R - 1) return '準決勝';
+    if (r === R - 2) return '準々決勝';
+    return r + '回戦';
+  }
+
+  function makeOpponent(g, t, r) {
+    var S = t.str * BAL.oppScale;
+    var isFinal = r === t.rounds;
+    if (isFinal && t.rounds >= 3) {
+      var p = S + 4 + rnd(-2.5, 2.5);
+      if (!isIntl(t) && g.rival) return { name: g.rival.name, from: g.rival.pref, power: p, rival: true };
+      var fn = foreignName();
+      return { name: fn.name, from: fn.country, power: p, champ: true };
+    }
+    var pw = S - (t.rounds - r) * 3 + rnd(-3, 3);
+    if (isIntl(t)) { var f = foreignName(); return { name: f.name, from: f.country, power: pw }; }
+    return { name: japaneseName(), from: pick(PREFS), power: pw };
+  }
+
+  function myMoves(g) {
+    var list = MOVES.filter(function (m) { return g.stats.tec >= m.tec; });
+    return list.length ? list : [{ name: '押し込み', pts: 2 }];
+  }
+  function oppMoves(p) {
+    var list = MOVES.filter(function (m) { return p >= m.tec * 0.9; });
+    return list.length ? list : [{ name: '押し込み', pts: 2 }];
+  }
+  // 得点を技の場面に分ける
+  function narrate(pts, moves, who) {
+    var lines = [];
+    var big = moves.filter(function (m) { return m.pts === 4; })[0];
+    var small = moves.filter(function (m) { return m.pts === 2; });
+    if (!small.length) small = [{ name: '押し込み', pts: 2 }];
+    while (pts > 0) {
+      if (pts >= 4 && big && rand() < 0.4) { lines.push({ who: who, move: big.name, pts: 4 }); pts -= 4; }
+      else if (pts >= 2) {
+        // 強い技ほど出やすい
+        var mv = rand() < 0.5 ? small[small.length - 1] : pick(small);
+        lines.push({ who: who, move: mv.name, pts: 2 }); pts -= 2;
+      } else { lines.push({ who: who, move: '場外押し出し', pts: 1 }); pts -= 1; }
+    }
+    return lines;
+  }
+
+  function simulateMatch(g, opp) {
+    var P = matchPower(g);
+    var diff = P - opp.power;
+    var fall = null;
+    if (Math.abs(diff) > 20 && rand() < 0.2) fall = { period: ri(1, 2), by: diff > 0 ? 'me' : 'opp' };
+    var periods = [];
+    var me = 0, op = 0;
+    var mm = myMoves(g), om = oppMoves(opp.power);
+    for (var p = 1; p <= 2; p++) {
+      var a = Math.max(0, Math.round(2 + diff / 7 + rnd(-2.5, 2.5)));
+      var b = Math.max(0, Math.round(2 - diff / 7 + rnd(-2.5, 2.5)));
+      var lines = narrate(a, mm, 'me').concat(narrate(b, om, 'opp'));
+      // 交互に並べ替え
+      for (var i = lines.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var tmp = lines[i]; lines[i] = lines[j]; lines[j] = tmp; }
+      me += a; op += b;
+      periods.push({ me: a, opp: b, lines: lines });
+      if (fall && fall.period === p) break;
+    }
+    var win, method;
+    if (fall) {
+      win = fall.by === 'me';
+      method = win ? 'フォール勝ち' : 'フォール負け';
+    } else if (me !== op) {
+      win = me > op;
+      method = win ? '判定勝ち' : '判定負け';
+    } else {
+      var pw = clamp(0.5 + diff / 100 + (g.stats.men - 50) / 200, 0.1, 0.9);
+      win = rand() < pw;
+      method = win ? '同点・ラストポイントで勝ち' : '同点・ラストポイントで負け';
+    }
+    addStat(g, 'men', win ? 0.6 : 0.3);
+    if (opp.rival && g.rival) { if (win) g.rival.w++; else g.rival.l++; }
+    return {
+      opp: { name: opp.name, from: opp.from, power: Math.round(opp.power), rival: !!opp.rival, champ: !!opp.champ },
+      myPower: Math.round(P), periods: periods, me: me, op: op, win: win, method: method, fall: fall
+    };
+  }
+
+  function simulateTournament(g, t) {
+    var tour = { name: t.name, kind: t.kind, str: t.str, rounds: t.rounds, matches: [], won: false, place: '', medal: null };
+    var R = t.rounds;
+    for (var r = 1; r <= R; r++) {
+      var opp = makeOpponent(g, t, r);
+      var m = simulateMatch(g, opp);
+      m.round = roundName(r, R);
+      tour.matches.push(m);
+      if (!m.win) {
+        if (t.kind === 'olympics' && r === R - 1) {
+          var bopp = { name: '', from: '', power: t.str * BAL.oppScale - 3 + rnd(-2, 2) };
+          var bf = foreignName(); bopp.name = bf.name; bopp.from = bf.country;
+          var bm = simulateMatch(g, bopp);
+          bm.round = '3位決定戦';
+          tour.matches.push(bm);
+          if (bm.win) { tour.medal = '銅'; tour.place = '銅メダル'; } else { tour.place = '4位'; }
+        } else if (r === R) {
+          tour.place = t.kind === 'olympics' ? '銀メダル' : '準優勝';
+          if (t.kind === 'olympics') tour.medal = '銀';
+        } else if (r === R - 1) {
+          tour.place = 'ベスト4';
+        } else {
+          tour.place = m.round + '敗退';
+        }
+        break;
+      }
+      if (r === R) {
+        tour.won = true;
+        tour.place = t.kind === 'olympics' ? '金メダル' : '優勝';
+        if (t.kind === 'olympics') tour.medal = '金';
+      }
+    }
+    if (tour.won) g.titles.push({ age: g.age, name: t.name });
+    if (tour.medal) g.medals.push({ age: g.age, medal: tour.medal });
+    if (t.kind === 'olympics' || t.kind === 'world' || tour.won) g.log.push({ age: g.age, name: t.name, place: tour.place });
+    tour.next = tour.won ? followUp(g, t) : null;
+    return tour;
+  }
+
+  function afterSeasons(g) {
+    var t = tournamentFor(g.age);
+    if (t && !g.injured) {
+      g.tour = simulateTournament(g, t);
+      g.tourStep = 0;
+      g.phase = 'tournament';
+    } else {
+      if (t) g.yearNotes.push('ケガのため「' + t.name + '」は欠場した。');
+      else if (g.age >= 6) g.yearNotes.push('今年は大会がない。');
+      endYear(g);
+    }
+  }
+
+  // 大会結果を見終わったあと
+  function finishTournament(g) {
+    if (g.phase !== 'tournament' || !g.tour) return;
+    var t = g.tour;
+    g.yearNotes.push(t.name + ':' + t.place);
+    if (t.medal === '金') {
+      g.ending = { type: 'gold', age: g.age };
+      g.phase = 'ending';
+      return;
+    }
+    if (t.next) {
+      g.tour = simulateTournament(g, t.next);
+      g.tourStep = 0;
+      return;
+    }
+    endYear(g);
+  }
+
+  function endYear(g) {
+    if (g.age >= 31) {
+      addStat(g, 'sta', -BAL.declineSS); addStat(g, 'spd', -BAL.declineSS);
+      var dn = '年齢による衰え:スタミナ−' + BAL.declineSS + '、スピード−' + BAL.declineSS;
+      if (BAL.declineOther) {
+        ['str', 'tec', 'men'].forEach(function (s) { addStat(g, s, -BAL.declineOther); });
+        dn += '、筋力・技術・メンタル−' + BAL.declineOther;
+      }
+      g.yearNotes.push(dn);
+    }
+    addFatigue(g, -10);
+    if (g.injured) g.fatigue = Math.min(g.fatigue, 30);
+    g.phase = 'yearEnd';
+  }
+
+  function nextYear(g) {
+    if (g.phase !== 'yearEnd') return;
+    if (g.age >= LAST_AGE) {
+      g.age++;
+      g.ending = { type: 'retire', age: g.age };
+      g.phase = 'ending';
+      return;
+    }
+    g.age++;
+    g.lastMsg = '';
+    beginYear(g);
+  }
+
+  function startInfancy(g) { if (g.phase === 'birth') g.phase = 'infancy'; }
+
+  return {
+    STATS: STATS, STAT_NAMES: STAT_NAMES, MENUS: MENUS, INFANCY: INFANCY, COURSES: COURSES, BAL: BAL,
+    OLYMPIC_AGES: OLYMPIC_AGES, MOVES: MOVES,
+    setRandom: setRandom, newGame: newGame, startInfancy: startInfancy, chooseInfancy: chooseInfancy,
+    resolveEvent: resolveEvent, train: train, finishTournament: finishTournament, nextYear: nextYear,
+    tournamentFor: tournamentFor, power: power, matchPower: matchPower, stars: stars, stageName: stageName,
+    ageCoef: ageCoef, fatigueCoef: fatigueCoef, courseMul: courseMul, courseFat: courseFat
+  };
+})();
+if (typeof module !== 'undefined') module.exports = WL;
+// ==LOGIC END==
+</script>
+
+<script>
+// ===== 画面処理 =====
+(function () {
+  var SAVE_KEY = 'wrestlingLife.save.v1';
+  var NAME_KEY = 'wrestlingLife.lastName';
+  var app = document.getElementById('app');
+  var g = null;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function storeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function storeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function storeDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function save() { if (g) storeSet(SAVE_KEY, JSON.stringify(g)); }
+  function load() {
+    var s = storeGet(SAVE_KEY);
+    if (!s) return null;
+    try { var d = JSON.parse(s); return d && d.v === 1 && d.phase ? d : null; } catch (e) { return null; }
+  }
+  function starStr(n) { return '★★★'.slice(0, n) + '☆☆☆'.slice(0, 3 - n); }
+  function n0(v) { return Math.floor(v); }
+
+  function render() {
+    save();
+    var html;
+    if (!g) html = titleScreen();
+    else switch (g.phase) {
+      case 'birth': html = birthScreen(); break;
+      case 'infancy': html = infancyScreen(); break;
+      case 'event': html = eventScreen(); break;
+      case 'train': html = trainScreen(); break;
+      case 'tournament': html = tournamentScreen(); break;
+      case 'yearEnd': html = yearEndScreen(); break;
+      case 'ending': html = endingScreen(); break;
+      default: html = titleScreen();
+    }
+    app.innerHTML = '<div class="pop">' + html + '</div>';
+    window.scrollTo(0, 0);
+  }
+
+  // ---- 1. タイトル ----
+  function titleScreen() {
+    var saved = load();
+    var last = storeGet(NAME_KEY) || '';
+    return '<div class="title-logo"><div class="sub">WRESTLING LIFE</div><h1>レスリング人生</h1>' +
+      '<div class="road">〜オリンピックへの道〜</div></div>' +
+      '<div class="mat">🤼</div>' +
+      '<div class="card"><div class="label">選手の名前</div>' +
+      '<input type="text" id="nameInput" maxlength="12" placeholder="例:北村 太郎" value="' + esc(last) + '">' +
+      '<button class="btn" data-act="new">はじめから</button>' +
+      '<button class="btn gold" data-act="continue"' + (saved && saved.phase !== 'ending' ? '' : ' disabled') + '>つづきから' +
+      (saved && saved.phase !== 'ending' ? '(' + esc(saved.name) + '・' + saved.age + '歳)' : '') + '</button></div>' +
+      '<div class="card small muted">毎年「春・夏・秋」の3回、練習メニューを選び、冬の大会に挑もう。<br>' +
+      '36歳までにオリンピックで金メダルを取れればクリア! 疲れをためすぎるとケガをするので、休養も大事。</div>';
+  }
+
+  // ---- 2. 誕生 ----
+  function birthScreen() {
+    var rows = WL.STATS.map(function (s) {
+      return '<li>' + WL.STAT_NAMES[s] + ' <span class="gold-t">' + starStr(WL.stars(g.talent[s])) + '</span></li>';
+    }).join('');
+    return '<div class="center" style="padding-top:20px"><div class="medal">👶</div><h2>おめでとうございます!</h2></div>' +
+      '<div class="card"><div class="big center">' + esc(g.name) + '</div>' +
+      '<p class="center">' + esc(g.pref) + 'で元気な赤ちゃんが生まれた!</p>' +
+      '<div class="label">生まれつきの才能(★が多いほど伸びやすい)</div><ul class="plain">' + rows + '</ul></div>' +
+      '<button class="btn" data-act="toInfancy">すくすく育つ</button>';
+  }
+
+  // ---- 3. 幼少期 ----
+  function infancyScreen() {
+    return '<div class="card"><div class="label">0〜5歳</div><h2>どんなふうに育てる?</h2>' +
+      '<p class="muted small">幼いころの過ごし方で、得意なことが変わる。</p>' +
+      WL.INFANCY.map(function (c) {
+        return '<button class="btn choice" data-act="infancy" data-id="' + c.id + '"><b>' + esc(c.label) + '</b><span>' + esc(c.desc) + '</span></button>';
+      }).join('') + '</div>';
+  }
+
+  // ---- 4. 年初イベント ----
+  function eventScreen() {
+    var e = g.event;
+    var body = '<div class="card ' + (e.options ? 'gold' : 'red') + '"><div class="label">' + g.age + '歳の年のはじめ</div>' +
+      '<h2>' + esc(e.title) + '</h2><p style="white-space:pre-line">' + esc(e.text) + '</p>';
+    if (e.options) {
+      body += e.options.map(function (o) {
+        return '<button class="btn choice" data-act="event" data-id="' + esc(o.id) + '"><b>' + esc(o.label) + '</b><span>' + esc(o.desc) + '</span></button>';
+      }).join('');
+    } else {
+      body += '<button class="btn" data-act="event" data-id="">練習へ</button>';
+    }
+    return header() + (g.lastMsg && !e.options ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + body + '</div>';
+  }
+
+  // ---- 5. 練習 ----
+  function header() {
+    return '<div class="hdr"><div><div class="nm">' + esc(g.name) + '</div><div class="st">' + esc(WL.stageName(g)) + '・' + esc(g.pref) + '出身</div></div>' +
+      '<div class="age">' + g.age + '<small>歳</small></div></div>';
+  }
+  function statsPanel() {
+    var html = WL.STATS.map(function (s) {
+      var v = g.stats[s];
+      return '<div class="stat"><div class="nm">' + WL.STAT_NAMES[s] + '<small>' + starStr(WL.stars(g.talent[s])) + '</small></div>' +
+        '<div class="bar"><i style="width:' + v + '%"></i></div><div class="v">' + n0(v) + '</div></div>';
+    }).join('');
+    var f = g.fatigue;
+    var fl = f > 85 ? '<span class="red-t">限界</span>' : f > 65 ? '<span class="red-t">ヘトヘト</span>' : f > 50 ? '<span class="gold-t">疲れぎみ</span>' : '<span class="green-t">元気</span>';
+    html += '<div class="stat"><div class="nm">疲労</div><div class="bar fat"><i style="width:' + f + '%"></i></div><div class="v">' + n0(f) + '</div></div>';
+    html += '<div class="power"><span>戦闘力 <b class="gold-t">' + n0(WL.power(g)) + '</b>' +
+      (f > 50 ? '(試合では ' + n0(WL.matchPower(g)) + ')' : '') + '</span><span>' + fl + '</span></div>';
+    if (g.rival) html += '<div class="small muted">ライバル ' + esc(g.rival.name) + ':' + g.rival.w + '勝' + g.rival.l + '敗</div>';
+    return '<div class="card">' + html + '</div>';
+  }
+  function trainScreen() {
+    var t = WL.tournamentFor(g.age);
+    var names = ['春', '夏', '秋'];
+    var seasons = names.map(function (n, i) {
+      return '<div class="' + (i < g.season ? 'done' : i === g.season ? 'now' : '') + '">' + n + '</div>';
+    }).join('') + '<div class="tour">冬・大会</div>';
+    var tourLine = t ? '今年の大会:<b class="gold-t">' + esc(t.name) + '</b>(全' + t.rounds + '試合)' +
+      (t.kind === 'trials' ? '<span class="tag gold">五輪イヤー</span>' : '') : '今年は大会なし';
+    var menus = WL.MENUS.map(function (m) {
+      var gains = Object.keys(m.gain).map(function (s) { return WL.STAT_NAMES[s] + '+' + m.gain[s]; }).join(' ');
+      var extra = m.id === 'rest' ? '' : WL.courseFat(g);
+      var fat = m.fat + (extra || 0);
+      return '<button class="btn ' + m.id + '" data-act="train" data-id="' + m.id + '"><b>' + esc(m.name) + '</b><span>' +
+        (gains || '疲れをとる') + '</span><span>疲労' + (fat > 0 ? '+' : '') + fat + (m.injury ? '・ケガ注意' : '') + '</span></button>';
+    }).join('');
+    var tips = [];
+    if (g.master > 1) tips.push('師匠の指導で今年の成長×' + g.master);
+    if (g.season === 2 && t && g.fatigue > 50) tips.push('大会前に疲れを抜いておくと試合で力を出せる');
+    if (g.fatigue > 80) tips.push('疲労80超はケガをしやすい!');
+    return header() +
+      '<div class="seasons">' + seasons + '</div>' +
+      '<div class="small">' + tourLine + '</div>' +
+      statsPanel() +
+      (g.lastMsg ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') +
+      (tips.length ? '<div class="small gold-t">💡 ' + tips.map(esc).join('<br>💡 ') + '</div>' : '') +
+      '<div class="label" style="margin-top:8px">' + ['春', '夏', '秋'][g.season] + 'の練習メニューを選ぶ</div>' +
+      '<div class="menus">' + menus + '</div>' +
+      '<button class="btn ghost" data-act="toTitle" style="margin-top:18px">タイトルへ(自動でセーブされています)</button>';
+  }
+
+  // ---- 6. 大会 ----
+  function lineText(l, oppName) {
+    var who = l.who === 'me' ? esc(g.name) : esc(oppName);
+    return '<div class="' + (l.who === 'me' ? 'gold-t' : 'muted') + '">' + who + 'の' + esc(l.move) + '! +' + l.pts + '</div>';
+  }
+  function tournamentScreen() {
+    var t = g.tour;
+    var step = g.tourStep;
+    var head = '<div class="card ' + (t.kind === 'olympics' ? 'gold' : 'red') + ' center"><div class="label">' + g.age + '歳の冬</div>' +
+      '<h2>' + (t.kind === 'olympics' ? '🏅 ' : t.kind === 'world' ? '🌏 ' : '🏆 ') + esc(t.name) + '</h2></div>';
+    if (step === 0) {
+      return header() + (g.lastMsg ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + head +
+        '<div class="card center">全' + t.rounds + '試合のトーナメント。<br>' + esc(g.name) + 'の戦闘力:<b class="gold-t">' + n0(WL.matchPower(g)) + '</b>' +
+        (g.fatigue > 50 ? '<br><span class="red-t small">疲れが残っていて本来の力を出しきれない…</span>' : '') + '</div>' +
+        '<button class="btn" data-act="tourNext">試合開始!</button>';
+    }
+    if (step <= t.matches.length) {
+      var m = t.matches[step - 1];
+      var o = m.opp;
+      var html = head + '<div class="card"><div class="center gold-t"><b>' + esc(m.round) + '</b>' + (o.rival ? '<span class="tag">宿命のライバル</span>' : '') + (o.champ ? '<span class="tag gold">世界王者</span>' : '') + '</div>' +
+        '<div class="vs"><div class="side me"><b>' + esc(g.name) + '</b><div class="p">戦闘力 ' + m.myPower + '</div></div><div class="x">VS</div>' +
+        '<div class="side"><b>' + esc(o.name) + '</b><div class="p">' + esc(o.from) + '・戦闘力 ' + o.power + '</div></div></div>' +
+        '<div class="score">' + m.me + ' - ' + m.op + '</div>';
+      m.periods.forEach(function (p, i) {
+        html += '<div class="period"><span class="ph">第' + (i + 1) + 'ピリオド ' + p.me + '-' + p.opp + '</span>' +
+          (p.lines.length ? p.lines.map(function (l) { return lineText(l, o.name); }).join('') : '<div class="muted">お互い得点なし</div>') +
+          (m.fall && m.fall.period === i + 1 ? '<div class="' + (m.win ? 'gold-t' : 'red-t') + '"><b>' + (m.win ? esc(g.name) : esc(o.name)) + 'がフォール!</b></div>' : '') + '</div>';
+      });
+      html += '<div class="result ' + (m.win ? 'win' : 'lose') + '">' + (m.win ? '◯ ' : '✕ ') + esc(m.method) + '</div>';
+      if (o.rival) html += '<div class="center small muted">ライバルとの通算:' + g.rival.w + '勝' + g.rival.l + '敗</div>';
+      html += '</div><button class="btn" data-act="tourNext">つぎへ</button>';
+      return html;
+    }
+    // 結果まとめ
+    var res = '<div class="card center ' + (t.won ? 'gold' : '') + '">';
+    if (t.medal) res += '<div class="medal">' + ({ '金': '🥇', '銀': '🥈', '銅': '🥉' })[t.medal] + '</div>';
+    else if (t.won) res += '<div class="medal">🏆</div>';
+    res += '<div class="big ' + (t.won || t.medal ? 'gold-t' : '') + '">' + esc(t.place) + '</div>' +
+      '<ul class="plain" style="text-align:left">' + t.matches.map(function (m) {
+        return '<li>' + esc(m.round) + ' ' + (m.win ? '◯' : '✕') + ' ' + esc(m.opp.name) + '(' + m.me + '-' + m.op + ' ' + esc(m.method) + ')</li>';
+      }).join('') + '</ul>';
+    if (t.next) res += '<p class="gold-t">' + (t.next.kind === 'olympics' ? '🎌 オリンピック代表に内定! ついに夢の舞台へ!' : '🌏 世界選手権の日本代表に選ばれた!') + '</p>';
+    else if (t.kind === 'trials') res += '<p class="muted">代表の座には届かなかった…。次のオリンピックは4年後。</p>';
+    res += '</div><button class="btn' + (t.next ? ' gold' : '') + '" data-act="tourDone">' + (t.next ? esc(t.next.name) + 'へ' : 'つぎへ') + '</button>';
+    return head + res;
+  }
+
+  // ---- 年末 ----
+  function yearEndScreen() {
+    var notes = g.yearNotes.length ? g.yearNotes : ['おだやかな1年だった。'];
+    var nextOly = WL.OLYMPIC_AGES.filter(function (a) { return a > g.age; })[0];
+    var last = g.age >= 36;
+    return header() +
+      (g.lastMsg && !g.tour ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') +
+      '<div class="card"><h2>' + g.age + '歳の1年が終わった</h2><ul class="plain">' +
+      notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' +
+      (nextOly && g.age >= 10 ? '<div class="small muted">次のオリンピックまで あと' + (nextOly - g.age) + '年(' + nextOly + '歳)</div>' : '') + '</div>' +
+      statsPanel() +
+      '<button class="btn" data-act="nextYear">' + (last ? '現役を終える…' : (g.age + 1) + '歳へ') + '</button>';
+  }
+
+  // ---- 7. エンディング ----
+  function endingScreen() {
+    var gold = g.ending.type === 'gold';
+    var top = gold
+      ? '<div class="medal">🥇</div><h1 class="center gold-t">オリンピック金メダル!</h1><p class="center">' + g.ending.age + '歳、' + esc(g.name) + 'はついに世界の頂点に立った!<br>' + esc(g.pref) + 'の町は大歓声に包まれた。</p>'
+      : '<div class="medal">🎌</div><h1 class="center">引退</h1><p class="center">' + g.ending.age + '歳。' + esc(g.name) + 'は静かにマットを降りた。<br>金メダルには届かなかったが、その挑戦は多くの人の心に残った。</p>';
+    var titles = g.titles.length ? g.titles.map(function (t) { return '<li>' + t.age + '歳 ' + esc(t.name) + ' 優勝</li>'; }).join('') : '<li class="muted">なし</li>';
+    var medals = g.medals.length ? g.medals.map(function (m) { return '<li>' + m.age + '歳 オリンピック ' + ({ '金': '🥇金', '銀': '🥈銀', '銅': '🥉銅' })[m.medal] + 'メダル</li>'; }).join('') : '<li class="muted">なし</li>';
+    var oly = g.log.filter(function (l) { return l.name === 'オリンピック' || l.name === '世界選手権'; });
+    return '<div class="card ' + (gold ? 'gold' : '') + '">' + top + '</div>' +
+      '<div class="card"><h3>🏅 メダル</h3><ul class="plain">' + medals + '</ul>' +
+      (oly.length ? '<h3>🌏 国際大会</h3><ul class="plain">' + oly.map(function (l) { return '<li>' + l.age + '歳 ' + esc(l.name) + ' ' + esc(l.place) + '</li>'; }).join('') + '</ul>' : '') +
+      '<h3>🏆 優勝歴(' + g.titles.length + '回)</h3><ul class="plain">' + titles + '</ul>' +
+      (g.rival ? '<h3>⚔️ ライバル ' + esc(g.rival.name) + '</h3><p>通算 ' + g.rival.w + '勝' + g.rival.l + '敗</p>' : '') + '</div>' +
+      statsPanel() +
+      '<button class="btn gold" data-act="reborn">生まれ変わる</button>';
+  }
+
+  // ---- 操作 ----
+  app.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-act]');
+    if (!b || b.disabled) return;
+    var act = b.getAttribute('data-act');
+    var id = b.getAttribute('data-id');
+    if (act === 'new') {
+      var input = document.getElementById('nameInput');
+      var name = (input.value || '').trim().slice(0, 12);
+      if (!name) { input.focus(); input.placeholder = '名前を入れてください'; return; }
+      var saved = load();
+      if (saved && saved.phase !== 'ending' && !confirm('いまのセーブデータ(' + saved.name + '・' + saved.age + '歳)は消えます。はじめからにしますか?')) return;
+      storeSet(NAME_KEY, name);
+      g = WL.newGame(name);
+    } else if (act === 'continue') {
+      g = load();
+    } else if (act === 'toInfancy') WL.startInfancy(g);
+    else if (act === 'infancy') WL.chooseInfancy(g, id);
+    else if (act === 'event') WL.resolveEvent(g, id);
+    else if (act === 'train') WL.train(g, id);
+    else if (act === 'tourNext') g.tourStep++;
+    else if (act === 'tourDone') WL.finishTournament(g);
+    else if (act === 'nextYear') WL.nextYear(g);
+    else if (act === 'toTitle') { save(); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
+    else if (act === 'reborn') { storeDel(SAVE_KEY); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
+    render();
+  });
+
+  app.innerHTML = titleScreen();
+})();
+</script>
+</body>
+</html>
