@@ -28,6 +28,8 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://japanwrestlingchannel.com/en/#website", "name": "Japan Wrestling Archive", "url": "https://japanwrestlingchannel.com/en/", "inLanguage": "en", "description": "The official Japan Wrestling Channel archive of Japanese wrestling streams and videos (from Japan Wrestling Channel and others), searchable by tournament, year and day. Emperor's Cup, Meiji Cup, Inter-College, Inter-High and more.", "publisher": {"@id": "https://japanwrestlingchannel.com/#organization"}}, {"@type": "Organization", "@id": "https://japanwrestlingchannel.com/#organization", "name": "Japan Wrestling Channel", "url": "https://japanwrestlingchannel.com/", "logo": "https://japanwrestlingchannel.com/assets/logo.png", "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "url": "https://japanwrestlingchannel.com/en/contact.html"}}, {"@type": "CollectionPage", "name": "Japan Wrestling Archive", "url": "https://japanwrestlingchannel.com/en/", "isPartOf": {"@id": "https://japanwrestlingchannel.com/en/#website"}, "hasPart": [{"@type": "WebPage", "name": "Tournaments", "url": "https://japanwrestlingchannel.com/en/events/"}, {"@type": "WebPage", "name": "Technique videos", "url": "https://japanwrestlingchannel.com/en/technique/"}, {"@type": "ContactPage", "name": "Contact", "url": "https://japanwrestlingchannel.com/en/contact.html"}]}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Connect early to the YouTube image server for the hero and list thumbnails (#24) -->
+<link rel="preconnect" href="https://i.ytimg.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -428,7 +430,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
   </div>
 </header>
 <section class="jhero" id="jhero" aria-labelledby="jhero-h">
-  <img class="jhero-img" id="jhero-img" alt="" decoding="async">
+  <img class="jhero-img" id="jhero-img" alt="" decoding="async" fetchpriority="high">
   <div class="jhero-scrim"></div>
   <div class="wrap jhero-in">
     <h1 id="jhero-h">Japan Wrestling Archive</h1>
