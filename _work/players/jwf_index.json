@@ -80,6 +80,34 @@
   "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
  },
  {
+  "event": "wre-2022-university-championship-1119",
+  "series": "university-championship",
+  "year": 2022,
+  "name": "全日本大学選手権",
+  "page": "https://wrestling-spirits.jp/2022/11/21/198859/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2022/1120daigaku2/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 10,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "manual": "manual/university-2022.tsv",
+  "note": "入賞者一覧表は画像なので、拡大して書き写した表(manual/)を使う。階級ごとのトーナメント表で名前と所属を確かめた"
+ },
+ {
+  "event": "wre-2023-university-championship-1118",
+  "series": "university-championship",
+  "year": 2023,
+  "name": "全日本大学選手権",
+  "page": "https://wrestling-spirits.jp/2023/11/20/217955/",
+  "winners": [
+   "https://wrestling-spirits.jp/www/wp-content/data/2023/1119_daigaku2/ichiran.pdf"
+  ],
+  "n_weight_pdfs": 10,
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "manual": "manual/university-2023.tsv",
+  "note": "入賞者一覧表は画像なので、拡大して書き写した表(manual/)を使う。階級ごとのトーナメント表で名前と所属を確かめた"
+ },
+ {
   "event": "wre-2021-university-greco-1009",
   "series": "university-greco",
   "year": 2021,
