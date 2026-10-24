@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-24T12:31:23+09:00",
+ "built_at": "2026-10-24T12:33:29+09:00",
  "as_of": "2026-10-24",
  "video_count": 3360,
  "raw_count": 3360,
@@ -94,8 +94,8 @@
   ]
  },
  "players": {
-  "total": 1529,
-  "published": 1400,
+  "total": 1546,
+  "published": 1417,
   "hidden_minor": 0,
   "hidden_private": 129,
   "errors": [],
@@ -106,28 +106,28 @@
   "uww_video_links": 2075,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1400,
+    "made": 132,
+    "kept": 1285,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1400,
+    "made": 132,
+    "kept": 1285,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 1101,
+  "rows": 1121,
   "hidden_minor": 0,
   "no_link": 22,
   "skipped_unknown_event": 31,
-  "history_rows": 5135,
-  "history_linked": 1165,
+  "history_rows": 5115,
+  "history_linked": 1145,
   "history_hidden": 7,
-  "history_site_preferred": 974,
+  "history_site_preferred": 994,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
@@ -156,6 +156,7 @@
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-championship フリースタイル 2020 125kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
    "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」",
+   "university-greco グレコローマン 2024 130kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-greco グレコローマン 2022 82kg: サイト「谷﨑 大造」/ 歴代記録「谷崎 大造」",
    "university-greco グレコローマン 2020 130kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」"
   ],
@@ -285,7 +286,7 @@
   ]
  },
  "en": {
-  "pages": 1740,
+  "pages": 1757,
   "names": 637,
   "machine_translations": 3725,
   "missing_names": []
