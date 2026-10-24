@@ -294,6 +294,8 @@ var SHELF_CATS = L([['大学','大学の大会'],['高校','高校の大会'],['
 var NO_HERO = {'x-fujinami-cup':1};
 // 特集の一番前に出さない開催回(国スポは終わったので、次の大会に席を譲る)。大会ページや下の列には今までどおり出る
 var HIDE_FEAT = {'wre-2026-kokutai-1012':1};
+// 特集の一番前に並べる順番(ここに書いた開催回が先、あとは開催日の新しい順)
+var FEAT_ORDER = ['wre-2026-university-greco-1023', 'wre-2026-women-open-1024'];
 // 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
 var FEATURE_ART = {'wre-2026-kokutai-1012': {src:'/assets/feature/kokutai-2026.jpg', pos:'22% 50%'}};
 var FEAT = [], featI = 0;
@@ -318,7 +320,8 @@ function buildFeature(){
   // 始まる3日前から終わって7日までの大会で、結果・公式サイトのリンク(overrides.json の event_links)がある大会を一番前に出す
   var today = jstDate(new Date().toISOString()), weekAgo = jstDate(new Date(Date.now()-7*864e5).toISOString()), soonTo = jstDate(new Date(Date.now()+3*864e5).toISOString());
   var live = DATA.events.filter(function(e){ return e.links && e.links.length && PAGES[e.id] && e.start && e.start<=soonTo && (e.end||e.start)>=weekAgo && e.status!=='cancelled' && !NO_HERO[e.series] && !HIDE_FEAT[e.id]; })
-    .sort(function(a,b){ return a.start<b.start?1:-1; });
+    .sort(function(a,b){ var ia = FEAT_ORDER.indexOf(a.id), ib = FEAT_ORDER.indexOf(b.id);
+      if(ia<0) ia = 99; if(ib<0) ib = 99; if(ia!==ib) return ia-ib; return a.start<b.start?1:-1; });
   var out = live.map(function(e){
     var x = evSlide(e, e.start>today ? 'soon' : (e.end||e.start)>=today ? 'live' : 'result');
     // 配信動画がまだない大会は、同じ大会の前の年の試合動画を背景にする
@@ -343,7 +346,7 @@ function showFeature(i){
   var t = FEAT_TXT[f.kind];
   box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="badge-l'+(f.kind==='live'?' live':'')+'">'+t[0]+'</div><a class="fn" href="'+esc(f.href)+'">'+esc(f.name)+'</a>'+
     (f.meta?'<div class="fm">'+f.meta+'</div>':'')+
-    (f.ext ? '<div class="ctas"><a class="cta" href="'+esc(f.ext)+'" target="_blank" rel="noopener">'+t[1]+' ↗</a><a class="cta2" href="'+esc(f.href)+'">'+L('大会ページへ','Tournament page')+'</a></div>'
+    (f.ext ? '<div class="ctas"><a class="cta" href="'+esc(f.ext)+'" target="_blank" rel="noopener">'+(LANG==='ja' && f.extLabel ? esc(f.extLabel)+'を見る' : t[1])+' ↗</a><a class="cta2" href="'+esc(f.href)+'">'+L('大会ページへ','Tournament page')+'</a></div>'
            : '<a class="cta" href="'+esc(f.href)+'" tabindex="-1">'+t[1]+'</a>')+'</div>'+
     (FEAT.length>1 ? '<div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="'+L('前の特集','Previous')+'">‹</button><div class="fdots">'+
       FEAT.map(function(x,k){ return '<button type="button" data-featto="'+k+'" aria-label="'+L((k+1)+'件目('+FEAT.length+'件中)','Item '+(k+1)+' of '+FEAT.length)+'"'+(k===featI?' aria-current="true"':'')+'></button>'; }).join('')+

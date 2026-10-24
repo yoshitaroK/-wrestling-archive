@@ -632,6 +632,16 @@ def to_jst_date(iso):
     return dt.astimezone(JST).date()
 
 
+def shown_status(e, as_of):
+    """サイトに出す開催の状態。「開催予定」のままでも、終わりの日(なければ始まりの日)が過ぎていれば「開催済み」にする。
+    毎日の自動更新で切り替わるので、大会が終わるたびに master_events.json を手で直さなくてよい"""
+    if e.get("status") == "scheduled":
+        last = d(e.get("end_date") or e.get("start_date"))
+        if last and last < as_of:
+            return "held"
+    return e.get("status")
+
+
 def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, previous=None):
     as_of = as_of or datetime.now(JST).date()
     events = master["events"]
@@ -853,7 +863,7 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
             "id": e["id"], "series": e["series_id"], "year": e["year"],
             "fy_label": fy_label(fiscal_year(sd)) if sd else None,
             "name": e["name"], "official_name": e.get("official_name"),
-            "status": e["status"], "start": e["start_date"], "end": e["end_date"],
+            "status": shown_status(e, as_of), "start": e["start_date"], "end": e["end_date"],
             "venue": e.get("venue"), "date_quality": e.get("date_quality"),
             "evidence": EVIDENCE_LABEL.get(e.get("evidence_level"), e.get("evidence_level")),
             "jwf_relationship": e.get("jwf_relationship"),
