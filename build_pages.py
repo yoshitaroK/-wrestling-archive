@@ -1599,6 +1599,27 @@ def extract_css(index_path):
     return (m.group(1) if m else "") + books.BOOK_CSS + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS + uww_page.UWW_CSS + news.NEWS_CSS
 
 
+TITLE_RE = re.compile(r"<title>(.*?)</title>", re.S)
+DESC_RE = re.compile(r'<meta name="description" content="([^"]*)"')
+
+
+def duplicate_meta(all_pages):
+    """title と description が、ほかのページと同じになっているページを探す(Issue #25)。
+    同じだと検索エンジンがページの違いを見分けにくいので、ビルドのときに知らせる(止めはしない)"""
+    out = {}
+    for lang, pages in all_pages:
+        pre = "/en" if lang == "en" else ""
+        for kind, rx in (("title", TITLE_RE), ("description", DESC_RE)):
+            seen = defaultdict(list)
+            for path, doc, _ in pages:
+                m = rx.search(doc)
+                if m and m.group(1).strip():
+                    seen[html.unescape(m.group(1).strip())].append(pre + path)
+            dups = [{"value": v, "pages": sorted(ps)} for v, ps in seen.items() if len(ps) > 1]
+            out[f"{kind}_{lang}"] = sorted(dups, key=lambda d: (-len(d["pages"]), d["value"]))
+    return out
+
+
 def build(root=HERE, inline_css=False, only=None):
     with open(os.path.join(root, "data.json"), encoding="utf-8") as f:
         data = json.load(f)
@@ -1796,6 +1817,7 @@ def build(root=HERE, inline_css=False, only=None):
     if only is None:
         report["en"] = {"pages": len(en_pages), "names": len(i18n.names_table()), "machine_translations": i18n.tr_count(),
                         "missing_names": sorted(i18n.missing)}
+        report["duplicate_meta"] = dup = duplicate_meta(all_pages)
         with open(os.path.join(root, "build_report.json"), "w", encoding="utf-8") as f:
             json.dump(report, f, ensure_ascii=False, indent=1)
         urls = [(f"{SITE}/", data.get("as_of")), (f"{SITE}/en/", data.get("as_of"))]
@@ -1817,6 +1839,12 @@ def build(root=HERE, inline_css=False, only=None):
     print(f"ページを生成しました: {len(pages)}ページ(開催回 {n_ev}・大会 {n_se}・技術動画 {n_te}・選手 {n_pl}・写真 {n_ph}・歴代優勝者 {n_ch})+英語版 {len(en_pages)}ページ")
     if i18n.missing:
         print(f"[英語版] 英語名が無い名前 {len(i18n.missing)}件(日本語のまま表示): " + "、".join(sorted(i18n.missing)[:10]) + " … en_names.csv に追加してください")
+    if only is None:
+        for k, lst in dup.items():
+            if lst:
+                n = sum(len(d["pages"]) for d in lst)
+                print(f"[重複] {k}: 同じ文のページが {len(lst)}組・{n}ページ(例: 「{lst[0]['value'][:40]}」→ {', '.join(lst[0]['pages'][:3])})"
+                      " … build_report.json の duplicate_meta を見てください")
     print(f"写真: {photo_report['shown']}枚を{photo_report['pages_with_photos']}ページに掲載"
           f"(非表示 {photo_report['hidden']}・未確認 {photo_report['unconfirmed']}・エラー {len(photo_report['errors'])}・警告 {len(photo_report['warnings'])})")
     return pages
