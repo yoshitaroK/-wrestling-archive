@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-25T11:53:19+09:00",
+ "built_at": "2026-10-25T11:55:17+09:00",
  "as_of": "2026-10-25",
  "video_count": 3360,
  "raw_count": 3360,
@@ -32,14 +32,14 @@
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
-  "total": 3725,
-  "translated": 3725,
+  "total": 3484,
+  "translated": 3484,
   "new": 0,
   "pending": 0,
   "chars_used": 0,
   "error": "",
   "name_fixed": 0,
-  "name_suspects": 10,
+  "name_suspects": 8,
   "name_suspect_examples": [
    {
     "ja": "2021年ジュニアクイーンズカップ(カデット) 46kg級 決勝 太田真蓉（青＝埼玉・埼玉栄高）○［フォール、4:00=4-4］●小川凜佳（中津川ジュニア）",
@@ -80,16 +80,6 @@
     "ja": "令和３年度第65回風間杯全国高校選抜レスリング大会決勝戦 　【65kg級】　細川周（京都・丹後緑風）○［Ｔフォール、3:52=14-2］●平井友真（山梨・甲府城西）",
     "en": "Reiwa 3, 65th Kazama Cup National High School Select Wrestling Tournament Finals  [65kg Class] Shu Hosokawa (Tango Ryokufu, Kyoto) ○ [Technical Fall, 3:52 = 14-2] ● Tomoma Hirai (Kofu Josai, Yamanashi)",
     "expected": "Makoto Hosokawa"
-   },
-   {
-    "ja": "手動確認: YouTube のタイトルは女子72kg級決勝(藤倉優花-中村旭)と同じだが、映像はグレコローマン72kg級決勝の本名一晟-本名帝心(運営者が確認)。日本協会の入賞者一覧でもこの階級の1位が本名一晟、2位が本名帝心(確認日 2026-10-14)",
-    "en": "Manual verification: Although the YouTube title is the same as that of the Women’s 72kg Final (Yuka Fujikura vs. Asahi Nakamura), the video actually shows the Greco-Roman 72kg Final between Issei Honmyo and Teishin Honmyo (verified by the site administrator). In the Japan Federation’s list of medalists, the first-place finisher in this weight class is Ichisei Honmyo, and the second-place finisher is Teishin Honmyo (verified on October 14, 2026).",
-    "expected": "Taishin Honna"
-   },
-   {
-    "ja": "手動確認: YouTube のタイトルは女子72kg級決勝(藤倉優花-中村旭)と同じだが、映像はグレコローマン72kg級決勝の本名一晟-本名帝心(運営者が確認)。日本協会の入賞者一覧でもこの階級の1位が本名一晟、2位が本名帝心(確認日 2026-10-14)",
-    "en": "Manual verification: Although the YouTube title is the same as that of the Women’s 72kg Final (Yuka Fujikura vs. Asahi Nakamura), the video actually shows the Greco-Roman 72kg Final between Issei Honmyo and Teishin Honmyo (verified by the site administrator). In the Japan Federation’s list of medalists, the first-place finisher in this weight class is Ichisei Honmyo, and the second-place finisher is Teishin Honmyo (verified on October 14, 2026).",
-    "expected": "Issei Honna"
    }
   ]
  },
@@ -289,7 +279,7 @@
  "en": {
   "pages": 1776,
   "names": 637,
-  "machine_translations": 3725,
+  "machine_translations": 3484,
   "missing_names": []
  },
  "duplicate_meta": {
