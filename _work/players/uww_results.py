@@ -41,6 +41,7 @@ GAMES = [
     ("U23世界選手権", "2023", "", UWW + "2023-10/2023-u23-world-championships_final-book.pdf"),
     ("U23世界選手権", "2024", "", UWW + "2026-06/results_10_tirana_u23_20260608.pdf"),
     ("U23世界選手権", "2025", "", UWW + "2025-10/final-book-1f0a015d-285b-6194-be9d-7d4675d42071.pdf"),
+    ("U23世界選手権", "2026", "", UWW + "2026-10/final-book-u23-world-championships.pdf"),  # ラスベガス
 ]
 STYLE = {"Freestyle": "フリースタイル", "Greco-Roman": "グレコローマン", "Women's wrestling": "女子"}
 # 冊子によって、階級の見出しの後ろに日付「(8 Aug - 9 Aug 2024)」があるものと無いものがある
