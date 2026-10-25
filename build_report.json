@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-25T11:48:30+09:00",
+ "built_at": "2026-10-25T11:53:19+09:00",
  "as_of": "2026-10-25",
  "video_count": 3360,
  "raw_count": 3360,
@@ -106,15 +106,15 @@
   "uww_video_links": 2075,
   "og_cards": {
    "ja": {
-    "made": 2,
-    "kept": 1433,
-    "removed": 2,
+    "made": 0,
+    "kept": 1435,
+    "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 2,
-    "kept": 1433,
-    "removed": 2,
+    "made": 0,
+    "kept": 1435,
+    "removed": 0,
     "errors": []
    }
   }
