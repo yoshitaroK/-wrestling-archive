@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-25T11:55:17+09:00",
+ "built_at": "2026-10-25T12:05:03+09:00",
  "as_of": "2026-10-25",
  "video_count": 3360,
  "raw_count": 3360,
@@ -84,8 +84,8 @@
   ]
  },
  "players": {
-  "total": 1564,
-  "published": 1435,
+  "total": 1563,
+  "published": 1434,
   "hidden_minor": 0,
   "hidden_private": 129,
   "errors": [],
@@ -93,18 +93,18 @@
   "video_links": 1125,
   "event_results": 300,
   "event_results_linked": 148,
-  "uww_video_links": 2075,
+  "uww_video_links": 2042,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1435,
-    "removed": 0,
+    "made": 42,
+    "kept": 1392,
+    "removed": 1,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1435,
-    "removed": 0,
+    "made": 42,
+    "kept": 1392,
+    "removed": 1,
     "errors": []
    }
   }
@@ -113,7 +113,7 @@
   "rows": 1141,
   "hidden_minor": 0,
   "no_link": 23,
-  "skipped_unknown_event": 31,
+  "skipped_unknown_event": 34,
   "history_rows": 5095,
   "history_linked": 1128,
   "history_hidden": 7,
@@ -132,6 +132,9 @@
    "meiji-cup 女子 2022 55kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
    "meiji-cup 女子 2019 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2018 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
+   "meiji-cup 女子 2018 53kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
+   "meiji-cup 女子 2017 55kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
+   "shakaijin 女子 2022 55kg: サイト「村山 春菜」/ 歴代記録「奥野春菜」",
    "tenno-cup フリースタイル 2024 74kg: サイト「高田 熙」/ 歴代記録「高田 煕」",
    "tenno-cup フリースタイル 2021 65kg: サイト「山口 海輝」/ 歴代記録「山口 輝海」",
    "tenno-cup フリースタイル 2021 79kg: サイト「髙橋 夢大」/ 歴代記録「高橋 夢大」",
@@ -142,7 +145,9 @@
    "tenno-cup グレコローマン 2016 66kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "tenno-cup グレコローマン 2015 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
    "tenno-cup グレコローマン 2014 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
+   "tenno-cup 女子 2019 53kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
    "tenno-cup 女子 2018 76kg: サイト「皆川 博恵」/ 歴代記録「鈴木 博恵」",
+   "tenno-cup 女子 2017 53kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-championship フリースタイル 2023 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-championship フリースタイル 2020 125kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
@@ -277,7 +282,7 @@
   ]
  },
  "en": {
-  "pages": 1776,
+  "pages": 1775,
   "names": 637,
   "machine_translations": 3484,
   "missing_names": []
