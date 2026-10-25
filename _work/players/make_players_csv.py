@@ -44,6 +44,11 @@ def is_yes(v):
 
 # 一覧によってカタカナの書き方が違う同じ人(所属・階級が同じ)。左の書き方を右の人にまとめる
 ALIAS = {"バドバヤルナンバルダグワ": "バトバヤルナンバルダグワ"}  # 育英大学・125/130kg(2024年全日本大学グレコの一覧の書き方)
+# 漢字違いで2人に分かれていた同じ人(運営者に確認済み)。新しい公式の一覧の書き方に合わせる
+ALIAS.update({"本原理沙": "本原理紗",   # 東洋大学。2025年天皇杯の結果(訂正版)は「理紗」
+              "水崎俊介": "水崎竣介"})  # 拓殖大学。2026年インカレの入賞者一覧は「竣介」
+# まとめるときに残す選手ID(上の ALIAS の書き方の人)。ほかの選手には関係しない
+PREFER_ID = {"p-24306b", "p-6ad5c2"}
 
 
 def name_key(name):
@@ -86,7 +91,7 @@ def main():
     # 残すのは、すでに公開している選手ID(ページのアドレスを変えない)→ かっこの無い名前 → 先に出てきたもの
     def rank(r):
         o = old.get(r["選手ID"], {})
-        return (not is_yes(o.get("公開")), r["選手ID"] not in old, r["氏名"].startswith(("(", "(")))
+        return (r["選手ID"] not in PREFER_ID, not is_yes(o.get("公開")), r["選手ID"] not in old, r["氏名"].startswith(("(", "(")))
     keep = {}
     for r in sorted(cands, key=rank):
         keep.setdefault(name_key(unparen(r["氏名"])), r["選手ID"])
