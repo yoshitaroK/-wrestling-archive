@@ -1599,6 +1599,33 @@ def extract_css(index_path):
     return (m.group(1) if m else "") + books.BOOK_CSS + PAGE_CSS + players.PLAYER_CSS + calendar_page.CAL_CSS + photo_gallery.PHOTO_CSS + champions.CHAMP_CSS + uww_page.UWW_CSS + news.NEWS_CSS
 
 
+# AI の学習用のクローラーは断り、検索・引用用のクローラーと検索エンジンは受け入れる(Issue #23。運営者が決めた方針)。
+# 写真は撮影者の方針で AI の学習に使えないので、学習用のクローラーにはサイト全体を見せない。
+# 守るかどうかは各社しだいで、強制する力はない。Cloudflare の「AI クローラーのブロック」とは別のしくみ
+AI_TRAINING_BOTS = [
+    ("GPTBot", "OpenAI の学習用"),
+    ("Google-Extended", "Google の AI(Gemini)の学習用。Google 検索には影響しない"),
+    ("ClaudeBot", "Anthropic の学習用"),
+    ("anthropic-ai", "Anthropic の学習用(古い名前)"),
+    ("CCBot", "Common Crawl。多くの AI の学習に使われる"),
+    ("Applebot-Extended", "Apple の AI の学習用。Apple の検索には影響しない"),
+    ("Meta-ExternalAgent", "Meta の AI の学習用"),
+    ("Bytespider", "ByteDance の AI の学習用"),
+    ("cohere-ai", "Cohere の学習用"),
+]
+
+
+def robots_txt():
+    """robots.txt。検索・引用用(OAI-SearchBot・ChatGPT-User・Claude-SearchBot・Claude-User・PerplexityBot など)と
+    ふつうの検索エンジンは、下の「User-agent: *」で受け入れる"""
+    out = ["# Search engines and AI search/citation are welcome. Use for AI training is not permitted",
+           "# (the photos are copyrighted by the photographer and must not be used for AI training)."]
+    for bot, _ in AI_TRAINING_BOTS:
+        out += ["", f"User-agent: {bot}", "Disallow: /"]
+    out += ["", "User-agent: *", "Allow: /", "", f"Sitemap: {SITE}/sitemap.xml", ""]
+    return "\n".join(out)
+
+
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.S)
 DESC_RE = re.compile(r'<meta name="description" content="([^"]*)"')
 
@@ -1829,7 +1856,7 @@ def build(root=HERE, inline_css=False, only=None):
                 f.write(f"  <url><loc>{e(u)}</loc>{f'<lastmod>{lm}</lastmod>' if lm else ''}</url>\n")
             f.write("</urlset>\n")
         with open(os.path.join(root, "robots.txt"), "w", encoding="utf-8") as f:
-            f.write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+            f.write(robots_txt())
     n_ev = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 4)
     n_se = sum(1 for p in pages if p[0].startswith("/events/") and p[0].count("/") == 3)
     n_te = sum(1 for p in pages if p[0].startswith("/technique/"))
