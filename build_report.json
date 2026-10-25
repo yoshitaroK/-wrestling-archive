@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-24T19:55:07+09:00",
- "as_of": "2026-10-24",
+ "built_at": "2026-10-25T10:51:29+09:00",
+ "as_of": "2026-10-25",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
@@ -94,12 +94,12 @@
   ]
  },
  "players": {
-  "total": 1546,
-  "published": 1417,
+  "total": 1566,
+  "published": 1437,
   "hidden_minor": 0,
   "hidden_private": 129,
   "errors": [],
-  "video_excluded": 2,
+  "video_excluded": 3,
   "video_links": 1125,
   "event_results": 300,
   "event_results_linked": 148,
@@ -107,27 +107,27 @@
   "og_cards": {
    "ja": {
     "made": 0,
-    "kept": 1417,
+    "kept": 1437,
     "removed": 0,
     "errors": []
    },
    "en": {
     "made": 0,
-    "kept": 1417,
+    "kept": 1437,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 1121,
+  "rows": 1141,
   "hidden_minor": 0,
-  "no_link": 22,
+  "no_link": 23,
   "skipped_unknown_event": 31,
-  "history_rows": 5115,
-  "history_linked": 1145,
+  "history_rows": 5095,
+  "history_linked": 1128,
   "history_hidden": 7,
-  "history_site_preferred": 994,
+  "history_site_preferred": 1014,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
@@ -154,6 +154,7 @@
    "tenno-cup グレコローマン 2014 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
    "tenno-cup 女子 2018 76kg: サイト「皆川 博恵」/ 歴代記録「鈴木 博恵」",
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
+   "university-championship フリースタイル 2023 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-championship フリースタイル 2020 125kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
    "university-greco グレコローマン 2025 130kg: サイト「ソヴィット アビレイ」/ 歴代記録「アビレイ・ソビィット」",
    "university-greco グレコローマン 2024 130kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
@@ -286,9 +287,172 @@
   ]
  },
  "en": {
-  "pages": 1758,
+  "pages": 1778,
   "names": 637,
   "machine_translations": 3725,
   "missing_names": []
+ },
+ "duplicate_meta": {
+  "title_ja": [
+   {
+    "value": "ALSOKパワーで勝つ!レスリング最強バイブル|書籍|レスリング配信アーカイブ",
+    "pages": [
+     "/books/9784780416138/",
+     "/books/9784780421453/"
+    ]
+   },
+   {
+    "value": "U23,U15 JOCジュニアオリンピックカップ 2025年 写真|レスリング配信アーカイブ",
+    "pages": [
+     "/events/u15-selection/2025/",
+     "/events/u23-selection/2025/"
+    ]
+   },
+   {
+    "value": "日本レスリングの物語|書籍|レスリング配信アーカイブ",
+    "pages": [
+     "/books/9784000242929/",
+     "/books/9784006033262/"
+    ]
+   }
+  ],
+  "description_ja": [
+   {
+    "value": "世界レスリング連合(UWW)の公式 YouTube にある、日本人選手が出ている試合・ハイライトなどの動画を年代ごとにまとめました。動画はこのサイトの中(YouTube のプレーヤー)で再生できます。動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。",
+    "pages": [
+     "/uww/",
+     "/uww/senior/",
+     "/uww/u17/",
+     "/uww/u20/",
+     "/uww/u23/"
+    ]
+   },
+   {
+    "value": "ALSOKパワーで勝つ!レスリング最強バイブル(大橋,正教,1964-)。レスリングの本の紹介。",
+    "pages": [
+     "/books/9784780416138/",
+     "/books/9784780421453/"
+    ]
+   },
+   {
+    "value": "日本レスリングの物語(柳澤,健)。レスリングの本の紹介。",
+    "pages": [
+     "/books/9784000242929/",
+     "/books/9784006033262/"
+    ]
+   }
+  ],
+  "title_en": [
+   {
+    "value": "Abilay SOVIT – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-2a3e74/",
+     "/en/players/p-e0d13b/"
+    ]
+   },
+   {
+    "value": "East Japan University Women's League 2024 – 1 video | Japan Wrestling Archive",
+    "pages": [
+     "/en/events/east-women-league/2024-01-14/",
+     "/en/events/east-women-league/2024-11-24/"
+    ]
+   },
+   {
+    "value": "Karina HONDA – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-276e61/",
+     "/en/players/p-776ebd/"
+    ]
+   },
+   {
+    "value": "Kosuke KOBAYASHI – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-20b6ac/",
+     "/en/players/p-5e454b/"
+    ]
+   },
+   {
+    "value": "Kota FUKUBUNAI – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-2ea018/",
+     "/en/players/p-765dd9/"
+    ]
+   },
+   {
+    "value": "Kotaro WATANABE – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-453fdb/",
+     "/en/players/p-b3b40e/"
+    ]
+   },
+   {
+    "value": "Miyu OGASHI – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-45aebc/",
+     "/en/players/p-a72c3f/"
+    ]
+   },
+   {
+    "value": "Rinko KOZAN – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-44d416/",
+     "/en/players/p-77a782/"
+    ]
+   },
+   {
+    "value": "Risa MOTOHARA – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-24306b/",
+     "/en/players/p-a05679/"
+    ]
+   },
+   {
+    "value": "Shori KANAZAWA – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-4e8cb8/",
+     "/en/players/p-550e58/"
+    ]
+   },
+   {
+    "value": "Shunsuke MIZUSAKI – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-3e34e6/",
+     "/en/players/p-6ad5c2/"
+    ]
+   },
+   {
+    "value": "Shusei TAKAHASHI – Results & Match Videos | Japan Wrestling Archive",
+    "pages": [
+     "/en/players/p-a76f6d/",
+     "/en/players/p-b6c440/"
+    ]
+   }
+  ],
+  "description_en": [
+   {
+    "value": "Videos featuring Japanese wrestlers from the official YouTube channel of United World Wrestling (UWW), organized by age category. Videos play right on this site in the YouTube player. Titles are shown as published by UWW.",
+    "pages": [
+     "/en/uww/",
+     "/en/uww/senior/",
+     "/en/uww/u17/",
+     "/en/uww/u20/",
+     "/en/uww/u23/"
+    ]
+   },
+   {
+    "value": "Risa MOTOHARA (Toyo University): 1 tournament result and 0 match videos.",
+    "pages": [
+     "/en/players/p-24306b/",
+     "/en/players/p-a05679/"
+    ]
+   },
+   {
+    "value": "Shunsuke MIZUSAKI (Takushoku University): 3 tournament results and 0 match videos.",
+    "pages": [
+     "/en/players/p-3e34e6/",
+     "/en/players/p-6ad5c2/"
+    ]
+   }
+  ]
  }
 }
