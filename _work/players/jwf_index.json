@@ -169,7 +169,11 @@
    "https://wrestling-spirits.jp/www/wp-content/data/2015/0621meiji/ichiranGR.pdf"
   ],
   "n_weight_pdfs": 0,
-  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧"
+  "source": "日本レスリング協会の以前のサイト(wrestling-spirits.jp)の入賞者一覧",
+  "manual": {
+   "ichiranFe.pdf": "manual/meiji-2015-women.tsv"
+  },
+  "note": "女子の入賞者一覧(ichiranFe.pdf)は字が図形なので、書き写した表(manual/)を使う。階級ごとのトーナメント表で名前と所属を確かめた"
  },
  {
   "event": "wre-2016-meiji-cup-0527",
