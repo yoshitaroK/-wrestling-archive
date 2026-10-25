@@ -408,7 +408,7 @@ function videoRow(v, showBasis){
   meta.push('<span>'+L('公開 ','Published ')+esc(fmtDate(jstDate(v.p)))+'</span>');
   if(v.vs==='upcoming') meta.push('<span class="lk">'+L('配信予定','Scheduled stream')+'</span>');
   if(v.vs==='unavailable') meta.push('<span class="lk unmatched">'+L('現在YouTubeで取得できません','Currently unavailable on YouTube')+'</span>');
-  meta.push('<span class="lk '+esc(v.l)+'" title="'+esc(v.b||'')+'">'+esc(LINK[v.l]||v.l)+'</span>');
+  meta.push('<span class="lk '+esc(v.l)+'"'+(v.b?' title="'+esc(v.b)+'"':'')+'>'+esc(LINK[v.l]||v.l)+'</span>');
   return '<li class="v"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">'+thumb(v.id,'')+'</a>'+
     '<div><div class="vt"><a href="'+esc(yt(v.id))+'" target="_blank" rel="noopener"'+L('',' lang="ja"')+'>'+esc(v.t)+'</a></div>'+trLine(v.t)+
     '<div class="vm">'+meta.join('')+'</div>'+(showBasis&&v.b?'<div class="basis">'+L('根拠:','Basis: ')+(TR[v.b]&&LANG==='en' ? esc(TR[v.b])+' <span class="mt">auto-translated</span>' : '<span'+L('',' lang="ja"')+'>'+esc(v.b)+'</span>')+'</div>':'')+'</div></li>';

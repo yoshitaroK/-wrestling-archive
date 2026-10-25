@@ -917,7 +917,10 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
         ov = {
             "id": v["id"], "t": v["title"], "p": v["published_at"], "du": v["duration"],
             "k": v["kind"], "st": v["styles"], "m": v["mat"], "dl": v["day_label"], "dh": v["date_hint"],
-            "s": v["series"], "e": v["event"], "l": v["link"], "b": v["basis"], "c": v["cand"],
+            "s": v["series"], "e": v["event"], "l": v["link"], "c": v["cand"],
+            # 照合の根拠の文は、ページに出す動画(開催回が決まっていない「確認待ち」「開催回を確認中」)の分だけ入れる。
+            # 開催回が決まった動画の分は data.json の約2割を占めるのに使い道が無いので入れない(Issue #24)
+            "b": v["basis"] if not v["event"] else None,
             "vs": v["state"], "ss": v["scheduled_start"], "as": v["actual_start"],
             "ch": v.get("channel"),
         }
