@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-26T10:54:11+09:00",
+ "built_at": "2026-10-26T11:23:57+09:00",
  "as_of": "2026-10-26",
  "video_count": 3360,
  "raw_count": 3360,
@@ -91,7 +91,7 @@
   "errors": [],
   "video_excluded": 3,
   "video_links": 1125,
-  "event_results": 339,
+  "event_results": 376,
   "event_results_linked": 177,
   "uww_video_links": 2042,
   "og_cards": {
@@ -203,7 +203,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 10
+  "articles": 11
  },
  "books": {
   "errors": [],
