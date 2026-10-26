@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-juniorhigh-senbatsu-1121@japanwrestlingchannel.com
+DTSTAMP:20261121T000000Z
+DTSTART;VALUE=DATE:20261121
+DTEND;VALUE=DATE:20261123
+SUMMARY:All Japan Junior High School Selection Championships (incl. U15)
+LOCATION:Komazawa Gymnasium\, Tokyo
+URL:https://japanwrestlingchannel.com/en/events/juniorhigh-senbatsu/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/juniorhigh-senbatsu/
+END:VEVENT
+END:VCALENDAR

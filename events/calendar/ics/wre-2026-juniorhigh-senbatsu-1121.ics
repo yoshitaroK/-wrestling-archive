@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-juniorhigh-senbatsu-1121@japanwrestlingchannel.com
+DTSTAMP:20261121T000000Z
+DTSTART;VALUE=DATE:20261121
+DTEND;VALUE=DATE:20261123
+SUMMARY:東京都知事杯全国中学選抜U15選手権
+LOCATION:東京・駒沢体育館
+URL:https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/juniorhigh-senbatsu/
+END:VEVENT
+END:VCALENDAR
