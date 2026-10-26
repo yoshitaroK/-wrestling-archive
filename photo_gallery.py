@@ -491,7 +491,7 @@ def home_cards(ctx, photos_by_page, bp, limit=30):
 
 
 def photographer(credit):
-    """「撮影:Kotone NARIKUNI(@__kotograph__)」→「Kotone NARIKUNI」(撮影者の名前だけ)"""
+    """「撮影:Japan Wrestling Channel」→「Japan Wrestling Channel」(撮影者の名前だけ。「(@…)」は付けない)"""
     m = re.match(r"^(?:撮影|写真|提供)?\s*[:：]?\s*([^(（@]+)", (credit or "").strip())
     return m.group(1).strip() if m else ""
 
@@ -503,7 +503,9 @@ def image_ld(ph, bp):
         o["creditText"] = credit_text(ph["credit"])
         name = photographer(ph["credit"])
         if name:
-            o["creator"] = {"@type": "Person", "name": name}
+            # 運営者(Japan Wrestling Channel)の撮影は、どのページにもある運営者の情報(Organization)と同じものとする
+            o["creator"] = ({"@type": "Organization", "@id": bp.ORG_ID, "name": name} if name == "Japan Wrestling Channel"
+                            else {"@type": "Person", "name": name})
             o["copyrightNotice"] = f"© {name}"
         # 写真の利用・取り下げの相談先(お問い合わせの「写真の掲載・取り下げについて」)
         o["acquireLicensePage"] = bp.SITE + U("/contact.html") + "?kind=photo"
