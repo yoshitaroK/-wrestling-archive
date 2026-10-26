@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-26T10:51:50+09:00",
+ "built_at": "2026-10-26T10:54:11+09:00",
  "as_of": "2026-10-26",
  "video_count": 3360,
  "raw_count": 3360,
@@ -34,9 +34,9 @@
  "translation": {
   "total": 3485,
   "translated": 3485,
-  "new": 1,
+  "new": 0,
   "pending": 0,
-  "chars_used": 17,
+  "chars_used": 0,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
@@ -91,19 +91,19 @@
   "errors": [],
   "video_excluded": 3,
   "video_links": 1125,
-  "event_results": 300,
-  "event_results_linked": 148,
+  "event_results": 339,
+  "event_results_linked": 177,
   "uww_video_links": 2042,
   "og_cards": {
    "ja": {
-    "made": 39,
-    "kept": 1395,
+    "made": 0,
+    "kept": 1434,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 39,
-    "kept": 1395,
+    "made": 0,
+    "kept": 1434,
     "removed": 0,
     "errors": []
    }
@@ -203,7 +203,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 9
+  "articles": 10
  },
  "books": {
   "errors": [],
