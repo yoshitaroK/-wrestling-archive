@@ -30,7 +30,10 @@ for x in idx:
         continue
     for u in x["winners"]:
         fn = "jwf/" + hashlib.md5(u.encode()).hexdigest()[:10] + ".pdf"
-        rows = (manual_rows(x["manual"], u, len(x["winners"]) == 1) if x.get("manual")  # 文字として読めない一覧を、画像を見て書き写した表(manual/)
+        # 文字として読めない一覧は、画像を見て書き写した表(manual/)。"manual" が {ファイル名: 表} のときは、その一覧だけ
+        man = x.get("manual")
+        man = man.get(u.rsplit("/", 1)[-1]) if isinstance(man, dict) else man
+        rows = (manual_rows(man, u, isinstance(x["manual"], dict) or len(x["winners"]) == 1) if man
                 else parsewin.parse_rotated(fn, x["rotated"]["pages"], {tuple(v) for v in x["rotated"]["six"]}) if x.get("rotated")
                 else parsewin.parse_table(fn) if x.get("table")  # 1行に1人ずつ並んだ表(2020年全日本大学グレコなど)
                 else parsewin.parse(fn))
