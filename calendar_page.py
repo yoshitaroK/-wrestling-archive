@@ -113,6 +113,11 @@ def entries(data, ctx):
     return out
 
 
+def month_url(start):
+    """その日が入っている月のカレンダーのアドレス(/events/calendar/#2025-08)。日付が無いときは空(Issue #25)"""
+    return U("/events/calendar/") + "#" + start[:7] if DATE_RE.match(start or "") else ""
+
+
 def fmt_md(s, e):
     a = f"{int(s[5:7])}/{int(s[8:10])}"
     if e and e != s:

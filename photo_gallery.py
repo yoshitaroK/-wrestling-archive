@@ -580,8 +580,12 @@ def photo_pages(ctx, photos_by_page, bp):
         lead = L((f"{when}" + (f"、{venue}で" if venue else "に") + "開催。" if when else "") + f"写真{len(lst)}枚を掲載しています。",
                  (f"Held {when}" + (f" at {venue}" if venue else "") + ". " if when else "") + f"{i18n_plural(len(lst))}.")
         h += f'<p class="lead">{e(lead)}</p>'
+        import calendar_page
+        cal = calendar_page.month_url(x["start"])
         back = (f'<p class="elinks"><a class="elink" href="{e(U(p))}">'
-                f'{L("この大会の動画・大会情報を見る", "Videos and details for this tournament")} →</a></p>')
+                f'{L("この大会の動画・大会情報を見る", "Videos and details for this tournament")} →</a>'
+                + (f'<a class="elink" href="{e(cal)}">{L("開催月の大会カレンダー", "Tournament calendar for that month")} →</a>' if cal else "")
+                + '</p>')
         h += back
         h += gallery_html(lst, e, name, p)
         h += back.replace('class="elinks"', 'class="elinks pback"')
