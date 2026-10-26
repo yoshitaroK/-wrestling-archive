@@ -6,7 +6,7 @@
 
 長谷川は決勝で[[p-8ff27d|荻野大河]](山梨学院大)を8-0のテクニカルスペリオリティーで破った。
 
-[[photo:2026-univ-greco-final-podium.jpg|72kg級の表彰式。中央が3連覇の長谷川虎次郎(育英大)|撮影:Kotone NARIKUNI(@__kotograph__)]]
+[[photo:2026-univ-greco-final-podium.jpg|72kg級の表彰式。中央が3連覇の長谷川虎次郎(育英大)|撮影:Japan Wrestling Channel]]
 
 昨年は67kg級で優勝し、今年は72kg級に階級を上げての連続優勝。8月の全日本学生選手権(インカレ)も72kg級で制している。
 
