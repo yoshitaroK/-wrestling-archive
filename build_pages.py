@@ -562,7 +562,10 @@ def event_page(ev, ctx):
             f"{(L('(', ' (') + e(N(x['venue'])) + ')') if x.get('venue') else ''}</li>" for x in ss) + "</ul></dd>"
     else:
         when = L("配信日", "Stream dates") if ev.get("derived") else L("開催日", "Dates")
-        h += f"<dt>{when}</dt><dd>{e(fmt_range(ev.get('start'), ev.get('end')))}{L('(予定)', ' (scheduled)') if status == 'scheduled' else ''}</dd>"
+        import calendar_page
+        cal = calendar_page.month_url(ev.get("start"))
+        h += (f"<dt>{when}</dt><dd>{e(fmt_range(ev.get('start'), ev.get('end')))}{L('(予定)', ' (scheduled)') if status == 'scheduled' else ''}"
+              + (f' <a class="calm" href="{e(cal)}">{L("この月のカレンダー", "See this month on the calendar")}</a>' if cal else "") + "</dd>")
         if venue:
             h += f"<dt>{L('会場', 'Venue')}</dt><dd>{e(venue)}</dd>"
     if ev.get("fy_label"):
@@ -1495,6 +1498,7 @@ PAGE_CSS = """
 .page h1 .yr-h{font-family:var(--num);font-weight:600;font-size:1.25em;color:var(--pink);letter-spacing:.02em}
 .lead{color:var(--ink2);margin:0 0 14px;max-width:70ch}
 .page .facts{font-size:14px;margin-bottom:6px}
+.page .facts .calm{margin-left:8px;font-size:12px;color:var(--ink3);white-space:nowrap}
 .page .vgroup h3{margin:0 0 8px;font-size:16px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .page .vgroup h3 small{font-weight:400;color:var(--ink3);font-size:12px}
 .vgroup{margin-top:26px}
