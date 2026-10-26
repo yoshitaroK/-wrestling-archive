@@ -16,6 +16,7 @@
       [[event:wre-2026-kokutai-1012|国スポ]] … 開催回ページへのリンク
       [[news:2026-kokutai-day2|第2日]]       … ほかのニュース記事へのリンク
       [[https://…|出典]]                     … 外のサイトへのリンク
+      [[photo:file.jpg|写真の説明|撮影:…]]     … 本文の途中の写真(1行だけで書く。写真は assets/news/。撮影者は省略可)
 
 見た目は白地のニュース記事(ヘッダー・フッターはほかのページと同じ黒)。右の欄に、大会ページ・記事に出てくる選手・新着ニュースを出す。
 """
@@ -30,6 +31,7 @@ from i18n import U
 
 NEWS_JSON = "news.json"
 IMAGE_DIR = "assets/news"  # 記事の写真(手で入れる)
+PHOTO_RE = re.compile(r"\[\[photo:([\w.-]+)\|([^\]|]+)(?:\|([^\]]+))?\]\]")
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,80}$")
 WEEK = "月火水木金土日"
 
@@ -63,20 +65,26 @@ def load(root, report):
             report["errors"].append(f"news.json「{a['slug']}」: 写真 {IMAGE_DIR}/{img.get('file')} がありません")
             a.pop("image")
         elif img:
-            try:
-                from PIL import Image
-                with Image.open(os.path.join(root, IMAGE_DIR, img["file"])) as im:
-                    a["image"] = dict(img, w=im.width, h=im.height)
-            except Exception:  # Pillow が無いときは大きさを書かずに出す
-                pass
+            a["image"] = with_size(root, img)
     out.sort(key=lambda a: (a["date"], a["slug"]), reverse=True)
     return out
 
 
-def image_html(img, e):
-    """記事の写真(見出しの下)"""
+def with_size(root, img):
+    """写真の縦横の大きさを足す(読み込み中に文章がずれないように)。分からないときはそのまま"""
+    try:
+        from PIL import Image
+        with Image.open(os.path.join(root, IMAGE_DIR, img["file"])) as im:
+            return dict(img, w=im.width, h=im.height)
+    except Exception:  # Pillow が無い・root が分からないときは大きさを書かずに出す
+        return img
+
+
+def image_html(img, e, top=False):
+    """記事の写真(見出しの下・本文の途中)"""
     wh = f' width="{img["w"]}" height="{img["h"]}"' if img.get("w") else ""
-    return (f'<figure class="nw-fig"><img src="/{IMAGE_DIR}/{e(img["file"])}" alt="{e(img.get("alt") or "")}"{wh} decoding="async" fetchpriority="high">'
+    return (f'<figure class="nw-fig"><img src="/{IMAGE_DIR}/{e(img["file"])}" alt="{e(img.get("alt") or "")}"{wh} decoding="async"'
+            + (' fetchpriority="high">' if top else ' loading="lazy">')
             + (f'<figcaption>{e(img["credit"])}</figcaption>' if img.get("credit") else "") + "</figure>")
 
 
@@ -151,6 +159,15 @@ def render_body(text, ctx, report, slug):
     out = []
     for block in re.split(r"\n\s*\n", text.strip()):
         lines = [l.rstrip() for l in block.strip().split("\n")]
+        m = PHOTO_RE.fullmatch(lines[0]) if len(lines) == 1 else None
+        if m:
+            img = {"file": m.group(1), "alt": m.group(2), "credit": m.group(3) or ""}
+            root = ctx.get("news_root")
+            if root and not os.path.exists(os.path.join(root, IMAGE_DIR, img["file"])):
+                report["errors"].append(f"{slug}: 写真 {IMAGE_DIR}/{img['file']} がありません")
+                continue
+            out.append(image_html(with_size(root, img), e))
+            continue
         if lines[0].startswith("## "):
             out.append(f'<h2>{inline(lines[0][3:].strip())}</h2>')
             lines = lines[1:]
@@ -188,7 +205,7 @@ def build(root, ctx, bp, report):
         return []
     e = bp.e
     pages = []
-    ctx = dict(ctx, news_slugs={a["slug"] for a in arts})
+    ctx = dict(ctx, news_slugs={a["slug"] for a in arts}, news_root=root)
     rendered = {a["slug"]: render_body(a["body"], ctx, report, a["slug"]) for a in arts}
 
     def side(a, players):
@@ -231,7 +248,7 @@ def build(root, ctx, bp, report):
               + (f'<p class="nw-cat">{e(a["category"])}</p>' if a.get("category") else "")
               + f'<h1>{e(a["title"])}</h1>'
               + f'<p class="nw-meta"><b>{e(bp.SITE_NAME)}</b><time datetime="{e(a["date"])}">{e(fmt_day(a["date"]))}</time></p>'
-              + (image_html(img, e) if img else "")
+              + (image_html(img, e, top=True) if img else "")
               + f'<div class="nw-body">{body}</div>'
               + (f'<p class="nw-tags">{tags}</p>' if tags else "")
               + f'</main><aside class="nw-side">{side(a, players)}</aside></div></div>')
