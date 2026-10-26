@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-25T17:36:25+09:00",
- "as_of": "2026-10-25",
+ "built_at": "2026-10-26T10:51:50+09:00",
+ "as_of": "2026-10-26",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
@@ -32,11 +32,11 @@
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
-  "total": 3484,
-  "translated": 3484,
-  "new": 0,
+  "total": 3485,
+  "translated": 3485,
+  "new": 1,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 17,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
@@ -84,10 +84,10 @@
   ]
  },
  "players": {
-  "total": 1563,
+  "total": 1577,
   "published": 1434,
   "hidden_minor": 0,
-  "hidden_private": 129,
+  "hidden_private": 143,
   "errors": [],
   "video_excluded": 3,
   "video_links": 1125,
@@ -96,28 +96,28 @@
   "uww_video_links": 2042,
   "og_cards": {
    "ja": {
-    "made": 0,
-    "kept": 1434,
+    "made": 39,
+    "kept": 1395,
     "removed": 0,
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1434,
+    "made": 39,
+    "kept": 1395,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 1141,
+  "rows": 1149,
   "hidden_minor": 0,
   "no_link": 23,
   "skipped_unknown_event": 34,
-  "history_rows": 5095,
-  "history_linked": 1128,
+  "history_rows": 5087,
+  "history_linked": 1120,
   "history_hidden": 7,
-  "history_site_preferred": 1014,
+  "history_site_preferred": 1022,
   "history_mismatch": [
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
@@ -211,9 +211,9 @@
   "books": 48
  },
  "tech": {
-  "shown": 59,
+  "shown": 60,
   "by_category": {
-   "stand": 9,
+   "stand": 10,
    "ground": 5,
    "tackle": 14,
    "defense": 4,
@@ -283,8 +283,8 @@
  },
  "en": {
   "pages": 1775,
-  "names": 637,
-  "machine_translations": 3484,
+  "names": 639,
+  "machine_translations": 3485,
   "missing_names": []
  },
  "duplicate_meta": {

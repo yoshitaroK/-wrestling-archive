@@ -3,6 +3,12 @@
  "ja": {
   "tech": [
    {
+    "id": "jWMdpAw8N1g",
+    "t": "2on1で腕を取られた際の対処方法",
+    "cat": "組み手・スタンド",
+    "href": "/technique/stand/"
+   },
+   {
     "id": "6VuXbpM_At8",
     "t": "2on1からの展開　パート２",
     "cat": "組み手・スタンド",
@@ -65,12 +71,6 @@
    {
     "id": "-vaMPBQhUQk",
     "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その2〜",
-    "cat": "タックル",
-    "href": "/technique/tackle/"
-   },
-   {
-    "id": "2XuX_hchT04",
-    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その1〜",
     "cat": "タックル",
     "href": "/technique/tackle/"
    }
@@ -249,6 +249,12 @@
  "en": {
   "tech": [
    {
+    "id": "jWMdpAw8N1g",
+    "t": "2on1で腕を取られた際の対処方法",
+    "cat": "Hand fighting & standing",
+    "href": "/en/technique/stand/"
+   },
+   {
     "id": "6VuXbpM_At8",
     "t": "2on1からの展開　パート２",
     "cat": "Hand fighting & standing",
@@ -311,12 +317,6 @@
    {
     "id": "-vaMPBQhUQk",
     "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その2〜",
-    "cat": "Takedowns (tackles)",
-    "href": "/en/technique/tackle/"
-   },
-   {
-    "id": "2XuX_hchT04",
-    "t": "現役インカレチャンピオンが教える「ハイクラッチ」の処理について 〜その1〜",
     "cat": "Takedowns (tackles)",
     "href": "/en/technique/tackle/"
    }
