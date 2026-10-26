@@ -2,6 +2,23 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-worlds-greco-day3-finals",
+   "date": "2026-10-27",
+   "title": "世界選手権グレコ ヘダヤティが初出場で130kg級制す イランが団体優勝",
+   "category": "世界選手権",
+   "lead": "世界選手権の男子グレコローマン130kg級で、イランのヘダヤティが初出場で優勝した。イランは72kg級も制し、最終日を待たずに団体優勝を決めた。",
+   "tags": [
+    "世界選手権2026",
+    "グレコローマン",
+    "田南部魁星"
+   ],
+   "sources": [
+    "https://uww.org/articles/hedayati-ushers-new-era-130kg-world-championships-gold",
+    "https://uww.org/articles/world-championships-2026-greco-roman-130kg-72kg-97kg-highlights",
+    "https://uww.org/articles/world-championships-2026-day-3-greco-roman-highlights"
+   ]
+  },
+  {
    "slug": "2026-uww-president-lalovic",
    "date": "2026-10-26",
    "title": "UWWラロビッチ会長が続投 140票すべて賛成で2032年まで",
