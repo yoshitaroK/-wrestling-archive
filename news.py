@@ -5,6 +5,9 @@
   news.json            … 記事の一覧。1件 = {"slug", "date", "title", "category", "event_id", "lead", "tags", "file"}
                           slug は URL(/news/<slug>/)に使う半角英小文字・数字・ハイフン。date は YYYY-MM-DD。
                           event_id(開催回ID)を書くと、右の欄に大会ページへのリンクが出る。
+                          image を書くと、見出しの下に写真を出し、SNS で共有したときの画像にも使う。
+                          "image": {"file": "2026-univ-greco-final.jpg", "alt": "写真の説明", "credit": "撮影:…"}
+                          写真は assets/news/ に入れる(長い辺 1600 ピクセルくらい・撮影データ(EXIF)は消す)
   articles/<slug>.md   … 記事の本文。次の書き方が使える
       空行            … 段落の区切り
       ## 見出し       … 小見出し
@@ -26,6 +29,7 @@ import players
 from i18n import U
 
 NEWS_JSON = "news.json"
+IMAGE_DIR = "assets/news"  # 記事の写真(手で入れる)
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,80}$")
 WEEK = "月火水木金土日"
 
@@ -53,8 +57,27 @@ def load(root, report):
         else:
             with open(body_path, encoding="utf-8-sig") as f:
                 out.append(dict(a, body=f.read()))
+    for a in out:
+        img = a.get("image")
+        if img and not os.path.exists(os.path.join(root, IMAGE_DIR, img.get("file") or "")):
+            report["errors"].append(f"news.json「{a['slug']}」: 写真 {IMAGE_DIR}/{img.get('file')} がありません")
+            a.pop("image")
+        elif img:
+            try:
+                from PIL import Image
+                with Image.open(os.path.join(root, IMAGE_DIR, img["file"])) as im:
+                    a["image"] = dict(img, w=im.width, h=im.height)
+            except Exception:  # Pillow が無いときは大きさを書かずに出す
+                pass
     out.sort(key=lambda a: (a["date"], a["slug"]), reverse=True)
     return out
+
+
+def image_html(img, e):
+    """記事の写真(見出しの下)"""
+    wh = f' width="{img["w"]}" height="{img["h"]}"' if img.get("w") else ""
+    return (f'<figure class="nw-fig"><img src="/{IMAGE_DIR}/{e(img["file"])}" alt="{e(img.get("alt") or "")}"{wh} decoding="async" fetchpriority="high">'
+            + (f'<figcaption>{e(img["credit"])}</figcaption>' if img.get("credit") else "") + "</figure>")
 
 
 def fmt_day(d):
@@ -198,12 +221,17 @@ def build(root, ctx, bp, report):
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
             "@type": "NewsArticle", "headline": a["title"], "datePublished": a["date"], "description": desc,
             "url": bp.SITE + path, "publisher": {"@type": "Organization", "name": bp.SITE_NAME}}]}
-        h = bp.head(f"{a['title']}|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
+        img = a.get("image")
+        og = f"{bp.SITE}/{IMAGE_DIR}/{img['file']}" if img else ""
+        if og:
+            jsonld["@graph"][1]["image"] = og
+        h = bp.head(f"{a['title']}|{bp.SITE_NAME}", desc, path, og, jsonld, ctx["css"], alternates=False)
         tags = "".join(f'<span>#{e(t)}</span>' for t in a.get("tags") or [])
         h += ('<div class="nw"><div class="wrap nw-grid"><main id="content" class="nw-main">' + bp.breadcrumb_html(crumbs)
               + (f'<p class="nw-cat">{e(a["category"])}</p>' if a.get("category") else "")
               + f'<h1>{e(a["title"])}</h1>'
               + f'<p class="nw-meta"><b>{e(bp.SITE_NAME)}</b><time datetime="{e(a["date"])}">{e(fmt_day(a["date"]))}</time></p>'
+              + (image_html(img, e) if img else "")
               + f'<div class="nw-body">{body}</div>'
               + (f'<p class="nw-tags">{tags}</p>' if tags else "")
               + f'</main><aside class="nw-side">{side(a, players)}</aside></div></div>')
@@ -247,6 +275,9 @@ NEWS_CSS = """
 .nw-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--ink3);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .nw-meta b{color:var(--ink)}
 .nw-body{font-size:16px;line-height:1.95;max-width:680px}
+.nw-fig{margin:0 0 22px;max-width:680px}
+.nw-fig img{display:block;width:100%;height:auto;border-radius:6px;background:var(--surface-2)}
+.nw-fig figcaption{margin-top:6px;font-size:12px;color:var(--ink3);text-align:right}
 .nw-body p{margin:0 0 1.2em}
 .nw-body a{color:var(--link);text-decoration:none}
 .nw-body a:hover{text-decoration:underline}
