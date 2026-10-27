@@ -451,6 +451,14 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
 .page .vgroup h3{margin:0 0 8px;font-size:16px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .page .vgroup h3 small{font-weight:400;color:var(--ink3);font-size:12px}
 .vgroup{margin-top:26px}
+.related{margin-top:28px}
+.related h2{font-size:18px;margin:0 0 10px}
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 24px}
+.related h3{font-size:14px;margin:0 0 6px;color:var(--ink2)}
+.related .rel-v{font-size:12px;color:var(--ink3);margin:-2px 0 6px}
+.related ul{list-style:none;margin:0;padding:0}
+.related li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
+.related li small{flex:0 0 auto;color:var(--ink3);font-size:12px}
 a.yr{text-decoration:none}
 .yr[aria-current] .dot{width:24px;height:24px;margin:2px auto;background:linear-gradient(120deg,var(--grad-a),var(--grad-b));box-shadow:0 0 0 3px var(--pink)}
 .yr[aria-current] .y{color:var(--pink)}
