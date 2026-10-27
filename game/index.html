@@ -205,17 +205,19 @@ var WL = (function () {
     '凌', '陸', '光', '樹', '湊', '玲央', '烈', '迅', '岳', '轟'];
   var FOREIGN = [
     { c: 'アメリカ', g: ['ジェイク', 'タイラー', 'マイケル', 'ブランドン', 'コール'], f: ['ハリソン', 'ミッチェル', 'ブルックス', 'ウォーカー', 'グレイ'] },
-    { c: 'イラン', g: ['アミール', 'レザ', 'ハサン', 'メフディ', 'アリ'], f: ['ヤズダニ', 'ガセミ', 'ラフマニ', 'カリミ', 'サデギ'] },
+    { c: 'イラン', asia: true, g: ['アミール', 'レザ', 'ハサン', 'メフディ', 'アリ'], f: ['ヤズダニ', 'ガセミ', 'ラフマニ', 'カリミ', 'サデギ'] },
     { c: 'ジョージア', g: ['ギオルギ', 'ダヴィト', 'レヴァン', 'イラクリ', 'ニコ'], f: ['ベリゼ', 'カパナゼ', 'ゴギア', 'ツィクラウリ', 'マチャヴァリアニ'] },
     { c: 'トルコ', g: ['ムスタファ', 'エムレ', 'ブラク', 'ケマル', 'オメル'], f: ['ユルドゥズ', 'デミル', 'カヤ', 'アルスラン', 'チェリク'] },
-    { c: 'モンゴル', g: ['バトバヤル', 'ガンバータル', 'テムジン', 'ボルド', 'エルデネ'], f: ['ツェレン', 'ナランバートル', 'ダワー', 'オユン', 'ガンゾリグ'] },
+    { c: 'モンゴル', asia: true, g: ['バトバヤル', 'ガンバータル', 'テムジン', 'ボルド', 'エルデネ'], f: ['ツェレン', 'ナランバートル', 'ダワー', 'オユン', 'ガンゾリグ'] },
     { c: 'キューバ', g: ['ヨアン', 'ルイス', 'アレハンドロ', 'ラウル', 'ミゲル'], f: ['ペレス', 'ロドリゲス', 'ガルシア', 'モリーナ', 'エレーラ'] },
-    { c: 'カザフスタン', g: ['ヌルスルタン', 'ダニヤル', 'アルマン', 'エルラン', 'サケン'], f: ['ベクボラトフ', 'ジュマバエフ', 'オスパノフ', 'カシモフ', 'ヌルラノフ'] },
+    { c: 'カザフスタン', asia: true, g: ['ヌルスルタン', 'ダニヤル', 'アルマン', 'エルラン', 'サケン'], f: ['ベクボラトフ', 'ジュマバエフ', 'オスパノフ', 'カシモフ', 'ヌルラノフ'] },
     { c: 'アゼルバイジャン', g: ['エルヴィン', 'ラシャド', 'トグルル', 'ハジ', 'ムラド'], f: ['アリエフ', 'ママドフ', 'グセイノフ', 'ハサノフ', 'イスマイロフ'] },
-    { c: 'インド', g: ['ラヴィ', 'アマン', 'ディーパク', 'スニル', 'ヴィノド'], f: ['クマール', 'シン', 'ダヒヤ', 'マリク', 'ヤダヴ'] },
+    { c: 'インド', asia: true, g: ['ラヴィ', 'アマン', 'ディーパク', 'スニル', 'ヴィノド'], f: ['クマール', 'シン', 'ダヒヤ', 'マリク', 'ヤダヴ'] },
     { c: 'ブルガリア', g: ['ゲオルギ', 'イヴァン', 'ストヤン', 'ディミタル', 'ニコライ'], f: ['ペトロフ', 'イリエフ', 'ストイコフ', 'ディモフ', 'ゲオルギエフ'] },
     { c: 'ハンガリー', g: ['バーリント', 'ジョルト', 'ペーテル', 'ラースロー', 'タマーシュ'], f: ['ナジ', 'コヴァーチ', 'サボー', 'ホルヴァート', 'ヴァルガ'] },
-    { c: 'ウズベキスタン', g: ['ルスタム', 'ジャスル', 'ウルグベク', 'ボブル', 'シェルゾド'], f: ['トゥルスノフ', 'ラヒモフ', 'ユスポフ', 'カリモフ', 'アブドゥラエフ'] }
+    { c: 'ウズベキスタン', asia: true, g: ['ルスタム', 'ジャスル', 'ウルグベク', 'ボブル', 'シェルゾド'], f: ['トゥルスノフ', 'ラヒモフ', 'ユスポフ', 'カリモフ', 'アブドゥラエフ'] },
+    { c: '韓国', asia: true, g: ['ジフン', 'ミンジュン', 'ソンホ', 'ドンヒョン', 'ヒョヌ'], f: ['キム', 'イ', 'パク', 'チェ', 'チョン'] },
+    { c: 'キルギス', asia: true, g: ['アイベク', 'エルダル', 'ヌルベク', 'ベクジャン', 'ティムール'], f: ['アサノフ', 'トクトグロフ', 'ジュヌソフ', 'エセンベコフ', 'サディコフ'] }
   ];
 
   var rand = Math.random;
@@ -228,8 +230,8 @@ var WL = (function () {
 
   function stars(mul) { return mul < 1.0 ? 1 : mul < 1.15 ? 2 : 3; }
   function japaneseName() { return pick(SURNAMES) + ' ' + pick(GIVEN); }
-  function foreignName() {
-    var f = pick(FOREIGN);
+  function foreignName(asiaOnly) {
+    var f = pick(asiaOnly ? FOREIGN.filter(function (x) { return x.asia; }) : FOREIGN);
     return { name: pick(f.g) + '・' + pick(f.f), country: f.c };
   }
 
@@ -426,10 +428,11 @@ var WL = (function () {
   }
   function followUp(g, t) {
     if (t.kind === 'trials') return { name: 'オリンピック', str: 68 + BAL.topBonus + (g.age - 24) / 4 * BAL.olyStep, rounds: 4, kind: 'olympics' };
+    if (t.name === '全国中学大会') return { name: 'U15アジア選手権', str: t.str + 4, rounds: 4, kind: 'asia' };
     if (t.kind === 'national' || (t.name === '全日本選手権')) return { name: '世界選手権', str: t.str + 4, rounds: 4, kind: 'world' };
     return null;
   }
-  function isIntl(t) { return t.kind === 'world' || t.kind === 'olympics'; }
+  function isIntl(t) { return t.kind === 'world' || t.kind === 'olympics' || t.kind === 'asia'; }
 
   function roundName(r, R) {
     if (r === R) return '決勝';
@@ -444,11 +447,11 @@ var WL = (function () {
     if (isFinal && t.rounds >= 3) {
       var p = S + 4 + rnd(-2.5, 2.5);
       if (!isIntl(t) && g.rival) return { name: g.rival.name, from: g.rival.pref, power: p, rival: true };
-      var fn = foreignName();
-      return { name: fn.name, from: fn.country, power: p, champ: true };
+      var fn = foreignName(t.kind === 'asia');
+      return { name: fn.name, from: fn.country, power: p, champ: t.kind === 'asia' ? 'アジア王者' : '世界王者' };
     }
     var pw = S - (t.rounds - r) * 3 + rnd(-3, 3);
-    if (isIntl(t)) { var f = foreignName(); return { name: f.name, from: f.country, power: pw }; }
+    if (isIntl(t)) { var f = foreignName(t.kind === 'asia'); return { name: f.name, from: f.country, power: pw }; }
     return { name: japaneseName(), from: pick(PREFS), power: pw };
   }
 
@@ -510,7 +513,7 @@ var WL = (function () {
     addStat(g, 'men', win ? 0.6 : 0.3);
     if (opp.rival && g.rival) { if (win) g.rival.w++; else g.rival.l++; }
     return {
-      opp: { name: opp.name, from: opp.from, power: Math.round(opp.power), rival: !!opp.rival, champ: !!opp.champ },
+      opp: { name: opp.name, from: opp.from, power: Math.round(opp.power), rival: !!opp.rival, champ: opp.champ || '' },
       myPower: Math.round(P), periods: periods, me: me, op: op, win: win, method: method, fall: fall
     };
   }
@@ -549,7 +552,7 @@ var WL = (function () {
     }
     if (tour.won) g.titles.push({ age: g.age, name: t.name });
     if (tour.medal) g.medals.push({ age: g.age, medal: tour.medal });
-    if (t.kind === 'olympics' || t.kind === 'world' || tour.won) g.log.push({ age: g.age, name: t.name, place: tour.place });
+    if (isIntl(t) || tour.won) g.log.push({ age: g.age, name: t.name, place: tour.place });
     tour.next = tour.won ? followUp(g, t) : null;
     return tour;
   }
@@ -781,7 +784,7 @@ if (typeof module !== 'undefined') module.exports = WL;
     var t = g.tour;
     var step = g.tourStep;
     var head = '<div class="card ' + (t.kind === 'olympics' ? 'gold' : 'red') + ' center"><div class="label">' + g.age + '歳の冬</div>' +
-      '<h2>' + (t.kind === 'olympics' ? '🏅 ' : t.kind === 'world' ? '🌏 ' : '🏆 ') + esc(t.name) + '</h2></div>';
+      '<h2>' + (t.kind === 'olympics' ? '🏅 ' : t.kind === 'world' || t.kind === 'asia' ? '🌏 ' : '🏆 ') + esc(t.name) + '</h2></div>';
     if (step === 0) {
       return header() + (g.lastMsg ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + head +
         '<div class="card center">全' + t.rounds + '試合のトーナメント。<br>' + esc(g.name) + 'の戦闘力:<b class="gold-t">' + n0(WL.matchPower(g)) + '</b>' +
@@ -791,7 +794,7 @@ if (typeof module !== 'undefined') module.exports = WL;
     if (step <= t.matches.length) {
       var m = t.matches[step - 1];
       var o = m.opp;
-      var html = head + '<div class="card"><div class="center gold-t"><b>' + esc(m.round) + '</b>' + (o.rival ? '<span class="tag">宿命のライバル</span>' : '') + (o.champ ? '<span class="tag gold">世界王者</span>' : '') + '</div>' +
+      var html = head + '<div class="card"><div class="center gold-t"><b>' + esc(m.round) + '</b>' + (o.rival ? '<span class="tag">宿命のライバル</span>' : '') + (o.champ ? '<span class="tag gold">' + esc(o.champ === true ? '世界王者' : o.champ) + '</span>' : '') + '</div>' +
         '<div class="vs"><div class="side me"><b>' + esc(g.name) + '</b><div class="p">戦闘力 ' + m.myPower + '</div></div><div class="x">VS</div>' +
         '<div class="side"><b>' + esc(o.name) + '</b><div class="p">' + esc(o.from) + '・戦闘力 ' + o.power + '</div></div></div>' +
         '<div class="score">' + m.me + ' - ' + m.op + '</div>';
@@ -813,7 +816,7 @@ if (typeof module !== 'undefined') module.exports = WL;
       '<ul class="plain" style="text-align:left">' + t.matches.map(function (m) {
         return '<li>' + esc(m.round) + ' ' + (m.win ? '◯' : '✕') + ' ' + esc(m.opp.name) + '(' + m.me + '-' + m.op + ' ' + esc(m.method) + ')</li>';
       }).join('') + '</ul>';
-    if (t.next) res += '<p class="gold-t">' + (t.next.kind === 'olympics' ? '🎌 オリンピック代表に内定! ついに夢の舞台へ!' : '🌏 世界選手権の日本代表に選ばれた!') + '</p>';
+    if (t.next) res += '<p class="gold-t">' + (t.next.kind === 'olympics' ? '🎌 オリンピック代表に内定! ついに夢の舞台へ!' : t.next.kind === 'asia' ? '🌏 U15アジア選手権の日本代表に選ばれた! はじめての国際大会だ!' : '🌏 世界選手権の日本代表に選ばれた!') + '</p>';
     else if (t.kind === 'trials') res += '<p class="muted">代表の座には届かなかった…。次のオリンピックは4年後。</p>';
     res += '</div><button class="btn' + (t.next ? ' gold' : '') + '" data-act="tourDone">' + (t.next ? esc(t.next.name) + 'へ' : 'つぎへ') + '</button>';
     return head + res;
@@ -841,7 +844,7 @@ if (typeof module !== 'undefined') module.exports = WL;
       : '<div class="medal">🎌</div><h1 class="center">引退</h1><p class="center">' + g.ending.age + '歳。' + esc(g.name) + 'は静かにマットを降りた。<br>金メダルには届かなかったが、その挑戦は多くの人の心に残った。</p>';
     var titles = g.titles.length ? g.titles.map(function (t) { return '<li>' + t.age + '歳 ' + esc(t.name) + ' 優勝</li>'; }).join('') : '<li class="muted">なし</li>';
     var medals = g.medals.length ? g.medals.map(function (m) { return '<li>' + m.age + '歳 オリンピック ' + ({ '金': '🥇金', '銀': '🥈銀', '銅': '🥉銅' })[m.medal] + 'メダル</li>'; }).join('') : '<li class="muted">なし</li>';
-    var oly = g.log.filter(function (l) { return l.name === 'オリンピック' || l.name === '世界選手権'; });
+    var oly = g.log.filter(function (l) { return l.name === 'オリンピック' || l.name === '世界選手権' || l.name === 'U15アジア選手権'; });
     return '<div class="card ' + (gold ? 'gold' : '') + '">' + top + '</div>' +
       '<div class="card"><h3>🏅 メダル</h3><ul class="plain">' + medals + '</ul>' +
       (oly.length ? '<h3>🌏 国際大会</h3><ul class="plain">' + oly.map(function (l) { return '<li>' + l.age + '歳 ' + esc(l.name) + ' ' + esc(l.place) + '</li>'; }).join('') + '</ul>' : '') +
