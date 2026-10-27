@@ -114,6 +114,33 @@ ul.plain li { padding: 4px 0; border-bottom: 1px dashed var(--line); font-size: 
 .row > * { flex: 1; }
 .foot { text-align: center; margin-top: 20px; }
 .foot a { color: var(--muted); font-size: 12px; }
+/* 金メダルの特別エンディング */
+.scene { position: relative; overflow: hidden; min-height: 62vh; display: flex; flex-direction: column; justify-content: center; text-align: center;
+  background: radial-gradient(circle at 50% 30%, rgba(243,210,122,.18), transparent 60%), var(--panel); }
+.scene .kicker { color: var(--gold); letter-spacing: .2em; font-size: 12px; }
+.scene h1 { font-size: 28px; color: var(--gold2); margin: 10px 0; text-shadow: 0 0 18px rgba(243,210,122,.45); }
+.scene p { white-space: pre-line; margin: 8px 0; position: relative; z-index: 1; }
+.scene .say { background: #0e0a09; border-radius: 10px; padding: 10px; margin: 10px 4px; font-size: 14px; text-align: left; position: relative; z-index: 1; }
+.rays { position: absolute; left: 50%; top: 32%; width: 600px; height: 600px; margin: -300px 0 0 -300px; z-index: 0; opacity: .18;
+  background: repeating-conic-gradient(var(--gold) 0 6deg, transparent 6deg 18deg); border-radius: 50%; animation: spin 40s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.podium { display: flex; align-items: flex-end; justify-content: center; gap: 4px; margin: 14px auto 6px; position: relative; z-index: 1; }
+.podium div { width: 74px; border-radius: 6px 6px 0 0; color: #2a1a00; font-weight: bold; padding-top: 6px; font-size: 12px; }
+.podium .p1 { height: 96px; background: linear-gradient(var(--gold2), var(--gold)); }
+.podium .p2 { height: 66px; background: linear-gradient(#e6e6e6, #a9a9a9); }
+.podium .p3 { height: 48px; background: linear-gradient(#e0a774, #a8693a); }
+.podium .who { display: block; font-size: 26px; margin-top: -40px; }
+.flag { display: inline-block; width: 60px; height: 40px; background: #fff; border-radius: 3px; position: relative; animation: rise 2.4s ease-out both; z-index: 1; }
+.flag::after { content: ''; position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; background: #bc002d; }
+@keyframes rise { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.confetti { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.confetti i { position: absolute; top: -12px; width: 7px; height: 12px; border-radius: 2px; animation: fall linear infinite; }
+@keyframes fall { to { transform: translateY(80vh) rotate(540deg); } }
+.honor { display: inline-block; margin: 8px 0; padding: 6px 16px; border: 2px solid var(--gold); border-radius: 999px; color: var(--gold2); font-weight: bold; font-size: 18px; position: relative; z-index: 1; }
+.dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--gold); }
+@media (prefers-reduced-motion: reduce) { .rays, .confetti i, .flag { animation: none; } .confetti { display: none; } }
 @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .pop { animation: pop .25s ease-out; }
 </style>
@@ -837,15 +864,99 @@ if (typeof module !== 'undefined') module.exports = WL;
   }
 
   // ---- 7. エンディング ----
+  // 金メダルの特別エンディング(人生の中身でセリフが変わる)
+  function confetti() {
+    var colors = ['#f3d27a', '#d9ad3c', '#c8102e', '#ffffff', '#4caf7a', '#5b9bd5'];
+    var html = '';
+    for (var i = 0; i < 36; i++) {
+      html += '<i style="left:' + ((i * 37) % 100) + '%;background:' + colors[i % colors.length] +
+        ';animation-duration:' + (2.6 + (i * 7 % 10) / 4) + 's;animation-delay:' + ((i * 13 % 20) / 10) + 's"></i>';
+    }
+    return '<div class="confetti">' + html + '</div>';
+  }
+  function honorTitle() {
+    var a = g.ending.age;
+    if (a >= 36) return '生ける伝説';
+    if (a >= 32) return '不屈のベテラン';
+    var asia = g.titles.some(function (t) { return t.name === 'U15アジア選手権'; });
+    if (a <= 24) return asia ? 'アジアから世界へ駆けた天才' : '若き天才';
+    return '日本の大黒柱';
+  }
+  function goldScenes() {
+    var name = esc(g.name);
+    var a = g.ending.age;
+    var fin = g.tour && g.tour.matches ? g.tour.matches[g.tour.matches.length - 1] : null;
+    var scenes = [];
+    // 1. 決勝の瞬間
+    var finText = fin
+      ? 'オリンピック決勝。相手は' + esc(fin.opp.from) + 'の世界王者、' + esc(fin.opp.name) + '。\n\n' +
+        (fin.fall ? '第' + fin.fall.period + 'ピリオド、' + name + 'が相手の両肩をマットに押さえつけた——\nレフェリーの手がマットを叩く!' :
+          fin.me === fin.op ? fin.me + '-' + fin.op + 'の同点のまま、最後のポイントを奪った!' :
+          '残り10秒。スコアは ' + fin.me + '-' + fin.op + '。\n' + name + 'は最後まで攻めの姿勢をくずさなかった。') +
+        '\n\nブザーが鳴った。'
+      : 'オリンピック決勝。ブザーが鳴った。';
+    scenes.push('<div class="kicker">' + a + '歳・オリンピック決勝</div><p>' + finText + '</p><h1>金メダル!!</h1>');
+    // 2. 表彰台
+    var cry = a <= 24 ? 'まだあどけなさの残る顔で、何度も金メダルを見つめた。' :
+      a >= 32 ? '長い長い道のりを思い出し、' + name + 'は人目もはばからず泣いた。' :
+      name + 'は目を閉じ、静かにこの瞬間をかみしめた。';
+    var past = g.medals.filter(function (m) { return m.medal !== '金'; });
+    var pastText = past.length ? '\n' + past[past.length - 1].age + '歳のオリンピックでの' + past[past.length - 1].medal + 'メダルの悔しさが、ようやく報われた。' : '';
+    scenes.push('<div class="kicker">表彰式</div><div style="margin:8px 0 34px"><span class="flag"></span></div>' +
+      '<div class="podium"><div class="p2"><span class="who">🥈</span>2</div><div class="p1"><span class="who">🥇</span>1</div><div class="p3"><span class="who">🥉</span>3</div></div>' +
+      '<p>表彰台のいちばん高いところに立つ。\n日の丸がゆっくりと上がり、君が代が流れる。\n' + cry + pastText + '</p>');
+    // 3. ライバル
+    if (g.rival) {
+      var r = g.rival, rn = esc(r.name);
+      var line = r.w > r.l ? '「…やっぱりお前は強いよ。おれが一番よく知ってる。」' :
+        r.w < r.l ? '「おれに負け越してるくせに、世界一になりやがって。…最高だよ。」' :
+        '「おれたちの勝負は、まだ決着がついてないからな。」';
+      scenes.push('<div class="kicker">宿命のライバル</div><p>観客席に、見覚えのある顔があった。\n10歳のあの日から戦い続けた' + esc(r.pref) + 'の' + rn + 'だ。</p>' +
+        '<div class="say">' + rn + ':' + line + '<br>' + rn + ':「おめでとう、' + name + '。」</div>' +
+        '<p class="small muted">ライバルとの通算成績 ' + r.w + '勝' + r.l + '敗</p>');
+    }
+    // 4. 凱旋
+    var memories = [];
+    if (g.titles.some(function (t) { return t.name === 'U15アジア選手権'; })) memories.push('15歳でアジアを制したあの冬');
+    if (g.titles.some(function (t) { return t.name === 'インターハイ'; })) memories.push('インターハイの優勝');
+    if (g.titles.some(function (t) { return t.name === '世界選手権'; })) memories.push('世界選手権の金メダル');
+    var courseText = g.after === 'abroad' ? '海外で一人きりで磨いた技が、ついに世界一になった。' :
+      g.after === 'corp' ? '支えてくれた実業団のチームメイトたちも、涙を流して喜んだ。' :
+      g.after === 'univ' ? '大学の監督や仲間たちから、お祝いのメッセージが山のように届いた。' : '';
+    scenes.push('<div class="kicker">凱旋</div><p>' + esc(g.pref) + 'に帰ると、駅前は人であふれていた。\n' +
+      '「おかえり!」「ありがとう!」の声に包まれながら、オープンカーでパレード。\n\n' +
+      '初めてレスリングに出会った体育館には、子どもたちが「' + name + 'みたいになりたい!」と押し寄せた。' +
+      (memories.length ? '\n\n' + memories.join('、') + '——すべてがこの日につながっていた。' : '') +
+      (courseText ? '\n' + courseText : '') + '</p>');
+    // 5. その後
+    var after = a <= 24 ? name + 'はその後も勝ち続け、日本レスリング界の顔となった。\n若き天才の物語は、まだ始まったばかりだ。' :
+      a <= 28 ? name + 'は日本代表のキャプテンとして、後輩たちを引っぱっていった。' :
+      a <= 32 ? 'あきらめなかった者だけがたどり着ける場所がある。\n' + name + 'の姿は、多くの選手に勇気を与えた。' :
+      '36歳での金メダル。誰もが不可能だと思った奇跡を、' + name + 'はやってのけた。\nこの日のことは、ずっと語り継がれるだろう。';
+    scenes.push('<div class="kicker">そして伝説へ</div><p>' + after + '</p><p class="small muted">' + name + 'に贈られた称号</p><div><span class="honor">' + esc(honorTitle()) + '</span></div>');
+    return scenes;
+  }
+  function goldSceneScreen(scenes, i) {
+    var dots = scenes.map(function (_, k) { return '<i class="' + (k === i ? 'on' : '') + '"></i>'; }).join('');
+    return '<div class="card gold scene"><div class="rays"></div>' + (i === 0 || i === scenes.length - 1 ? confetti() : '') + scenes[i] + '</div>' +
+      '<div class="dots">' + dots + '</div>' +
+      '<button class="btn gold" data-act="endingNext">' + (i === scenes.length - 1 ? '成績を見る' : 'つぎへ') + '</button>';
+  }
+
   function endingScreen() {
     var gold = g.ending.type === 'gold';
+    if (gold) {
+      var scenes = goldScenes();
+      var i = g.ending.scene || 0;
+      if (i < scenes.length) return goldSceneScreen(scenes, i);
+    }
     var top = gold
-      ? '<div class="medal">🥇</div><h1 class="center gold-t">オリンピック金メダル!</h1><p class="center">' + g.ending.age + '歳、' + esc(g.name) + 'はついに世界の頂点に立った!<br>' + esc(g.pref) + 'の町は大歓声に包まれた。</p>'
+      ? confetti() + '<div class="medal">🥇</div><h1 class="center gold-t" style="font-size:24px">オリンピック金メダル!</h1><p class="center">' + g.ending.age + '歳、' + esc(g.name) + 'はついに世界の頂点に立った!</p><div class="center"><span class="honor">' + esc(honorTitle()) + '</span></div>'
       : '<div class="medal">🎌</div><h1 class="center">引退</h1><p class="center">' + g.ending.age + '歳。' + esc(g.name) + 'は静かにマットを降りた。<br>金メダルには届かなかったが、その挑戦は多くの人の心に残った。</p>';
     var titles = g.titles.length ? g.titles.map(function (t) { return '<li>' + t.age + '歳 ' + esc(t.name) + ' 優勝</li>'; }).join('') : '<li class="muted">なし</li>';
     var medals = g.medals.length ? g.medals.map(function (m) { return '<li>' + m.age + '歳 オリンピック ' + ({ '金': '🥇金', '銀': '🥈銀', '銅': '🥉銅' })[m.medal] + 'メダル</li>'; }).join('') : '<li class="muted">なし</li>';
     var oly = g.log.filter(function (l) { return l.name === 'オリンピック' || l.name === '世界選手権' || l.name === 'U15アジア選手権'; });
-    return '<div class="card ' + (gold ? 'gold' : '') + '">' + top + '</div>' +
+    return '<div class="card ' + (gold ? 'gold' : '') + '" style="position:relative;overflow:hidden">' + top + '</div>' +
       '<div class="card"><h3>🏅 メダル</h3><ul class="plain">' + medals + '</ul>' +
       (oly.length ? '<h3>🌏 国際大会</h3><ul class="plain">' + oly.map(function (l) { return '<li>' + l.age + '歳 ' + esc(l.name) + ' ' + esc(l.place) + '</li>'; }).join('') + '</ul>' : '') +
       '<h3>🏆 優勝歴(' + g.titles.length + '回)</h3><ul class="plain">' + titles + '</ul>' +
@@ -877,6 +988,7 @@ if (typeof module !== 'undefined') module.exports = WL;
     else if (act === 'tourNext') g.tourStep++;
     else if (act === 'tourDone') WL.finishTournament(g);
     else if (act === 'nextYear') WL.nextYear(g);
+    else if (act === 'endingNext') g.ending.scene = (g.ending.scene || 0) + 1;
     else if (act === 'toTitle') { save(); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
     else if (act === 'reborn') { storeDel(SAVE_KEY); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
     render();
