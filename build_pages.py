@@ -629,10 +629,54 @@ def event_page(ev, ctx):
     import sys
     h += players.event_results_html(ev, ctx, sys.modules[__name__])
     h += players.winners_html(ev, ctx, sys.modules[__name__])
+    h += related_html(ev, ctx)
     h += info_details(ev)
     h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}&amp;e={e(ev["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
     h += "</main>" + footer(ctx["as_of"])
     return path, h
+
+
+RELATED_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}")
+RELATED_DAYS = 10  # 「同じ時期の大会」は、開始日の前後この日数に始まった大会
+RELATED_MAX = 5
+
+
+def related_html(ev, ctx):
+    """開催回ページの「同じ時期の大会」「同じ会場の大会」(Issue #25)。ほかの大会のページがあるものだけ、近い順に最大5つ"""
+    slugs, S = ctx["slugs"], ctx["S"]
+    start = ev.get("start") or ""
+    if not RELATED_DATE.match(start):
+        return ""
+    day = datetime.strptime(start[:10], "%Y-%m-%d")
+
+    def gap(x):
+        return abs((datetime.strptime(x["start"][:10], "%Y-%m-%d") - day).days)
+    # 「(マスター未収録の回)」「(大会名の確認が必要)」のような、まだ整理できていない大会は出さない
+    def tidy(x):
+        name = S.get(x["series"], {}).get("name") or x.get("name") or ""
+        return not any(k in name for k in ("未収録", "確認が必要"))
+    others = [x for x in ctx["all_events"] if x["id"] != ev["id"] and x["id"] in slugs and x.get("series") != ev.get("series") and tidy(x)
+              and RELATED_DATE.match(x.get("start") or "") and x.get("status") != "cancelled"]
+    near = sorted((x for x in others if gap(x) <= RELATED_DAYS), key=lambda x: (gap(x), x["start"]))[:RELATED_MAX]
+    venue = ev.get("venue") or ""
+    same = sorted((x for x in others if venue and x.get("venue") == venue and x not in near), key=lambda x: (gap(x), x["start"]))[:RELATED_MAX]
+    if not near and not same:
+        return ""
+
+    def items(lst):
+        out = ""
+        for x in lst:
+            sx = S.get(x["series"], {"id": x["series"], "name": x["name"]})
+            name = L(event_name(x, sx), f"{series_name(sx)} {year_label(x['year'])}")
+            out += (f'<li><a href="{U("/events/" + slugs[x["id"]] + "/")}">{e(name)}</a>'
+                    f'<small>{e(fmt_range(x.get("start"), x.get("end")))}</small></li>')
+        return out
+    h = f'<section class="related"><h2>{L("関連する大会", "Related tournaments")}</h2><div class="rel-grid">'
+    if near:
+        h += f'<div><h3>{L("同じ時期の大会", "Around the same time")}</h3><ul>{items(near)}</ul></div>'
+    if same:
+        h += f'<div><h3>{L("同じ会場の大会", "At the same venue")}</h3><p class="rel-v">{e(N(venue))}</p><ul>{items(same)}</ul></div>'
+    return h + "</div></section>"
 
 
 def source_label(src):
@@ -1502,6 +1546,14 @@ PAGE_CSS = """
 .page .vgroup h3{margin:0 0 8px;font-size:16px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .page .vgroup h3 small{font-weight:400;color:var(--ink3);font-size:12px}
 .vgroup{margin-top:26px}
+.related{margin-top:28px}
+.related h2{font-size:18px;margin:0 0 10px}
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 24px}
+.related h3{font-size:14px;margin:0 0 6px;color:var(--ink2)}
+.related .rel-v{font-size:12px;color:var(--ink3);margin:-2px 0 6px}
+.related ul{list-style:none;margin:0;padding:0}
+.related li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
+.related li small{flex:0 0 auto;color:var(--ink3);font-size:12px}
 a.yr{text-decoration:none}
 .yr[aria-current] .dot{width:24px;height:24px;margin:2px auto;background:linear-gradient(120deg,var(--grad-a),var(--grad-b));box-shadow:0 0 0 3px var(--pink)}
 .yr[aria-current] .y{color:var(--pink)}
