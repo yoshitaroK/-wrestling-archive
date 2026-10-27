@@ -7,12 +7,12 @@
     "selection_rule": "元640件のうち全国・学生連盟大会385件、地方大会記事local系列30件、関東高校大会・予選8件、国内日韓高校親善9件を抜粋。別途、2026年の開催予定11件を追加。",
     "counts": {
       "past_or_cancelled_records": 432,
-      "future_reference_records": 12,
-      "total": 444,
+      "future_reference_records": 13,
+      "total": 445,
       "held": 397,
       "cancelled": 34,
       "postponed": 1,
-      "scheduled": 12
+      "scheduled": 13
     },
     "not_included": "元データのその他地域・NTS・一部国際大会、および2027年予定。除外は未開催・不要・非公式を意味しない。",
     "warnings": [
@@ -11742,6 +11742,28 @@
         "start_date": "2026-11-27",
         "end_date": "2026-11-29"
       }
+    },
+    {
+      "id": "wre-2026-east-women-league-1129",
+      "series_id": "east-women-league",
+      "year": 2026,
+      "name": "STIカップ東日本大学女子リーグ戦",
+      "category": "大学生",
+      "scope": "全国・学生連盟大会",
+      "status": "scheduled",
+      "start_date": "2026-11-29",
+      "end_date": "2026-11-29",
+      "venue": "東京・自由ヶ丘学園高校",
+      "date_quality": "source_date",
+      "evidence_level": "wrestling_spirits_report",
+      "jwf_relationship": "大会報道あり・日本協会との主催等の関係は未確認",
+      "source_urls": [
+        "https://wrestling-spirits.jp/schedule/"
+      ],
+      "date_kind": "planned",
+      "source_names": [
+        "STIカップ東日本大学女子リーグ戦"
+      ]
     },
     {
       "id": "wre-2026-tenno-cup-1224",
