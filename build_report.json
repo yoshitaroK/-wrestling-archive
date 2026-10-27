@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-26T23:52:26+09:00",
- "as_of": "2026-10-26",
+ "built_at": "2026-10-27T10:30:14+09:00",
+ "as_of": "2026-10-27",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
@@ -204,7 +204,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 13
+  "articles": 14
  },
  "books": {
   "errors": [],
