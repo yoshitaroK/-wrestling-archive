@@ -829,7 +829,9 @@
   "year": 2026,
   "name": "文部科学大臣杯 令和8年度 全日本大学レスリンググレコローマンレスリング選手権大会",
   "page": "https://www.japan-wrestling.jp/competition/2026/7537",
-  "winners": [],
+  "winners": [
+   "https://www.japan-wrestling.jp/wp-content/uploads/2026/10/261023_competition03.pdf"
+  ],
   "n_weight_pdfs": 0,
   "files": []
  },
