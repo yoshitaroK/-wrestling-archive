@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-27T11:28:40+09:00",
+ "built_at": "2026-10-27T14:07:44+09:00",
  "as_of": "2026-10-27",
  "video_count": 3360,
  "raw_count": 3360,
@@ -14,7 +14,7 @@
   "unmatched": 190
  },
  "overrides_applied": 42,
- "master_events": 444,
+ "master_events": 445,
  "derived_events": 41,
  "event_dates_applied": [
   "x-olympics-2024-05-23",
@@ -286,7 +286,9 @@
   "pages": 1776,
   "names": 639,
   "machine_translations": 3485,
-  "missing_names": []
+  "missing_names": [
+   "東京・自由ヶ丘学園高校"
+  ]
  },
  "duplicate_meta": {
   "title_ja": [
