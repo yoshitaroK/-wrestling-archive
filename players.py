@@ -593,6 +593,7 @@ table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px
 table.results th,table.results td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
 table.results th{color:var(--ink3);font-weight:500;font-size:12px}
 table.results td b{color:var(--pink)}
+@media(max-width:600px){table.results{min-width:0;font-size:13px}table.results th,table.results td{padding:8px 5px}table.results th:first-child,table.results td:first-child{padding-left:0}table.results td:nth-child(2){white-space:normal;min-width:7em;line-height:1.5}}
 .pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}
 .pager button{min-width:38px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .pager button[aria-current]{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
