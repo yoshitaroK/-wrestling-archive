@@ -630,11 +630,25 @@ var WL = (function () {
     g.phase = 'yearEnd';
   }
 
+  function goldCount(g) { return g.medals.filter(function (m) { return m.medal === '金'; }).length; }
+
+  // 金メダルのあと「現役を続ける」を選んだとき
+  function continueAfterGold(g) {
+    if (g.phase !== 'ending' || !g.ending || g.ending.type !== 'gold' || g.ending.done || g.age >= LAST_AGE) return;
+    g.ending = null;
+    endYear(g);
+  }
+  // 金メダルのあと「ここで引退する」を選んだとき
+  function retireAfterGold(g) {
+    if (g.phase !== 'ending' || !g.ending || g.ending.type !== 'gold') return;
+    g.ending.done = true;
+  }
+
   function nextYear(g) {
     if (g.phase !== 'yearEnd') return;
     if (g.age >= LAST_AGE) {
       g.age++;
-      g.ending = { type: 'retire', age: g.age };
+      g.ending = goldCount(g) ? { type: 'gold', age: g.age, done: true } : { type: 'retire', age: g.age };
       g.phase = 'ending';
       return;
     }
@@ -648,7 +662,7 @@ var WL = (function () {
   return {
     STATS: STATS, STAT_NAMES: STAT_NAMES, MENUS: MENUS, INFANCY: INFANCY, COURSES: COURSES, BAL: BAL,
     OLYMPIC_AGES: OLYMPIC_AGES, MOVES: MOVES,
-    setRandom: setRandom, newGame: newGame, startInfancy: startInfancy, chooseInfancy: chooseInfancy,
+    setRandom: setRandom, newGame: newGame, goldCount: goldCount, continueAfterGold: continueAfterGold, retireAfterGold: retireAfterGold, startInfancy: startInfancy, chooseInfancy: chooseInfancy,
     resolveEvent: resolveEvent, train: train, finishTournament: finishTournament, nextYear: nextYear,
     tournamentFor: tournamentFor, power: power, matchPower: matchPower, stars: stars, stageName: stageName,
     ageCoef: ageCoef, fatigueCoef: fatigueCoef, courseMul: courseMul, courseFat: courseFat
@@ -704,6 +718,7 @@ if (typeof module !== 'undefined') module.exports = WL;
   // ---- 1. タイトル ----
   function titleScreen() {
     var saved = load();
+    var resumable = saved && (saved.phase !== 'ending' || (saved.ending && saved.ending.type === 'gold' && !saved.ending.done));
     var last = storeGet(NAME_KEY) || '';
     return '<div class="title-logo"><div class="sub">WRESTLING LIFE</div><h1>レスリング人生</h1>' +
       '<div class="road">〜オリンピックへの道〜</div></div>' +
@@ -711,8 +726,8 @@ if (typeof module !== 'undefined') module.exports = WL;
       '<div class="card"><div class="label">選手の名前</div>' +
       '<input type="text" id="nameInput" maxlength="12" placeholder="例:田中 レス太郎" value="' + esc(last) + '">' +
       '<button class="btn" data-act="new">はじめから</button>' +
-      '<button class="btn gold" data-act="continue"' + (saved && saved.phase !== 'ending' ? '' : ' disabled') + '>つづきから' +
-      (saved && saved.phase !== 'ending' ? '(' + esc(saved.name) + '・' + saved.age + '歳)' : '') + '</button></div>' +
+      '<button class="btn gold" data-act="continue"' + (resumable ? '' : ' disabled') + '>つづきから' +
+      (resumable ? '(' + esc(saved.name) + '・' + saved.age + '歳)' : '') + '</button></div>' +
       '<div class="card small muted">毎年「春・夏・秋」の3回、練習メニューを選び、冬の大会に挑もう。<br>' +
       '36歳までにオリンピックで金メダルを取れればクリア! 疲れをためすぎるとケガをするので、休養も大事。</div>';
   }
@@ -874,8 +889,12 @@ if (typeof module !== 'undefined') module.exports = WL;
     }
     return '<div class="confetti">' + html + '</div>';
   }
+  function golds() { return g.medals.filter(function (m) { return m.medal === '金'; }); }
   function honorTitle() {
-    var a = g.ending.age;
+    var gs = golds();
+    if (gs.length >= 3) return '史上最強のレスラー';
+    if (gs.length === 2) return gs[1].age - gs[0].age === 4 ? 'オリンピック連覇の王者' : '2度の金メダリスト';
+    var a = gs.length ? gs[0].age : g.ending.age;
     if (a >= 36) return '生ける伝説';
     if (a >= 32) return '不屈のベテラン';
     var asia = g.titles.some(function (t) { return t.name === 'U15アジア選手権'; });
@@ -895,13 +914,16 @@ if (typeof module !== 'undefined') module.exports = WL;
           '残り10秒。スコアは ' + fin.me + '-' + fin.op + '。\n' + name + 'は最後まで攻めの姿勢をくずさなかった。') +
         '\n\nブザーが鳴った。'
       : 'オリンピック決勝。ブザーが鳴った。';
-    scenes.push('<div class="kicker">' + a + '歳・オリンピック決勝</div><p>' + finText + '</p><h1>金メダル!!</h1>');
+    var n = golds().length;
+    scenes.push('<div class="kicker">' + a + '歳・オリンピック決勝' + (n >= 2 ? '(' + n + '個目の金メダル)' : '') + '</div><p>' + finText + '</p><h1>金メダル!!</h1>');
     // 2. 表彰台
     var cry = a <= 24 ? 'まだあどけなさの残る顔で、何度も金メダルを見つめた。' :
       a >= 32 ? '長い長い道のりを思い出し、' + name + 'は人目もはばからず泣いた。' :
       name + 'は目を閉じ、静かにこの瞬間をかみしめた。';
     var past = g.medals.filter(function (m) { return m.medal !== '金'; });
-    var pastText = past.length ? '\n' + past[past.length - 1].age + '歳のオリンピックでの' + past[past.length - 1].medal + 'メダルの悔しさが、ようやく報われた。' : '';
+    var prevGold = golds().filter(function (m) { return m.age < a; });
+    var pastText = prevGold.length ? '\n' + (a - prevGold[prevGold.length - 1].age === 4 ? '4年前に続いて、ふたたび世界の頂点へ。オリンピック連覇だ!' : prevGold[prevGold.length - 1].age + '歳のとき以来、2度目の頂点へ。') :
+      past.length ? '\n' + past[past.length - 1].age + '歳のオリンピックでの' + past[past.length - 1].medal + 'メダルの悔しさが、ようやく報われた。' : '';
     scenes.push('<div class="kicker">表彰式</div><div style="margin:8px 0 34px"><span class="flag"></span></div>' +
       '<div class="podium"><div class="p2"><span class="who">🥈</span>2</div><div class="p1"><span class="who">🥇</span>1</div><div class="p3"><span class="who">🥉</span>3</div></div>' +
       '<p>表彰台のいちばん高いところに立つ。\n日の丸がゆっくりと上がり、君が代が流れる。\n' + cry + pastText + '</p>');
@@ -940,7 +962,23 @@ if (typeof module !== 'undefined') module.exports = WL;
     var dots = scenes.map(function (_, k) { return '<i class="' + (k === i ? 'on' : '') + '"></i>'; }).join('');
     return '<div class="card gold scene"><div class="rays"></div>' + (i === 0 || i === scenes.length - 1 ? confetti() : '') + scenes[i] + '</div>' +
       '<div class="dots">' + dots + '</div>' +
-      '<button class="btn gold" data-act="endingNext">' + (i === scenes.length - 1 ? '成績を見る' : 'つぎへ') + '</button>';
+      '<button class="btn gold" data-act="endingNext">つぎへ</button>';
+  }
+  // 金メダルのあと:続けるか引退するか
+  function goldChoiceScreen() {
+    var a = g.ending.age;
+    var n = golds().length;
+    var html = '<div class="card gold center"><div class="medal">' + '🥇'.repeat(Math.min(n, 3)) + '</div><h2>これからどうする?</h2>';
+    if (a < 36) {
+      html += '<p>' + esc(g.name) + 'は' + a + '歳。オリンピック金メダル' + n + '個。<br>次のオリンピックは4年後の' + (a + 4) + '歳。</p>' +
+        '<p class="small muted">続けると36歳まで挑戦できます。31歳からは体が衰えるので、勝ち続けるのは簡単ではありません。</p></div>' +
+        '<button class="btn gold" data-act="goldContinue">現役を続ける(' + (a + 4) + '歳で' + (n >= 1 ? (n + 1) + '個目の金' : '金') + 'をねらう)</button>' +
+        '<button class="btn" data-act="goldRetire">ここで引退する</button>';
+    } else {
+      html += '<p>36歳。最後のオリンピックで頂点に立った。<br>' + esc(g.name) + 'の現役生活は、最高の形で幕を閉じる。</p></div>' +
+        '<button class="btn gold" data-act="goldRetire">現役を終える</button>';
+    }
+    return html;
   }
 
   function endingScreen() {
@@ -948,10 +986,14 @@ if (typeof module !== 'undefined') module.exports = WL;
     if (gold) {
       var scenes = goldScenes();
       var i = g.ending.scene || 0;
-      if (i < scenes.length) return goldSceneScreen(scenes, i);
+      if (!g.ending.done) return i < scenes.length ? goldSceneScreen(scenes, i) : goldChoiceScreen();
     }
+    var gs = golds();
+    var lastGold = gs.length ? gs[gs.length - 1].age : 0;
     var top = gold
-      ? confetti() + '<div class="medal">🥇</div><h1 class="center gold-t" style="font-size:24px">オリンピック金メダル!</h1><p class="center">' + g.ending.age + '歳、' + esc(g.name) + 'はついに世界の頂点に立った!</p><div class="center"><span class="honor">' + esc(honorTitle()) + '</span></div>'
+      ? confetti() + '<div class="medal">🥇</div><h1 class="center gold-t" style="font-size:24px">オリンピック金メダル' + (gs.length >= 2 ? gs.length + '個!' : '!') + '</h1><p class="center">' +
+        (gs.length >= 2 || g.ending.age > lastGold ? gs.map(function (m) { return m.age + '歳'; }).join('・') + 'で金メダル!<br>' + esc(g.name) + 'は' + g.ending.age + '歳で現役を引退した。' :
+          g.ending.age + '歳、' + esc(g.name) + 'はついに世界の頂点に立った!') + '</p><div class="center"><span class="honor">' + esc(honorTitle()) + '</span></div>'
       : '<div class="medal">🎌</div><h1 class="center">引退</h1><p class="center">' + g.ending.age + '歳。' + esc(g.name) + 'は静かにマットを降りた。<br>金メダルには届かなかったが、その挑戦は多くの人の心に残った。</p>';
     var titles = g.titles.length ? g.titles.map(function (t) { return '<li>' + t.age + '歳 ' + esc(t.name) + ' 優勝</li>'; }).join('') : '<li class="muted">なし</li>';
     var medals = g.medals.length ? g.medals.map(function (m) { return '<li>' + m.age + '歳 オリンピック ' + ({ '金': '🥇金', '銀': '🥈銀', '銅': '🥉銅' })[m.medal] + 'メダル</li>'; }).join('') : '<li class="muted">なし</li>';
@@ -976,7 +1018,7 @@ if (typeof module !== 'undefined') module.exports = WL;
       var name = (input.value || '').trim().slice(0, 12);
       if (!name) { input.focus(); input.placeholder = '名前を入れてください'; return; }
       var saved = load();
-      if (saved && saved.phase !== 'ending' && !confirm('いまのセーブデータ(' + saved.name + '・' + saved.age + '歳)は消えます。はじめからにしますか?')) return;
+      if (saved && (saved.phase !== 'ending' || (saved.ending && saved.ending.type === 'gold' && !saved.ending.done)) && !confirm('いまのセーブデータ(' + saved.name + '・' + saved.age + '歳)は消えます。はじめからにしますか?')) return;
       storeSet(NAME_KEY, name);
       g = WL.newGame(name);
     } else if (act === 'continue') {
@@ -989,6 +1031,8 @@ if (typeof module !== 'undefined') module.exports = WL;
     else if (act === 'tourDone') WL.finishTournament(g);
     else if (act === 'nextYear') WL.nextYear(g);
     else if (act === 'endingNext') g.ending.scene = (g.ending.scene || 0) + 1;
+    else if (act === 'goldContinue') WL.continueAfterGold(g);
+    else if (act === 'goldRetire') WL.retireAfterGold(g);
     else if (act === 'toTitle') { save(); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
     else if (act === 'reborn') { storeDel(SAVE_KEY); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
     render();
