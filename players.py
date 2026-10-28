@@ -118,8 +118,9 @@ def load(root):
         if not is_yes(r.get("公開")):
             report["hidden_private"] += 1
             continue
-        names = [name] + [a for a in (r.get("別表記") or "").split(";") if a.strip()]
-        players.append({"id": pid, "name": name, "kana": r.get("ふりがな", ""), "club": r.get("所属", ""),
+        aliases = [a.strip() for a in (r.get("別表記") or "").split(";") if a.strip()]
+        names = [name] + aliases
+        players.append({"id": pid, "name": name, "kana": r.get("ふりがな", ""), "club": r.get("所属", ""), "aliases": aliases,
                         "roman": r.get("ローマ字", ""), "roman_ok": is_yes(r.get("ローマ字確認")),
                         "keys": sorted({norm(n) for n in names if len(norm(n)) >= 3}, key=len, reverse=True),
                         "results": [], "videos": []})
@@ -258,6 +259,41 @@ def best_result(p, ctx, bp):
     return f"{r.get('開催年', '')}年{name} {rk}"
 
 
+def last_updated(p, ctx, as_of=""):
+    """選手のデータのいちばん新しい日(成績の開催回の最終日・試合動画・国際大会の動画の公開日)。
+    構造化データの dateModified と sitemap の lastmod に使う。毎日の更新日にしないのは、
+    データが変わっていないページの日付まで毎日変わって、更新日の意味が無くなるため"""
+    days = []
+    for r in p["results"]:
+        ev = ctx.get("events_by_id", {}).get(r.get("開催回ID", "")) or {}
+        d = ev.get("end") or ev.get("start") or ""
+        if d:
+            days.append(d[:10])
+    for v in p["videos"] + ctx.get("uww_by_player", {}).get(p["id"], []):
+        if v.get("p"):
+            days.append(v["p"][:10])
+    days = [d for d in days if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) and (not as_of or d <= as_of[:10])]
+    return max(days) if days else (as_of or "")[:10]
+
+
+def awards(p, ctx, bp, limit=10):
+    """構造化データの award に入れる、3位以内の成績(新しい順に最大 limit 件)。
+    例: 2025年 全日本学生選手権 フリースタイル 57kg 優勝"""
+    rows = [r for r in p["results"] if re.fullmatch(r"[123]位", r.get("成績", ""))]
+    rows.sort(key=lambda r: (r.get("開催年", ""), (ctx["events_by_id"].get(r.get("開催回ID", "")) or {}).get("start") or ""), reverse=True)
+    out = []
+    for r in rows[:limit]:
+        if i18n.en():
+            rk = rank(r["成績"])
+            parts = [r.get("開催年", ""), tournament_name(r, ctx, bp), N(r.get("スタイル", "")), r.get("階級", ""), rk]
+            out.append(" ".join(x for x in parts if x))
+        else:
+            rk = {"1位": "優勝", "2位": "準優勝"}.get(r["成績"], r["成績"])
+            parts = [(r.get("開催年", "") + "年") if r.get("開催年") else "", tournament_name(r, ctx, bp), N(r.get("スタイル", "")), r.get("階級", ""), rk]
+            out.append(" ".join(x for x in parts if x))
+    return out
+
+
 def player_page(p, ctx, bp, card=""):
     e, SITE = bp.e, bp.SITE
     path = f"/players/{p['id']}/"
@@ -281,12 +317,22 @@ def player_page(p, ctx, bp, card=""):
         parts.append(f"、国際大会の動画{nu}本。" if nu else "。")
         desc = "".join(parts)
     person = {"@type": "Person", "name": name, "url": SITE + U(path)}
-    if p["kana"] and not i18n.en():
-        person["alternateName"] = p["kana"]
+    # 別名:ふりがな(日本語版)と players.csv の別表記(旧姓・異体字など)。英語版は日本語の氏名も別名にする。
+    # 別表記には動画タイトルの誤字を拾うためのものも混ざるので、ページの文には出さず構造化データだけに入れる
+    alt = ([p["kana"]] if p["kana"] and not i18n.en() else []) + ([p["name"]] if i18n.en() and name != p["name"] else []) + p.get("aliases", [])
+    alt = list(dict.fromkeys(a for a in alt if a and a != name))
+    if alt:
+        person["alternateName"] = alt[0] if len(alt) == 1 else alt
     if club:
         person["affiliation"] = {"@type": "SportsOrganization", "name": club}
-    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "ProfilePage", "url": SITE + U(path), "mainEntity": person}]}
+    aw = awards(p, ctx, bp)
+    if aw:
+        person["award"] = aw
+    profile = {"@type": "ProfilePage", "url": SITE + U(path), "mainEntity": person}
+    upd = last_updated(p, ctx, ctx.get("as_of", ""))
+    if upd:
+        profile["dateModified"] = upd
+    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), profile]}
     # SNS 用画像(og_cards.py で作ったもの)。作れなかったときは試合動画のサムネイル
     first = (p["videos"] or uww)[:1]
     og = card or (f"https://i.ytimg.com/vi/{first[0]['id']}/hqdefault.jpg" if first else "")
@@ -660,7 +706,8 @@ def build(root, data, ctx, bp):
     import og_cards
     year = int((data.get("as_of") or "")[:4] or 0) or __import__("datetime").date.today().year
     cards = og_cards.Cards(root, year)
-    pages = [(*player_page(p, ctx, bp, cards.url(p, ctx, bp, sys.modules[__name__])), data.get("as_of")) for p in players]
+    pages = [(*player_page(p, ctx, bp, cards.url(p, ctx, bp, sys.modules[__name__])), last_updated(p, ctx, data.get("as_of") or "") or data.get("as_of"))
+             for p in players]
     ctx.setdefault("og_cards", {})["en" if i18n.en() else "ja"] = cards.finish()
     pages.append((*index_page(players, ctx, bp), data.get("as_of")))
     remove_old_pages(root, players)
