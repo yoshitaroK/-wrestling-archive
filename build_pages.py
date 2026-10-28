@@ -251,6 +251,14 @@ def with_org(jsonld):
     return {"@context": jsonld.get("@context", "https://schema.org"), "@graph": ([rest] if rest else []) + [org_ld()]}
 
 
+def og_size(og_image):
+    """og_cards.py で作った画像(1200×630)は大きさも書く(SNS が画像を読む前に枠を決められる)"""
+    import og_cards
+    if "/assets/og/" not in (og_image or ""):
+        return ""
+    return f'\n<meta property="og:image:width" content="{og_cards.W}">\n<meta property="og:image:height" content="{og_cards.H}">'
+
+
 def head(title, desc, path, og_image, jsonld, css, alternates=True):
     """path は日本語版のパス(/events/…/)。英語版では /en を付けたURLにする"""
     url = SITE + U(path)
@@ -273,7 +281,7 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{e(url)}">
-{f'<meta property="og:image" content="{e(og_image)}">' if og_image else ''}
+{f'<meta property="og:image" content="{e(og_image)}">' if og_image else ''}{og_size(og_image)}
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico?v=2" sizes="any">
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
@@ -547,7 +555,16 @@ def event_page(ev, ctx):
     ld.extend(video_ld(vids))
     jsonld = {"@context": "https://schema.org", "@graph": ld}
 
-    h = head(title, desc, path, f"https://i.ytimg.com/vi/{first['id']}/hqdefault.jpg" if first else "", jsonld, ctx["css"])
+    # SNS 用画像:動画がある回は最初の動画のサムネイル。動画がまだ無い回は、大会名・日程入りの画像(og_cards.py。#25)
+    og = f"https://i.ytimg.com/vi/{first['id']}/hqdefault.jpg" if first else ""
+    if not og and ctx.get("event_cards"):
+        import og_cards
+        import sys
+        og = ctx["event_cards"].event_url(ev["id"], og_cards.event_spec(
+            sys.modules[__name__], name, year_label(ev["year"]),
+            (fmt_range(ev.get("start"), ev.get("end")) if ev.get("start") and not ev.get("derived") else ""),
+            venue if not ev.get("derived") else "", status_label().get(status, "")), sys.modules[__name__])
+    h = head(title, desc, path, og, jsonld, ctx["css"])
     h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs)
     sl = status_label()
     badge = f'<span class="badge {e(status)}">{e(sl[status])}</span>' if status in sl else ""
@@ -1868,11 +1885,15 @@ def build(root=HERE, inline_css=False, only=None):
     for lang in ("ja", "en"):
         i18n.set_lang(lang)
         pages = []
+        # 動画がまだ無い開催回の SNS 用画像(og_cards.py)
+        import og_cards
+        ctx["event_cards"] = og_cards.Cards(root, 0, og_cards.EVENT_DIR, keep_others=only is not None)
         for ev in data["events"]:
             if ev["id"] in slugs and (only is None or ev["id"] in only):
                 path, doc = event_page(ev, ctx)
                 lastmod = max((jst_date(v.get("p")) for v in by_event.get(ev["id"], [])), default=data.get("as_of"))
                 pages.append((path, doc, lastmod))
+        ctx.setdefault("og_cards", {})["events-" + lang] = ctx.pop("event_cards").finish()
         for s in data["series"]:
             # 配信動画がなくても、写真・アルバムや結果のリンクで開催回のページがある大会は、大会のページも作る(開催回ページの「大会名」のリンク先)
             has_page = s.get("n") or any(x["id"] in slugs for x in events_by_series[s["id"]])
