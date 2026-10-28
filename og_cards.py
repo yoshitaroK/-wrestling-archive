@@ -1,9 +1,11 @@
-"""選手ページの SNS 用画像(X・LINE などに URL を貼ったときに出る横長の画像)を作る。
+"""選手ページと開催回ページの SNS 用画像(X・LINE などに URL を貼ったときに出る横長の画像)を作る。
 
 - 1200×630。紺の地に、名前・所属・代表の印・直近7年の大会成績・サイト名を文字だけで描く
 - 日本語版は assets/og/players/<選手ID>.png、英語版は <選手ID>-en.png
 - 中身が変わった選手の分だけ作り直す(manifest-ja.json / manifest-en.json に中身の指紋を残す)
 - 公開をやめた選手の画像は消す
+- 開催回ページは、配信動画がまだ無い回だけ(動画がある回は動画のサムネイル)。大会名・年・日程・会場を描く。
+  assets/og/events/<開催回ID>.png(英語版は -en.png)。人の名前は描かない(#25)
 - Pillow やフォントが無い・失敗したときは空を返し、ページは今までどおり動画のサムネイルを使う(毎朝の更新は止めない)
 """
 import hashlib
@@ -16,11 +18,14 @@ import i18n
 from i18n import L
 
 OUT_DIR = os.path.join("assets", "og", "players")
+EVENT_DIR = os.path.join("assets", "og", "events")
 FONT_DIR = "fonts"
 FONT_BOLD = "NotoSansJP-700.ttf"
 FONT_BLACK = "NotoSansJP-900.ttf"
 # 見た目を変えたらこの数字を上げる(全員分が作り直される)
 VERSION = 4
+# 開催回の画像の見た目を変えたらこの数字を上げる(開催回の分だけ作り直される)
+EVENT_VERSION = 1
 YEARS = 7
 W, H = 1200, 630
 PAD = 64
@@ -257,15 +262,102 @@ def render(spec, logo):
     return im
 
 
-class Cards:
-    """1つの言語の分の画像をまとめて作る(players.build から使う)"""
+def wrap(draw, text, f, width, lines):
+    """幅に収まるように折り返す(英語は単語ごと、日本語は文字ごと)。lines 行を超える分は最後の行を … にする"""
+    units = re.findall(r"\S+\s*", text) if not JP.search(text) else list(text)
+    out, cur = [], ""
+    for u in units:
+        if cur and draw.textlength((cur + u).rstrip(), font=f) > width:
+            out.append(cur.rstrip())
+            cur = u.lstrip()
+        else:
+            cur += u
+    if cur.strip():
+        out.append(cur.rstrip())
+    if len(out) > lines:
+        out = out[:lines - 1] + [fit(draw, "".join(out[lines - 1:]) + "  ", f, width)]
+    return out
 
-    def __init__(self, root, this_year):
+
+def event_spec(bp, name, year, when, venue, status):
+    """開催回ページの画像に描く中身(文字だけ)。人の名前は入れない"""
+    en = i18n.en()
+    if en and JP.search(venue or ""):
+        venue = ""  # 英語版に日本語を出さない(会場の英語名が無いとき)
+    return {"v": EVENT_VERSION, "kind": "event", "lang": "en" if en else "ja", "site": bp.site_name(),
+            "name": name, "year": year, "when": when, "venue": venue, "status": status}
+
+
+def render_event(spec, logo):
+    """開催回の画像。選手の画像と同じ枠(上の帯・左の赤い帯・下の線と URL)に、大会名・年・日程・会場を描く"""
+    from PIL import Image, ImageDraw
+    en = spec["lang"] == "en"
+    im = Image.new("RGB", (W, H))
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, W, H], fill=NAVY_BOTTOM)
+    d.rectangle([0, 0, W, 104], fill=NAVY_TOP)
+    d.rectangle([0, 0, 10, H], fill=RED)
+    x0 = PAD
+    if logo is not None:
+        lh = 50
+        lw = round(logo.width * lh / logo.height)
+        lg = logo.resize((lw, lh), Image.LANCZOS)
+        im.paste(lg, (x0, 34), lg)
+        tx = x0 + lw + 18
+    else:
+        tx = x0
+    d.text((tx, 40), spec["site"], font=font(FONT_BOLD, 22), fill=WHITE)
+    d.text((tx, 68), "Official · Japan Wrestling Channel" if en else "Japan Wrestling Channel 公式", font=font(FONT_BOLD, 16), fill=SUB)
+
+    foot_y = H - 64
+    y = 136
+    # 年(赤)と、開催予定・中止などの札
+    yf = font(FONT_BLACK, 44)
+    d.text((x0, y), spec["year"], font=yf, fill=RED)
+    if spec["status"]:
+        bf = font(FONT_BOLD, 20)
+        bx = x0 + round(d.textlength(spec["year"], font=yf)) + 24
+        bw, bh = round(d.textlength(spec["status"], font=bf)) + 36, 38
+        by = y + 12
+        d.rounded_rectangle([bx, by, bx + bw - 1, by + bh - 1], radius=bh // 2, outline=PLAN, width=2)
+        d.text((bx + bw // 2, by + bh // 2), spec["status"], font=bf, fill=WHITE, anchor="mm")
+    y += 72
+    # 大会名(長いときは3行まで折り返し、日程・会場まで収まらなければ字を小さくする)
+    facts = [t for t in (spec["when"], spec["venue"]) if t]
+    for size in (68, 60, 54, 48, 44):
+        nf = font(FONT_BLACK, size)
+        lines = wrap(d, spec["name"], nf, W - PAD * 2, 3)
+        lh = round(size * 1.3)
+        if y + lh * len(lines) + 14 + 44 * len(facts) <= foot_y - 10:
+            break
+    for ln in lines:
+        d.text((x0, y), ln, font=nf, fill=WHITE)
+        y += lh
+    y += 14
+    ff = font(FONT_BOLD, 28)
+    for t in facts:
+        if y + 40 <= foot_y - 10:
+            d.text((x0, y), fit(d, t, ff, W - PAD * 2), font=ff, fill=SUB)
+            y += 44
+
+    d.line([(x0, foot_y), (W - PAD, foot_y)], fill=RED, width=3)
+    ft = font(FONT_BOLD, 20)
+    d.text((x0, foot_y + 32), "Schedule · results · videos" if en else "大会の日程・結果・動画", font=ft, fill=SUB, anchor="lm")
+    d.text((W - PAD, foot_y + 32), "japanwrestlingchannel.com", font=ft, fill=RED, anchor="rm")
+    return im
+
+
+class Cards:
+    """1つの言語の分の画像をまとめて作る(players.build・開催回ページから使う)。
+    keep_others=True のときは、今回作らなかった分の画像を消さない(一部のページだけ作り直すとき)"""
+
+    def __init__(self, root, this_year, out_dir=OUT_DIR, keep_others=False):
         global _root
         _root = root
         self.root, self.year = root, this_year
+        self.out_dir = out_dir
         self.suffix = "-en" if i18n.en() else ""
-        self.dir = os.path.join(root, OUT_DIR)
+        self.dir = os.path.join(root, out_dir)
         self.mpath = os.path.join(self.dir, f"manifest-{'en' if i18n.en() else 'ja'}.json")
         self.ok = True
         self.made = self.kept = 0
@@ -285,7 +377,8 @@ class Cards:
                 self.manifest = json.load(f)
         except (OSError, ValueError):
             self.manifest = {}
-        self.new_manifest = {}
+        self.keep_others = keep_others
+        self.new_manifest = dict(self.manifest) if keep_others else {}
         os.makedirs(self.dir, exist_ok=True)
 
     def url(self, p, ctx, bp, players):
@@ -293,29 +386,41 @@ class Cards:
         if not self.ok:
             return ""
         try:
-            spec = card_spec(p, ctx, bp, players, self.year)
-            h = hashlib.sha1(json.dumps(spec, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()[:10]
-            fn = f"{p['id']}{self.suffix}.png"
-            path = os.path.join(self.dir, fn)
-            if self.manifest.get(p["id"]) != h or not os.path.exists(path):
-                im = render(spec, self.logo)
-                # 色数を減らした PNG にして軽くする(文字と単色の図形だけなので見た目はほぼ変わらない)
-                im.quantize(colors=96, method=2, dither=0).save(path, optimize=True)
-                self.made += 1
-            else:
-                self.kept += 1
-            self.new_manifest[p["id"]] = h
-            return f"{bp.SITE}/{OUT_DIR.replace(os.sep, '/')}/{fn}?v={h}"
+            return self.make(p["id"], card_spec(p, ctx, bp, players, self.year), render, bp)
         except Exception as ex:
             self.errors.append(f"{p['id']}: {ex}")
             return ""
+
+    def event_url(self, key, spec, bp):
+        """開催回の画像を(必要なら作って)URL を返す。作れないときは空"""
+        if not self.ok:
+            return ""
+        try:
+            return self.make(key, spec, render_event, bp)
+        except Exception as ex:
+            self.errors.append(f"{key}: {ex}")
+            return ""
+
+    def make(self, key, spec, renderer, bp):
+        h = hashlib.sha1(json.dumps(spec, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()[:10]
+        fn = f"{key}{self.suffix}.png"
+        path = os.path.join(self.dir, fn)
+        if self.manifest.get(key) != h or not os.path.exists(path):
+            im = renderer(spec, self.logo)
+            # 色数を減らした PNG にして軽くする(文字と単色の図形だけなので見た目はほぼ変わらない)
+            im.quantize(colors=96, method=2, dither=0).save(path, optimize=True)
+            self.made += 1
+        else:
+            self.kept += 1
+        self.new_manifest[key] = h
+        return f"{bp.SITE}/{self.out_dir.replace(os.sep, '/')}/{fn}?v={h}"
 
     def finish(self):
         """公開をやめた選手の画像を消し、manifest を書く"""
         if not self.ok:
             return {"made": 0, "kept": 0, "removed": 0, "errors": self.errors}
         removed = 0
-        for fn in os.listdir(self.dir):
+        for fn in ([] if self.keep_others else os.listdir(self.dir)):
             m = re.match(r"^(.+?)(-en)?\.png$", fn)
             if m and (m.group(2) or "") == self.suffix and m.group(1) not in self.new_manifest:
                 os.remove(os.path.join(self.dir, fn))
