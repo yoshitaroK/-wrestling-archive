@@ -237,7 +237,13 @@ def build(root, ctx, bp, report):
         desc = a.get("lead") or a["title"]
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
             "@type": "NewsArticle", "headline": a["title"], "datePublished": a["date"], "description": desc,
-            "url": bp.SITE + path, "publisher": {"@type": "Organization", "name": bp.SITE_NAME}}]}
+            "url": bp.SITE + path, "mainEntityOfPage": bp.SITE + path, "inLanguage": "ja",
+            "author": {"@type": "Organization", "name": bp.SITE_NAME, "url": bp.SITE + "/about/"},
+            "publisher": {"@type": "Organization", "name": bp.SITE_NAME}}]}
+        # 記事の元になった発表・記事(news.json の sources)。AI や検索エンジンが出典を機械で読めるようにする
+        srcs = [s for s in a.get("sources") or [] if isinstance(s, str) and s.startswith("http")]
+        if srcs:
+            jsonld["@graph"][1]["isBasedOn"] = srcs
         img = a.get("image")
         og = f"{bp.SITE}/{IMAGE_DIR}/{img['file']}" if img else ""
         if og:
