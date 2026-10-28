@@ -92,6 +92,22 @@ def intro():
              "organized by age category. Videos play right on this site in the YouTube player. Titles are shown as published by UWW.")
 
 
+def cat_desc(cat, lst):
+    """年代ページの説明文(meta description)。年代名・本数と、そのページに載っている大会名(動画の多い順に最大2つ)をデータから入れる(Issue #224)"""
+    cnt = defaultdict(int)
+    for v in lst:
+        if v["ev"]:
+            cnt[v["ev"]] += 1
+    top = sorted(cnt, key=lambda ev: (-cnt[ev], EV_ORDER.get(ev, 99)))[:2]
+    n = len(lst)
+    ja_ev = f"({'・'.join(top)}{'など' if len(cnt) > len(top) else ''})" if top else ""
+    en_ev = f" ({', '.join(EV_EN.get(ev, ev) for ev in top)}{' and more' if len(cnt) > len(top) else ''})" if top else ""
+    return L(f"{cat_name(cat)}の国際大会{ja_ev}で日本人選手が出ているレスリングの動画{n:,}本を、大会・年ごとにまとめました。"
+             "世界レスリング連合(UWW)公式 YouTube の動画をこのサイトで再生できます。",
+             f"{n:,} {cat_name(cat)} international wrestling videos{en_ev} featuring Japanese wrestlers, organized by event and year. "
+             "Watch videos from the official United World Wrestling (UWW) YouTube channel on this site.")
+
+
 def note(cat):
     if cat == "senior":
         return L("年代が分からない動画も、ここに入れています。", "Videos whose age category is unknown are also listed here.")
@@ -160,7 +176,7 @@ def build(root, ctx, bp):
             body += (f'<details class="uww-g"{" open" if i < 2 else ""}><summary>{e(head)}<small>{L(f"{len(vids)}本", f"{len(vids)} videos")}</small></summary>'
                      f'<ul class="vlist">{"".join(row(v, bp) for v in vids)}</ul></details>')
         path = f"/uww/{cat}/"
-        out.append((path, page(bp, ctx, path, title, intro(), [home, (top_t, "/uww/"), (cat_name(cat), None)], body),
+        out.append((path, page(bp, ctx, path, title, cat_desc(cat, lst), [home, (top_t, "/uww/"), (cat_name(cat), None)], body),
                     max(v["p"] for v in lst)))
     return out
 
