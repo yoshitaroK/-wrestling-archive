@@ -195,6 +195,24 @@ def by_player(root, ctx):
     return out
 
 
+def by_event(root):
+    """開催回ID → その開催回の記事(新しい順)。開催回ページの「この大会のニュース」に使う(#221)"""
+    out = {}
+    for a in load(root, {"errors": [], "warnings": []}):
+        if a.get("event_id"):
+            out.setdefault(a["event_id"], []).append(a)
+    return out
+
+
+def event_section(arts, e):
+    """開催回ページの「この大会のニュース」。リンクの文字は記事の見出しのまま。選手ページへのリンクは足さない"""
+    if not arts:
+        return ""
+    return ('<section id="ev-news"><h2>この大会のニュース</h2><ul class="pl-news">' + "".join(
+        f'<li><a href="{U("/news/" + a["slug"] + "/")}">{e(a["title"])}</a><small>{e(fmt_day(a["date"]))}</small></li>'
+        for a in arts) + "</ul></section>")
+
+
 def build(root, ctx, bp, report):
     """ニュースのページ [(path, html, lastmod)]。日本語版だけ"""
     if i18n.en():

@@ -600,6 +600,10 @@ def event_page(ev, ctx):
         gc, ic = calendar_page.add_to_calendar(ev["id"], f"{name} {year_label(ev['year'])}" if i18n.en() else name,
                                                ev["start"][:10], (ev.get("end") or ev["start"])[:10], venue or "", U(path), ctx)
         h += '<p class="elinks">' + calendar_page.add_buttons_html(gc, ic, e) + "</p>"
+    # この大会のニュース(news.json の event_id が一致する記事。ニュースは日本語だけ)
+    if not i18n.en():
+        import news
+        h += news.event_section(ctx.get("news_by_event", {}).get(ev["id"]), e)
 
     # 開催年の年表(ほかの年へのリンク)
     h += year_rail(s, ev["id"], ctx)
@@ -1786,6 +1790,9 @@ def build(root=HERE, inline_css=False, only=None):
     # 大会ごとの歴代優勝者(player_results.csv の1位)。大会ページのリンクでも使うので先に読む
     import champions
     creport = champions.prepare(root, data, ctx)
+    # 開催回ごとのニュース記事(開催回ページの「この大会のニュース」)。エラーはニュースのページを作るときに出す
+    import news
+    ctx["news_by_event"] = news.by_event(root)
     # 選手ページの SNS 用画像を作った数(日本語版・英語版。players.build が書き込む)
     preport["og_cards"] = ctx.setdefault("og_cards", {})
     report = load_json(root, "build_report.json", {}) if only is None else None
