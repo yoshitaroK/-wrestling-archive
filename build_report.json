@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-28T09:48:54+09:00",
+ "built_at": "2026-10-28T12:23:08+09:00",
  "as_of": "2026-10-28",
  "video_count": 3360,
  "raw_count": 3360,
@@ -317,16 +317,6 @@
   ],
   "description_ja": [
    {
-    "value": "世界レスリング連合(UWW)の公式 YouTube にある、日本人選手が出ている試合・ハイライトなどの動画を年代ごとにまとめました。動画はこのサイトの中(YouTube のプレーヤー)で再生できます。動画のタイトルは UWW が公開しているもの(英語)をそのまま表示しています。",
-    "pages": [
-     "/uww/",
-     "/uww/senior/",
-     "/uww/u17/",
-     "/uww/u20/",
-     "/uww/u23/"
-    ]
-   },
-   {
     "value": "ALSOKパワーで勝つ!レスリング最強バイブル(大橋,正教,1964-)。レスリングの本の紹介。",
     "pages": [
      "/books/9784780416138/",
@@ -364,17 +354,6 @@
     ]
    }
   ],
-  "description_en": [
-   {
-    "value": "Videos featuring Japanese wrestlers from the official YouTube channel of United World Wrestling (UWW), organized by age category. Videos play right on this site in the YouTube player. Titles are shown as published by UWW.",
-    "pages": [
-     "/en/uww/",
-     "/en/uww/senior/",
-     "/en/uww/u17/",
-     "/en/uww/u20/",
-     "/en/uww/u23/"
-    ]
-   }
-  ]
+  "description_en": []
  }
 }
