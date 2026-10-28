@@ -66,7 +66,7 @@ const STRATEGIES = {
   }
 };
 
-function play(strategy, seed) {
+function play(strategy, seed, keepGoing) {
   const rnd = mulberry32(seed);
   WL.setRandom(mulberry32(seed * 7919 + 1));
   const g = WL.newGame('テスト');
@@ -75,7 +75,12 @@ function play(strategy, seed) {
   const powerAt = {};
   let injuries = 0;
   let guard = 0;
-  while (g.phase !== 'ending' && guard++ < 10000) {
+  while (guard++ < 10000) {
+    if (g.phase === 'ending') {
+      // 金メダルのあとも続けるか(keepGoing のときだけ続ける)
+      if (keepGoing && g.ending.type === 'gold' && !g.ending.done && g.age < 36) { WL.continueAfterGold(g); continue; }
+      break;
+    }
     if (g.phase === 'event') {
       const e = g.event;
       WL.resolveEvent(g, e.options ? e.options[Math.floor(rnd() * e.options.length)].id : '');
@@ -119,3 +124,14 @@ function report(name, n) {
 const N = Number(process.argv[2]) || 5000;
 console.log('つまみ:', JSON.stringify(WL.BAL));
 for (const name of Object.keys(STRATEGIES)) report(name, N);
+
+// 金メダルを取っても36歳まで続けた場合、金メダルを何個取れるか
+{
+  const dist = {};
+  for (let i = 1; i <= N; i++) {
+    const n = play(STRATEGIES.standard, i, true).g.medals.filter(m => m.medal === '金').length;
+    dist[n] = (dist[n] || 0) + 1;
+  }
+  console.log(`\n■ standard で金メダル後も36歳まで続けた場合の金メダルの数(${N}回)`);
+  console.log('  ' + Object.keys(dist).sort().map(k => `${k}個 ${(dist[k] / N * 100).toFixed(1)}%`).join(' / '));
+}
