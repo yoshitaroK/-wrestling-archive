@@ -403,12 +403,22 @@ def index_page(players, ctx, bp):
 
 
 
-def winners_html(ev, ctx, bp):
-    """開催回ページの「入賞者」の欄(公開している選手だけ)"""
+def winners_summary(ev, ctx):
+    """開催回ページの「入賞者」の欄に出す人数と、UWW の結果か(欄を出さない回は None)。
+    開催回ページの最初の段落(build_pages.event_page)でも同じ数・同じ出典を使う"""
     lst = ctx.get("winners", {}).get(ev["id"])
     # 「結果(速報)」の欄(event_results.csv)がある開催回は、同じ選手が二重に出ないように出さない
     if not lst or ctx.get("event_results", {}).get(ev["id"]):
+        return None
+    return len({p["id"] for p, _ in lst}), any(is_uww(r) for _, r in lst)
+
+
+def winners_html(ev, ctx, bp):
+    """開催回ページの「入賞者」の欄(公開している選手だけ)"""
+    summ = winners_summary(ev, ctx)
+    if not summ:
         return ""
+    lst = ctx["winners"][ev["id"]]
     e = bp.e
     by_style = defaultdict(lambda: defaultdict(list))
     for p, r in lst:
@@ -428,8 +438,8 @@ def winners_html(ev, ctx, bp):
                              f'{(" <small>" + e(N(p["club"])) + "</small>") if p["club"] else ""}</span>')
             rows += f"<tr><th>{e(w)}</th><td>{''.join(cells)}</td></tr>"
         body += f'<h3>{e(N(st))}</h3><div class="rtable"><table class="winners"><tbody>{rows}</tbody></table></div>'
-    n = len({p["id"] for p, _ in lst})
-    if any(is_uww(r) for _, r in lst):
+    n, uww = summ
+    if uww:
         # オリンピック・世界選手権は入賞していない人も載せるので「日本代表」とする
         summary = L(f"日本代表の成績({n}人)", "Team Japan results (" + i18n.plural(n, "player") + ")")
         hint = L("世界レスリング連合(UWW)の公式結果から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
@@ -438,7 +448,7 @@ def winners_html(ev, ctx, bp):
         summary = L(f"入賞者({n}人)", "Medalists (" + i18n.plural(n, "player") + ")")
         hint = L("日本レスリング協会の入賞者一覧から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
                  "From the Japan Wrestling Federation medalist list. Select a name to open the player page. Some players are not listed.")
-    return (f'<details class="more-box winners-box"><summary>{summary}</summary><p class="hint">{hint}</p>' + body + "</details>")
+    return (f'<details class="more-box winners-box" id="winners"><summary>{summary}</summary><p class="hint">{hint}</p>' + body + "</details>")
 
 
 # 結果の名前と選手の名前を比べるときに同じ字として扱う異体字(髙橋と高橋、德原と徳原など)

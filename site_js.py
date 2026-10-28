@@ -20,6 +20,7 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 - メールアドレスのリンクを組み立てる(<a class="eml" data-u data-d>)
 - 選手ページの国際大会の動画を、何本かずつのページに分ける(<section data-per>)
 - 写真の拡大表示(<dialog class="plb">)と「写真をもっと見る」ボタン
+- アドレスの # が閉じた欄(<details id>。開催回ページの #winners など)を指すときは、その欄を開く
 - 選手一覧の検索欄(#pq)。ひらがなはカタカナに、名前の異体字(髙・﨑・德)はふつうの字にしてくらべる
 
 - build_pages.py が assets/head.js に書き出し、すべてのページの <head> から読み込む。
@@ -32,7 +33,7 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 import os
 
 HEAD_VER = "3"
-SITE_VER = "2"
+SITE_VER = "3"
 CONTACT_VER = "1"
 
 
@@ -149,6 +150,10 @@ each('dialog.plb',function(d){
   d.addEventListener('touchend',function(ev){if(x0===null)return;var dx=ev.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);});
   d.addEventListener('close',function(){im.removeAttribute('src');});
 });
+(function(){
+function op(){var d=location.hash.length>1&&document.getElementById(location.hash.slice(1));if(d&&d.tagName==='DETAILS'){d.open=true;d.scrollIntoView({block:'start'});}}
+op();window.addEventListener('hashchange',op);
+})();
 (function(){
 var q=document.getElementById('pq'),c=document.getElementById('pcount');
 if(!q||!c)return;
