@@ -761,30 +761,71 @@ AUDIENCE = [("大学", "大学生", "university students"), ("高校", "高校�
 MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 
+def series_audience(s):
+    """大会の対象(日本語, 英語)。大会データの区分が1つのときだけ。分からなければ None"""
+    if s.get("scope") == "海外":
+        return ("海外で開かれる国際大会", "International tournament held outside Japan")
+    groups = s.get("groups") or []
+    aud = next((a for g, *a in AUDIENCE if groups == [g]), None)
+    if aud and groups == ["年代別"]:
+        ages = sorted({u for c in s.get("categories") or [] for u in re.findall(r"U\d+", c)}, key=lambda u: -int(u[1:]))
+        aud = (f"年代別({'・'.join(ages)})の選手", f"{', '.join(ages)} age-group wrestlers") if ages else None
+    return tuple(aud) if aud else None
+
+
+def series_month(evs):
+    """例年の開催月(3回以上・6割以上が同じ月のときだけ)。分からなければ None"""
+    months = [int(x["start"][5:7]) for x in evs if x.get("start") and not x.get("derived") and x.get("status") in ("held", "scheduled")]
+    if len(months) >= 3:
+        m, c = Counter(months).most_common(1)[0]
+        if c / len(months) >= 0.6:
+            return m
+    return None
+
+
+def series_about(s, evs, ctx):
+    """大会ページの「大会について」(Issue #25)。大会データにあることだけを項目で出す:対象・例年の開催時期・主催。
+    主催は、要項の「主催」が分かっているいちばん新しい開催回から取り、その回のページ(出典がある)へリンクする。
+    英語版は主催を出さない(固有名の英語名が無いため。開催回の JSON-LD の organizer も日本語版だけ)"""
+    if not s.get("master"):
+        return ""
+    rows = []
+    aud = series_audience(s)
+    if aud:
+        rows.append((L("対象", "Who competes"), e(L(aud[0], aud[1][:1].upper() + aud[1][1:]))))
+    m = series_month(evs)
+    if m:
+        rows.append((L("例年の開催時期", "Usually held"), e(L(f"{m}月ごろ", MONTHS_EN[m - 1]))))
+    if not i18n.en():
+        x = next((x for x in reversed(evs) if (x.get("organizers") or {}).get("主催")), None)
+        if x:
+            ref = f"{x['year']}年大会の要項より"
+            if x["id"] in ctx["slugs"]:
+                ref = f'<a href="{U("/events/" + ctx["slugs"][x["id"]] + "/")}">{e(ref)}</a>'
+            rows.append(("主催", f'{e(x["organizers"]["主催"])} <span class="calm">({ref})</span>'))
+    if not rows:
+        return ""
+    return (f'<section class="section about-series"><h2>{L("大会について", "About this tournament")}</h2><dl class="facts">'
+            + "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in rows) + "</dl></section>")
+
+
 def series_summary(s, evs, name):
     """大会ページの最初に置く1〜2文の要約(Google や AI が引用しやすい形)。
     大会データで確かめられることだけを書く:対象(大会の区分)と、例年の開催月(3回以上・6割以上が同じ月のときだけ)"""
     if not s.get("master"):
         return ""
+    aud = series_audience(s)
+    if not aud:
+        return ""  # 区分が複数(例:一般・高校生)や対象外のときは書かない
     if s.get("scope") == "海外":
         first = L(f"{name}は、海外で開かれる国際大会です。", f"The {name} is an international tournament held outside Japan.")
     else:
-        groups = s.get("groups") or []
-        aud = next((a for g, *a in AUDIENCE if groups == [g]), None)
-        if not aud:
-            return ""  # 区分が複数(例:一般・高校生)や対象外のときは書かない
-        if groups == ["年代別"]:
-            ages = sorted({u for c in s.get("categories") or [] for u in re.findall(r"U\d+", c)}, key=lambda u: -int(u[1:]))
-            if not ages:
-                return ""
-            aud = (f"年代別({'・'.join(ages)})の選手", f"{', '.join(ages)} age-group wrestlers")
         first = L(f"{name}は、{aud[0]}が出場する国内のレスリング大会です。", f"The {name} is a Japanese wrestling tournament for {aud[1]}.")
-    months = [int(x["start"][5:7]) for x in evs if x.get("start") and not x.get("derived") and x.get("status") in ("held", "scheduled")]
-    if len(months) >= 3:
-        m, c = Counter(months).most_common(1)[0]
-        if c / len(months) >= 0.6:
-            first += L(f"例年{m}月ごろに開かれています。", f" It is usually held in {MONTHS_EN[m - 1]}.")
+    m = series_month(evs)
+    if m:
+        first += L(f"例年{m}月ごろに開かれています。", f" It is usually held in {MONTHS_EN[m - 1]}.")
     return first
+
 
 def series_page(s, ctx):
     path = f"/events/{s['id']}/"
@@ -846,6 +887,7 @@ def series_page(s, ctx):
     elif alias:
         h += f'<p class="aliases">この名前でも探せます:{e("、".join(alias))}</p>'
 
+    h += series_about(s, evs, ctx)
     import champions
     h += champions.link_html(s, ctx)
     sl = status_label()
