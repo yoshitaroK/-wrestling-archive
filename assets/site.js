@@ -47,6 +47,10 @@ each('dialog.plb',function(d){
   d.addEventListener('close',function(){im.removeAttribute('src');});
 });
 (function(){
+function op(){var d=location.hash.length>1&&document.getElementById(location.hash.slice(1));if(d&&d.tagName==='DETAILS'){d.open=true;d.scrollIntoView({block:'start'});}}
+op();window.addEventListener('hashchange',op);
+})();
+(function(){
 var q=document.getElementById('pq'),c=document.getElementById('pcount');
 if(!q||!c)return;
 var items=[].slice.call(document.querySelectorAll('#plist li')),groups=[].slice.call(document.querySelectorAll('#plist .pgroup'));
