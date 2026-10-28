@@ -414,7 +414,7 @@ def counts_text(vids):
 
 def counts_links(vids, matches):
     """開催回ページの「収録」の行。区分ごとの本数を、下の動画の欄(vgroup の id)へのリンクにする。
-    試合配信は最初の競技日の欄へ。欄が1つだけのときは空を返す(今までどおり文字だけ)"""
+    試合配信は、ページで最初に出る試合配信の欄へ(競技日を確認中の欄があればそこ)。欄が1つだけのときは空を返す(今までどおり文字だけ)"""
     first_day = min((v.get("dh") or "" for v in matches), default=None)
     ids = {"match": (f"d-{first_day}" if first_day else "d-x") if first_day is not None else ""}
     n_groups = len({v.get("dh") or "" for v in matches}) + sum(1 for k, _ in kind_counts(vids) if k != "match")
