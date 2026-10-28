@@ -2,6 +2,41 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-worlds-women-day4",
+   "date": "2026-10-28",
+   "title": "世界選手権女子 須﨑優衣・永本聖奈が決勝へ 永本は前回王者マルーリス破る",
+   "category": "世界選手権",
+   "lead": "世界選手権の女子が始まり、50kg級の須﨑優衣と57kg級の永本聖奈が決勝に進んだ。永本は準々決勝で前回王者のマルーリスに勝った。65kg級の池畑菜々は敗者復活戦に回る。",
+   "tags": [
+    "世界選手権2026",
+    "須﨑優衣",
+    "永本聖奈",
+    "池畑菜々",
+    "松雪泰葉"
+   ],
+   "sources": [
+    "https://uww.org/articles/india-searching-first-womens-world-champion-gets-two-chances",
+    "https://uww.org/articles/world-championships-day-4-womens-wrestling-highlights"
+   ]
+  },
+  {
+   "slug": "2026-worlds-greco-day4-finals",
+   "date": "2026-10-28",
+   "title": "世界選手権グレコ エスマイリが67kg級連覇 イランは9階級でメダル",
+   "category": "世界選手権",
+   "lead": "世界選手権の男子グレコローマンが最終日を迎え、67kg級はイランのエスマイリが連覇した。87kg級はノビコフ、63kg級はアスラニャンが優勝。団体はイランが9階級でメダルを取って制した。",
+   "tags": [
+    "世界選手権2026",
+    "グレコローマン",
+    "サイード・エスマイリ",
+    "遠藤功章"
+   ],
+   "sources": [
+    "https://uww.org/articles/esmaeili-fends-incursion-continue-reign-67kg",
+    "https://uww.org/articles/mohamadi-novikov-set-olympic-rematch-esmaeili-denies-jafarov"
+   ]
+  },
+  {
    "slug": "2026-worlds-greco-day3-finals",
    "date": "2026-10-27",
    "title": "世界選手権グレコ ヘダヤティが初出場で130kg級制す イランが団体優勝",

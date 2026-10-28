@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-east-women-league-1129@japanwrestlingchannel.com
+DTSTAMP:20261129T000000Z
+DTSTART;VALUE=DATE:20261129
+DTEND;VALUE=DATE:20261130
+SUMMARY:East Japan University Women's League
+LOCATION:東京・自由ヶ丘学園高校
+URL:https://japanwrestlingchannel.com/en/events/east-women-league/
+DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
+ en/events/east-women-league/
+END:VEVENT
+END:VCALENDAR

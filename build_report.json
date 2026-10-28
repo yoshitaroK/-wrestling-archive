@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-27T11:28:40+09:00",
- "as_of": "2026-10-27",
+ "built_at": "2026-10-28T09:48:54+09:00",
+ "as_of": "2026-10-28",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
@@ -14,7 +14,7 @@
   "unmatched": 190
  },
  "overrides_applied": 42,
- "master_events": 444,
+ "master_events": 445,
  "derived_events": 41,
  "event_dates_applied": [
   "x-olympics-2024-05-23",
@@ -84,33 +84,33 @@
   ]
  },
  "players": {
-  "total": 1577,
-  "published": 1434,
+  "total": 1584,
+  "published": 1441,
   "hidden_minor": 0,
   "hidden_private": 143,
   "errors": [],
-  "video_excluded": 3,
+  "video_excluded": 5,
   "video_links": 1125,
   "event_results": 376,
-  "event_results_linked": 177,
+  "event_results_linked": 185,
   "uww_video_links": 2042,
   "og_cards": {
    "ja": {
     "made": 0,
-    "kept": 1434,
+    "kept": 1441,
     "removed": 0,
     "errors": []
    },
    "en": {
     "made": 0,
-    "kept": 1434,
+    "kept": 1441,
     "removed": 0,
     "errors": []
    }
   }
  },
  "champions": {
-  "rows": 1149,
+  "rows": 1159,
   "hidden_minor": 0,
   "no_link": 23,
   "skipped_unknown_event": 34,
@@ -119,6 +119,7 @@
   "history_hidden": 7,
   "history_site_preferred": 1022,
   "history_mismatch": [
+   "east-autumn グレコローマン 2025 82kg: サイト「渡邊 虎汰郎」/ 歴代記録「渡邊虎太郎」",
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "meiji-cup フリースタイル 2016 61kg: サイト「有元 伸悟」/ 歴代記録「有元 伸吾」",
@@ -204,7 +205,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 15
+  "articles": 17
  },
  "books": {
   "errors": [],
@@ -283,10 +284,12 @@
   ]
  },
  "en": {
-  "pages": 1776,
+  "pages": 1783,
   "names": 639,
   "machine_translations": 3485,
-  "missing_names": []
+  "missing_names": [
+   "東京・自由ヶ丘学園高校"
+  ]
  },
  "duplicate_meta": {
   "title_ja": [
@@ -340,13 +343,6 @@
   ],
   "title_en": [
    {
-    "value": "Abilay SOVIT – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-2a3e74/",
-     "/en/players/p-e0d13b/"
-    ]
-   },
-   {
     "value": "East Japan University Women's League 2024 – 1 video | Japan Wrestling Archive",
     "pages": [
      "/en/events/east-women-league/2024-01-14/",
@@ -354,52 +350,10 @@
     ]
    },
    {
-    "value": "Karina HONDA – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-276e61/",
-     "/en/players/p-776ebd/"
-    ]
-   },
-   {
     "value": "Kosuke KOBAYASHI – Results & Match Videos | Japan Wrestling Archive",
     "pages": [
      "/en/players/p-20b6ac/",
      "/en/players/p-5e454b/"
-    ]
-   },
-   {
-    "value": "Kota FUKUBUNAI – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-2ea018/",
-     "/en/players/p-765dd9/"
-    ]
-   },
-   {
-    "value": "Kotaro WATANABE – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-453fdb/",
-     "/en/players/p-b3b40e/"
-    ]
-   },
-   {
-    "value": "Miyu OGASHI – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-45aebc/",
-     "/en/players/p-a72c3f/"
-    ]
-   },
-   {
-    "value": "Rinko KOZAN – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-44d416/",
-     "/en/players/p-77a782/"
-    ]
-   },
-   {
-    "value": "Shori KANAZAWA – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-4e8cb8/",
-     "/en/players/p-550e58/"
     ]
    },
    {

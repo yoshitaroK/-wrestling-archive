@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Japan Wrestling Channel//Archive//JA
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:wre-2026-east-women-league-1129@japanwrestlingchannel.com
+DTSTAMP:20261129T000000Z
+DTSTART;VALUE=DATE:20261129
+DTEND;VALUE=DATE:20261130
+SUMMARY:STIカップ東日本大学女子リーグ戦
+LOCATION:東京・自由ヶ丘学園高校
+URL:https://japanwrestlingchannel.com/events/east-women-league/
+DESCRIPTION:大会の情報と配信:https://japanwrestlingchannel.com/even
+ ts/east-women-league/
+END:VEVENT
+END:VCALENDAR

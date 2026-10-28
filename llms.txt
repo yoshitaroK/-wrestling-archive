@@ -3,7 +3,7 @@
 > YouTubeで公開されている日本のレスリング大会の配信・動画3,360本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
-- データ更新日: 2026年10月27日
+- データ更新日: 2026年10月28日
 - お問い合わせ: https://japanwrestlingchannel.com/contact.html
 
 ## 主なページ
@@ -13,6 +13,9 @@
 - [大会カレンダー](https://japanwrestlingchannel.com/events/calendar/): 開催予定・過去の大会を月ごとに表示
 - [選手検索](https://japanwrestlingchannel.com/players/): 選手ごとの出場大会・成績・動画
 - [歴代優勝者](https://japanwrestlingchannel.com/champions/): 主な大会の階級ごとの歴代優勝者
+- [ニュース](https://japanwrestlingchannel.com/news/): 国内・海外の大会の結果や話題の記事(日付・出典つき)
+- [国際大会](https://japanwrestlingchannel.com/uww/): 世界レスリング連合(UWW)が公開している国際大会の動画を、大会ごとに整理
+- [書籍](https://japanwrestlingchannel.com/books/): レスリングに関する本の紹介
 - [検索ページ](https://japanwrestlingchannel.com/): 大会名・通称・動画タイトルで検索
 - [English version](https://japanwrestlingchannel.com/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)
 - [運営者情報](https://japanwrestlingchannel.com/about/): 運営者(Japan Wrestling Channel)、データの出典、更新のしかた、写真の掲載について
@@ -20,7 +23,7 @@
 - [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
 
 ## 詳しい一覧
-- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)の一覧
+- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)と、ニュース記事(日付・見出し・要旨)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本

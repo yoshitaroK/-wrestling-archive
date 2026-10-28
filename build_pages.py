@@ -1450,6 +1450,9 @@ def llms_txt(data, series_list, ctx):
         f"- [大会カレンダー]({SITE}/events/calendar/): 開催予定・過去の大会を月ごとに表示",
         f"- [選手検索]({SITE}/players/): 選手ごとの出場大会・成績・動画",
         f"- [歴代優勝者]({SITE}/champions/): 主な大会の階級ごとの歴代優勝者",
+        f"- [ニュース]({SITE}/news/): 国内・海外の大会の結果や話題の記事(日付・出典つき)",
+        f"- [国際大会]({SITE}/uww/): 世界レスリング連合(UWW)が公開している国際大会の動画を、大会ごとに整理",
+        f"- [書籍]({SITE}/books/): レスリングに関する本の紹介",
         f"- [検索ページ]({SITE}/): 大会名・通称・動画タイトルで検索",
         f"- [English version]({SITE}/en/): 英語版(同じ内容。大会名・会場名は英語、動画タイトルは日本語の原題)",
         f"- [運営者情報]({SITE}/about/): 運営者(Japan Wrestling Channel)、データの出典、更新のしかた、写真の掲載について",
@@ -1457,7 +1460,7 @@ def llms_txt(data, series_list, ctx):
         f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
         "## 詳しい一覧",
-        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)の一覧",
+        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)と、ニュース記事(日付・見出し・要旨)の一覧",
         "",
         "## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)",
     ]
@@ -1485,6 +1488,14 @@ def llms_full_txt(data, series_list, ctx):
             if f"/events/{ctx['slugs'][v['id']]}/" in ctx.get("photo_paths", ()):
                 parts.append("写真あり")
             lines.append(f"- [{v.get('official_name') or v['name']}]({SITE}/events/{ctx['slugs'][v['id']]}/): " + "・".join(parts))
+        lines.append("")
+    # ニュース記事(news.json)。要旨は記事の説明文(lead)と同じ文
+    arts = ctx.get("news_articles") or []
+    if arts:
+        lines += ["## ニュース(新しい順)", ""]
+        for a in arts:
+            lead = a.get("lead") or ""
+            lines.append(f"- {a['date']} [{a['title']}]({SITE}/news/{a['slug']}/)" + (f": {lead}" if lead else ""))
         lines.append("")
     return "\n".join(lines).rstrip("\n") + "\n"
 
@@ -1825,6 +1836,8 @@ def build(root=HERE, inline_css=False, only=None):
             import news
             news_report = {"errors": [], "warnings": []}
             pages.extend(news.build(root, ctx, me, news_report))
+            # llms-full.txt にニュースの一覧を載せるため(エラーは上の news_report に出ているので、ここでは捨てる)
+            ctx["news_articles"] = news.load(root, {"errors": [], "warnings": []})
             # 書籍(/books/)。日本語版だけ
             try:
                 pages.extend(books.build(root, ctx, me, books_report))
