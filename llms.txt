@@ -23,7 +23,7 @@
 - [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
 
 ## 詳しい一覧
-- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)と、ニュース記事(日付・見出し・要旨)の一覧
+- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
