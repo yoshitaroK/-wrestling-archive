@@ -412,6 +412,22 @@ def counts_text(vids):
     return "・".join(f"{KIND_LABEL[k]}{n}本" for k, n in kind_counts(vids))
 
 
+def counts_links(vids, matches):
+    """開催回ページの「収録」の行。区分ごとの本数を、下の動画の欄(vgroup の id)へのリンクにする。
+    試合配信は最初の競技日の欄へ。欄が1つだけのときは空を返す(今までどおり文字だけ)"""
+    first_day = min((v.get("dh") or "" for v in matches), default=None)
+    ids = {"match": (f"d-{first_day}" if first_day else "d-x") if first_day is not None else ""}
+    n_groups = len({v.get("dh") or "" for v in matches}) + sum(1 for k, _ in kind_counts(vids) if k != "match")
+    if n_groups < 2:
+        return ""
+    parts = []
+    for k, n in kind_counts(vids):
+        text = f"{kind_label(k)}: {n}" if i18n.en() else f"{KIND_LABEL[k]}{n}本"
+        gid = ids.get(k, k)
+        parts.append(f'<a href="#{e(gid)}">{e(text)}</a>' if gid else e(text))
+    return (", " if i18n.en() else "・").join(parts)
+
+
 # ---------------------------------------------------------------- 開催回ページ
 
 def photo_mark():
@@ -605,7 +621,7 @@ def event_page(ev, ctx):
             h += f"<dt>{L('会場', 'Venue')}</dt><dd>{e(venue)}</dd>"
     if ev.get("fy_label"):
         h += f"<dt>{L('年度', 'Fiscal year')}</dt><dd>{e(N(ev['fy_label']))}</dd>"
-    h += f"<dt>{L('収録', 'Videos')}</dt><dd>{e(counts or L('配信動画なし', 'No videos yet'))}</dd>"
+    h += f"<dt>{L('収録', 'Videos')}</dt><dd>{counts_links(vids, matches) or e(counts or L('配信動画なし', 'No videos yet'))}</dd>"
     if ev.get("group"):
         sib = [x for x in ctx["all_events"] if x.get("group") == ev["group"] and x["id"] != ev["id"]]
         if sib:
