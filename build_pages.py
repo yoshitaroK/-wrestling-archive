@@ -484,18 +484,29 @@ def event_page(ev, ctx):
     n_main = sum(1 for v in vids if not v.get("ch"))
     rng = fmt_range(ev.get("start"), ev.get("end")) if ev.get("start") else ""
 
+    # 入賞者の欄(players.winners_html)がある回は、最初の段落でも人数と出典を知らせ、その欄へのリンクにする。
+    # [[W]]…[[/W]] は、文字をエスケープしたあとで <a href="#winners"> に置き換える
+    import players
+    summ = players.winners_summary(ev, ctx)
     lead_parts = []
     if i18n.en():
         if status == "cancelled":
             lead_parts.append(f"The {ev['year']} {series_name(s)} is recorded as cancelled.")
         elif ev.get("start"):
-            lead_parts.append(f"Video publish dates: {rng} (official dates not yet confirmed)." if ev.get("derived")
-                              else f"{'Scheduled for' if status == 'scheduled' else 'Being held' if status == 'live' else 'Held on'} {rng}{(' at ' + venue) if venue else ''}.")
-        src = "Japan Wrestling Channel streams" if not others else "YouTube streams and videos"
-        if vids:
-            lead_parts.append(f" {i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
+            lead_parts.append(f"The {ev['year']} {name}: video publish dates {rng} (official dates not yet confirmed)." if ev.get("derived")
+                              else f"The {ev['year']} {name} {'is scheduled for' if status == 'scheduled' else 'is being held on' if status == 'live' else 'was held on'} {rng}{(' at ' + venue) if venue else ''}.")
         else:
-            lead_parts.append(" No videos for this edition yet. " + ("See the photos below." if has_ph else "Use the buttons below for results and tournament information."))
+            lead_parts.append(f"The {ev['year']} {name}.")
+        src = "Japan Wrestling Channel streams" if not others else "YouTube streams and videos"
+        win = ""
+        if summ:
+            n_w, uww = summ
+            win = (f"[[W]]results of {i18n.plural(n_w, 'Team Japan wrestler')} with player pages[[/W]] (official results of United World Wrestling)" if uww
+                   else f"[[W]]{i18n.plural(n_w, 'medalist')} with player pages[[/W]] (Japan Wrestling Federation medalist list)")
+        if vids:
+            lead_parts.append(f" Includes {win + ' and ' if win else ''}{i18n.plural(len(vids), 'video')} from {src} ({counts}){', organized by day' if matches else ''}.")
+        else:
+            lead_parts.append((f" Includes {win}." if win else "") + " No videos for this edition yet. " + ("See the photos below." if has_ph else "Use the buttons below for results and tournament information."))
         if others:
             lead_parts.append(f" Includes {n_main} Japan Wrestling Channel streams plus videos from {', '.join(others)}." if n_main
                               else f" All videos are published by {', '.join(others)}.")
@@ -503,14 +514,21 @@ def event_page(ev, ctx):
         if status == "cancelled":
             lead_parts.append(f"{ev['year']}年の{s['name']}は中止の記録があります。")
         elif ev.get("start"):
-            verb = "開催予定" if status == "scheduled" else "開催中" if status == "live" else "開催"
-            lead_parts.append(f"{rng}{('、' + ev['venue'] + 'で') if ev.get('venue') else 'に'}{verb}。"
-                              if not ev.get("derived") else f"動画の配信日は{rng}です(公式の開催日は確認中)。")
-        src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
-        if vids:
-            lead_parts.append(f"{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+            verb = "開催予定です" if status == "scheduled" else "開催中です" if status == "live" else "開催されました"
+            lead_parts.append(f"{name}は、{rng}に{(ev['venue'] + 'で') if ev.get('venue') else ''}{verb}。"
+                              if not ev.get("derived") else f"{name}の動画の配信日は{rng}です(公式の開催日は確認中)。")
         else:
-            lead_parts.append("この開催回の配信動画はまだありません。" + ("下の「写真」から写真を見られます。" if has_ph else "結果や大会の情報は、下のボタンから見られます。"))
+            lead_parts.append(f"{name}({ev['year']}年)。")
+        src = "Japan Wrestling Channel の配信" if not others else "YouTubeの配信・動画"
+        win = ""
+        if summ:
+            n_w, uww = summ
+            win = (f"[[W]]日本代表のうち選手ページがある{n_w}人の成績[[/W]](世界レスリング連合(UWW)の公式結果より)" if uww
+                   else f"[[W]]入賞者のうち選手ページがある{n_w}人[[/W]](日本レスリング協会の入賞者一覧より)")
+        if vids:
+            lead_parts.append(f"{win + 'と、' if win else ''}{src}{len(vids)}本({counts})を{'日程ごとに' if matches else ''}掲載しています。")
+        else:
+            lead_parts.append((f"{win}を掲載しています。" if win else "") + "この開催回の配信動画はまだありません。" + ("下の「写真」から写真を見られます。" if has_ph else "結果や大会の情報は、下のボタンから見られます。"))
         if others:
             lead_parts.append(f"Japan Wrestling Channel の配信{n_main}本のほか、{'、'.join(others)}の動画を含みます。" if n_main
                               else f"いずれも{'、'.join(others)}が公開している動画です。")
@@ -569,7 +587,7 @@ def event_page(ev, ctx):
     sl = status_label()
     badge = f'<span class="badge {e(status)}">{e(sl[status])}</span>' if status in sl else ""
     h += f'<h1>{e(name)} <span class="yr-h">{e(year_label(ev["year"]))}</span>{badge}</h1>'
-    h += f'<p class="lead">{e(lead)}</p>'
+    h += '<p class="lead">' + e(lead).replace("[[W]]", '<a href="#winners">').replace("[[/W]]", "</a>") + "</p>"
 
     h += '<dl class="facts">'
     if ev.get("sessions"):
