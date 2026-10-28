@@ -1460,7 +1460,7 @@ def llms_txt(data, series_list, ctx):
         f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
         "## 詳しい一覧",
-        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)と、ニュース記事(日付・見出し・要旨)の一覧",
+        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧",
         "",
         "## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)",
     ]
@@ -1496,6 +1496,25 @@ def llms_full_txt(data, series_list, ctx):
         for a in arts:
             lead = a.get("lead") or ""
             lines.append(f"- {a['date']} [{a['title']}]({SITE}/news/{a['slug']}/)" + (f": {lead}" if lead else ""))
+        lines.append("")
+    # 選手(選手ページを作っている人だけ。未成年・非公開の人は players.load の時点で入っていない)
+    pls = ctx.get("players") or []
+    if pls:
+        import players
+        import sys
+        bp = sys.modules[__name__]
+        lines += ["## 選手(選手ページがある人。ふりがなの五十音順で、ふりがなが無い人は最後)",
+                  "成績は日本レスリング協会の入賞者一覧と、世界レスリング連合(UWW)の公式結果によります。所属は大会のときのものです。", ""]
+        for p in sorted(pls, key=lambda p: (p["kana"] or p["name"]).replace(" ", "").replace("\u3000", "")):
+            club = N(p["club"])
+            parts = [club] if club else []
+            best = players.best_result(p, ctx, bp)
+            if best:
+                parts.append(best)
+            if p["results"]:
+                parts.append(f"大会成績{len(p['results'])}件")
+            label = p["name"] + (f"({p['kana']})" if p["kana"] else "")
+            lines.append(f"- [{label}]({SITE}/players/{p['id']}/)" + (": " + "・".join(parts) if parts else ""))
         lines.append("")
     return "\n".join(lines).rstrip("\n") + "\n"
 
