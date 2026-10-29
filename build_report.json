@@ -1,6 +1,6 @@
 {
- "built_at": "2026-10-28T13:06:45+09:00",
- "as_of": "2026-10-28",
+ "built_at": "2026-10-29T09:00:48+09:00",
+ "as_of": "2026-10-29",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
@@ -96,8 +96,8 @@
   "uww_video_links": 2042,
   "og_cards": {
    "events-ja": {
-    "made": 8,
-    "kept": 0,
+    "made": 0,
+    "kept": 8,
     "removed": 0,
     "errors": []
    },
@@ -108,8 +108,8 @@
     "errors": []
    },
    "events-en": {
-    "made": 8,
-    "kept": 0,
+    "made": 0,
+    "kept": 8,
     "removed": 0,
     "errors": []
    },
