@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-31T07:37:29+09:00",
+ "built_at": "2026-10-31T07:40:01+09:00",
  "as_of": "2026-10-31",
  "video_count": 3360,
  "raw_count": 3360,
@@ -84,8 +84,8 @@
   ]
  },
  "players": {
-  "total": 1584,
-  "published": 1441,
+  "total": 1583,
+  "published": 1440,
   "hidden_minor": 0,
   "hidden_private": 143,
   "errors": [],
@@ -102,9 +102,9 @@
     "errors": []
    },
    "ja": {
-    "made": 0,
-    "kept": 1441,
-    "removed": 0,
+    "made": 1,
+    "kept": 1439,
+    "removed": 1,
     "errors": []
    },
    "events-en": {
@@ -114,9 +114,9 @@
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1441,
-    "removed": 0,
+    "made": 1,
+    "kept": 1439,
+    "removed": 1,
     "errors": []
    }
   }
@@ -132,8 +132,9 @@
   "history_site_preferred": 1022,
   "history_mismatch": [
    "east-autumn グレコローマン 2025 82kg: サイト「渡邊 虎汰郎」/ 歴代記録「渡邊虎太郎」",
+   "east-spring フリースタイル 2026 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "intercollegiate フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
-   "intercollegiate グレコローマン 2025 130kg: サイト「バドバヤル ナムバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
+   "intercollegiate グレコローマン 2025 130kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バトバヤル・ナムバルダグワ」",
    "meiji-cup フリースタイル 2016 61kg: サイト「有元 伸悟」/ 歴代記録「有元 伸吾」",
    "meiji-cup グレコローマン 2019 67kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
    "meiji-cup グレコローマン 2017 66kg: サイト「髙橋 昭五」/ 歴代記録「高橋 昭五」",
@@ -296,7 +297,7 @@
   ]
  },
  "en": {
-  "pages": 1794,
+  "pages": 1793,
   "names": 639,
   "machine_translations": 3485,
   "missing_names": [

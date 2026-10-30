@@ -10,7 +10,7 @@
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
   var now = new Date(Date.now() + (9 * 60 + new Date().getTimezoneOffset()) * 60000); // 日本時間
   var today = ymd(now), cur, sel = null;
-  function kind(x){ return x.st === "cancelled" ? "can" : (x.vid ? "vid" : "sch"); }
+  function kind(x){ return x.st === "cancelled" ? "can" : x.vid ? "vid" : x.st === "held" ? "held" : "sch"; }
   function md(s, e){
     var a = (+s.slice(5,7)) + "/" + (+s.slice(8,10));
     if (e && e !== s) a += T.dash + (e.slice(0,7) !== s.slice(0,7) ? (+e.slice(5,7)) + "/" : "") + (+e.slice(8,10));
