@@ -232,18 +232,18 @@ def build(root, ctx, bp, report):
         if eid and eid in ctx["slugs"]:
             ev = ctx["events_by_id"][eid]
             s = ctx["S"].get(ev["series"], {"id": ev["series"], "name": ev["name"]})
-            h += ('<section><h3>この大会のページ</h3><ul>'
+            h += ('<section><h2>この大会のページ</h2><ul>'
                   f'<li><a href="{U("/events/" + ctx["slugs"][eid] + "/")}">{e(bp.event_name(ev, s))}<small>結果・大会情報・動画</small></a></li>'
                   f'<li><a href="{U("/events/" + s["id"] + "/")}">{e(bp.series_name(s))}<small>歴代の開催</small></a></li></ul></section>')
         if players:
-            h += '<section><h3>記事に出てくる選手</h3><ul>'
+            h += '<section><h2>記事に出てくる選手</h2><ul>'
             for p in players:
                 n = len(p["results"])
                 h += f'<li><a href="{U("/players/" + p["id"] + "/")}">{e(p["name"])}<small>{e(p["club"])}{"・大会成績" + str(n) + "件" if n else ""}</small></a></li>'
             h += "</ul></section>"
         others = [x for x in arts if x["slug"] != a["slug"]][:5]
         if others:
-            h += '<section><h3>新着ニュース</h3><ul>' + "".join(
+            h += '<section><h2>新着ニュース</h2><ul>' + "".join(
                 f'<li><a href="{U("/news/" + x["slug"] + "/")}">{e(x["title"])}<small>{e(fmt_day(x["date"]))}</small></a></li>' for x in others) + "</ul></section>"
         return h
 
@@ -338,7 +338,7 @@ NEWS_CSS = """
 .nw-tags span{background:var(--surface-2);font-size:12.5px;padding:3px 10px;border-radius:999px;color:var(--ink2)}
 .nw-side{display:grid;gap:16px;min-width:0}
 .nw-side section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
-.nw-side h3{font-size:14px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--pink)}
+.nw-side h2{font-size:14px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--pink)}
 .nw-side ul{list-style:none;margin:0;padding:0}
 .nw-side li+li{border-top:1px solid var(--line)}
 .nw-side a{display:block;padding:9px 0;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.55}
