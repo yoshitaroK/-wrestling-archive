@@ -57,7 +57,8 @@ DIVISION_EN = {"成年男子フリースタイル": "Men's freestyle (senior)", 
                "女子": "Women", "少年男子フリースタイル": "Boys' freestyle (high school)",
                "少年男子グレコローマン": "Boys' Greco-Roman (high school)"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
-# 未成年の大会のグループ(data.json の series の groups)。この大会の動画は選手ページに出さない
+# 未成年の大会のグループ(data.json の series の groups)。グループがこれ(と「年代別」)だけの大会の動画は選手ページに出さない。
+# 国体のように「一般」もある大会は丸ごとは外さず、少年の部はタイトルの言葉(少年男子など)で外す
 MINOR_GROUPS = {"中学", "高校", "少年少女"}
 # タイトルにあれば未成年の大会・部門の動画とみなす言葉(全角・半角はそろえてから比べる)
 MINOR_TITLE_WORDS = ("カデット", "U17", "U15", "U13", "U-17", "U-15", "少年少女", "キッズ大会", "キッズトーナメント", "中学生", "中学選抜",
@@ -159,6 +160,12 @@ def affiliation(title, key):
     j = rest.find(")")
     a = rest[:j] if j >= 0 else rest
     return re.sub(r"^(赤|青)=", "", a)
+
+
+def is_minor_series(groups):
+    """未成年だけの大会か。グループに未成年のものがあり、ほかは「年代別」だけ(国体の ['一般', '高校'] は入らない)"""
+    g = set(groups or [])
+    return bool(g & MINOR_GROUPS) and g <= MINOR_GROUPS | {"年代別"}
 
 
 def is_minor_video(v, t, minor_series):
@@ -719,7 +726,7 @@ def prepare(root, data, ctx):
     path = os.path.join(root, VIDEO_EXCLUDE_CSV)
     exclude = {(norm(r.get("選手ID")), norm(r.get("動画ID"))) for r in read_csv(path)} if os.path.exists(path) else set()
     report["video_excluded"] = len(exclude)
-    minor_series = {x["id"] for x in data.get("series", []) if MINOR_GROUPS & set(x.get("groups") or [])}
+    minor_series = {x["id"] for x in data.get("series", []) if is_minor_series(x.get("groups"))}
     report["video_links"] = attach_videos(players, data.get("videos", []), exclude, minor_series, report) if players else 0
     winners = defaultdict(list)
     for p in players:
