@@ -67,7 +67,10 @@ PREFS = ("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島"
          "和歌山", "鳥取", "島根", "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分",
          "宮崎", "鹿児島", "沖縄")
 # 所属が中学・高校(「〜高」「〜高校」「〜中」「〜中学」、または「三重・いなべ総合学園」のような「都道府県・学校」)
-SCHOOL_RE = re.compile(r"(高|高校|高等学校|中|中学|中学校)$|^(" + "|".join(PREFS) + r")[都道府県]?・")
+SCHOOL_RE = re.compile(r"(高|高校|高等学校|中|中学|中学校)$")
+PREF_RE = re.compile(r"^(" + "|".join(PREFS) + r")[都道府県]?・")
+# 大人も「東京・自衛隊」のように「都道府県・所属」と書く大会(国体)。ここでは「都道府県・」だけでは中学・高校とみなさない
+PREF_ALL_AGES = {"kokutai"}
 # 「都道府県・」で始まっても大人の所属(高校のコーチ・先生(「〜高教」)など)
 ADULT_RE = re.compile(r"コーチ|監督|教員|教諭|教$|職$|職員|(OB|OG)$")
 YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
@@ -163,9 +166,11 @@ def is_minor_video(v, t, minor_series):
     return v.get("s") in minor_series or any(norm(w) in t for w in MINOR_TITLE_WORDS)
 
 
-def is_school(a):
-    """所属が中学・高校か"""
-    return bool(a) and bool(SCHOOL_RE.search(a)) and not ADULT_RE.search(a)
+def is_school(a, series=None):
+    """所属が中学・高校か。series は動画の大会シリーズ(国体では「都道府県・」だけで決めない)"""
+    if not a or ADULT_RE.search(a):
+        return False
+    return bool(SCHOOL_RE.search(a)) or (series not in PREF_ALL_AGES and bool(PREF_RE.search(a)))
 
 
 def attach_videos(players, videos, exclude=frozenset(), minor_series=frozenset(), report=None):
@@ -185,7 +190,7 @@ def attach_videos(players, videos, exclude=frozenset(), minor_series=frozenset()
             if is_minor_video(v, t, minor_series):
                 minor_n += 1
                 continue
-            if any(is_school(affiliation(t, k)) for k in ks):
+            if any(is_school(affiliation(t, k), v.get("s")) for k in ks):
                 school_n += 1
                 continue
             hits[v["id"]] = v
