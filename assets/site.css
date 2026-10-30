@@ -741,6 +741,7 @@ table.champs td.none{color:var(--ink3)}
 .champ-link a{display:inline-block;padding:8px 18px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .champ-link a:hover{border-color:var(--pink)}
 .champ-list a{grid-template-columns:1fr auto}
+.champ-ja{margin:-4px 0 14px}
 
 .uww{padding-bottom:44px}
 .uww h2{font-size:19px;margin:26px 0 10px}
