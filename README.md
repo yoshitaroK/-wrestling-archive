@@ -95,7 +95,7 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
    - 今までに無い大会(`series_id`)を足すときは、`series_aliases.json` の `series` にも足します。
    - 会場名・大会名が初めてのものは、`en_names.csv` に英語名を足します(足さないと英語版に日本語のまま出て、`build_report.json` の `en.missing_names` に出ます)。
    - 日程が変わったときは、`start_date`・`end_date` を直し、前の日程を `schedule_history` に残します。
-   - `metadata` の `counts` を数え直します。
+   - `metadata` の `counts` を数え直し、`as_of` を更新した日に直します(照合データの時点が分かるように)。
 4. **結果が出た大会を直す**:日付が過ぎた `scheduled` の大会は、協会の大会ページに結果(入賞者一覧など)が出ていれば `status` を `held` に、中止・延期なら `cancelled`・`postponed` にし、出典を `source_urls` に足します。結果がまだ出ていない大会はそのままにして、PR の説明に書きます。
 5. **変えないもの**:開催回のアドレス(`page_slugs.json`)は変えません。今ある行の `id` も変えません(アドレスや動画の結びつけが切れるため)。
 6. **確かめる**:`python3 build_pages.py` を実行し、`build_report.json` の `photos.errors`・`news.errors`・`news.warnings` が空なこと、`en.missing_names` が増えていないことを確かめます。PR に入れるのは `master_events.json`・`series_aliases.json`・`en_names.csv` などの元のファイルだけです(上の「#75」の決まり)。
