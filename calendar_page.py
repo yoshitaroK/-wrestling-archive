@@ -129,11 +129,11 @@ def fmt_md(s, e):
 # カレンダーの画面に出す文字(JavaScript に渡す)
 JS_TEXT = {
     "ja": {"ym": "{y}年{m}月", "wd": ["日", "月", "火", "水", "木", "金", "土"], "more": "ほか{n}件", "cell": "{m}月{d}日 大会{n}件",
-           "day": "{m}月{d}日の大会", "month": "この月の大会({n}件)", "can": "中止", "vid": "動画あり", "sch": "予定",
+           "day": "{m}月{d}日の大会", "month": "この月の大会({n}件)", "can": "中止", "vid": "動画あり", "sch": "予定", "held": "開催済み",
            "derived": "(配信日)", "noday": "この日の大会はありません。", "nomonth": "この月に登録されている大会はありません。", "dash": "〜",
            "gc": "＋ Google カレンダー", "ic": "＋ iPhone・Outlook など"},
     "en": {"ym": "{M} {y}", "wd": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], "more": "+{n} more", "cell": "{M} {d}: {n} tournaments",
-           "day": "Tournaments on {M} {d}", "month": "Tournaments this month ({n})", "can": "Cancelled", "vid": "Videos", "sch": "Scheduled",
+           "day": "Tournaments on {M} {d}", "month": "Tournaments this month ({n})", "can": "Cancelled", "vid": "Videos", "sch": "Scheduled", "held": "Held",
            "derived": " (stream dates)", "noday": "No tournaments on this day.", "nomonth": "No tournaments listed for this month.", "dash": "–",
            "gc": "+ Google Calendar", "ic": "+ Apple / Outlook"},
 }
@@ -162,8 +162,8 @@ def calendar_page(data, ctx, bp):
           '<h2 id="cal-title" aria-live="polite"></h2>'
           f'<button type="button" class="cal-nav" id="cal-next" aria-label="{L("次の月", "Next month")}">›</button>'
           f'<button type="button" class="cal-today" id="cal-today">{L("今月", "This month")}</button></div>'
-          f'<p class="cal-legend"><span class="lg vid">{L("動画あり", "Videos available")}</span><span class="lg sch">{L("開催予定・動画なし", "Scheduled / no videos")}</span>'
-          f'<span class="lg can">{L("中止", "Cancelled")}</span></p>'
+          f'<p class="cal-legend"><span class="lg vid">{L("動画あり", "Videos available")}</span><span class="lg held">{L("開催済み・動画なし", "Held / no videos")}</span>'
+          f'<span class="lg sch">{L("開催予定・動画なし", "Scheduled / no videos")}</span><span class="lg can">{L("中止", "Cancelled")}</span></p>'
           '<div class="cal-grid" id="cal-grid" role="grid"></div>'
           f'<div class="cal-listhead"><h2 id="cal-listtitle">{L("この月の大会", "Tournaments this month")}</h2>'
           f'<button type="button" class="cal-all" id="cal-all" hidden>{L("月の大会をすべて表示", "Show the whole month")}</button></div>')
@@ -181,8 +181,17 @@ def calendar_page(data, ctx, bp):
     return path, h
 
 
+def kind(x):
+    """札の種類。中止 → 動画あり → 開催済み(動画なし) → 予定。assets/calendar.js の kind() と同じ決め方にする(Issue #163)"""
+    if x["st"] == "cancelled":
+        return "can"
+    if x["vid"]:
+        return "vid"
+    return "held" if x["st"] == "held" else "sch"
+
+
 def list_item(x, e):
-    cls = "can" if x["st"] == "cancelled" else ("vid" if x["vid"] else "sch")
+    cls = kind(x)
     badge = JS_TEXT[i18n.LANG][cls]
     name = e(x["n"])
     if x["u"]:
@@ -207,6 +216,7 @@ CAL_CSS = """
 .cal-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin:0 0 10px}
 .cal-legend .lg::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
 .lg.vid::before{background:var(--pink)}.lg.sch::before{background:#5b8def}.lg.can::before{background:#6b6a73}
+.lg.held::before,.dots i.held{background:transparent;box-shadow:inset 0 0 0 2px var(--ink2)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--line);gap:1px}
 .cal-grid .wd{background:var(--bg2);text-align:center;font-size:12px;color:var(--ink3);padding:6px 0}
 .cal-grid .wd.sun{color:#ff6a8a}.cal-grid .wd.sat{color:#7aa6ff}
@@ -218,7 +228,7 @@ CAL_CSS = """
 .cal-grid .day.sun .dn{color:#ff6a8a}.cal-grid .day.sat .dn{color:#7aa6ff}
 .cal-grid .chip{display:block;font-size:11px;line-height:1.35;padding:2px 5px;min-height:24px;box-sizing:border-box;padding-top:4px;border-radius:5px;color:#fff;text-decoration:none;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chip.vid{background:var(--pink-fill)}.chip.sch{background:#2f4f8f}.chip.can{background:#3a3a42;text-decoration:line-through}
+.chip.vid{background:var(--pink-fill)}.chip.sch{background:#2f4f8f}.chip.held{background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-hi)}.chip.can{background:#3a3a42;text-decoration:line-through}
 .cal-grid .cal-more{font-size:11px;color:var(--ink3)}
 .cal-grid .dots{display:none;gap:3px;flex-wrap:wrap}
 .cal-grid .dots i{width:7px;height:7px;border-radius:50%}
@@ -236,6 +246,7 @@ CAL_CSS = """
 .cal-list .vid .cb{background:var(--pink-tint);color:var(--pink)}
 .cal-list .sch .cb{background:rgba(91,141,239,.16);color:#8fb0ff}
 .cal-list .can .cb{background:#26262c;color:var(--ink3)}
+.cal-list .held .cb{background:var(--surface-2);color:var(--ink2);box-shadow:inset 0 0 0 1px var(--line-hi)}
 [data-theme="light"] .cal-grid .wd.sun,[data-theme="light"] .cal-grid .day.sun .dn{color:#c62850}
 [data-theme="light"] .cal-grid .wd.sat,[data-theme="light"] .cal-grid .day.sat .dn{color:#1d5bbf}
 [data-theme="light"] .cal-list .sch .cb{background:#e7effa;color:#1d4f91}[data-theme="light"] .cal-list .can .cb{background:#ececf0}
@@ -254,7 +265,7 @@ CAL_CSS = """
 }
 """
 
-CAL_VER = "1"
+CAL_VER = "2"
 SCRIPT_TAG = f'<script src="/assets/calendar.js?v={CAL_VER}"></script>'
 
 CAL_JS = r"""(function(){
@@ -269,7 +280,7 @@ CAL_JS = r"""(function(){
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
   var now = new Date(Date.now() + (9 * 60 + new Date().getTimezoneOffset()) * 60000); // 日本時間
   var today = ymd(now), cur, sel = null;
-  function kind(x){ return x.st === "cancelled" ? "can" : (x.vid ? "vid" : "sch"); }
+  function kind(x){ return x.st === "cancelled" ? "can" : x.vid ? "vid" : x.st === "held" ? "held" : "sch"; }
   function md(s, e){
     var a = (+s.slice(5,7)) + "/" + (+s.slice(8,10));
     if (e && e !== s) a += T.dash + (e.slice(0,7) !== s.slice(0,7) ? (+e.slice(5,7)) + "/" : "") + (+e.slice(8,10));
