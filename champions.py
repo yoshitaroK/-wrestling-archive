@@ -1,5 +1,5 @@
 """
-大会ごとの歴代優勝者のページ(champions/)。いまは日本語版だけ作る(英語版は作らない)
+大会ごとの歴代優勝者のページ(champions/)。日本語版と英語版(/en/champions/)を作る
 
   /champions/            … 歴代優勝者のまとめ(大会の一覧と、何年分の記録があるか)
   /champions/<大会ID>/   … その大会の歴代優勝者の表(例: /champions/tenno-cup/)
@@ -19,6 +19,11 @@
   - champions.csv の人は、players.csv の氏名(別表記も含む)が1人だけ一致するときだけ、その人として扱う。
     直近6年分(データ更新日の年から数えて)で所属が高校・中学などの人は「—」
   - 出典はページの一番下にまとめて載せる
+
+英語版(#76、運営者の答えは案 A)
+  - 名前は、選手ページがある人(ローマ字が確かな人)だけ出す。ほかは「—」(機械で作った綴りは出さない)
+  - 所属は en_names.csv に英語名があるものだけ出す(英語版に日本語を出さない)
+  - ページの上に、名前は日本語版で見られることと、日本語版へのリンクを出す
 """
 import os
 import re
@@ -26,7 +31,7 @@ import unicodedata
 from collections import defaultdict
 
 import i18n
-from i18n import U
+from i18n import L, N, U
 import players as P
 
 STYLES = ["フリースタイル", "グレコローマン", "女子"]
@@ -38,12 +43,47 @@ ORDER = ["tenno-cup", "meiji-cup", "intercollegiate", "university-championship",
 HERE_NOTE_MINOR = "未成年の選手(最近6年の記録で高校・中学などに所属していた選手を含む)は名前を載せていません(—)。"
 CHAMPIONS_CSV = "champions.csv"
 HISTORY_SOURCE = "日本レスリング協会『歴代記録』(レスリング・スピリッツ調べ)"
+HISTORY_SOURCE_EN = "the Japan Wrestling Federation's historical records (compiled by Wrestling Spirits)"
 RECENT_YEARS = 6
 # 所属が高校・中学など(未成年とみなす)。「高教」(高校の先生)などは除く
 SCHOOL_RE = re.compile(r"(高校|高等学校|中学|中等教育|高専|[^大]高$|[^大]中$|小学校|小$)")
 # 昔の階級名の並び順
 CLASSIC = ["ペーパー級", "ライトフライ級", "フライ級", "バンタム級", "フェザー級", "ライト級", "ウエルター級", "ミドル級",
            "ライトヘビー級", "ヘビー級"]
+CLASSIC_EN = ["Paperweight", "Light flyweight", "Flyweight", "Bantamweight", "Featherweight", "Lightweight", "Welterweight",
+              "Middleweight", "Light heavyweight", "Heavyweight"]
+STYLE_ANCHOR = ["fs", "gr", "ww"]
+STYLE_SHORT_EN = {"フリースタイル": "FS", "グレコローマン": "GR", "女子": "WW"}
+
+
+def wname(w):
+    """階級の表示。英語版は「100kg以上」→「100kg+」、昔の階級名は英語にする"""
+    if not i18n.en():
+        return w
+    if w in CLASSIC:
+        return CLASSIC_EN[CLASSIC.index(w)]
+    return re.sub(r"以上$", "+", w or "")
+
+
+def roman_by_id(ctx):
+    """選手ID → ローマ字(英語版の名前。選手ページがある人だけ)"""
+    if "_roman_by_id" not in ctx:
+        ctx["_roman_by_id"] = {p["id"]: p.get("roman", "") for p in ctx.get("players") or []}
+    return ctx["_roman_by_id"]
+
+
+def shown_name(name, pid, ctx):
+    """表に出す名前。英語版は選手ページがあってローマ字のある人だけ(ほかは空 → 「—」)"""
+    if not i18n.en():
+        return name
+    return roman_by_id(ctx).get(pid, "") if pid else ""
+
+
+def shown_club(club):
+    """所属。英語版は英語名があるものだけ"""
+    if not i18n.en():
+        return club
+    return i18n.names_table().get(club, "")
 
 
 def wkey(w):
@@ -178,16 +218,18 @@ def edition_link(sid, year, ctx):
     return ""
 
 
-def cell(winners, e):
+def cell(winners, e, ctx):
     if not winners:
         return '<td class="none">—</td>'
     parts = []
     for w in winners:
-        if w["hidden"]:
+        name = "" if w["hidden"] else shown_name(w["name"], w["id"], ctx)
+        if not name:
             parts.append('<span class="cw">—</span>')
             continue
-        nm = f'<a href="{U("/players/" + w["id"] + "/")}">{e(w["name"])}</a>' if w["id"] else e(w["name"])
-        club = f'<small>{e(w["club"])}</small>' if w["club"] else ""
+        nm = f'<a href="{U("/players/" + w["id"] + "/")}">{e(name)}</a>' if w["id"] else e(name)
+        club = shown_club(w["club"])
+        club = f'<small>{e(club)}</small>' if club else ""
         parts.append(f'<span class="cw">{nm}{club}</span>')
     return "<td>" + "".join(parts) + "</td>"
 
@@ -195,15 +237,18 @@ def cell(winners, e):
 def style_tables(sid, by_year, ctx, e):
     h = ""
     for years, ws in eras(by_year):
-        cap = (f"{years[-1]}〜{years[0]}年" if len(years) > 1 else f"{years[0]}年") + "の階級"
-        head = "".join(f'<th scope="col">{e(w)}</th>' for w in ws)
+        if i18n.en():
+            cap = "Weight classes, " + (f"{years[-1]}–{years[0]}" if len(years) > 1 else str(years[0]))
+        else:
+            cap = (f"{years[-1]}〜{years[0]}年" if len(years) > 1 else f"{years[0]}年") + "の階級"
+        head = "".join(f'<th scope="col">{e(wname(w))}</th>' for w in ws)
         rows = ""
         for y in years:
             link = edition_link(sid, y, ctx)
             yh = f'<a href="{U(link)}">{y}</a>' if link else str(y)
-            rows += f'<tr><th scope="row">{yh}</th>' + "".join(cell(by_year[y].get(w), e) for w in ws) + "</tr>"
+            rows += f'<tr><th scope="row">{yh}</th>' + "".join(cell(by_year[y].get(w), e, ctx) for w in ws) + "</tr>"
         h += (f'<div class="ctable"><table class="champs"><caption>{e(cap)}</caption>'
-              f'<thead><tr><th scope="col">年</th>{head}</tr></thead><tbody>{rows}</tbody></table></div>')
+              f'<thead><tr><th scope="col">{L("年", "Year")}</th>{head}</tr></thead><tbody>{rows}</tbody></table></div>')
     return h
 
 
@@ -244,56 +289,93 @@ def ranking(t):
     return out
 
 
-def ranking_html(s, t, e):
+def ranking_html(s, t, e, ctx):
     if s["id"] not in RANK_SERIES:
         return ""
     rows = ranking(t)
     if len(rows) < 3:
         return ""
+    en = i18n.en()
     body = ""
     for rank, name, pid, n, sts, y0, y1 in rows:
+        name = shown_name(name, pid, ctx) or "—"
         nm = f'<a href="{U("/players/" + pid + "/")}">{e(name)}</a>' if pid else e(name)
-        short = {"フリースタイル": "フリー", "グレコローマン": "グレコ", "女子": "女子"}  # スマホで1行に収まるよう短く
-        style = "・".join(f"{short[st]}{c}" if len(sts) > 1 else short[st] for st, c in sorted(sts.items(), key=lambda x: STYLES.index(x[0])))
-        years = f"{y0}年" if y0 == y1 else f"{y0}〜{y1}年"
-        body += (f'<tr><th scope="row">{rank}</th><td class="rn">{nm}</td><td class="rc"><b>{n}</b>回</td>'
+        short = STYLE_SHORT_EN if en else {"フリースタイル": "フリー", "グレコローマン": "グレコ", "女子": "女子"}  # スマホで1行に収まるよう短く
+        style = L("・", " · ").join(f"{short[st]}{L('', ' ')}{c}" if len(sts) > 1 else short[st]
+                                   for st, c in sorted(sts.items(), key=lambda x: STYLES.index(x[0])))
+        years = (str(y0) if y0 == y1 else f"{y0}–{y1}") if en else (f"{y0}年" if y0 == y1 else f"{y0}〜{y1}年")
+        body += (f'<tr><th scope="row">{rank}</th><td class="rn">{nm}</td><td class="rc"><b>{n}</b>{L("回", "")}</td>'
                  f'<td class="rs">{e(style)}</td><td class="ry">{years}</td></tr>')
-    return (f'<section class="section" id="rank"><h2>優勝回数ランキング</h2>'
-            f'<p class="hint">{e(s["name"])}で{RANK_MIN}回以上優勝した選手(上位{RANK_TOP}位まで)。'
-            '1つの大会で1つの階級に優勝したら1回と数えています。名前の表記が同じ人を同じ選手として数えています。</p>'
-            f'<div class="ctable"><table class="champs rank"><thead><tr><th scope="col">順位</th><th scope="col">選手</th>'
-            f'<th scope="col">優勝回数</th><th scope="col">スタイル</th><th scope="col">優勝した年</th></tr></thead>'
+    sname = N(s["name"])
+    hint = L(f'{e(sname)}で{RANK_MIN}回以上優勝した選手(上位{RANK_TOP}位まで)。'
+             '1つの大会で1つの階級に優勝したら1回と数えています。名前の表記が同じ人を同じ選手として数えています。',
+             f'Wrestlers who have won the {e(sname)} at least {RANK_MIN} times (top {RANK_TOP}). '
+             'Each title in one weight class at one edition counts as one. Wrestlers without a player page are shown as "—".')
+    return (f'<section class="section" id="rank"><h2>{L("優勝回数ランキング", "Most titles")}</h2>'
+            f'<p class="hint">{hint}</p>'
+            f'<div class="ctable"><table class="champs rank"><thead><tr><th scope="col">{L("順位", "Rank")}</th><th scope="col">{L("選手", "Wrestler")}</th>'
+            f'<th scope="col">{L("優勝回数", "Titles")}</th><th scope="col">{L("スタイル", "Style")}</th><th scope="col">{L("優勝した年", "Years")}</th></tr></thead>'
             f'<tbody>{body}</tbody></table></div></section>')
+
+
+def years_text_en(years):
+    ys = sorted(set(years))
+    if len(ys) <= 4:
+        return ", ".join(str(y) for y in ys)
+    return f"{ys[0]}–{ys[-1]}, {len(ys)} years"
+
+
+def span_text(years):
+    return years_text_en(years) if i18n.en() else years_text(years)
+
+
+def en_note(path, e):
+    """英語版のページの上に出す、日本語版への案内(#76 案 A)"""
+    return ('<p class="hint champ-ja">Names are shown only for wrestlers who have a player page on this site, '
+            'so that we never show a guessed spelling. Other names (mostly from earlier years) are shown as "—"; '
+            f'you can see them on the <a href="{e(path)}" hreflang="ja">Japanese version of this page</a> (<span lang="ja">日本語版</span>).</p>')
 
 
 def series_page(s, t, src, hist, ctx, bp):
     e = bp.e
+    en = i18n.en()
     path = f"/champions/{s['id']}/"
-    name = s["name"]
+    name = N(s["name"])
     years = all_years(t)
-    span = years_text(years)
-    crumbs = [("トップ", "/"), ("歴代優勝者", "/champions/"), (name, None)]
-    title = f"{name} 歴代優勝者({span})|{bp.SITE_NAME}"
-    desc = f"{name}の歴代優勝者を、スタイル・階級ごとに年別にまとめた表({span})。選手名から選手ページへ移れます。"
+    span = span_text(years)
+    crumbs = [(L("トップ", "Home"), "/"), (L("歴代優勝者", "Past champions"), "/champions/"), (name, None)]
+    title = L(f"{name} 歴代優勝者({span})|{bp.SITE_NAME}", f"{name} – Past Champions ({span}) | {bp.site_name()}")
+    desc = L(f"{name}の歴代優勝者を、スタイル・階級ごとに年別にまとめた表({span})。選手名から選手ページへ移れます。",
+             f"Past champions of the {name} by style, weight class and year ({span}). Names link to player pages.")
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "WebPage", "name": f"{name} 歴代優勝者", "url": bp.SITE + path}]}
-    h = bp.head(title, desc, path, "", jsonld, ctx["css"], alternates=False)
+        "@type": "WebPage", "name": L(f"{name} 歴代優勝者", f"{name} – Past Champions"), "url": bp.SITE + U(path),
+        "inLanguage": L("ja", "en")}]}
+    h = bp.head(title, desc, path, "", jsonld, ctx["css"])
     h += '<main id="content" class="wrap page champ">' + bp.breadcrumb_html(crumbs)
-    h += f"<h1>{e(name)} 歴代優勝者</h1>"
-    h += (f'<p class="lead">{e(name)}の優勝者を、スタイル・階級ごとに年別にまとめています。いま載せているのは{e(span)}の記録です。'
-          f'選手名を押すと、その選手のページへ移れます。</p>')
-    rank = ranking_html(s, t, e)
-    nav = "".join(f'<a href="#{["fs", "gr", "ww"][STYLES.index(st)]}">{e(st)}</a>' for st in STYLES if st in t) + (
-        '<a href="#rank">優勝回数ランキング</a>' if rank else "")
+    h += f"<h1>{e(L(f'{name} 歴代優勝者', f'{name}: Past Champions'))}</h1>"
+    if en:
+        h += (f'<p class="lead">Champions of the {e(name)} by style and weight class, year by year. '
+              f'This page covers {e(span)}. Click a name to open the wrestler\'s page.</p>')
+        h += en_note(path, e)
+    else:
+        h += (f'<p class="lead">{e(name)}の優勝者を、スタイル・階級ごとに年別にまとめています。いま載せているのは{e(span)}の記録です。'
+              f'選手名を押すと、その選手のページへ移れます。</p>')
+    rank = ranking_html(s, t, e, ctx)
+    nav = "".join(f'<a href="#{STYLE_ANCHOR[STYLES.index(st)]}">{e(N(st))}</a>' for st in STYLES if st in t) + (
+        f'<a href="#rank">{L("優勝回数ランキング", "Most titles")}</a>' if rank else "")
     if len([st for st in STYLES if st in t]) > 1 or rank:
-        h += f'<nav class="catnav" aria-label="スタイル">{nav}</nav>'
+        h += f'<nav class="catnav" aria-label="{L("スタイル", "Style")}">{nav}</nav>'
     for st in STYLES:
         if st not in t:
             continue
-        h += f'<section class="section" id="{["fs", "gr", "ww"][STYLES.index(st)]}"><h2>{e(st)}</h2>'
+        h += f'<section class="section" id="{STYLE_ANCHOR[STYLES.index(st)]}"><h2>{e(N(st))}</h2>'
         h += style_tables(s["id"], t[st], ctx, e) + "</section>"
-    h += ('<p class="hint">「—」はその年にその階級の記録がないか、名前を載せていないことを表します。'
-          '所属は大会のときのものです。リンクのない名前は、選手ページを作っていない選手です。' + HERE_NOTE_MINOR + "</p>")
+    h += L('<p class="hint">「—」はその年にその階級の記録がないか、名前を載せていないことを表します。'
+           '所属は大会のときのものです。リンクのない名前は、選手ページを作っていない選手です。' + HERE_NOTE_MINOR + "</p>",
+           '<p class="hint">"—" means there is no record for that weight class in that year, or that the name is not shown. '
+           'Teams are as of the tournament and are shown only when we have an English name for them. '
+           'Names of minors (including wrestlers listed with a high school or junior high school in the last '
+           f'{RECENT_YEARS} years) are not shown.</p>')
     # 優勝回数ランキングは表の下(出典の前)に置く
     h += rank
     # 出典(年ごと)
@@ -302,21 +384,25 @@ def series_page(s, t, src, hist, ctx, bp):
         by_url = defaultdict(list)
         for u, st in src[y]:
             by_url[u].append(st)
-        links = "・".join(f'<a href="{e(u)}" target="_blank" rel="noopener">{e("・".join(sorted(sts, key=STYLES.index)))}</a>'
-                         for u, sts in sorted(by_url.items(), key=lambda x: min(STYLES.index(s) for s in x[1])))
-        items += f"<li><b>{y}年</b> {links}</li>"
+        links = L("・", " · ").join(
+            f'<a href="{e(u)}" target="_blank" rel="noopener">{e(L("・", " / ").join(N(x) for x in sorted(sts, key=STYLES.index)))}</a>'
+            for u, sts in sorted(by_url.items(), key=lambda x: min(STYLES.index(s) for s in x[1])))
+        items += f"<li><b>{y}{L('年', '')}</b> {links}</li>"
     hitems = ""
     for (u, st), ys in sorted(hist.items(), key=lambda x: STYLES.index(x[0][1])):
-        hitems += f'<li><a href="{e(u)}" target="_blank" rel="noopener">{e(st)}(PDF)</a> … {e(years_text(ys))}の記録</li>'
+        hitems += (f'<li><a href="{e(u)}" target="_blank" rel="noopener">{e(N(st))}{L("(PDF)", " (PDF)")}</a> … '
+                   f'{e(L(years_text(ys) + "の記録", "records for " + years_text_en(ys)))}</li>')
     if items or hitems:
-        h += '<section class="section csrc"><h2>出典</h2>'
+        h += f'<section class="section csrc"><h2>{L("出典", "Sources")}</h2>'
         if items:
-            h += f'<p class="hint">日本レスリング協会が公開している入賞者一覧(PDF)から作っています。</p><ul>{items}</ul>'
+            h += L('<p class="hint">日本レスリング協会が公開している入賞者一覧(PDF)から作っています。</p>',
+                   '<p class="hint">From the lists of medalists published by the Japan Wrestling Federation (PDF, in Japanese).</p>') + f'<ul>{items}</ul>'
         if hitems:
-            h += (f'<p class="hint">{"それより前の年は、" if items else ""}{e(HISTORY_SOURCE)}から作っています。</p>'
-                  f'<ul>{hitems}</ul>')
+            h += L(f'<p class="hint">{"それより前の年は、" if items else ""}{e(HISTORY_SOURCE)}から作っています。</p>',
+                   f'<p class="hint">{"Earlier years are from " if items else "From "}{e(HISTORY_SOURCE_EN)} (PDF, in Japanese).</p>') + f'<ul>{hitems}</ul>'
         h += "</section>"
-    h += f'<p class="tosearch-line"><a href="{U("/events/" + s["id"] + "/")}">{e(name)}の配信動画を見る</a> / <a href="/champions/">ほかの大会の歴代優勝者</a></p>'
+    h += (f'<p class="tosearch-line"><a href="{U("/events/" + s["id"] + "/")}">{e(L(f"{name}の配信動画を見る", f"Watch {name} videos"))}</a> / '
+          f'<a href="{U("/champions/")}">{L("ほかの大会の歴代優勝者", "Past champions of other tournaments")}</a></p>')
     h += P.optout_note(listing=True)
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
@@ -324,24 +410,34 @@ def series_page(s, t, src, hist, ctx, bp):
 
 def index_page(listed, ctx, bp):
     e = bp.e
+    en = i18n.en()
     path = "/champions/"
-    crumbs = [("トップ", "/"), ("歴代優勝者", None)]
-    desc = f"天皇杯・明治杯・インカレなど国内{len(listed)}大会の歴代優勝者を、大会ごと・スタイル・階級ごとにまとめています。"
+    crumbs = [(L("トップ", "Home"), "/"), (L("歴代優勝者", "Past champions"), None)]
+    desc = L(f"天皇杯・明治杯・インカレなど国内{len(listed)}大会の歴代優勝者を、大会ごと・スタイル・階級ごとにまとめています。",
+             f"Past champions of {len(listed)} Japanese national tournaments, including the Emperor's Cup and the Meiji Cup, "
+             "by tournament, style and weight class.")
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": "歴代優勝者", "url": bp.SITE + path,
-        "hasPart": [{"@type": "WebPage", "name": f"{s['name']} 歴代優勝者", "url": bp.SITE + f"/champions/{s['id']}/"} for s, _ in listed]}]}
-    h = bp.head(f"歴代優勝者({len(listed)}大会)|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
-    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + "<h1>歴代優勝者</h1>"
-    h += f'<p class="lead">{e(desc)}大会名を押すと、その大会の歴代優勝者の表が開きます。</p>'
+        "@type": "CollectionPage", "name": L("歴代優勝者", "Past champions"), "url": bp.SITE + U(path), "inLanguage": L("ja", "en"),
+        "hasPart": [{"@type": "WebPage", "name": L(f"{N(s['name'])} 歴代優勝者", f"{N(s['name'])} – Past Champions"),
+                     "url": bp.SITE + U(f"/champions/{s['id']}/")} for s, _ in listed]}]}
+    h = bp.head(L(f"歴代優勝者({len(listed)}大会)|{bp.SITE_NAME}", f"Past Champions ({len(listed)} tournaments) | {bp.site_name()}"),
+                desc, path, "", jsonld, ctx["css"])
+    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + f'<h1>{L("歴代優勝者", "Past champions")}</h1>'
+    h += f'<p class="lead">{e(desc)}{L("大会名を押すと、その大会の歴代優勝者の表が開きます。", " Choose a tournament to open its table of champions.")}</p>'
+    if en:
+        h += en_note(path, e)
     h += '<ol class="occ slist-static champ-list">'
     for s, t in listed:
         ys = all_years(t)
-        n = sum(len(ws) for st in t.values() for ws in st.values())
-        h += (f'<li><a href="/champions/{s["id"]}/"><span class="ob"><span class="od sname">{e(s["name"])}</span>'
-              f'<span class="ov">{e(years_text(ys))}の記録</span></span><span class="on"><b class="num">{len(ys)}</b>年分</span></a></li>')
+        span = L(years_text(ys) + "の記録", "Records for " + years_text_en(ys))
+        h += (f'<li><a href="{U("/champions/" + s["id"] + "/")}"><span class="ob"><span class="od sname">{e(N(s["name"]))}</span>'
+              f'<span class="ov">{e(span)}</span></span><span class="on"><b class="num">{len(ys)}</b>{L("年分", " years")}</span></a></li>')
     h += "</ol>"
-    h += ('<p class="hint">日本レスリング協会が公開している入賞者一覧と、' + e(HISTORY_SOURCE) + 'から作っています。'
-          '同じ年・階級の記録が両方にあるときは、入賞者一覧のほうを載せています。出典は各大会のページの一番下にあります。</p>')
+    h += L('<p class="hint">日本レスリング協会が公開している入賞者一覧と、' + e(HISTORY_SOURCE) + 'から作っています。'
+           '同じ年・階級の記録が両方にあるときは、入賞者一覧のほうを載せています。出典は各大会のページの一番下にあります。</p>',
+           '<p class="hint">Compiled from the lists of medalists published by the Japan Wrestling Federation and from '
+           + e(HISTORY_SOURCE_EN) + '. Where both cover the same year and weight class, we use the list of medalists. '
+           'Sources are listed at the bottom of each tournament page.</p>')
     h += "</main>" + bp.footer(ctx["as_of"])
     return path, h
 
@@ -355,16 +451,15 @@ def prepare(root, data, ctx):
 
 
 def link_html(s, ctx):
-    """大会ページに出す「歴代優勝者」へのリンク(日本語版で、表がある大会だけ)"""
-    if i18n.en() or s["id"] not in ctx.get("champions", {}):
+    """大会ページに出す「歴代優勝者」へのリンク(表がある大会だけ)"""
+    if s["id"] not in ctx.get("champions", {}):
         return ""
-    return f'<p class="champ-link"><a href="/champions/{s["id"]}/">{s["name"]}の歴代優勝者を見る</a></p>'
+    return (f'<p class="champ-link"><a href="{U("/champions/" + s["id"] + "/")}">'
+            f'{L(s["name"] + "の歴代優勝者を見る", "Past champions of the " + N(s["name"]))}</a></p>')
 
 
 def build(ctx, bp):
-    """歴代優勝者のページを作って (path, doc) のリストを返す。日本語版だけ"""
-    if i18n.en():
-        return []
+    """歴代優勝者のページを作って (path, doc) のリストを返す。日本語版・英語版とも同じ処理"""
     table, sources = ctx.get("champions", {}), ctx.get("champion_sources", {})
     if not table:
         return []
@@ -405,4 +500,5 @@ table.champs td.none{color:var(--ink3)}
 .champ-link a{display:inline-block;padding:8px 18px;border:1px solid var(--pink-line);border-radius:999px;color:var(--pink);text-decoration:none;font-size:14px;font-weight:700}
 .champ-link a:hover{border-color:var(--pink)}
 .champ-list a{grid-template-columns:1fr auto}
+.champ-ja{margin:-4px 0 14px}
 """

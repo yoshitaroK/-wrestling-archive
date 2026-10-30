@@ -1953,7 +1953,7 @@ def build(root=HERE, inline_css=False, only=None):
                           "photos": photo_gallery.home_cards(ctx, photos_by_page, me)}
             # 選手ページ(players.csv / player_results.csv があるときだけ作られる)
             pages.extend(players.build(root, data, ctx, me))
-            # 歴代優勝者のページ(/champions/)。日本語版だけ
+            # 歴代優勝者のページ(/champions/)。日本語版と英語版(英語版の名前はローマ字が確かな人だけ。#76)
             pages.extend((path, doc, data.get("as_of")) for path, doc in champions.build(ctx, me))
             # ニュース(/news/)。news.json と articles/ から。日本語版だけ
             import news
