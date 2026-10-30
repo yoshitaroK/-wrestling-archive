@@ -14,6 +14,7 @@
     選手ID, 動画ID, メモ
     動画IDは YouTube の動画のURL(…watch?v=XXXX)の XXXX。名前がタイトルに入っているだけで、
     その選手の試合ではない動画(ほかの選手のインタビューなど)を外すのに使う
+    中学・高校のころの動画は、下の「未成年の動画」のルールで自動で外れるので、ここに書かなくてよい
 
 ルール
   - 「公開」が「はい」で、かつ「未成年」が「いいえ」の選手だけページを作る
@@ -56,6 +57,19 @@ DIVISION_EN = {"成年男子フリースタイル": "Men's freestyle (senior)", 
                "女子": "Women", "少年男子フリースタイル": "Boys' freestyle (high school)",
                "少年男子グレコローマン": "Boys' Greco-Roman (high school)"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
+# 未成年の大会のグループ(data.json の series の groups)。この大会の動画は選手ページに出さない
+MINOR_GROUPS = {"中学", "高校", "少年少女"}
+# タイトルにあれば未成年の大会・部門の動画とみなす言葉(全角・半角はそろえてから比べる)
+MINOR_TITLE_WORDS = ("カデット", "U17", "U15", "U13", "U-17", "U-15", "少年少女", "キッズ大会", "キッズトーナメント", "中学生", "中学選抜",
+                     "高校生", "高校選抜", "高校総体", "高校選手権", "インターハイ", "風間杯", "沼尻", "少年男子", "少年女子")
+PREFS = ("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川",
+         "新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都", "大阪", "兵庫", "奈良",
+         "和歌山", "鳥取", "島根", "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分",
+         "宮崎", "鹿児島", "沖縄")
+# 所属が中学・高校(「〜高」「〜高校」「〜中」「〜中学」、または「三重・いなべ総合学園」のような「都道府県・学校」)
+SCHOOL_RE = re.compile(r"(高|高校|高等学校|中|中学|中学校)$|^(" + "|".join(PREFS) + r")[都道府県]?・")
+# 「都道府県・」で始まっても大人の所属(高校のコーチ・先生(「〜高教」)など)
+ADULT_RE = re.compile(r"コーチ|監督|教員|教諭|教$|職$|職員|(OB|OG)$")
 YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
 # オリンピックの大会名(player_results.csv)→ 名前の下の印(日本語・英語)と英語の大会名。新しい大会を上に足す
 OLYMPICS = {
@@ -133,19 +147,53 @@ def load(root):
     return players, report
 
 
-def attach_videos(players, videos, exclude=frozenset()):
-    """動画タイトルに選手名が含まれる動画を結びつける。exclude は外す (選手ID, 動画ID)"""
+def affiliation(title, key):
+    """そろえたタイトルの中で、名前 key のすぐ後ろの「(…)」の中身(所属)。「赤=」「青=」は除く。無ければ空"""
+    i = title.find(key)
+    if i < 0 or title[i + len(key):i + len(key) + 1] != "(":
+        return ""
+    rest = title[i + len(key) + 1:]
+    j = rest.find(")")
+    a = rest[:j] if j >= 0 else rest
+    return re.sub(r"^(赤|青)=", "", a)
+
+
+def is_minor_video(v, t, minor_series):
+    """未成年の大会・部門の動画か(t はそろえたタイトル)"""
+    return v.get("s") in minor_series or any(norm(w) in t for w in MINOR_TITLE_WORDS)
+
+
+def is_school(a):
+    """所属が中学・高校か"""
+    return bool(a) and bool(SCHOOL_RE.search(a)) and not ADULT_RE.search(a)
+
+
+def attach_videos(players, videos, exclude=frozenset(), minor_series=frozenset(), report=None):
+    """動画タイトルに選手名が含まれる動画を結びつける。exclude は外す (選手ID, 動画ID)。
+    未成年の大会の動画と、タイトルで所属が中学・高校になっている動画は外す(#188)。数は report に入れる"""
     n = 0
+    minor_n = school_n = 0
     titles = [(v, norm(v.get("t"))) for v in videos]
     for p in players:
         if not p["keys"]:
             continue
         hits = {}
         for v, t in titles:
-            if any(k in t for k in p["keys"]) and (p["id"], v["id"]) not in exclude:
-                hits[v["id"]] = v
+            ks = [k for k in p["keys"] if k in t]
+            if not ks or (p["id"], v["id"]) in exclude:
+                continue
+            if is_minor_video(v, t, minor_series):
+                minor_n += 1
+                continue
+            if any(is_school(affiliation(t, k)) for k in ks):
+                school_n += 1
+                continue
+            hits[v["id"]] = v
         p["videos"] = sorted(hits.values(), key=lambda v: v.get("p") or "", reverse=True)
         n += len(p["videos"])
+    if report is not None:
+        report["video_minor_excluded"] = minor_n
+        report["video_school_excluded"] = school_n
     return n
 
 
@@ -666,7 +714,8 @@ def prepare(root, data, ctx):
     path = os.path.join(root, VIDEO_EXCLUDE_CSV)
     exclude = {(norm(r.get("選手ID")), norm(r.get("動画ID"))) for r in read_csv(path)} if os.path.exists(path) else set()
     report["video_excluded"] = len(exclude)
-    report["video_links"] = attach_videos(players, data.get("videos", []), exclude) if players else 0
+    minor_series = {x["id"] for x in data.get("series", []) if MINOR_GROUPS & set(x.get("groups") or [])}
+    report["video_links"] = attach_videos(players, data.get("videos", []), exclude, minor_series, report) if players else 0
     winners = defaultdict(list)
     for p in players:
         for r in p["results"]:
