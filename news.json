@@ -2,6 +2,26 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-worlds-freestyle-day7-finals",
+   "date": "2026-10-30",
+   "title": "世界選手権フリー 吉田アラシが97kg級2位 スナイダーに終盤逆転され",
+   "category": "世界選手権",
+   "lead": "世界選手権の男子フリースタイルで最初の決勝があり、97kg級の吉田アラシは4-0から残り1分で逆転され、アメリカのスナイダーに4-4で敗れて2位だった。65kg級は20歳のバセットが優勝した。",
+   "tags": [
+    "世界選手権2026",
+    "フリースタイル",
+    "吉田アラシ",
+    "カイル・スナイダー"
+   ],
+   "sources": [
+    "https://uww.org/articles/snyder-fends-yoshida-97kg-repeat-fifth-world-championships-gold",
+    "https://uww.org/articles/snyder-upends-sadulaev-reaching-world-championships-final",
+    "https://uww.org/articles/dake-86kg-reaches-sixth-world-championships-final",
+    "https://uww.org/articles/live-updates-world-championships-day-6-97kg-and-65kg",
+    "https://uww.org/articles/live-updates-world-championships-2026-freestyle"
+   ]
+  },
+  {
    "slug": "2026-worlds-women-day6-7-finals",
    "date": "2026-10-30",
    "title": "世界選手権女子 清岡もえが53kg級優勝 団体は日本が2点差で2位",
