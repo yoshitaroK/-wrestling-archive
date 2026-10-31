@@ -1,13 +1,13 @@
 {
- "built_at": "2026-10-31T09:37:00+09:00",
+ "built_at": "2026-10-31T13:07:50+09:00",
  "as_of": "2026-10-31",
  "video_count": 3360,
  "raw_count": 3360,
  "duplicate_ids_removed": 0,
  "link_counts": {
+  "manual": 42,
   "matched": 2427,
   "derived": 302,
-  "manual": 42,
   "livedate": 177,
   "candidate": 193,
   "series_only": 29,
@@ -218,7 +218,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 18
+  "articles": 19
  },
  "books": {
   "errors": [],
