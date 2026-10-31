@@ -57,6 +57,7 @@ DIVISION_EN = {"成年男子フリースタイル": "Men's freestyle (senior)", 
                "少年男子グレコローマン": "Boys' Greco-Roman (high school)"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 YES = {"はい", "yes", "y", "1", "true", "○", "〇"}
+NO = {"いいえ", "no", "n", "0", "false", "×"}
 # オリンピックの大会名(player_results.csv)→ 名前の下の印(日本語・英語)と英語の大会名。新しい大会を上に足す
 OLYMPICS = {
     "オリンピック(パリ)": ("パリ 2024 オリンピック代表", "Paris 2024 Olympian", "Olympic Games Paris 2024"),
@@ -92,6 +93,11 @@ def is_yes(v):
     return norm(v).lower() in YES
 
 
+def is_adult(v):
+    """「未成年」の欄が「いいえ」とはっきり書いてあるときだけ大人とみなす(「要確認」や空欄は未成年あつかい)"""
+    return norm(v).lower() in NO
+
+
 def load(root):
     rows = read_csv(os.path.join(root, PLAYERS_CSV))
     results = read_csv(os.path.join(root, RESULTS_CSV))
@@ -112,7 +118,7 @@ def load(root):
             report["errors"].append(f"players.csv {i}行目: 氏名が空です")
             continue
         seen.add(pid)
-        if is_yes(r.get("未成年")):
+        if not is_adult(r.get("未成年")):
             report["hidden_minor"] += 1
             continue
         if not is_yes(r.get("公開")):

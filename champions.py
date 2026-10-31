@@ -15,7 +15,7 @@
   - スタイルごと(フリースタイル → グレコローマン → 女子)に表を1つ。縦に年(新しい年が上)、横に階級。
     階級の区分が変わった年で表を分ける
   - 優勝者の名前は選手ページへのリンク(公開している選手だけ)。
-    players.csv で「公開」が「はい」でない人は名前だけ(リンクなし)。「未成年」が「はい」の人は「—」
+    players.csv で「公開」が「はい」でない人・「未成年」が「いいえ」でない人は名前だけ(リンクなし)。「未成年」が「はい」の人は「—」
   - champions.csv の人は、players.csv の氏名(別表記も含む)が1人だけ一致するときだけ、その人として扱う。
     直近6年分(データ更新日の年から数えて)で所属が高校・中学などの人は「—」
   - 出典はページの一番下にまとめて載せる
@@ -123,7 +123,7 @@ def load(root, data):
             continue
         p = people.get(r.get("選手ID", ""), {})
         minor = P.is_yes(p.get("未成年"))
-        public = P.is_yes(p.get("公開")) and not minor
+        public = P.is_yes(p.get("公開")) and P.is_adult(p.get("未成年")) and not minor
         year = int(r.get("開催年") or ev["year"])
         table[s["id"]][style][year][r.get("階級", "")].append(
             {"name": p.get("氏名", ""), "club": p.get("所属", ""), "id": p.get("選手ID") if public else None, "hidden": minor})
@@ -174,7 +174,7 @@ def load_history(root, data, people, table, S, report):
             minor = bool(p and P.is_yes(p.get("未成年")))
             if this_year and year > this_year - RECENT_YEARS and SCHOOL_RE.search(club):
                 minor = True
-            public = bool(p and P.is_yes(p.get("公開"))) and not minor
+            public = bool(p and P.is_yes(p.get("公開")) and P.is_adult(p.get("未成年"))) and not minor
             table[sid][style][year][w].append({"name": p["氏名"] if p else r.get("氏名", ""), "club": club,
                                                 "id": p.get("選手ID") if public else None, "hidden": minor})
             if r.get("出典URL", "").startswith("http"):
