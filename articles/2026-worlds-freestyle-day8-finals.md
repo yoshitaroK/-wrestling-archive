@@ -28,7 +28,7 @@
 
 青柳は昨年の世界選手権70kg級の優勝者で、今年は74kg級に上げて出場した。モハマド・モッタギニア(Mohammad MOTTAGHINIA、スペイン)に4-1で勝ち、準々決勝ではマゴメドラスル・アスルエフ(Magomedrasul ASLUEV、バーレーン)に5-2で勝った。アスルエフとは今年のアジア選手権の決勝でも戦い、勝っている。
 
-準決勝の相手は、元世界王者のヌルコジャ・カイパノフ(Nurkozha KAIPANOV、カザフスタン)だった。この試合の勝者は UWW の2つの記事で食い違っているため、確かめてから伝える。もう1試合の準決勝は、イナルベク・シェリエフ(Inalbek SHERIEV、ロシア)がタイムラズ・サルカザノフ(Taimuraz SALKAZANOV、スロバキア)に3-1で勝った。
+準決勝では、元世界王者のヌルコジャ・カイパノフ(Nurkozha KAIPANOV、カザフスタン)と対戦した。もう1試合の準決勝は、イナルベク・シェリエフ(Inalbek SHERIEV、ロシア)がタイムラズ・サルカザノフ(Taimuraz SALKAZANOV、スロバキア)に3-1で勝った。
 
 ## 57kg級 メキシコの選手が初めて決勝へ
 
@@ -60,7 +60,5 @@
 | 57kg | リー(アメリカ)― ブラボヤング(メキシコ) |
 | 79kg | ヘインズ(アメリカ)― ノホディ(イラン) |
 | 92kg | ヒドレー(アメリカ)― ガジマゴメドフ(ロシア) |
-
-74kg級の決勝はシェリエフと、青柳・カイパノフの準決勝の勝者が戦う。
 
 出典:[[https://uww.org/articles/dake-makes-history-fifth-world-gold-third-weight|United World Wrestling「Dake Makes History with Fifth World Gold in Third Weight」]]、[[https://uww.org/articles/bravo-young-puts-mexico-world-finals-where-lee-awaits|同「Bravo Young Puts Mexico in World Finals Where Lee Awaits」]]、[[https://uww.org/articles/live-updates-world-championships-day-8-freestyle|同「Live Updates World Championships Day 8: Freestyle」]]
