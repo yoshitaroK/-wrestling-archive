@@ -1,5 +1,5 @@
 {
- "built_at": "2026-10-31T07:40:01+09:00",
+ "built_at": "2026-10-31T09:37:00+09:00",
  "as_of": "2026-10-31",
  "video_count": 3360,
  "raw_count": 3360,
@@ -102,9 +102,9 @@
     "errors": []
    },
    "ja": {
-    "made": 1,
-    "kept": 1439,
-    "removed": 1,
+    "made": 0,
+    "kept": 1440,
+    "removed": 0,
     "errors": []
    },
    "events-en": {
@@ -114,9 +114,9 @@
     "errors": []
    },
    "en": {
-    "made": 1,
-    "kept": 1439,
-    "removed": 1,
+    "made": 0,
+    "kept": 1440,
+    "removed": 0,
     "errors": []
    }
   }
