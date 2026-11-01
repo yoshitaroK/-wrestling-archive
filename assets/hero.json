@@ -45,6 +45,15 @@
    "href": "/photos/shakaijin/2026/",
    "label": "全日本社会人選手権 2026年",
    "credit": "撮影:Japan Wrestling Channel"
+  },
+  {
+   "src": "/assets/photos/c545be58d968.jpg",
+   "srcset": "/assets/photos/c545be58d968-t.jpg 480w, /assets/photos/c545be58d968.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/photos/shakaijin-open/2026/",
+   "label": "全国社会人オープン選手権 2026年",
+   "credit": "撮影:Japan Wrestling Channel"
   }
  ],
  "en": [
@@ -91,6 +100,15 @@
    "h": 1201,
    "href": "/en/photos/shakaijin/2026/",
    "label": "All Japan Working Adults Championships 2026",
+   "credit": "Photo: Japan Wrestling Channel"
+  },
+  {
+   "src": "/assets/photos/c545be58d968.jpg",
+   "srcset": "/assets/photos/c545be58d968-t.jpg 480w, /assets/photos/c545be58d968.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/en/photos/shakaijin-open/2026/",
+   "label": "All Japan Working Adults Open Championships 2026",
    "credit": "Photo: Japan Wrestling Channel"
   }
  ]

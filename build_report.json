@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-01T18:59:50+09:00",
+ "built_at": "2026-11-01T23:32:47+09:00",
  "as_of": "2026-11-01",
  "video_count": 3360,
  "raw_count": 3360,
@@ -93,7 +93,7 @@
   "video_links": 1125,
   "event_results": 376,
   "event_results_linked": 185,
-  "uww_video_links": 2042,
+  "uww_video_links": 1998,
   "og_cards": {
    "events-ja": {
     "made": 0,
@@ -173,11 +173,11 @@
   "series": 10
  },
  "photos": {
-  "entries": 871,
-  "shown": 871,
+  "entries": 901,
+  "shown": 901,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 29,
+  "pages_with_photos": 30,
   "by_page": {
    "/events/east-autumn/2025/": 30,
    "/events/east-league/2025/": 30,
@@ -198,6 +198,7 @@
    "/events/regional-関東-qualifier/": 30,
    "/events/regional-関東-summer/2025/": 30,
    "/events/shakaijin-open/2025/": 30,
+   "/events/shakaijin-open/2026/": 30,
    "/events/shakaijin/2025/": 30,
    "/events/shakaijin/2026/": 30,
    "/events/tenno-cup/2025/": 30,
@@ -212,7 +213,7 @@
   "warnings": [],
   "errors": [],
   "unlisted_files": [],
-  "albums": 32,
+  "albums": 33,
   "from_manifest": 301
  },
  "news": {
@@ -297,7 +298,7 @@
   ]
  },
  "en": {
-  "pages": 1793,
+  "pages": 1794,
   "names": 639,
   "machine_translations": 3485,
   "missing_names": [
