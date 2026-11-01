@@ -440,6 +440,7 @@ HERO_PHOTOS = [
     "intercollegiate-2026-dsc00312.jpg",
     "meiji-cup-2026-06.jpg",
     "shakaijin-2026-29.jpg",
+    "shakaijin-open-2026-30.jpg",
 ]
 HERO_JSON = os.path.join("assets", "hero.json")
 
