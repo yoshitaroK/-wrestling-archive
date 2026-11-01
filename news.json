@@ -2,6 +2,23 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-worlds-freestyle-day9-finals",
+   "date": "2026-11-01",
+   "title": "世界選手権フリー 青柳善の輔が74kg級3位 団体はアメリカが優勝",
+   "category": "世界選手権",
+   "lead": "世界選手権の最終日、男子フリースタイルの残り4階級の決勝があり、74kg級の青柳善の輔は準決勝でカイパノフに敗れたが3位に入った。57kg級はリーが初優勝し、団体はアメリカがロシアを9点差で抑えた。",
+   "tags": [
+    "世界選手権2026",
+    "フリースタイル",
+    "青柳善の輔",
+    "スペンサー・リー"
+   ],
+   "sources": [
+    "https://uww.org/articles/lee-sails-57kg-world-gold-us-wins-team-title",
+    "https://uww.org/articles/bravo-young-assures-mexico-first-ever-world-medal"
+   ]
+  },
+  {
    "slug": "2026-worlds-freestyle-day8-finals",
    "date": "2026-10-31",
    "title": "世界選手権フリー 青柳善の輔が74kg級4強 デークは3階級目の世界王者に",
