@@ -1,32 +1,32 @@
 ## UWW の日本人選手の動画の一覧(チャンネル: United World Wrestling・UCi8PYovluicFUUD_YxJIcMA)
 
 - **完了**:読める動画は全部読みました
-- 調べた動画: 67279本(チャンネルの動画は 70125本)・まだ調べていない動画: 0本・読んだ再生リスト: 1041/1041個
-- **日本人選手が出ている動画: 3677本**(長時間の配信 3本は外した)
+- 調べた動画: 67396本(チャンネルの動画は 70242本)・まだ調べていない動画: 0本・読んだ再生リスト: 1041/1041個
+- **日本人選手が出ている動画: 3687本**(長時間の配信 3本は外した)
 - 一覧: `uww_videos.csv`(サイトの /uww/ のページの元)
 - YouTube API はアップロードの一覧を新しい順に 20,000本までしか返さない(いちばん古いもの 2021-04-02)。それより前で、どの再生リストにも入っていない動画は取れない
-- 今回の API の呼び出し: 5回
+- 今回の API の呼び出し: 7回
 
 ### 種類ごと
-- 試合: 3423本
-- ショート: 116本
-- その他: 78本
+- 試合: 3427本
+- ショート: 119本
+- その他: 81本
 - ハイライト・特集: 26本
 - 試合まとめ: 24本
 - インタビュー: 9本
 - 表彰式: 1本
 
 ### 年代ごと
-- シニア(または不明): 2215本
+- シニア(または不明): 2225本
 - U17: 582本
 - U20: 582本
 - U23: 290本
 - U15: 8本
 
 ### 大会ごと
-- 世界選手権: 1810本
+- 世界選手権: 1812本
 - アジア選手権: 860本
-- (分からない): 573本
+- (分からない): 581本
 - ランキングシリーズ等: 191本
 - オリンピック予選: 124本
 - ワールドカップ: 114本
@@ -34,8 +34,8 @@
 - ユース五輪: 1本
 
 ### 確かさごと
-- 高: 3589本
-- 低(要確認): 56本
+- 高: 3596本
+- 低(要確認): 59本
 - 中: 32本
 
 ### 年ごと
@@ -51,11 +51,14 @@
 - 2020: 124本
 - 2025: 96本
 - 2014: 56本
-- 2026: 43本
+- 2026: 53本
 - 2012: 1本
 - 2013: 1本
 
-### 見分けに自信がない動画(56本。最初の30本)
+### 見分けに自信がない動画(59本。最初の30本)
+- [Back on her THRONE! 👑 SUSAKI pins NEELAM to reclaim world gold! | 2026 World Championships](https://www.youtube.com/watch?v=Bhrri5-HqT8) … 説明にJPN/Japan・低(要確認)
+- [PETLIAKOVA blows the bracket WIDE OPEN! 🤯 A stunning pin over ISHII! | 2026 World Championships](https://www.youtube.com/watch?v=UM7QFDGtsxo) … 説明にJPN/Japan・低(要確認)
+- [NAGAMOTO shocks Olympic gold medalist and defending world champ MAROULIS! 🤯](https://www.youtube.com/watch?v=eL4ZDygQQdk) … 説明にJPN/Japan・低(要確認)
 - [This headbutt nearly cost Azat SARIYAR (TUR) the 67kg U23 world finals spot 😱🤯](https://www.youtube.com/watch?v=gYLCUB2cP7A) … 説明にJPN/Japan・低(要確認)
 - [Rahman AMOUZADKHALILI (IRI) strikes gold | 2025 World Championships Highlight | Freestyle | Day Four](https://www.youtube.com/watch?v=ehSai8JowWo) … 説明にJPN/Japan・低(要確認)
 - [A Decade of Dominance: Freestyle Wrestling's Top World Championship Highlights](https://www.youtube.com/watch?v=tQXgQDPu2nw) … 説明にJPN/Japan・低(要確認)
@@ -83,6 +86,3 @@
 - [Murad Mammadov (AZE) vs Eldaniz Azizli (AZE) - Final // Matteo Pellicone 2022](https://www.youtube.com/watch?v=t0EoHOshtXU) … 説明にJPN/Japan・低(要確認)
 - [Yones Aliakbar Emamichoghaei (IRI) vs Nurkozha Kaipanov (KAZ) - Final // Asian Championships 2022](https://www.youtube.com/watch?v=HegjTxszNTo) … 説明にJPN/Japan・低(要確認)
 - [Top Five Team Performances of '21](https://www.youtube.com/watch?v=LCzM1QjdPJQ) … 説明にJPN/Japan・低(要確認)
-- [Aisuluu TYNYBEKOVA 🇰🇬 Recaps Her Inspiring Journey to Kyrgyz Sports History](https://www.youtube.com/watch?v=w5ImKzdug6U) … 説明にJPN/Japan・低(要確認)
-- [#WrestleWarsaw GR Top Performer: Islomjon BAKHRAMOV 🇺🇿](https://www.youtube.com/watch?v=1B4nUVHOs_A) … 説明にJPN/Japan・低(要確認)
-- [Signature Move: Vorobieva’s Dump](https://www.youtube.com/watch?v=-A6l2ro18PU) … 説明にJPN/Japan・低(要確認)
