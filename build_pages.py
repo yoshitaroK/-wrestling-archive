@@ -1288,16 +1288,48 @@ __CONTACT_JS__
 PRIVACY_UPDATED = "2026-10-07"
 
 
-FAQ_UPDATED = "2026-10-09"
+FAQ_UPDATED = "2026-11-02"
 
 
-def faq_items(data, series_list):
+# 選手ページの大会成績の出典(出典URL のサイト → 日本語・英語の名前)。ここに無いサイトは「その他」にまとめる
+RESULT_SOURCE_NAMES = [
+    ("wrestling-spirits.jp", None, None),  # 名前は champions.HISTORY_SOURCE と同じ書き方にする(faq_result_sources で入れる)
+    ("www.japan-wrestling.jp", "日本レスリング協会のサイト(japan-wrestling.jp)で公開されている入賞者一覧(PDF)",
+     "lists of medalists (PDF) published on the Japan Wrestling Federation website (japan-wrestling.jp)"),
+    ("cdn.uww.org", "世界レスリング連合(UWW)の大会結果冊子(PDF)",
+     "final result books (PDF) of United World Wrestling (UWW)"),
+]
+
+
+def faq_result_sources(players_list):
+    """選手ページに出ている大会成績の件数と、出典のサイトごとの内訳 [(名前, 件数)]。数字はデータから数える"""
+    import champions
+    names = {h: (ja, en) for h, ja, en in RESULT_SOURCE_NAMES}
+    names["wrestling-spirits.jp"] = (champions.HISTORY_SOURCE, champions.HISTORY_SOURCE_EN)
+    count = Counter()
+    for p in players_list:
+        for r in p.get("results", []):
+            host = urllib.parse.urlparse((r.get("出典URL") or "").strip()).netloc
+            count[host if host in names else ""] += 1
+    total = sum(count.values())
+    parts = [(L(*names[h]), count[h]) for h, _, _ in RESULT_SOURCE_NAMES if count[h]]
+    if count[""]:
+        parts.append((L("その他", "other sources"), count[""]))
+    return total, parts
+
+
+def _en_list(xs):
+    """英語の並べ方(A, B and C)"""
+    return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
+
+
+def faq_items(data, series_list, players_list=None):
     """よくある質問。数字はデータから入れるので、毎日の更新で最新になる"""
     n_videos = len(data.get("videos", []))
     years = [e["year"] for e in data.get("events", []) if e.get("n")]
     y0 = min(years) if years else ""
     n_series = len(series_list)
-    return [
+    items = [
         (L("このサイトは何ですか?", "What is this site?"),
          L(f"Japan Wrestling Channel 公式の配信アーカイブです。YouTube で公開されている日本のレスリング大会の配信・動画{n_videos:,}本を、大会・開催年・日程ごとに整理しています。",
            f"The official archive of Japan Wrestling Channel. It organizes {n_videos:,} Japanese wrestling streams and videos published on YouTube by tournament, year and day."),
@@ -1318,6 +1350,21 @@ def faq_items(data, series_list):
          L("選手検索から、選手ごとの出場大会・成績・関連する動画を見られます。",
            "Yes. Player pages list each wrestler's tournaments, results and related videos."),
          ("/players/", L("選手検索", "Players"))),
+    ]
+    total, parts = faq_result_sources(players_list or [])
+    if total:
+        items.append((
+            L("大会成績の出典はどこですか?", "Where do the tournament results come from?"),
+            L(f"選手ページの大会成績{total:,}件は、公開されている資料から取っています。内訳は、"
+              + "、".join(f"{n}が{c:,}件" for n, c in parts)
+              + "です。成績の行ごとに「出典」のリンクがあり、元の資料を開けます。"
+              "未成年の選手(大人と確認できていない選手を含む)の選手ページは作っていません。誤りに気づいたら、お問い合わせからお知らせください。",
+              f"The {total:,} tournament results on player pages are taken from published documents: "
+              + _en_list([f"{c:,} from {n}" for n, c in parts])
+              + ". Each result has a Source link that opens the original document. "
+              "We do not make player pages for minors (including wrestlers not yet confirmed to be adults). If you find a mistake, please let us know through the contact form."),
+            ("/contact.html", L("お問い合わせ", "Contact"))))
+    items += [
         (L("写真は使ってもいいですか? 取り下げてほしい写真があります", "Can I use the photos? I want a photo removed"),
          L("写真は撮影者の許可を得て掲載しています。著作権は撮影者にあるため、利用したい場合は撮影者にご確認ください。写真の取り下げのご依頼は、お問い合わせの「写真の掲載・取り下げについて」から受け付けています。",
            "Photos are published with the photographers' permission, and the copyright belongs to them. Please ask the photographer before using a photo. To request a removal, use the contact form and choose Photos (removal request)."),
@@ -1335,6 +1382,7 @@ def faq_items(data, series_list):
            "Yes. Every page has a Japanese version at the same address without /en/. English pages show tournament and venue names in English; video titles stay in Japanese as originally published."),
          (L("/en/", "/"), L("English version", "Japanese version"))),
     ]
+    return items
 
 
 def about_page(data, series_list, ctx):
@@ -1379,7 +1427,7 @@ def about_page(data, series_list, ctx):
 
 def faq_page(data, series_list, ctx):
     """よくある質問(/faq/)。FAQPage の構造化データ付き(Google や AI が答えとして引用しやすい形)"""
-    items = faq_items(data, series_list)
+    items = faq_items(data, series_list, ctx.get("players"))
     crumbs = [(L("トップ", "Home"), "/"), (L("よくある質問", "FAQ"), None)]
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
         "@type": "FAQPage", "url": SITE + U("/faq/"), "dateModified": FAQ_UPDATED,
