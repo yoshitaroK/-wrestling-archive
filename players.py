@@ -27,8 +27,8 @@
     機械で作った綴りなので、英語版で「Name romanized automatically」と添える
   - 掲載の取りやめの連絡が来たら、その人の「公開」を「いいえ」にする
   - オリンピックの成績は大会名を「オリンピック(パリ)」のようにする(下の OLYMPICS)。名前の下に「パリ 2024 オリンピック代表」の印が出る。
-    世界選手権・U23世界選手権は大会名を「世界選手権」「U23世界選手権」にする(下の WORLDS)。
-    名前の下に「世界選手権 代表(2022・2023)」のように、種類ごとに1つ印が出る。
+    世界選手権・U23世界選手権・アジア大会・アジア選手権は大会名を「世界選手権」「U23世界選手権」「アジア大会」「アジア選手権」にする(下の WORLDS)。
+    名前の下に「世界選手権 代表(2022・2023)」のように、種類ごとに1つ印が出る(アジア選手権は印なしで、成績の表にだけ出す。#57)。
     これらの成績は世界レスリング連合(UWW)の結果から _work/players/uww_results.py で足す
 """
 import csv
@@ -63,10 +63,12 @@ OLYMPICS = {
     "オリンピック(パリ)": ("パリ 2024 オリンピック代表", "Paris 2024 Olympian", "Olympic Games Paris 2024"),
     "オリンピック(東京 2020)": ("東京 2020 オリンピック代表", "Tokyo 2020 Olympian", "Olympic Games Tokyo 2020"),
 }
-# 世界選手権の大会名 → 印(日本語・英語。後ろに出場した年が付く)と英語の大会名。印はこの順に出る
+# 世界選手権などの大会名 → 印(日本語・英語。後ろに出場した年が付く。空なら印を出さない)と英語の大会名。印はこの順に出る
 WORLDS = {
     "世界選手権": ("世界選手権 代表", "World Championships", "World Championships"),
     "U23世界選手権": ("U23世界選手権 代表", "U23 World Championships", "U23 World Championships"),
+    "アジア大会": ("アジア大会 代表", "Asian Games", "Asian Games"),
+    "アジア選手権": ("", "", "Asian Championships"),
 }
 
 
@@ -207,7 +209,7 @@ def result_rows(p, ctx, bp):
 
 
 def is_uww(r):
-    """オリンピック・世界選手権・U23世界選手権の成績(UWW の結果から取ったもの)か"""
+    """オリンピック・世界選手権・U23世界選手権・アジア大会・アジア選手権の成績(UWW の結果から取ったもの)か"""
     return r.get("大会名", "") in OLYMPICS or r.get("大会名", "") in WORLDS
 
 
@@ -217,7 +219,7 @@ def badges_html(p):
     h = "".join(f'<span class="oly">{L(ja, en)}</span>' for k, (ja, en, _) in OLYMPICS.items() if k in names)
     for k, (ja, en, _) in WORLDS.items():
         years = sorted({r.get("開催年", "") for r in p["results"] if r.get("大会名") == k})
-        if years:
+        if years and ja:
             h += f'<span class="oly wc">{L(ja + "(" + "・".join(years) + ")", en + " (" + ", ".join(years) + ")")}</span>'
     return h
 
@@ -364,9 +366,10 @@ def player_page(p, ctx, bp, card=""):
               f'<th>{L("スタイル", "Style")}</th><th>{L("階級", "Weight")}</th><th>{L("成績", "Result")}</th><th></th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
         h += '<p class="hint">' + L("成績は日本レスリング協会が公開している入賞者一覧から作っています。所属は大会のときのものです。",
                                     "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.")
-        if badges:
-            h += L("オリンピック・世界選手権・U23世界選手権の成績は世界レスリング連合(UWW)の公式結果によります。",
-                   " Olympic Games, World Championships and U23 World Championships results are from the official results of United World Wrestling (UWW).")
+        if any(is_uww(r) for r in p["results"]):
+            h += L("オリンピック・世界選手権・U23世界選手権・アジア大会・アジア選手権の成績は世界レスリング連合(UWW)の公式結果によります。",
+                   " Olympic Games, World Championships, U23 World Championships, Asian Games and Asian Championships results"
+                   " are from the official results of United World Wrestling (UWW).")
         h += "</p>"
     if p["videos"]:
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
