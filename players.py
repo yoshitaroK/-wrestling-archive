@@ -343,7 +343,7 @@ def player_page(p, ctx, bp, card=""):
     first = (p["videos"] or uww)[:1]
     og = card or (f"https://i.ytimg.com/vi/{first[0]['id']}/hqdefault.jpg" if first else "")
     title_ja = name.replace(" ", "").replace("\u3000", "") + (f"({club})" if club else "") + "レスリング 大会成績・試合動画"
-    h = bp.head(L(f"{title_ja}|{bp.SITE_NAME}", f"{name}" + (f" ({club})" if club and p["id"] in ctx.get("same_name_players", ()) else "") + f" – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
+    h = bp.head(L(f"{title_ja}|{bp.SITE_NAME}", f"{name}" + (f" ({club})" if club and club.isascii() and p["id"] in ctx.get("same_name_players", ()) else "") + f" – Results & Match Videos | {bp.site_name()}"), desc, path, og, jsonld, ctx["css"])
     h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
     if i18n.en():
         # 読みがな(大会のエントリーリスト)が分かっている人は、その読みからローマ字にしているので注記を出さない
