@@ -664,7 +664,7 @@ table.results td b{color:var(--pink)}
 .pager button[aria-current]{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
 .pager button:disabled{opacity:.35;cursor:default}
 .pager .pg-n{font-size:12px;color:var(--ink3);margin-left:4px}
-.uww-pl{scroll-margin-top:72px}
+.uww-pl{scroll-margin-top:84px}
 .uww-pl .v[hidden]{display:none}
 """
 
