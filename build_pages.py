@@ -480,6 +480,15 @@ def view_status(ev):
     return st
 
 
+def same_name_events(events, S):
+    """今の言語で、同じ年に同じ名前になる開催回の ID(タイトルの重複を避けるため)"""
+    groups = defaultdict(list)
+    for ev in events:
+        s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
+        groups[(event_name(ev, s), ev["year"])].append(ev["id"])
+    return {i for ids in groups.values() if len(ids) > 1 for i in ids}
+
+
 def event_page(ev, ctx):
     S, slugs, by_event, cand_by_event = ctx["S"], ctx["slugs"], ctx["by_event"], ctx["cand"]
     s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
@@ -550,21 +559,27 @@ def event_page(ev, ctx):
                               else f"いずれも{'、'.join(others)}が公開している動画です。")
     lead = "".join(lead_parts).strip()
 
+    # 同じ年に同じ名前の開催回がほかにもあるときは、タイトルと SportsEvent の名前に日付を入れて見分ける
+    # (例:U15 と U23 の JOC カップ、年に2回ある東日本学生女子リーグ。説明文にはもともと日付がある)
+    day = ""
+    if ev["id"] in ctx.get("same_name", ()) and ev.get("start") and not ev.get("derived"):
+        day = fmt_date(ev["start"])[5:] if not i18n.en() else fmt_date(ev["start"]).rsplit(",", 1)[0]
+    yr = f"{ev['year']}" + (L(f"年({day})", f" ({day})") if day else L("年", ""))
     if i18n.en():
-        title = f"{name} {ev['year']} – {i18n.plural(len(vids), 'video')} | {site_name()}"
+        title = f"{name} {yr} – {i18n.plural(len(vids), 'video')} | {site_name()}"
         desc = f"{name} ({ev['year']}): {i18n.plural(len(vids), 'stream/video', 'streams/videos')}. {counts}." + (
             f" Held {rng}" if ev.get("start") and not ev.get("derived") else "") + (
             f" at {venue}." if venue and not ev.get("derived") else "")
         if not vids:
-            title = f"{name} {ev['year']} – Photos | {site_name()}"
+            title = f"{name} {yr} – Photos | {site_name()}"
             desc = f"{name} ({ev['year']}): photos." + (f" Held {rng}" if ev.get("start") else "") + (f" at {venue}." if venue else "")
     else:
-        title = f"{name} {ev['year']}年 配信動画一覧({len(vids)}本)|{SITE_NAME}"
+        title = f"{name} {yr} 配信動画一覧({len(vids)}本)|{SITE_NAME}"
         desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + (
             f"{rng}開催" if ev.get("start") and not ev.get("derived") else "") + (
             f"、会場は{ev['venue']}。" if ev.get("venue") and not ev.get("derived") else "。")
         if not vids:
-            title = f"{name} {ev['year']}年 写真|{SITE_NAME}"
+            title = f"{name} {yr} 写真|{SITE_NAME}"
             desc = f"{name}({ev['year']}年)の写真。" + (f"{rng}開催" if ev.get("start") else "") + (f"、会場は{ev['venue']}。" if ev.get("venue") else "。")
     dated = re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (series_name(s), spath),
@@ -572,7 +587,7 @@ def event_page(ev, ctx):
 
     ld = [breadcrumb_ld(crumbs)]
     if not ev.get("derived") and ev.get("start"):
-        se = {"@type": "SportsEvent", "name": f"{name} {ev['year']}", "sport": "Wrestling", "url": SITE + U(path),
+        se = {"@type": "SportsEvent", "name": f"{name} {ev['year']}" + (L(f"({day})", f" ({day})") if day else ""), "sport": "Wrestling", "url": SITE + U(path),
               "startDate": ev["start"], "endDate": ev.get("end") or ev["start"],
               "eventStatus": "https://schema.org/" + SCHEMA_STATUS.get(status, "EventScheduled")}
         if venue:
@@ -1970,6 +1985,7 @@ def build(root=HERE, inline_css=False, only=None):
         # 動画がまだ無い開催回の SNS 用画像(og_cards.py)
         import og_cards
         ctx["event_cards"] = og_cards.Cards(root, 0, og_cards.EVENT_DIR, keep_others=only is not None)
+        ctx["same_name"] = same_name_events([ev for ev in data["events"] if ev["id"] in slugs], S)
         for ev in data["events"]:
             if ev["id"] in slugs and (only is None or ev["id"] in only):
                 path, doc = event_page(ev, ctx)
