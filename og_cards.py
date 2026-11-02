@@ -53,6 +53,8 @@ SHORT = {
     "オリンピック(東京 2020)": ("オリンピック(東京)", "Olympics (Tokyo)"),
     "世界選手権": ("世界選手権", "World Championships"),
     "U23世界選手権": ("U23世界選手権", "U23 World Championships"),
+    "アジア大会": ("アジア大会", "Asian Games"),
+    "アジア選手権": ("アジア選手権", "Asian Championships"),
 }
 STYLE_SHORT = {"フリースタイル": ("フリー", "FS"), "グレコローマン": ("グレコ", "GR"), "女子": ("女子", "WW")}
 JP = re.compile(r"[぀-ヿ一-鿿々〆]")
@@ -79,14 +81,16 @@ def style_short(s):
 
 
 def tier(r, ctx, players):
-    """大会の格。オリンピック → 世界選手権 → U23世界選手権 → 天皇杯・明治杯 → そのほか"""
+    """大会の格。オリンピック → 世界選手権 → U23世界選手権・アジア大会 → アジア選手権・天皇杯・明治杯 → そのほか"""
     name = r.get("大会名", "")
     if name in players.OLYMPICS:
         return 0
     if name == "世界選手権":
         return 1
-    if name == "U23世界選手権":
+    if name in ("U23世界選手権", "アジア大会"):
         return 2
+    if name == "アジア選手権":
+        return 3
     ev = ctx["events_by_id"].get(r.get("開催回ID", ""))
     sname = (ctx["S"].get(ev["series"], {}).get("name", "") if ev else "") or name
     return 3 if ("天皇杯" in sname or "明治杯" in sname) else 4
@@ -126,7 +130,7 @@ def card_spec(p, ctx, bp, players, this_year):
     badges = [["oly", L(ja, en)] for k, (ja, en, _) in players.OLYMPICS.items() if k in names]
     for k, (ja, en, _) in players.WORLDS.items():
         ys = sorted({r.get("開催年", "") for r in p["results"] if r.get("大会名") == k})
-        if ys:
+        if ys and ja:
             badges.append(["wc", L(ja + "(" + "・".join(ys) + ")", en + " (" + ", ".join(ys) + ")")])
     club = i18n.N(p["club"]) if p["club"] else ""
     if i18n.en() and JP.search(club or ""):

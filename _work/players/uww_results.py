@@ -1,5 +1,5 @@
 """
-オリンピック・世界選手権・U23世界選手権の成績を、世界レスリング連合(UWW)の結果の冊子(PDF)から取り、
+オリンピック・世界選手権・U23世界選手権・アジア大会・アジア選手権の成績を、世界レスリング連合(UWW)の結果の冊子(PDF)から取り、
 リポジトリの一番上の player_results.csv に足す。
 
     python3 uww_results.py
@@ -14,6 +14,7 @@
   何度動かしても同じ結果になる
 - make_players_csv.py で作り直しても、player_results.csv の UWW の行は残る
 - 新しい大会を足すときは、下の GAMES に1行足す(大会名は players.py の OLYMPICS・WORLDS にあるもの)
+- アジア大会・アジア選手権はシニアだけ(U20・U17 などは高校生が多いので入れない。#57)
 """
 import csv
 import os
@@ -42,6 +43,16 @@ GAMES = [
     ("U23世界選手権", "2024", "", UWW + "2026-06/results_10_tirana_u23_20260608.pdf"),
     ("U23世界選手権", "2025", "", UWW + "2025-10/final-book-1f0a015d-285b-6194-be9d-7d4675d42071.pdf"),
     ("U23世界選手権", "2026", "", UWW + "2026-10/final-book-u23-world-championships.pdf"),  # ラスベガス
+    # アジア大会(シニア。#57)。サイトに開催回ページは無い
+    ("アジア大会", "2023", "", UWW + "2026-05/final-book-19th_asian_games_20260528.pdf"),  # 第19回・杭州(2022年から延期)
+    ("アジア大会", "2026", "", UWW + "2026-10/results_09_nagoya_0.pdf"),  # 第20回・愛知・名古屋
+    # アジア選手権(シニア。#57)。サイトの x-asian-championships の開催回は動画の公開日から推定したものなのでつながない
+    ("アジア選手権", "2021", "", UWW + "2021-12/final-book-40c59ecb-9799-11eb-9d73-020f14733af0.pdf"),  # アルマトイ
+    ("アジア選手権", "2022", "", UWW + "2022-11/final-book-612b7a62-bd25-11ec-803a-06b1e9be04dc.pdf"),  # ウランバートル
+    ("アジア選手権", "2023", "", UWW + "2025-01/2023-seniors-asian_final-book_20250130.pdf"),  # アスタナ
+    ("アジア選手権", "2024", "", UWW + "2026-05/final-book-2024-seniors-asian-20260528.pdf"),  # ビシュケク
+    ("アジア選手権", "2025", "", UWW + "2026-10/final-book-senior-asian-championships-amman-2025_20261015.pdf"),  # アンマン
+    ("アジア選手権", "2026", "", UWW + "2026-04/senior_asian_championships_2026.pdf"),  # ビシュケク
 ]
 STYLE = {"Freestyle": "フリースタイル", "Greco-Roman": "グレコローマン", "Women's wrestling": "女子"}
 # 冊子によって、階級の見出しの後ろに日付「(8 Aug - 9 Aug 2024)」があるものと無いものがある
