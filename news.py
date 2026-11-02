@@ -264,8 +264,11 @@ def build(root, ctx, bp, report):
             jsonld["@graph"][1]["isBasedOn"] = srcs
         img = a.get("image")
         og = f"{bp.SITE}/{IMAGE_DIR}/{img['file']}" if img else ""
-        if og:
-            jsonld["@graph"][1]["image"] = og
+        # 代表画像:記事の写真。無い記事はサイトの共有画像(Google の記事の表示に image が要るため)。
+        # 動画のサムネイルは使わない(高校生以下の選手が大きく写ることがあるため)
+        jsonld["@graph"][1]["image"] = og or bp.OG_DEFAULT.split("?")[0]
+        # 記事に更新日の記録は無いので、公開日と同じ
+        jsonld["@graph"][1]["dateModified"] = a["date"]
         h = bp.head(f"{a['title']}|{bp.SITE_NAME}", desc, path, og, jsonld, ctx["css"], alternates=False)
         tags = "".join(f'<span>#{e(t)}</span>' for t in a.get("tags") or [])
         h += ('<div class="nw"><div class="wrap nw-grid"><main id="content" class="nw-main">' + bp.breadcrumb_html(crumbs)
