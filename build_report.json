@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-02T10:56:52+09:00",
+ "built_at": "2026-11-02T10:59:05+09:00",
  "as_of": "2026-11-02",
  "video_count": 3360,
  "raw_count": 3360,
@@ -102,8 +102,8 @@
     "errors": []
    },
    "ja": {
-    "made": 0,
-    "kept": 1440,
+    "made": 91,
+    "kept": 1349,
     "removed": 0,
     "errors": []
    },
@@ -114,8 +114,8 @@
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1440,
+    "made": 91,
+    "kept": 1349,
     "removed": 0,
     "errors": []
    }
@@ -125,7 +125,7 @@
   "rows": 1159,
   "hidden_minor": 0,
   "no_link": 23,
-  "skipped_unknown_event": 34,
+  "skipped_unknown_event": 85,
   "history_rows": 5087,
   "history_linked": 1120,
   "history_hidden": 7,
@@ -315,13 +315,6 @@
     ]
    },
    {
-    "value": "U23,U15 JOCジュニアオリンピックカップ 2025年 写真|レスリング配信アーカイブ",
-    "pages": [
-     "/events/u15-selection/2025/",
-     "/events/u23-selection/2025/"
-    ]
-   },
-   {
     "value": "日本レスリングの物語|書籍|レスリング配信アーカイブ",
     "pages": [
      "/books/9784000242929/",
@@ -345,29 +338,7 @@
     ]
    }
   ],
-  "title_en": [
-   {
-    "value": "East Japan University Women's League 2024 – 1 video | Japan Wrestling Archive",
-    "pages": [
-     "/en/events/east-women-league/2024-01-14/",
-     "/en/events/east-women-league/2024-11-24/"
-    ]
-   },
-   {
-    "value": "Kosuke KOBAYASHI – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-20b6ac/",
-     "/en/players/p-5e454b/"
-    ]
-   },
-   {
-    "value": "Shusei TAKAHASHI – Results & Match Videos | Japan Wrestling Archive",
-    "pages": [
-     "/en/players/p-a76f6d/",
-     "/en/players/p-b6c440/"
-    ]
-   }
-  ],
+  "title_en": [],
   "description_en": []
  }
 }
