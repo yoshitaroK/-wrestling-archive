@@ -295,7 +295,9 @@ var NO_HERO = {'x-fujinami-cup':1};
 // 特集の一番前に出さない開催回(国スポは終わったので、次の大会に席を譲る)。大会ページや下の列には今までどおり出る
 var HIDE_FEAT = {'wre-2026-kokutai-1012':1};
 // 特集の一番前に並べる順番(開催中→まもなく開催→結果の順に分けたうえで、ここに書いた開催回が先、あとは開催日の新しい順)
-var FEAT_ORDER = ['wre-2026-university-greco-1023', 'wre-2026-women-open-1024'];
+var FEAT_ORDER = ['wre-2026-university-championship-1114', 'wre-2026-university-greco-1023', 'wre-2026-women-open-1024'];
+// 3日前より早く「まもなく開催」に出す開催回(書いた日から出す)
+var FEAT_FROM = {'wre-2026-university-championship-1114':'2026-11-03'};
 // 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
 var FEATURE_ART = {'wre-2026-kokutai-1012': {src:'/assets/feature/kokutai-2026.jpg', pos:'22% 50%'}};
 var FEAT = [], featI = 0;
@@ -319,7 +321,7 @@ function buildFeature(){
   }
   // 始まる3日前から終わって7日までの大会で、結果・公式サイトのリンク(overrides.json の event_links)がある大会を一番前に出す
   var today = jstDate(new Date().toISOString()), weekAgo = jstDate(new Date(Date.now()-7*864e5).toISOString()), soonTo = jstDate(new Date(Date.now()+3*864e5).toISOString());
-  var live = DATA.events.filter(function(e){ return e.links && e.links.length && PAGES[e.id] && e.start && e.start<=soonTo && (e.end||e.start)>=weekAgo && e.status!=='cancelled' && !NO_HERO[e.series] && !HIDE_FEAT[e.id]; })
+  var live = DATA.events.filter(function(e){ return e.links && e.links.length && PAGES[e.id] && e.start && (e.start<=soonTo || (FEAT_FROM[e.id] && FEAT_FROM[e.id]<=today)) && (e.end||e.start)>=weekAgo && e.status!=='cancelled' && !NO_HERO[e.series] && !HIDE_FEAT[e.id]; })
     .sort(function(a,b){ var ia = FEAT_ORDER.indexOf(a.id), ib = FEAT_ORDER.indexOf(b.id);
       if(ia<0) ia = 99; if(ib<0) ib = 99; if(ia!==ib) return ia-ib; return a.start<b.start?1:-1; });
   var out = live.map(function(e){
