@@ -10,8 +10,9 @@ DTSTART;VALUE=DATE:20261114
 DTEND;VALUE=DATE:20261116
 SUMMARY:All Japan University Championships
 LOCATION:Osaka
-URL:https://japanwrestlingchannel.com/en/events/university-championship/
+URL:https://japanwrestlingchannel.com/en/events/university-championship/202
+ 6/
 DESCRIPTION:Tournament info and streams: https://japanwrestlingchannel.com/
- en/events/university-championship/
+ en/events/university-championship/2026/
 END:VEVENT
 END:VCALENDAR
