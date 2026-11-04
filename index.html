@@ -437,7 +437,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
   </div>
 </header>
 <section class="jhero" id="jhero" aria-labelledby="jhero-h">
-  <img class="jhero-img" id="jhero-img" alt="" decoding="async" fetchpriority="high">
+  <!--pre:img--><img class="jhero-img" id="jhero-img" alt="" decoding="async" fetchpriority="high"><!--/pre:img-->
   <div class="jhero-scrim"></div>
   <div class="wrap jhero-in">
     <h1 id="jhero-h">レスリング配信アーカイブ</h1>
@@ -448,9 +448,9 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
       <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索">
     </div>
     <p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
-    <div class="feat" id="feat" hidden data-wait></div>
+    <!--pre:feat--><div class="feat" id="feat" hidden data-wait></div><!--/pre:feat-->
   </div>
-  <a class="jcredit" id="jhero-credit" hidden></a>
+  <!--pre:credit--><a class="jcredit" id="jhero-credit" hidden></a><!--/pre:credit-->
 </section>
 <div class="wrap">
     <div class="searchbox" role="group" aria-label="絞り込み">
@@ -467,7 +467,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
     </div>
 </div>
 
-<main class="wrap" id="main"><div class="loading">データを読み込んでいます</div></main>
+<main class="wrap" id="main"><!--pre:main--><div class="loading">データを読み込んでいます</div><!--/pre:main--></main>
 
 <footer class="site-foot"><div class="wrap">
   <p><a href="/news/">ニュース</a>・<a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/champions/">歴代優勝者</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
@@ -479,6 +479,6 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
 </div></footer>
 
 <script defer src="/assets/player.js?v=1"></script>
-<script src="/assets/top.js?v=10"></script>
+<script src="/assets/top.js?v=12"></script>
 </body>
 </html>

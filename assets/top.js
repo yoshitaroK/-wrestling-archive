@@ -362,6 +362,9 @@ function showFeature(i){
       FEAT.map(function(x,k){ return '<button type="button" data-featto="'+k+'" aria-label="'+L((k+1)+'件目('+FEAT.length+'件中)','Item '+(k+1)+' of '+FEAT.length)+'"'+(k===featI?' aria-current="true"':'')+'></button>'; }).join('')+
       '</div><button type="button" class="fb" data-feat="1" aria-label="'+L('次の特集','Next')+'">›</button></div>' : '');
   box.hidden = false;
+  // ビルドのときに HTML に書き込まれた特集(top_prerender.py。#288)と同じ写真なら、付け直さない(消えて出直すちらつきを出さない)
+  var want = f.art ? f.art.src : f.photo ? f.photo.src : f.vid ? 'https://i.ytimg.com/vi/'+encodeURIComponent(f.vid)+'/maxresdefault.jpg' : '';
+  if(box.hasAttribute('data-pre')){ box.removeAttribute('data-pre'); if(want && img.getAttribute('src')===want){ img.onerror = function(){ if(this.src.indexOf('ytimg')>=0) thumbFail(this); }; return; } }
   img.classList.remove('on'); img.onload = function(){ img.classList.add('on'); }; img.onerror = function(){ if(this.src.indexOf('ytimg')>=0) thumbFail(this); };
   img.style.objectPosition = f.art && f.art.pos || '';
   if(f.art){ if(f.art.srcset){ img.sizes='100vw'; img.srcset=f.art.srcset; } else img.removeAttribute('srcset'); img.src=f.art.src; }

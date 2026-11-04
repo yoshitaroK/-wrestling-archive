@@ -67,7 +67,8 @@ jobs:
           build_and_commit() {
             python update_site.py
             # 写真の縮小版は assets/photos/ に、写真ページは photos/ の下(index.html)に作られる
-            git add data.json build_report.json page_slugs.json sitemap.xml robots.txt 404.html contact.html llms.txt llms-full.txt assets events technique players photos champions news books books_cache.json privacy faq about uww en translations_en.json
+            # トップの index.html は、特集と大会の列を書き込む場所(<!--pre:…-->)だけが毎日書き換わる(top_prerender.py。#288)
+            git add data.json build_report.json page_slugs.json sitemap.xml robots.txt index.html 404.html contact.html llms.txt llms-full.txt assets events technique players photos champions news books books_cache.json privacy faq about uww en translations_en.json
             git diff --cached --quiet || git commit -m "Update data and pages ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           }
 

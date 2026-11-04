@@ -2098,6 +2098,9 @@ def build(root=HERE, inline_css=False, only=None):
     i18n.set_lang("ja")
     if only is None:
         photo_gallery.write_hero(root, hero)
+        # トップページ(index.html・en/index.html)に、特集の1件目と大会の列を HTML として書き込む(#288)
+        import top_prerender
+        top_prerender.write(root, data, slugs, hero, report.setdefault("top_prerender", {"warnings": []})["warnings"])
         with open(os.path.join(root, "assets", "home.json"), "w", encoding="utf-8") as f:
             json.dump({"about": "自動生成。トップページの「技術動画」「写真」の列(build_pages.py)。手で編集しない", **home}, f, ensure_ascii=False, indent=1)
         # 「カレンダーに追加」の .ics ファイル。終わった大会の分が残らないよう、毎回作り直す

@@ -72,6 +72,8 @@ GitHub Actions が毎日(日本時間 6:00)動画を取得し、大会データ�
 - PR に入れるのは、元になるファイル(`overrides.json`・`players.csv`・`en_names.csv`・`*.py` など)だけにします。
   作られるファイル(`data.json`・`build_report.json`・`events/`・`players/`・`en/`・`assets/` の中の作られたもの・`sitemap.xml` など)は入れません。
   - `data.json` などは毎朝 6:00 の更新で丸ごと作り直されるので、PR に入れると翌朝には「This branch has conflicts」になってマージできなくなります。
+  - トップの `index.html` は手で書く元のファイルですが、`<!--pre:…-->` と `<!--/pre:…-->` の間(特集と大会の列)だけは毎日の更新で書き換わります(#288)。
+    手元でビルドしたあとは `python3 top_prerender.py --strip` でその間を空の形に戻してから PR に入れます。
 - マージすると、`.github/workflows/update.yml` が自動で動いて(数分)、ページを作り直して保存します。
   そのあと Cloudflare の「Purge Everything」を押します。
   - 動いているかは、GitHub の「Actions」タブで「Update wrestling archive data」が黄色(実行中)→ 緑(完了)になるかで分かります。
