@@ -29,9 +29,13 @@ DEFAULT = {
 _RE = re.compile(r"<!--pre:(\w+)-->(.*?)<!--/pre:\1-->", re.S)
 
 
-def strip(s):
+DEFAULT_EN = dict(DEFAULT, main='<div class="loading">Loading data…</div>')  # en_index.py の PAIRS と同じ英語
+
+
+def strip(s, lang="ja"):
     """書き込まれた中身を、空の形(DEFAULT)に戻す"""
-    return _RE.sub(lambda m: f"<!--pre:{m.group(1)}-->{DEFAULT.get(m.group(1), '')}<!--/pre:{m.group(1)}-->", s)
+    base = DEFAULT_EN if lang == "en" else DEFAULT
+    return _RE.sub(lambda m: f"<!--pre:{m.group(1)}-->{base.get(m.group(1), '')}<!--/pre:{m.group(1)}-->", s)
 
 
 def _fill(s, parts):
@@ -365,8 +369,7 @@ def write(root, data, slugs, hero, report=None):
             i18n.set_lang(lang)
             with open(fp, encoding="utf-8") as f:
                 s = f.read()
-            if lang == "ja":
-                s = strip(s)  # 英語版は en_index.py が空の形から作り直したばかり
+            s = strip(s, lang)
             if s.count("<!--pre:") != len(DEFAULT):
                 msg = f"トップページの書き込みをしませんでした({path} に書き込む場所の目印が {len(DEFAULT)} か所ありません)"
                 print("[トップ] " + msg)
