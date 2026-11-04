@@ -307,6 +307,33 @@ def fmt_pubdate(s):
     return f"{y}年" + (f"{int(mo)}月" if mo else "") + (f"{int(d)}日" if d and d != "00" else "")
 
 
+def pub_iso(s):
+    """発売日を構造化データ用の形(2019-03 など)に。データが無い・形がおかしいときは空文字(推測で埋めない)"""
+    m = re.match(r"^(\d{4})-?(\d{2})?-?(\d{2})?", s or "")
+    if not m:
+        return ""
+    y, mo, d = m.groups()
+    return y + (f"-{mo}" if mo and mo != "00" else "") + (f"-{d}" if mo and mo != "00" and d and d != "00" else "")
+
+
+def book_meta(b):
+    """本のページのタイトルと説明文(Issue #267)。同じ本の版違いで重ならないよう、
+    データ(books.json・books_cache.json)にある発売年と出版社だけを足す。無い本は書かない"""
+    year = (re.match(r"^(\d{4})", b.get("pubdate") or "") or [None, ""])[1]
+    tag = "・".join(x for x in (f"{year}年" if year else "", b.get("publisher") or "") if x)
+    title = b["title"] + (f"({tag})" if tag else "")
+    facts = [x for x in (b.get("authors") or "", b.get("publisher") or "",
+                         f"{fmt_pubdate(b['pubdate'])}発売" if b.get("pubdate") else "") if x]
+    desc = b["title"] + (f"({'、'.join(facts)})" if facts else "") + "。レスリングの本。"
+    shows = "表紙・内容紹介" if b.get("description") else "表紙"
+    # 下の build() で出すリンクと同じ。図書館・書店へのリンクは ISBN のある本だけ(Kindle 本などはブクログと Amazon だけ)
+    names = ["版元ドットコム", "図書館(カーリル)"] if is_isbn(b["isbn"]) else []
+    if not is_isbn(b["isbn"]) or isbn10(b["isbn"]):
+        names += ["ブクログ", "Amazon"]
+    desc += f"{shows}と、{'・'.join(names)} へのリンクを載せています。"
+    return title, desc
+
+
 def cover_html(b, e, cls="bk-cover"):
     """表紙。画像が無い・読めないときは題名を書いた札にする"""
     title = f'<span class="bk-ph">{e(b["title"])}</span>'
@@ -342,13 +369,14 @@ def build(root, ctx, bp, report):
     for b in books:
         path = f"/books/{b['isbn']}/"
         crumbs = [("トップ", "/"), ("書籍", "/books/"), (b["title"], None)]
-        desc = f"{b['title']}" + (f"({b['authors']})" if b["authors"] else "") + "。レスリングの本の紹介。"
+        title, desc = book_meta(b)
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), dict({
             "@type": "Book", "name": b["title"], "url": bp.SITE + path},
             **({"isbn": b["isbn"]} if is_isbn(b["isbn"]) else {}),
             **({"author": b["authors"]} if b["authors"] else {}), **({"publisher": b["publisher"]} if b["publisher"] else {}),
+            **({"datePublished": pub_iso(b["pubdate"])} if pub_iso(b["pubdate"]) else {}),
             **({"image": b["cover"]} if b.get("cover") else {}))]}
-        h = bp.head(f"{b['title']}|書籍|{bp.SITE_NAME}", desc, path, b.get("cover") or "", jsonld, ctx["css"], alternates=False)
+        h = bp.head(f"{title}|書籍|{bp.SITE_NAME}", desc, path, b.get("cover") or "", jsonld, ctx["css"], alternates=False)
         facts = [("著者", b["authors"]), ("出版社", b["publisher"]), ("発売日", fmt_pubdate(b["pubdate"])), ("ISBN" if is_isbn(b["isbn"]) else "Amazon の番号", b["isbn"]), ("棚", b["category"])]
         h += '<main id="content" class="wrap page bk-page">' + bp.breadcrumb_html(crumbs)
         h += f'<div class="bk-detail">{cover_html(b, e, "bk-cover bk-big")}<div class="bk-info"><h1>{e(b["title"])}</h1>'
