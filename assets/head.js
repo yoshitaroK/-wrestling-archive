@@ -23,6 +23,19 @@ if(me&&me.hasAttribute('data-intro'))(function(){
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   d.classList.add('intro');
 })();
+if(me&&me.hasAttribute('data-overlay'))(function(){
+  d.classList.add('overlay');
+  var t=null,mo=null;
+  function size(){d.style.setProperty('--hdr-h',t.offsetHeight+'px');}
+  function grab(){
+    if(t)return true;
+    t=document.querySelector('.top');if(!t)return false;
+    if(window.ResizeObserver)new ResizeObserver(size).observe(t);else size();
+    return true;
+  }
+  if(window.MutationObserver){mo=new MutationObserver(function(){if(grab())mo.disconnect();});mo.observe(d,{childList:true,subtree:true});}
+  document.addEventListener('DOMContentLoaded',function(){if(mo)mo.disconnect();grab();});
+})();
 window.thumbFail=function(i){
   var o=['mqdefault','hqdefault','default'],r=/\/vi\/([^/]+)\/([a-z]+)\.jpg/.exec(i.src);
   if(r){var n=o[o.indexOf(r[2])+1];if(n){i.src='https://i.ytimg.com/vi/'+r[1]+'/'+n+'.jpg';return;}}
