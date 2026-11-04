@@ -1620,7 +1620,7 @@ def llms_txt(data, series_list, ctx):
         f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
         "## 詳しい一覧",
-        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧",
+        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧",
         "",
         "## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)",
     ]
@@ -1649,6 +1649,9 @@ def llms_full_txt(data, series_list, ctx):
                 parts.append("写真あり")
             lines.append(f"- [{v.get('official_name') or v['name']}]({SITE}/events/{ctx['slugs'][v['id']]}/): " + "・".join(parts))
         lines.append("")
+    # 歴代優勝者(champions.py。未成年の名前はページと同じく「—」)
+    import champions
+    lines += champions.llms_lines(ctx, SITE)
     # ニュース記事(news.json)。要旨は記事の説明文(lead)と同じ文
     arts = ctx.get("news_articles") or []
     if arts:

@@ -218,17 +218,22 @@ def edition_link(sid, year, ctx):
     return ""
 
 
+def shown_winner(w, ctx):
+    """優勝者1人の (名前, 所属)。名前を載せない人(未成年など)は ("", "")。表(cell)と llms-full.txt の両方で使う"""
+    name = "" if w["hidden"] else shown_name(w["name"], w["id"], ctx)
+    return (name, shown_club(w["club"])) if name else ("", "")
+
+
 def cell(winners, e, ctx):
     if not winners:
         return '<td class="none">—</td>'
     parts = []
     for w in winners:
-        name = "" if w["hidden"] else shown_name(w["name"], w["id"], ctx)
+        name, club = shown_winner(w, ctx)
         if not name:
             parts.append('<span class="cw">—</span>')
             continue
         nm = f'<a href="{U("/players/" + w["id"] + "/")}">{e(name)}</a>' if w["id"] else e(name)
-        club = shown_club(w["club"])
         club = f'<small>{e(club)}</small>' if club else ""
         parts.append(f'<span class="cw">{nm}{club}</span>')
     return "<td>" + "".join(parts) + "</td>"
@@ -456,6 +461,37 @@ def link_html(s, ctx):
         return ""
     return (f'<p class="champ-link"><a href="{U("/champions/" + s["id"] + "/")}">'
             f'{L(s["name"] + "の歴代優勝者を見る", "Past champions of the " + N(s["name"]))}</a></p>')
+
+
+def llms_lines(ctx, site):
+    """llms-full.txt の「歴代優勝者」の節。大会ごとに、ページの URL・記録の年・出典と、スタイルごとにいちばん新しい年の優勝者。
+    名前はページと同じ決まり(hidden の人は「—」)。選手ページへのリンクは付けない"""
+    table = ctx.get("champions", {})
+    if not table:
+        return []
+    S = ctx["S"]
+    sids = sorted(table, key=lambda x: (ORDER.index(x) if x in ORDER else len(ORDER), S[x]["name"]))
+    lines = ["## 歴代優勝者(大会ごと。スタイルごとに、いちばん新しい年の階級別の優勝者)",
+             f"日本レスリング協会が公開している入賞者一覧と、{HISTORY_SOURCE}から作っています。所属は大会のときのものです。"
+             + HERE_NOTE_MINOR + "ほかの年は各大会の歴代優勝者のページにあります。", ""]
+    for sid in sids:
+        t = table[sid]
+        name = N(S[sid]["name"])
+        lines.append(f"### {name}")
+        lines.append(f"- 歴代優勝者のページ: {site}/champions/{sid}/")
+        lines.append(f"- 載せている記録: {years_text(all_years(t))}")
+        for st in STYLES:
+            if st not in t or not t[st]:
+                continue
+            y = max(t[st])
+            cells = []
+            for w in sorted(t[st][y], key=wkey):
+                people = "・".join((nm + (f"({club})" if club else "")) if nm else "—"
+                                   for nm, club in (shown_winner(x, ctx) for x in t[st][y][w]))
+                cells.append(f"{w} {people}")
+            lines.append(f"- {y}年 {N(st)}: " + "、".join(cells))
+        lines.append("")
+    return lines
 
 
 def build(ctx, bp):
