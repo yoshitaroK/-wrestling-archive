@@ -489,6 +489,15 @@ def same_name_events(events, S):
     return {i for ids in groups.values() if len(ids) > 1 for i in ids}
 
 
+def jwf_link(ev, status):
+    """日本レスリング協会の大会ページ(結果が載る)の (URL, 終わった回か)。開催回ページと llms-full.txt の両方で使う(#280)"""
+    jwf = next((x["url"] for x in ev.get("sources") or [] if JWF_COMPETITION.match(x.get("url") or "")), "")
+    if not jwf:
+        return "", False
+    import calendar_page
+    return jwf, (ev.get("end") or ev.get("start") or "9999") < calendar_page.today_jst() and status != "cancelled"
+
+
 def event_page(ev, ctx):
     S, slugs, by_event, cand_by_event = ctx["S"], ctx["slugs"], ctx["by_event"], ctx["cand"]
     s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
@@ -649,10 +658,8 @@ def event_page(ev, ctx):
     # 大会の公式サイト・結果など(overrides.json の event_links)と、日本レスリング協会の大会ページ(結果が載る)
     links = [(x["url"], (LINK_LABELS_EN[x["label"]] if x["label"] in LINK_LABELS_EN else N(x["label"])) if i18n.en() else x["label"])
              for x in ev.get("links") or []]
-    jwf = next((x["url"] for x in ev.get("sources") or [] if JWF_COMPETITION.match(x.get("url") or "")), "")
+    jwf, done = jwf_link(ev, status)
     if jwf and jwf not in {u for u, _ in links}:
-        import calendar_page
-        done = (ev.get("end") or ev.get("start") or "9999") < calendar_page.today_jst() and status != "cancelled"
         links.append((jwf, L("結果を見る(日本レスリング協会)", "Results (Japan Wrestling Federation)") if done
                       else L("大会情報(日本レスリング協会)", "Tournament info (Japan Wrestling Federation)")))
     if links:
@@ -1648,6 +1655,12 @@ def llms_full_txt(data, series_list, ctx):
             if f"/events/{ctx['slugs'][v['id']]}/" in ctx.get("photo_paths", ()):
                 parts.append("写真あり")
             lines.append(f"- [{v.get('official_name') or v['name']}]({SITE}/events/{ctx['slugs'][v['id']]}/): " + "・".join(parts))
+            # 結果の出典(終わった回だけ。ページの「結果を見る」と同じ判定)と、その回のニュース(見出しと URL だけ)(#280)
+            jwf, done = jwf_link(v, view_status(v))
+            if jwf and done:
+                lines.append(f"  - 結果(日本レスリング協会): {jwf}")
+            for a in ctx.get("news_by_event", {}).get(v["id"], []):
+                lines.append(f"  - ニュース: [{a['title']}]({SITE}/news/{a['slug']}/)")
         lines.append("")
     # ニュース記事(news.json)。要旨は記事の説明文(lead)と同じ文
     arts = ctx.get("news_articles") or []
