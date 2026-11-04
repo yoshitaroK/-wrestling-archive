@@ -258,7 +258,7 @@ function tileEvent(e){
   var first = vs[0]; var s = S[e.series];
   // 配信動画のない大会(国スポなど)は、大会ごとの絵(FEATURE_ART)があればそれを、数の代わりに「結果あり」を出す
   var art = !first && FEATURE_ART[e.id];
-  var th = art ? '<div class="thumb"><img src="'+esc(art.small||art.src)+'"'+(art.tile?' srcset="'+esc(art.tile)+'" sizes="260px"':'')+' alt="" loading="lazy" decoding="async" style="object-position:'+esc(art.pos||'50% 50%')+'"></div>' : thumb(first?first.id:'', s?s.name:'');
+  var th = art ? '<div class="thumb"><img src="'+esc(art.small||art.src)+'"'+(art.tile?' srcset="'+esc(art.tile)+'" sizes="(max-width:760px) 41vw, 260px"':'')+' alt="" loading="lazy" decoding="async" style="object-position:'+esc(art.pos||'50% 50%')+'"></div>' : thumb(first?first.id:'', s?s.name:'');
   var cnt = e.n ? '<span class="num">'+e.n+'</span>'+L('本 '+e.year+'年 ',' videos · '+e.year+' · ') : L(e.year+'年 結果あり ',e.year+' · Results · ');
   return '<a class="tile" href="'+esc(eventPage(e.id)||linkTo(e.series,e.id))+'">'+ th +
     '<div class="tt">'+esc(N(s?s.name:e.name))+'</div><div class="tm">'+cnt+fmtShort(e.start)+(e.end&&e.end!==e.start?L('〜','–')+fmtShort(e.end):'')+'</div></a>';
@@ -299,7 +299,7 @@ var FEAT_ORDER = ['wre-2026-university-championship-1114', 'wre-2026-university-
 // 3日前より早く「まもなく開催」に出す開催回(書いた日から出す)
 var FEAT_FROM = {'wre-2026-university-championship-1114':'2026-11-03'};
 // 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
-// small・tile はタイル(幅 140〜260px)用、srcset は特集の大きな枠で画面に合った大きさを選ばせる用。大きい版(src)はそのまま残す
+// small・tile はタイル(スマホは横幅の41%、パソコンは260px)用、srcset は特集の大きな枠で画面に合った大きさを選ばせる用。大きい版(src)はそのまま残す
 var FEATURE_ART = {'wre-2026-kokutai-1012': {src:'/assets/feature/kokutai-2026.jpg', small:'/assets/feature/kokutai-2026-s.jpg',
   tile:'/assets/feature/kokutai-2026-s.jpg 480w, /assets/feature/kokutai-2026-m.jpg 960w',
   srcset:'/assets/feature/kokutai-2026-s.jpg 480w, /assets/feature/kokutai-2026-m.jpg 960w, /assets/feature/kokutai-2026.jpg 1600w', pos:'22% 50%'}};
