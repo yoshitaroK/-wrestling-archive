@@ -32,6 +32,8 @@ function fyEn(s){ var m = /^(令和|平成)(元|\d+)年度$/.exec(s||''); if(!m)
 // 特集の写真(assets/hero.json)と、技術動画・写真の列(assets/home.json)。data.json と並べて読み込む
 function getJSON(u){ return fetch(u,{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }); }
 var heroP = getJSON('/assets/hero.json'), homeP = getJSON('/assets/home.json');
+// 大会ページの URL 表(page_slugs.json)と、英語版の機械翻訳(translations_en.json)も、data.json と同時に読み始める(順番に待たない。Issue #24)
+var pagesP = getJSON('/page_slugs.json'), trP = LANG==='en' ? getJSON('/translations_en.json') : Promise.resolve(null);
 var DATA = window.__DATA__;
 if(!DATA){
   try{ var res = await fetch('/data.json',{cache:'no-cache'}); DATA = await res.json(); }
@@ -40,10 +42,10 @@ if(!DATA){
 
 /* ---------- 大会・開催回ページのURL ---------- */
 var PAGES = {};
-try{ var pr = await fetch('/page_slugs.json',{cache:'no-cache'}); if(pr.ok) PAGES = (await pr.json()).events || {}; }catch(e){}
+PAGES = ((await pagesP) || {}).events || {};
 // 英語版:動画タイトルなどの機械翻訳(translate_en.py が作る)
 var TR = {};
-if(LANG==='en'){ try{ var trr = await fetch('/translations_en.json',{cache:'no-cache'}); if(trr.ok) TR = (await trr.json()).texts || {}; }catch(e){} }
+TR = ((await trP) || {}).texts || {};
 function trLine(ja){ var t = LANG==='en' && ja ? TR[String(ja).trim()] : ''; return t ? '<div class="vtr" lang="en">'+esc(t)+' <span class="mt">auto-translated</span></div>' : ''; }
 function eventPage(eid){ return PAGES[eid] ? U('/events/'+PAGES[eid]+'/') : ''; }
 function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? U('/events/'+sid+'/') : ''; }
