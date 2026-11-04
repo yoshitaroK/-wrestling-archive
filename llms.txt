@@ -23,7 +23,7 @@
 - [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
 
 ## 詳しい一覧
-- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧
+- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2026年 動画124本

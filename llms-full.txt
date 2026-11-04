@@ -23,7 +23,7 @@
 - [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
 
 ## 詳しい一覧
-- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧
+- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2026年 動画124本
@@ -99,7 +99,9 @@
 - 大会ページ: https://japanwrestlingchannel.com/events/university-championship/
 - [第52回内閣総理大臣杯 令和8年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2026/): 2026年11月14日〜15日(予定)・大阪・動画6本
 - [第51回内閣総理大臣杯 令和7年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2025/): 2025年11月8日〜9日・大阪・堺市金岡公園体育館・動画6本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2911
 - [第50回内閣総理大臣杯 令和6年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2024/): 2024年11月9日〜10日・大阪・堺市金岡公園体育館・動画6本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/592
 - [内閣総理大臣杯全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2023/): 2023年11月18日〜19日・大阪・堺市金岡公園体育館・動画6本
 - [内閣総理大臣杯全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2022/): 2022年11月19日〜20日・大阪・堺市金岡公園体育館・動画6本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/2021/): 2021年11月13日〜14日・栃木・足利市民体育館・動画6本
@@ -113,16 +115,23 @@
 ### 全国社会人オープン選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/shakaijin-open/
 - [第43回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2026/): 2026年10月31日〜11月1日・埼玉・動画6本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7543
 - [第42回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2025/): 2025年11月1日〜2日・埼玉・富士見市立市民総合体育・動画6本・写真あり
 - [第41回全国社会人オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin-open/2024/): 2024年11月2日〜3日・埼玉・富士見市立市民総合体育館・動画6本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1442
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/2023/): 2023年10月21日〜22日・埼玉・富士見市立市民総合体育館・動画5本
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/2022/): 2022年10月29日〜30日・埼玉・富士見市立市民総合体育館・動画6本
 
 ### 全日本大学グレコローマン選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/university-greco/
 - [文部科学大臣杯 令和8年度 全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2026/): 2026年10月23日〜24日・東京・駒沢オリンピック公園総合運動場体育館・動画6本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7537
+  - ニュース: [全日本大学グレコ、育英大が2年ぶり団体優勝 長谷川虎次郎が3連覇で最優秀選手](https://japanwrestlingchannel.com/news/2026-univ-greco-final/)
+  - ニュース: [全日本大学グレコ、長谷川虎次郎が3連覇へ決勝進出 インカレ王者5人も2冠に王手](https://japanwrestlingchannel.com/news/2026-univ-greco-day1/)
 - [文部科学大臣杯 令和7年度 全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2025/): 2025年10月18日〜19日・東京・駒沢体育館・動画6本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/5495
 - [文部科学大臣杯 令和6年度全日本大学レスリンググレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/university-greco/2024/): 2024年10月23日〜24日・東京・駒沢屋内球技場・動画6本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1435
 - [文部科学大臣杯全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2023/): 2023年10月18日〜19日・東京・駒沢屋内球技場・動画6本
 - [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2022/): 2022年10月19日〜20日・東京・駒沢体育館・動画6本
 - [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/2021/): 2021年10月9日〜10日・大阪・泉佐野市J:COM末広体育館・動画6本
@@ -141,8 +150,11 @@
 ### 全日本学生選手権（インカレ）
 - 大会ページ: https://japanwrestlingchannel.com/events/intercollegiate/
 - [文部科学大臣杯 UNIVAS CUP 令和8年度 全日本学生レスリング選手権大会](https://japanwrestlingchannel.com/events/intercollegiate/2026/): 2026年8月20日〜23日・東京・駒沢体育館・動画16本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7522
 - [文部科学大臣杯 令和7年度 全日本学生レスリング選手権大会](https://japanwrestlingchannel.com/events/intercollegiate/2025/): 2025年8月21日〜24日・東京・駒沢体育館・動画34本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/5058
 - [文部科学大臣杯 令和6年度全日本学生レスリング選手権大会](https://japanwrestlingchannel.com/events/intercollegiate/2024/): 2024年8月23日〜26日・東京・駒沢屋内球技場・動画16本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1426
 - [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2023/): 2023年8月26日〜29日・神奈川・横須賀アリーナ・動画16本
 - [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2022/): 2022年8月15日〜18日・東京・駒沢体育館・動画16本
 - [全日本学生選手権（インカレ）](https://japanwrestlingchannel.com/events/intercollegiate/2021/): 2021年10月13日〜11月5日・山口・キリンビバレッジ周南総合スポーツセンター/東京・駒沢体育館・動画16本
@@ -155,8 +167,11 @@
 ### 全国高校生グレコローマン選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/highschool-greco/
 - [第42回全国高校生グレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/highschool-greco/2026/): 2026年8月14日〜16日・滋賀・栗東市民体育館・動画12本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7518
 - [第41回全国高校生グレコローマンレスリング選手権大会](https://japanwrestlingchannel.com/events/highschool-greco/2025/): 2025年8月15日〜17日・滋賀・大津市ウカルちゃんアリーナ・動画14本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/3549
 - [第40回全国高校生グレコローマンスタイルレスリング選手権大会](https://japanwrestlingchannel.com/events/highschool-greco/2024/): 2024年8月18日〜20日・滋賀・大津市ウカルちゃんアリーナ・動画14本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/586
 - [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2023/): 2023年8月18日〜20日・滋賀県大津市・ウカルちゃんアリーナ・動画12本
 - [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2022/): 2022年8月17日〜19日・大阪・堺市金岡公園体育館・動画12本
 - [全国高校生グレコローマン選手権](https://japanwrestlingchannel.com/events/highschool-greco/2021/): 2021年7月17日〜19日・滋賀・大津市ウカルちゃんアリーナ・動画12本
@@ -166,7 +181,9 @@
 ### 東日本学生選手権（春季大会）
 - 大会ページ: https://japanwrestlingchannel.com/events/east-spring/
 - [令和8年度 東日本学生レスリング選手権大会(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2026/): 2026年7月13日〜15日・東京・駒沢体育館・動画11本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7509
 - [令和7年度 東日本学生レスリング選手権大会(春季大会)](https://japanwrestlingchannel.com/events/east-spring/2025/): 2025年7月9日〜11日・東京・駒沢体育館・動画9本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/4623
 - [東日本学生選手権(春季)・女子 / 新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-spring/2024/): 2024年7月8日〜10日・東京・駒沢屋内球技場・動画9本
 - [東日本学生選手権(春季大会)・女子 / 新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-spring/2023/): 2023年6月26日〜28日・東京・駒沢屋内球技場・動画10本
 - [東日本学生選手権(春季)・新人戦 / 女子の部 / 選手権の部](https://japanwrestlingchannel.com/events/east-spring/2022/): 2022年6月29日〜7月1日・東京・駒沢体育館・動画8本
@@ -178,8 +195,11 @@
 ### 全日本社会人選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/shakaijin/
 - [第73回 全日本社会人レスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin/2026/): 2026年7月11日〜12日・愛知・名古屋市稲永スポーツセンター・動画6本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7507
 - [第72回 全日本社会人レスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin/2025/): 2025年7月12日〜13日・埼玉・富士見市立市民総合体育館・動画6本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/4634
 - [第71回 全日本社会人レスリング選手権大会](https://japanwrestlingchannel.com/events/shakaijin/2024/): 2024年6月29日〜30日・埼玉・富士見市立市民体育館・動画6本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1384
 - [全日本社会人選手権](https://japanwrestlingchannel.com/events/shakaijin/2023/): 2023年7月1日〜2日・埼玉・富士見市立市民総合体育館・動画6本
 - [全日本社会人選手権](https://japanwrestlingchannel.com/events/shakaijin/2022/): 2022年7月2日〜3日・埼玉・富士見市立総合体育館・動画6本
 
@@ -194,7 +214,9 @@
 ### 東日本学生リーグ戦
 - 大会ページ: https://japanwrestlingchannel.com/events/east-league/
 - [東京都知事杯 令和8年度 東日本学生レスリングリーグ戦](https://japanwrestlingchannel.com/events/east-league/2026/): 2026年6月16日〜18日・東京・駒沢体育館・動画11本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7501
 - [東京都知事杯 令和7年度 東日本学生レスリングリーグ戦](https://japanwrestlingchannel.com/events/east-league/2025/): 2025年5月26日〜28日・東京・駒沢屋内球技場・動画10本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/4000
 - [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2024/): 2024年6月24日〜26日・東京・駒沢屋内球技場・動画17本
 - [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2023/): 2023年5月16日〜18日・東京・駒沢屋内球技場・動画14本
 - [東日本学生リーグ戦](https://japanwrestlingchannel.com/events/east-league/2022/): 2022年5月18日〜20日・東京・駒沢体育館・動画61本
@@ -210,16 +232,22 @@
 ### JOC杯全日本ジュニア・U20・U17選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/joc-junior/
 - [JOCジュニアオリンピックカップ 2026年U17,U20全日本レスリング選手権大会](https://japanwrestlingchannel.com/events/joc-junior/2026/): 2026年4月25日〜26日・神奈川・横浜武道館・動画10本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7104
 - [2025年度 JOCジュニアオリンピックカップ 全日本ジュニアレスリング選手権大会](https://japanwrestlingchannel.com/events/joc-junior/2025/): 2025年4月26日〜27日・神奈川・横浜武道館・動画10本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1595
 - [2024年度 JOCジュニアオリンピックカップ 全日本ジュニアレスリング選手権大会](https://japanwrestlingchannel.com/events/joc-junior/2024/): 2024年4月27日〜28日・神奈川・横浜武道館・動画10本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/578
 - [JOCジュニアオリンピックカップ（U20・U17）](https://japanwrestlingchannel.com/events/joc-junior/2023/): 2023年4月15日〜16日・神奈川・横浜武道館・動画13本
 - [JOCジュニアオリンピックカップ（U20・U17）](https://japanwrestlingchannel.com/events/joc-junior/2022/): 2022年4月23日〜24日・神奈川・横浜武道館・動画13本
 
 ### 全国高校選抜大会
 - 大会ページ: https://japanwrestlingchannel.com/events/highschool-senbatsu/
 - [令和7年度 風間杯第69回全国高等学校選抜レスリング大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2026/): 2026年3月27日〜29日・新潟・新潟東総合センター・動画13本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7055
 - [令和6年度 風間杯第68回全国高等学校選抜レスリング大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2025/): 2025年3月27日〜29日・新潟・新潟市東総合スポーツセンター・動画12本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/661
 - [令和5年度 風間杯第67回全国高等学校選抜レスリング大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2024/): 2024年3月27日〜29日・新潟・新潟市東総合スポーツセンター・動画12本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/572
 - [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2023/): 2023年3月27日〜29日・新潟・新潟東総合スポーツセンター・動画12本
 - [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2022/): 2022年3月27日〜29日・新潟・新潟東総合スポーツセンター・動画22本
 - [全国高校選抜大会](https://japanwrestlingchannel.com/events/highschool-senbatsu/2015/): 2015年3月27日〜29日・新潟・新潟市体育館・動画15本
@@ -242,7 +270,9 @@
 - 大会ページ: https://japanwrestlingchannel.com/events/masters/
 - [全日本マスターズ選手権](https://japanwrestlingchannel.com/events/masters/2026/): 2026年1月17日・東京・青少年総合センター・動画3本
 - [第24回全日本マスターズレスリング選手権大会](https://japanwrestlingchannel.com/events/masters/2025/): 2025年1月19日・東京・青少年総合センター・動画3本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1576
 - [第23回全日本マスターズ選手権大会](https://japanwrestlingchannel.com/events/masters/2024/): 2024年2月25日・東京・青少年総合センター・動画2本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1381
 - [全日本マスターズ選手権](https://japanwrestlingchannel.com/events/masters/2016/): 2016年1月24日・東京・青少年総合センター・動画1本
 
 ### 高谷惣亮杯(ゴールドキッズ年末合宿)
@@ -259,7 +289,9 @@
 ### 天皇杯全日本選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/tenno-cup/
 - [令和7年度 天皇杯全日本レスリング選手権大会](https://japanwrestlingchannel.com/events/tenno-cup/2025/): 2025年12月18日〜21日・東京・駒沢体育館・動画31本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/6288
 - [令和6年度 天皇杯全日本レスリング選手権大会](https://japanwrestlingchannel.com/events/tenno-cup/2024/): 2024年12月19日〜22日・東京・代々木競技場第2体育館大会・動画29本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/594
 - [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2023/): 2023年12月21日〜24日・東京・代々木競技場第2体育館・動画6本
 - [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2022/): 2022年12月22日〜25日・東京・駒沢体育館・動画67本
 - [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2021/): 2021年12月16日〜19日・東京・駒沢体育館・動画82本
@@ -273,7 +305,9 @@
 ### 全国中学選抜・全国中学選抜U15選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/
 - [令和7年度 東京都知事杯 第16回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2025/): 2025年12月6日〜7日・東京・駒沢屋内球技場・動画8本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2945
 - [令和6年度 東京都知事杯第15回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2024/): 2024年11月30日〜12月1日・東京・駒沢屋内球技場・動画8本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1448
 - [東京都知事杯全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2023/): 2023年11月25日〜26日・東京・駒沢屋内球技場・動画8本
 - [東京都知事杯全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2021/): 2021年11月27日〜28日・東京・駒沢屋内球技場・動画29本
 - [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2017/): 2017年11月25日〜26日・東京・駒沢屋内球技場・動画16本
@@ -284,6 +318,7 @@
 ### 東日本学生選手権（秋季大会）
 - 大会ページ: https://japanwrestlingchannel.com/events/east-autumn/
 - [令和7年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2025/): 2025年11月27日〜29日・東京・駒沢屋内球技場・動画10本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2943
 - [東日本学生選手権(秋季)・新人戦 / 選手権](https://japanwrestlingchannel.com/events/east-autumn/2024/): 2024年11月26日〜28日・東京・駒沢屋内球技場・動画9本
 - [東日本学生選手権(秋季)・選手権 / 新人選手権](https://japanwrestlingchannel.com/events/east-autumn/2023/): 2023年11月9日〜10日・東京・駒沢屋内球技場・動画6本
 - [東日本学生選手権(秋季)・新人戦 / 選手権の部](https://japanwrestlingchannel.com/events/east-autumn/2022/): 2022年11月28日〜30日・東京・駒沢体育館・動画9本
@@ -342,8 +377,10 @@
 ### 全国高校総体（インターハイ）
 - 大会ページ: https://japanwrestlingchannel.com/events/interhigh/
 - [令和8年度全国高等学校総合体育大会(インターハイ)](https://japanwrestlingchannel.com/events/interhigh/2026/): 2026年7月23日〜26日・和歌山・那智勝浦体育文化会館・動画0本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7511
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2025/): 2025年7月27日〜30日・島根・雲南市三刀屋文化体育館アスパル・動画0本・写真あり
 - [令和6年度全国高等学校総合体育大会(インターハイ)](https://japanwrestlingchannel.com/events/interhigh/2024/): 2024年8月1日〜4日・佐賀・嬉野市中央体育館・動画11本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1424
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2023/): 2023年7月27日〜30日・北海道札幌市・真駒内セキスイハイムアイスアリーナ・動画6本
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2018/): 2018年8月4日〜7日・三重県津市・メッセウイング・みえ・動画18本
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2016/): 2016年8月2日〜5日・広島・東広島運動公園体育館・動画15本
@@ -357,8 +394,11 @@
 ### 明治杯全日本選抜選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/meiji-cup/
 - [令和8年度 明治杯全日本選抜レスリング選手権大会](https://japanwrestlingchannel.com/events/meiji-cup/2026/): 2026年5月21日〜24日・東京・駒沢体育館・動画0本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7451
 - [令和7年度 明治杯全日本選抜レスリング選手権大会](https://japanwrestlingchannel.com/events/meiji-cup/2025/): 2025年6月19日〜22日・東京・東京体育館・動画0本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/3772
 - [令和6年度 明治杯全日本選抜レスリング選手権大会](https://japanwrestlingchannel.com/events/meiji-cup/2024/): 2024年5月23日〜26日・東京・東京体育館・動画8本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/580
 - [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2023/): 2023年6月15日〜18日・東京・東京体育館・動画48本
 - [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/2022/): 2022年6月16日〜19日・東京・駒沢体育館・動画53本
 - [明治杯全日本選抜選手権/世界選手権代表選考プレーオフ](https://japanwrestlingchannel.com/events/meiji-cup/2021/): 2021年5月27日〜30日・東京・駒沢体育館・動画85本
@@ -398,6 +438,9 @@
 ### 全日本女子オープン選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/women-open/
 - [フォーデイズ杯 令和8年度 第19回全日本女子オープンレスリング選手権大会](https://japanwrestlingchannel.com/events/women-open/2026/): 2026年10月24日〜25日・静岡・動画0本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7541
+  - ニュース: [全日本女子オープン U15の部 10階級の結果](https://japanwrestlingchannel.com/news/2026-women-open-u15/)
+  - ニュース: [全日本女子オープン 稲垣柚香が62kg級制し最優秀選手 自衛隊が4階級で優勝](https://japanwrestlingchannel.com/news/2026-women-open/)
 - [フォーデイズ杯全日本女子オープン選手・シニア / U17・U15・U12](https://japanwrestlingchannel.com/events/women-open/2023/): 2023年10月14日〜15日・静岡・焼津市総合体育館・動画8本
 - [フォーデイズ杯全日本女子オープン選手権・シニア / 高校生・中学生・キッズ](https://japanwrestlingchannel.com/events/women-open/2022/): 2022年10月15日〜16日・静岡・焼津市総合体育館・動画7本
 - [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/2016/): 2016年10月2日・静岡・三島市民体育館・動画24本
@@ -422,6 +465,7 @@
 ### U23日本代表選考会・U23全日本選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/u23-selection/
 - [U23,U15 JOCジュニアオリンピックカップ](https://japanwrestlingchannel.com/events/u23-selection/2025/): 2025年3月23日・東京・ドーム立川立飛・動画0本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/3228
 - [U23世界選手権・日本代表選考会](https://japanwrestlingchannel.com/events/u23-selection/2023/): 2023年4月22日・埼玉・富士見市立市民総合体育館・動画2本
 
 ### ジュニアクイーンズカップ
@@ -504,6 +548,11 @@
 ### 国民体育大会・国民スポーツ大会
 - 大会ページ: https://japanwrestlingchannel.com/events/kokutai/
 - [第80回国民スポーツ大会](https://japanwrestlingchannel.com/events/kokutai/2026/): 2026年10月12日〜15日・青森・八戸市・動画0本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7533
+  - ニュース: [【総括】国スポ・レスリング 天皇杯は京都が81.5点で優勝 成年グレコは自衛隊が5階級制す](https://japanwrestlingchannel.com/news/2026-kokutai-summary/)
+  - ニュース: [国スポ・グレコ 櫻庭功大が77kg級制す 鶴田峻大・奥村総太も優勝](https://japanwrestlingchannel.com/news/2026-kokutai-final/)
+  - ニュース: [国スポ・グレコは最終日に決勝 77kg級は櫻庭功大と清水賢亮が準決勝で激突](https://japanwrestlingchannel.com/news/2026-kokutai-day3/)
+  - ニュース: [元木咲良と村山春菜、世界女王2人が国スポ制す 86kg級は髙橋夢大が頂点](https://japanwrestlingchannel.com/news/2026-kokutai-day2/)
 - [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2016/): 2016年10月7日〜10日・岩手・宮古市総合体育館・動画25本
 - [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2015/): 2015年9月27日〜30日・和歌山・那智勝浦町文化体育会館・動画24本
 - [国民体育大会](https://japanwrestlingchannel.com/events/kokutai/2014/): 2014年10月14日〜16日・長崎・島原復興アリーナ・動画8本
@@ -516,6 +565,74 @@
 ### 西日本学生春季リーグ戦
 - 大会ページ: https://japanwrestlingchannel.com/events/west-spring-league/
 - [西日本学生春季リーグ戦](https://japanwrestlingchannel.com/events/west-spring-league/2015/): 2015年5月30日〜31日・大阪・堺市金岡公園体育館・動画7本
+
+## 歴代優勝者(大会ごと。スタイルごとに、いちばん新しい年の階級別の優勝者)
+日本レスリング協会が公開している入賞者一覧と、日本レスリング協会『歴代記録』(レスリング・スピリッツ調べ)から作っています。所属は大会のときのものです。未成年の選手(最近6年の記録で高校・中学などに所属していた選手を含む)は名前を載せていません(—)。ほかの年は各大会の歴代優勝者のページにあります。
+
+### 天皇杯全日本選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/tenno-cup/
+- 載せている記録: 1934〜2025年(89年分)
+- 2025年 フリースタイル: 57kg 小川 大和(日本体育大学)、61kg 長谷川 敏裕(三恵海運株式会社)、65kg 清岡 幸大郎(株式会社カクシングループ)、70kg 成國 大志(筒井メディカルグループ)、74kg 青柳 善の輔(クリナップ株式会社)、79kg ガレダギ 敬一(早稲田大学)、86kg 高谷 惣亮(拓殖大学職員)、92kg 石黒 峻士(MTXGOLDKIDS)、97kg 吉田 アラシ(三恵海運株式会社)、125kg 山本 泰輝(自衛隊体育学校)
+- 2025年 グレコローマン: 55kg 大楠 健太(日本体育大学)、60kg 五味 虹登(育英大学)、63kg 田南部 魁星(ミキハウス)、67kg 遠藤 功章(株式会社東和エンジニアリング)、72kg 成國 大志(筒井メディカルグループ)、77kg 日下 尚(マルハン北日本カンパニー)、82kg 藤井 達哉(栗東市役所)、87kg 吉田 泰造(日本体育大学)、97kg 鶴田 峻大(自衛隊体育学校)、130kg 奈良 勇太(警視庁第六機動隊)
+- 2025年 女子: 50kg 須﨑 優衣(株式会社キッツ)、53kg 清岡 もえ(ALSOK)、55kg 内田 颯夏(日本大学)、57kg 藤波 朱理(株式会社レスター)、59kg 永本 聖奈(株式会社アイシン)、62kg 尾﨑 野乃香(慶應義塾大学)、65kg 池畑 菜々(育英大学)、68kg 森川 美和(ALSOK)、72kg 吉武 まひろ(長崎県レスリング協会)、76kg 松雪 泰葉(株式会社ジェイテクト)
+
+### 明治杯全日本選抜選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/meiji-cup/
+- 載せている記録: 1997〜2026年(29年分)
+- 2026年 フリースタイル: 57kg 永井 陸斗(日本大学)、61kg 樋口 黎(ミキハウス)、65kg 清岡 幸大郎(株式会社カクシングループ)、70kg 冨山 悠真(自衛隊体育学校)、74kg 青柳 善の輔(クリナップ株式会社)、79kg ガレダギ 敬一(早稲田大学)、86kg 石黒 隼士(自衛隊体育学校)、92kg 金澤 空大(早稲田大学)、97kg 吉田 アラシ(三恵海運株式会社)、125kg 山本 泰輝(自衛隊体育学校)
+- 2026年 グレコローマン: 55kg 岡本 景虎(専修クラブ)、60kg 鈴木 絢大(株式会社レスター)、63kg 文田 健一郎(ミキハウス)、67kg 曽我部 京太郎(ALSOK)、72kg 曽我部 凜大郎((有)aiwa benefit)、77kg 日下 尚(マルハン北日本カンパニー)、82kg 藤井 達哉(栗東市役所)、87kg 吉田 泰造(日本体育大学)、97kg 仲里 優力(松尾建設)、130kg 奥村 総太(自衛隊体育学校)
+- 2026年 女子: 50kg 須﨑 優衣(株式会社キッツ)、53kg 清岡 もえ(ALSOK)、55kg 原田 渚(育英大学)、57kg 藤波 朱理(株式会社レスター)、59kg 山口 夏月(自衛隊体育学校)、62kg 尾﨑 野乃香(慶應義塾大学)、65kg 池畑 菜々(育英大学)、68kg 石井 亜海(クリナップ株式会社)、72kg 竹元 紫凛(育英大学)、76kg 鏡 優翔(サントリー)
+
+### 全日本学生選手権（インカレ）
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/intercollegiate/
+- 載せている記録: 1950〜2026年(76年分)
+- 2026年 フリースタイル: 57kg 勝目 大翔(山梨学院大学)、61kg 山鹿 辰士(山梨学院大学)、65kg 西内 悠人(日本体育大学)、70kg 荻野 大河(山梨学院大学)、74kg 山下 凌弥(日本体育大学)、79kg 山口 叶太(中央大学)、86kg 淺野 稜悟(中央大学)、92kg 増田 大将(山梨学院大学)、97kg 金澤 空大(早稲田大学)、125kg バトバヤル ナンバルダグワ(育英大学)
+- 2026年 グレコローマン: 55kg 森岡 一護(育英大学)、60kg 德原 誠馬(専修大学)、63kg 中村 真翔(育英大学)、67kg 鈴木 飛来(育英大学)、72kg 長谷川 虎次郎(育英大学)、77kg 小川 凛太郎(九州共立大学)、82kg 秋保 大地(早稲田大学)、87kg 矢作 元貴(法政大学)、97kg アリスタン カラベック(山梨学院大学)、130kg バトバヤル ナンバルダグワ(育英大学)
+- 2026年 女子: 50kg 森川 晴凪(至学館大学)、53kg 原田 渚(育英大学)、55kg 内田 颯夏(日本大学)、57kg 新井 一花(育英大学)、59kg 伊藤 渚(日本体育大学)、62kg 元木 日陽里(育英大学)、65kg 池畑 菜々(育英大学)、68kg 星野 レイ(神奈川大学)、72kg 木村 允希愛(至学館大学)
+
+### 全日本大学選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/university-championship/
+- 載せている記録: 1975〜2025年(51年分)
+- 2025年 フリースタイル: 57kg 勝目 大翔(山梨学院大学)、61kg 須田 宝(山梨学院大学)、65kg 西内 悠人(日本体育大学)、70kg 冨山 悠真(自衛隊体育学校)、74kg 吉田 アリヤ(日本大学)、79kg 神谷 龍之介(日本体育大学)、86kg 髙橋 海大(ALSOK)、92kg 本橋 知大(拓殖大学)、97kg 吉田 アラシ(三恵海運株式会社)、125kg バトバヤル ナンバルダグワ(育英大学)
+
+### 全日本大学グレコローマン選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/university-greco/
+- 載せている記録: 1989〜2026年(38年分)
+- 2026年 グレコローマン: 55kg 山本 海星(専修大学)、60kg 德原 誠馬(専修大学)、63kg 中村 真翔(育英大学)、67kg 鈴木 飛来(育英大学)、72kg 長谷川 虎次郎(育英大学)、77kg 角出 直生(東洋大学)、82kg 松崎 繕弘(拓殖大学)、87kg 小玉 龍舞(神奈川大学)、97kg アリスタン カラベック(山梨学院大学)、130kg バトバヤル ナンバルダグワ(育英大学)
+
+### 東日本学生選手権（春季大会）
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/east-spring/
+- 載せている記録: 2010〜2026年(16年分)
+- 2026年 フリースタイル: 57kg 菊地 優太(拓殖大学)、61kg 及川 丈尊(日本体育大学)、65kg 木村 太智(中央大学)、70kg 上村 朋也(日本体育大学)、74kg 加成 京介(育英大学)、79kg 菊田 創(青山学院大学)、86kg 淺野 稜悟(中央大学)、92kg 伊藤 大輝(中央大学)、97kg 中西 広耀(中央大学)、125kg バトバヤル ナンバルダグワ(育英大学)
+- 2026年 グレコローマン: 55kg 森岡 一護(育英大学)、60kg 伊藤 慶大(育英大学)、63kg 古市 一翔(育英大学)、67kg 直井 夢希(日本体育大学)、72kg 有田 英慎(育英大学)、77kg デンジャフィールド ルーシアスアポロ(神奈川大学)、82kg 山口 叶太(中央大学)、87kg 矢作 元貴(法政大学)、97kg 中沢 遥貴(山梨学院大学)
+- 2026年 女子: 50kg 川村 百花(法大)、53kg 小川 凜佳(育英大)、55kg 澤谷 ゆな(育英大)、57kg 山下 叶夢(東洋大)、59kg 小柴 ゆり(育英大)、62kg 筒井 双(法大)、65kg 相磯 ひなた(東洋大)、68kg 松山 楓(法大)
+
+### 東日本学生選手権（秋季大会）
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/east-autumn/
+- 載せている記録: 2016〜2025年(10年分)
+- 2025年 フリースタイル: 57kg 戸田 純人(育英大学)、61kg 佐々木 力人(中央大学)、65kg 高杉 将輔(日本体育大学)、70kg 上村 律心(専修大学)、74kg 加成 京介(育英大学)、79kg 飯塚 康太(神奈川大学)、86kg 神谷 龍之介(日本体育大学)、92kg 増田 大将(山梨学院大学)、97kg 能瀬 龍樹(国士舘大学)
+- 2025年 グレコローマン: 55kg 脇 康太朗(神奈川大学)、60kg 今井 悠稀(国士舘大学)、63kg 五木田 琉(日本体育大学)、72kg 深澤 昂空(育英大学)、77kg 大石 達也(育英大学)、82kg 渡邊 虎汰郎(育英大学)、97kg 菊地 一瑳(明治大学)
+- 2020年 女子: 50kg 宮原 乙葉(育英大)、53kg 片岡 梨乃(早大)、55kg 田村 生吹(日体大)、57kg 向山 凪(育英大)、59kg 元木 咲良(育英大)、62kg 小玉 彩天奈(早大)、65kg 森川 美和(日体大)、68kg 河内 沙樹(日体大)、72kg 小林 奏音(専大)、76kg 鏡 優翔(東洋大)
+
+### 全日本社会人選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/shakaijin/
+- 載せている記録: 1951〜2026年(70年分)
+- 2026年 フリースタイル: 57kg 山際 航平(フレアス)、61kg 小野 正之助(NLWC)、65kg 荻野 海志(大東建託)、70kg 森田 魁人(警視庁クラブ)、74kg 三輪 優翔(和歌山県協会)、79kg 青柳 善の輔(クリナップ)、86kg 佐藤 匡記(自衛隊)、92kg 髙橋 夢大(三恵海運)、97kg 白井 達也(TeamSSP)、125kg 伊藤 飛未来(自衛隊)
+- 2026年 グレコローマン: 55kg 椎葉 桂己(恒松自動車商会)、60kg 竹下 航生(警視庁クラブ)、63kg 伊藤 翔哉(佐賀県庁)、67kg 萩原 大和(自衛隊)、72kg 原田 真吾(育英クラブ)、77kg 小林 大悟(警視庁クラブ)、82kg 谷﨑 大造(自衛隊)、87kg 髙橋 夢大(三恵海運)、97kg 目黒 優太(自衛隊体育学校OB)、130kg 伊藤 飛未来(自衛隊)
+- 2026年 女子: 50kg 伊藤 海(フォーデイズ)、53kg 吉元 玲美那(KeePer技研)、55kg 村山 春菜(自衛隊)、57kg 志土地 真優(ジェイテクト)、59kg 南條 早映(自衛隊)、62kg 類家 直美(青森県競技力向上)、65kg 榎本 美鈴(自衛隊)、68kg 古市 雅子(自衛隊)、72kg 吉武 まひろ(長崎県協会)、76kg 松雪 泰葉(ジェイテクト)
+
+### 全国社会人オープン選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/shakaijin-open/
+- 載せている記録: 2024・2025年
+- 2025年 フリースタイル: 57kg 澤谷 孟(国士舘大学)、65kg 小川 航大(自衛隊体育学校)、70kg 山口 太一(三谷産業株式会社)、74kg 金子 将大(トラスト)、79kg 志賀 晃次郎(警視庁第六機動隊)、86kg 栃倉 健人(セコム上信越)、92kg 高谷 惣亮(拓殖大学職員)、97kg 吉田 ケイワン(三恵海運株式会社)、125kg 三橋 柚汰(新潟県レスリング協会)
+- 2025年 グレコローマン: 55kg 岡本 景虎(専修クラブ)、63kg 竹下 航生(警視庁品川警察署)、67kg 河名 真偉斗(自衛隊体育学校)、72kg 曽我部 凜大郎((有)aiwa benefit)、77kg 島袋 希理瑠(株式会社C-Knacks)、82kg 谷﨑 大造(自衛隊体育学校)、87kg 小堀 雄大(東洋大コーチ)、97kg 中原 陸(自衛隊体育学校(集合訓練))、130kg 伊藤 飛未来(自衛隊体育学校)
+- 2025年 女子: 50kg 竹内 美保子(日本大学)、53kg 上岡 三桜(天理大学)、55kg 中村 成実(法政クラブ)、57kg 陳 亞欣(天理大学)、59kg 岡田 純奈(自衛隊体育学校(集合訓練))、62kg 源平 彩南(株式会社アイシン)
+
+### 西日本学生新人選手権
+- 歴代優勝者のページ: https://japanwrestlingchannel.com/champions/west-rookie/
+- 載せている記録: 2025年
+- 2025年 フリースタイル: 57kg 池田 徹平(立命館大学)、61kg 伊藤 優隼(九州共立大学)、65kg 大関 勁心(九州共立大学)、70kg 小塚 彪(近畿大学)、74kg 米原 潔太(九州共立大学)、79kg 安井薙颯(九州共立大学)、86kg 春成飛翔(大阪体育大学)、92kg 武重 毅留(周南公立大学)、97kg 高橋 秀誠(南九州大学)、125kg 三宅 紘誠(九州共立大学)
+- 2025年 グレコローマン: 55kg 池田 徹平(立命館大学)、60kg 伊藤 優隼(九州共立大学)、63kg 杉本 壮汰(九州共立大学)、67kg 小塚 彪(近畿大学)、72kg 門坂 星那(九州共立大学)、77kg 内野 四恩(南九州大学)、82kg 山下智誠(九州共立大学)、87kg 春成飛翔(大阪体育大学)、97kg 佐野龍虎(周南公立大学)、130kg 三宅 紘誠(九州共立大学)
 
 ## ニュース(新しい順)
 
