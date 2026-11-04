@@ -177,6 +177,8 @@ html.overlay .top.see-through{background:transparent;border-bottom-color:transpa
 /* 検索・絞り込みをしているときは特集をしまって、結果をすぐ見せる */
 .jhero.compact .jhero-in{min-height:0;padding-bottom:40px}
 .jhero.compact .feat{display:none}
+/* 特集はデータが届くまで中身がないので、読み込み中から場所を取っておく(届いて広がると下がずれる=CLS。#286)。top.js が描き終えたら data-wait を外す */
+.feat[data-wait]{visibility:hidden;min-height:280px}
 
 /* 検索・絞り込み */
 .searchbox{padding:14px 0 4px}
@@ -446,7 +448,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
       <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索">
     </div>
     <p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
-    <div class="feat" id="feat" hidden></div>
+    <div class="feat" id="feat" hidden data-wait></div>
   </div>
   <a class="jcredit" id="jhero-credit" hidden></a>
 </section>
@@ -477,6 +479,6 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
 </div></footer>
 
 <script defer src="/assets/player.js?v=1"></script>
-<script src="/assets/top.js?v=7"></script>
+<script src="/assets/top.js?v=10"></script>
 </body>
 </html>
