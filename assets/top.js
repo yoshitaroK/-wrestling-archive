@@ -37,7 +37,7 @@ var pagesP = getJSON('/page_slugs.json'), trP = LANG==='en' ? getJSON('/translat
 var DATA = window.__DATA__;
 if(!DATA){
   try{ var res = await fetch('/data.json',{cache:'no-cache'}); DATA = await res.json(); }
-  catch(e){ document.getElementById('main').innerHTML = L('<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>', '<p class="empty"><strong>Could not load the data.</strong> Please reload the page.</p>'); return; }
+  catch(e){ document.getElementById('feat').removeAttribute('data-wait'); document.getElementById('main').innerHTML = L('<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>', '<p class="empty"><strong>Could not load the data.</strong> Please reload the page.</p>'); return; }
 }
 
 /* ---------- 大会・開催回ページのURL ---------- */
@@ -734,6 +734,7 @@ themeLabel();
 readHash();
 if(st.s) pendingScroll = 's-'+st.s;
 FEAT = buildFeature(); showFeature(0);
+document.getElementById('feat').removeAttribute('data-wait');
 render();
 // 画面の幅が変わったら、列の矢印の高さと表示を合わせ直す
 window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('.rowwrap .row'), updRow); });

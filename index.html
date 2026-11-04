@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#08080a">
-<script src="/assets/head.js?v=3" data-redirect data-intro></script>
+<script src="/assets/head.js?v=4" data-redirect data-intro data-overlay></script>
 <meta name="description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
 <link rel="alternate" hreflang="ja" href="https://japanwrestlingchannel.com/">
@@ -177,6 +177,8 @@ html.overlay .top.see-through{background:transparent;border-bottom-color:transpa
 /* 検索・絞り込みをしているときは特集をしまって、結果をすぐ見せる */
 .jhero.compact .jhero-in{min-height:0;padding-bottom:40px}
 .jhero.compact .feat{display:none}
+/* 特集はデータが届くまで中身がないので、読み込み中から場所を取っておく(届いて広がると下がずれる=CLS。#286)。top.js が描き終えたら data-wait を外す */
+.feat[data-wait]{visibility:hidden;min-height:280px}
 
 /* 検索・絞り込み */
 .searchbox{padding:14px 0 4px}
@@ -446,7 +448,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
       <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索">
     </div>
     <p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
-    <div class="feat" id="feat" hidden></div>
+    <div class="feat" id="feat" hidden data-wait></div>
   </div>
   <a class="jcredit" id="jhero-credit" hidden></a>
 </section>
