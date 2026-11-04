@@ -32,7 +32,7 @@ function fyEn(s){ var m = /^(令和|平成)(元|\d+)年度$/.exec(s||''); if(!m)
 // 特集の写真(assets/hero.json)と、技術動画・写真の列(assets/home.json)。data.json と並べて読み込む
 function getJSON(u){ return fetch(u,{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }); }
 var heroP = getJSON('/assets/hero.json'), homeP = getJSON('/assets/home.json');
-// 大会ページの URL 表(page_slugs.json)と、英語版の機械翻訳(translations_en.json)も、data.json と同時に読み始める(順番に待たない。Issue #24)
+// 大会ページの URL 表(page_slugs.json)と、英語版の機械翻訳(translations_en.json)も、data.json と同時に読み始める(順番に待たない。Issue #284)
 var pagesP = getJSON('/page_slugs.json'), trP = LANG==='en' ? getJSON('/translations_en.json') : Promise.resolve(null);
 var DATA = window.__DATA__;
 if(!DATA){
