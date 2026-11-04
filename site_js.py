@@ -13,6 +13,9 @@
 - ヘッダーの検索欄(<form class="hsearch">)で、トップページの検索に移る
 - 画像が読み込めないときに消す(<img data-gone>。書籍の表紙など)
 - トップページを開いた最初の1回だけ、ロゴの動き(intro)を出す(<script data-intro>)
+- トップページのメニューを特集の写真の上に重ねる html.overlay と、メニューの高さ --hdr-h を、描く前から付ける(<script data-overlay>)。
+  top.js(body の最後)が届くまで重ねない形で出ると、届いたときにヒーロー全体が上に動いてしまう(レイアウトのずれ=CLS。#286)。
+  ResizeObserver でメニューの高さを見続けるので、ウェブフォントでメニューが高くなってもついていく
 
 assets/site.js(defer で読み込む)には、ページを読み終えてから動けばよい処理をまとめる。
 
@@ -32,7 +35,7 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 """
 import os
 
-HEAD_VER = "3"
+HEAD_VER = "4"
 SITE_VER = "3"
 CONTACT_VER = "1"
 
@@ -41,7 +44,7 @@ def script_tag(redirect=False, intro=False):
     """index.html(手で書いたトップページ)には script_tag(redirect=True, intro=True) と同じタグを書いておく。
     HEAD_VER を上げたら index.html の番号も直す(合っていないと en_index.py がビルドを止める)"""
     return (f'<script src="/assets/head.js?v={HEAD_VER}"{" data-redirect" if redirect else ""}'
-            f'{" data-intro" if intro else ""}></script>')
+            f'{" data-intro data-overlay" if intro else ""}></script>')
 
 
 # ページを読み終えてから動けばよい処理は assets/site.js にまとめ、defer で読み込む
@@ -72,6 +75,19 @@ if(me&&me.hasAttribute('data-intro'))(function(){
   try{if(location.hash||location.search||sessionStorage.getItem('intro'))return;sessionStorage.setItem('intro','1');}catch(e){return;}
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   d.classList.add('intro');
+})();
+if(me&&me.hasAttribute('data-overlay'))(function(){
+  d.classList.add('overlay');
+  var t=null,mo=null;
+  function size(){d.style.setProperty('--hdr-h',t.offsetHeight+'px');}
+  function grab(){
+    if(t)return true;
+    t=document.querySelector('.top');if(!t)return false;
+    if(window.ResizeObserver)new ResizeObserver(size).observe(t);else size();
+    return true;
+  }
+  if(window.MutationObserver){mo=new MutationObserver(function(){if(grab())mo.disconnect();});mo.observe(d,{childList:true,subtree:true});}
+  document.addEventListener('DOMContentLoaded',function(){if(mo)mo.disconnect();grab();});
 })();
 window.thumbFail=function(i){
   var o=['mqdefault','hqdefault','default'],r=/\/vi\/([^/]+)\/([a-z]+)\.jpg/.exec(i.src);
