@@ -78,6 +78,9 @@ JSONLD_EN = ('<script type="application/ld+json">' + json.dumps({"@context": "ht
 def write(root, data, slugs):
     with open(os.path.join(root, "index.html"), encoding="utf-8") as f:
         s = f.read()
+    # 日本語版に書き込まれた特集・大会の列(top_prerender.py)を空の形に戻してから英語にする(英語版の分はあとで書き込む)
+    import top_prerender
+    s = top_prerender.strip(s)
     import site_js
     missing = []
     # 英語版では、英語版への自動移動(data-redirect)を外す
