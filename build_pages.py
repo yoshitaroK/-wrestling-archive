@@ -291,7 +291,8 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 {site_js.script_tag(redirect=not i18n.en() and alternates)}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+<!-- フォントの CSS は表示を止めないように media="print" で読み、届いたら head.js が all にする(#293。読み込み後の見た目は同じ) -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet" media="print" data-font><noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet"></noscript>
 {css}
 <script type="application/ld+json">{json.dumps(with_org(jsonld), ensure_ascii=False)}</script>
 {video_player.SCRIPT_TAG}
