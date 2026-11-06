@@ -6,6 +6,9 @@
 'unsafe-inline' を外せるようになり、改ざんされたスクリプトを動かされにくくなる。
 
 - Google アナリティクスの初期設定
+- ウェブフォントの CSS(<link data-font media="print">)が届いたら media を all にする。
+  ふつうの rel="stylesheet" だと、別のサーバーから CSS が届くまで画面が一切描かれなかった(LCP が遅い)。
+  ページの中に onload="..." を書かないのは、CSP で 'unsafe-inline' を外す計画(docs/security-headers.md)のため
 - 日本語以外のブラウザを英語版へ移す(日本語版のページだけ。<script data-redirect> のとき)
 - テーマ(明るい・暗い)の切り替え
 - YouTube のサムネイルが読み込めないときに、別の大きさの画像に替える(<img data-thumb>)
@@ -35,7 +38,7 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 """
 import os
 
-HEAD_VER = "4"
+HEAD_VER = "5"
 SITE_VER = "3"
 CONTACT_VER = "1"
 
@@ -57,6 +60,7 @@ var d=document.documentElement,me=document.currentScript;
 window.dataLayer=window.dataLayer||[];
 window.gtag=function(){dataLayer.push(arguments);};
 gtag('js',new Date());gtag('config','__GA_ID__');
+document.addEventListener('load',function(e){var l=e.target;if(l&&l.tagName==='LINK'&&l.hasAttribute('data-font'))l.media='all';},true);
 if(me&&me.hasAttribute('data-redirect'))(function(){
   try{if(localStorage.getItem('lang'))return;}catch(x){return;}
   var u=navigator.userAgent||'';
