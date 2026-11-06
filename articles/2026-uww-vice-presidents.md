@@ -14,7 +14,7 @@
 | マーケティング委員会 | 委員長 | Yerkin OKASSOV | Pedro GAMA FILHO に代わる |
 | 学校・大学スポーツ委員会 | 委員長 | Vladimir BREGOVIC | BACSA に代わる |
 
-LEE LOPEZ は総会で理事に再選され、OKASSOV と BREGOVIC は新しく理事に選ばれていた。理事会を離れる RUZIEV は、UWWの名誉副会長になった。
+BREGOVIC は総会で新しく理事に選ばれていた。理事会を離れる RUZIEV は、UWWの名誉副会長になった。
 
 総会と理事の選挙の結果は、[[news:2026-uww-president-lalovic|ラロビッチ会長の再選を伝えた記事]]にある。
 
