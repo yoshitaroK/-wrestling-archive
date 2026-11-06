@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#08080a">
-<script src="/assets/head.js?v=4" data-intro data-overlay></script>
+<script src="/assets/head.js?v=5" data-intro data-overlay></script>
 <meta name="description" content="The official Japan Wrestling Channel archive of Japanese wrestling streams and videos (from Japan Wrestling Channel and others), searchable by tournament, year and day. Emperor's Cup, Meiji Cup, Inter-College, Inter-High and more.">
 <link rel="canonical" href="https://japanwrestlingchannel.com/en/">
 <link rel="alternate" hreflang="ja" href="https://japanwrestlingchannel.com/">
@@ -30,7 +30,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Connect early to the YouTube image server for the hero and list thumbnails (#24) -->
 <link rel="preconnect" href="https://i.ytimg.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+<!-- Font CSS loads without blocking the first paint; head.js switches media to all when it arrives -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet" media="print" data-font><noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Teko:wght@500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   color-scheme:dark;

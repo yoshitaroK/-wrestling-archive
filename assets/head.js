@@ -4,6 +4,7 @@ var d=document.documentElement,me=document.currentScript;
 window.dataLayer=window.dataLayer||[];
 window.gtag=function(){dataLayer.push(arguments);};
 gtag('js',new Date());gtag('config','G-KWLY01JCWV');
+document.addEventListener('load',function(e){var l=e.target;if(l&&l.tagName==='LINK'&&l.hasAttribute('data-font'))l.media='all';},true);
 if(me&&me.hasAttribute('data-redirect'))(function(){
   try{if(localStorage.getItem('lang'))return;}catch(x){return;}
   var u=navigator.userAgent||'';

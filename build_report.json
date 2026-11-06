@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-06T13:38:04+09:00",
+ "built_at": "2026-11-06T13:40:12+09:00",
  "as_of": "2026-11-06",
  "video_count": 3366,
  "raw_count": 3366,
@@ -102,8 +102,8 @@
     "errors": []
    },
    "ja": {
-    "made": 0,
-    "kept": 1440,
+    "made": 28,
+    "kept": 1412,
     "removed": 0,
     "errors": []
    },
@@ -114,8 +114,8 @@
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1440,
+    "made": 28,
+    "kept": 1412,
     "removed": 0,
     "errors": []
    }
@@ -125,7 +125,7 @@
   "rows": 1159,
   "hidden_minor": 0,
   "no_link": 23,
-  "skipped_unknown_event": 85,
+  "skipped_unknown_event": 88,
   "history_rows": 5087,
   "history_linked": 1120,
   "history_hidden": 7,
