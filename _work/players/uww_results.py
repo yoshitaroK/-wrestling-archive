@@ -37,6 +37,7 @@ GAMES = [
     ("世界選手権", "2022", "x-world-championships-2022-09-12", UWW + "2026-01/results_09_belgrade_upd_doping_case_2.pdf"),
     ("世界選手権", "2023", "x-world-championships-2023-09-18", UWW + "2024-04/2023_seniors-world-chsips_final-book-20240424.pdf"),
     ("世界選手権", "2025", "", UWW + "2026-05/final-book-2025_senior_world_championships_20260528.pdf"),
+    ("世界選手権", "2026", "", UWW + "2026-11/results_10_astana.pdf"),  # アスタナ
     # U23世界選手権。2021年は日本が出ていない
     ("U23世界選手権", "2022", "", UWW + "2025-01/2022-u23-worlds_final-book_20250107.pdf"),
     ("U23世界選手権", "2023", "", UWW + "2023-10/2023-u23-world-championships_final-book.pdf"),
