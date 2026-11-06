@@ -341,6 +341,37 @@ def en_note(path, e):
             f'you can see them on the <a href="{e(path)}" hreflang="ja">Japanese version of this page</a> (<span lang="ja">日本語版</span>).</p>')
 
 
+def dataset_ld(name, years, src, hist, path, bp):
+    """歴代優勝者の表を Dataset として書く(#281)。値はデータから出せるものだけにする。
+    - temporalCoverage はページに出す年の範囲(いちばん古い年/いちばん新しい年)
+    - isBasedOn はページ下の「出典」と同じ URL だけ
+    - creator は運営者(協会を作者にしない)
+    - dateModified は書かない(data["as_of"] は毎朝変わるが、この表は毎朝の更新では変わらないため)
+    - license は出典に無いので書かない(Search Console の「推奨項目なし」の警告は許容する)"""
+    if not years:
+        return None
+    urls = sorted({u for y in src for u, _ in src[y]} | {u for u, _ in hist})
+    cover = f"{years[0]}/{years[-1]}" if years[0] != years[-1] else str(years[0])
+    if i18n.en():
+        based = " and ".join(x for x in ["the lists of medalists published by the Japan Wrestling Federation" if src else "",
+                                         HISTORY_SOURCE_EN if hist else ""] if x)
+        dname = f"{name}: past champions by style, weight class and year"
+        ddesc = (f"Champions of the {name} (Japan) by wrestling style, weight class and year. It covers {years_text_en(years)}. "
+                 + (f"Compiled by Japan Wrestling Channel from {based}." if based else "Compiled by Japan Wrestling Channel."))
+    else:
+        based = "と".join(x for x in ["日本レスリング協会が公開している入賞者一覧" if src else "", HISTORY_SOURCE if hist else ""] if x)
+        dname = f"{name} 歴代優勝者(スタイル・階級・年別)"
+        ddesc = (f"{name}の歴代優勝者を、スタイル・階級・年ごとにまとめた表です。対象は{years_text(years)}の記録です。"
+                 + (f"{based}をもとに、Japan Wrestling Channel がまとめました。" if based else "Japan Wrestling Channel がまとめました。"))
+    if len(ddesc) < 50:  # Google の決まり(Dataset の description は50字以上)
+        return None
+    d = {"@type": "Dataset", "name": dname, "description": ddesc, "url": bp.SITE + U(path),
+         "temporalCoverage": cover, "creator": {"@id": bp.ORG_ID}, "inLanguage": L("ja", "en")}
+    if urls:
+        d["isBasedOn"] = urls
+    return d
+
+
 def series_page(s, t, src, hist, ctx, bp):
     e = bp.e
     en = i18n.en()
@@ -352,9 +383,12 @@ def series_page(s, t, src, hist, ctx, bp):
     title = L(f"{name} 歴代優勝者({span})|{bp.SITE_NAME}", f"{name} – Past Champions ({span}) | {bp.site_name()}")
     desc = L(f"{name}の歴代優勝者を、スタイル・階級ごとに年別にまとめた表({span})。選手名から選手ページへ移れます。",
              f"Past champions of the {name} by style, weight class and year ({span}). Names link to player pages.")
-    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "WebPage", "name": L(f"{name} 歴代優勝者", f"{name} – Past Champions"), "url": bp.SITE + U(path),
-        "inLanguage": L("ja", "en")}]}
+    page = {"@type": "WebPage", "name": L(f"{name} 歴代優勝者", f"{name} – Past Champions"), "url": bp.SITE + U(path),
+            "inLanguage": L("ja", "en"), "description": desc, "publisher": {"@id": bp.ORG_ID}}
+    ds = dataset_ld(name, years, src, hist, path, bp)
+    if ds:
+        page["mainEntity"] = ds
+    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), page]}
     h = bp.head(title, desc, path, "", jsonld, ctx["css"])
     h += '<main id="content" class="wrap page champ">' + bp.breadcrumb_html(crumbs)
     h += f"<h1>{e(L(f'{name} 歴代優勝者', f'{name}: Past Champions'))}</h1>"
