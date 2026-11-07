@@ -1,6 +1,6 @@
 {
- "built_at": "2026-11-06T13:40:12+09:00",
- "as_of": "2026-11-06",
+ "built_at": "2026-11-07T09:48:28+09:00",
+ "as_of": "2026-11-07",
  "video_count": 3366,
  "raw_count": 3366,
  "duplicate_ids_removed": 0,
@@ -102,8 +102,8 @@
     "errors": []
    },
    "ja": {
-    "made": 28,
-    "kept": 1412,
+    "made": 0,
+    "kept": 1440,
     "removed": 0,
     "errors": []
    },
@@ -114,8 +114,8 @@
     "errors": []
    },
    "en": {
-    "made": 28,
-    "kept": 1412,
+    "made": 0,
+    "kept": 1440,
     "removed": 0,
     "errors": []
    }
