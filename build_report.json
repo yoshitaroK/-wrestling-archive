@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-08T09:19:29+09:00",
+ "built_at": "2026-11-08T20:23:46+09:00",
  "as_of": "2026-11-08",
  "video_count": 3366,
  "raw_count": 3366,
@@ -219,7 +219,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 25
+  "articles": 26
  },
  "books": {
   "errors": [],
