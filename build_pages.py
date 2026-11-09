@@ -2064,7 +2064,7 @@ def build(root=HERE, inline_css=False, only=None):
             pages.append((*faq_page(data, listed, ctx), data.get("as_of")))
             # トップの検索欄で、ニュース・大会の結果(速報)の大人の部・よくある質問も探せるように(assets/search.json)
             import search_index
-            search_index.write(root, ctx, faq_items(data, listed, ctx.get("players")), ctx.get("news_articles") or [], search_report)
+            search_index.write(root, data, ctx, faq_items(data, listed, ctx.get("players")), ctx.get("news_articles") or [], search_report)
             # 運営者情報
             pages.append((*about_page(data, listed, ctx), data.get("as_of")))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))

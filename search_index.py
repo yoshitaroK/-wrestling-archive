@@ -6,10 +6,11 @@
   news : ニュース(日本語版だけ。英語版にはニュースのページが無い) {u:リンク, t:見出し, l:リード, d:日付, c:分類, g:タグ}
   res  : 大会の結果(速報)の大人の部だけ [開催回ID, 種別, 階級, 成績, 氏名, 都道府県, 所属, 選手ID(選手ページがある人だけ。無ければ "")]
          英語版はさらに [部名の英語, 所属の英語(無ければ日本語), ローマ字の名前(無ければ "")]
-  faq  : よくある質問(/faq/ の FAQPage と同じ文) {q, a, u:リンク(無ければ "")}
+  faq  : よくある質問(/faq/ の FAQPage と同じ文) {q, a}
   syn  : 言い換え。同じ組の言葉はどれで検索しても同じものが見つかる(大会名と series_aliases.json の別名+下の EXTRA_SYNONYMS)
 
 高校生以下の部の結果は入れない(#未成年の決まり)。次のどれかに当たる行は外す:
+  0. 大会が高校・中学・少年少女・年代別だけの大会(data.json の groups に ADULT_GROUPS が無い)
   1. 種別が ADULT_DIVISIONS に無い(少年男子・U15 など。新しい部名も、ここに足すまでは入れない)
   2. 所属が高校・中学校など(「〜高」「〜高校」「〜中」「〜中学」などで終わる。「〜高教」=先生は大人なので残す。
      「含む」ではなく「終わる」で見る。中大(中央大)・中京学院大を消さないため)
@@ -29,6 +30,9 @@ import players as players_mod
 ADULT_DIVISIONS = {"成年男子フリースタイル", "成年男子グレコローマン", "男子グレコローマン", "シニア", "女子"}
 # 高校・中学校の所属(生徒)。「高教」「中教」(先生)は当てはまらない
 SCHOOL_CLUB_RE = re.compile(r"(高|高校|高等学校|高専|中|中学|中学校|中等教育学校|特別支援学校|高等支援学校)$")
+# 大人が出る大会の区分(data.json の series[].groups)。高校・中学・少年少女・年代別だけの大会の結果は、部の名前が
+# 「男子グレコローマン」「女子」でも入れない(高校の大会では学校名が「高」なしで書かれることも多いため)
+ADULT_GROUPS = {"一般", "大学", "社会人", "女子", "マスターズ"}
 # 英語版の部名(players.DIVISION_EN に無いもの)
 DIVISION_EN = {"シニア": "Senior", "男子グレコローマン": "Men's Greco-Roman"}
 # 子どものクラブ・学校の部(所属にこの言葉を含む行は外す。大人の指導者の所属かもしれないが、念のため)
@@ -43,7 +47,7 @@ EXTRA_SYNONYMS = [
 ]
 
 
-def adult_result_rows(root, minor_names):
+def adult_result_rows(root, minor_names, adult_events):
     """event_results.csv から、検索に入れてよい大人の部の行だけを返す。(行のリスト, 外した行数)"""
     path = os.path.join(root, players_mod.EVENT_RESULTS_CSV)
     if not os.path.exists(path):
@@ -55,7 +59,7 @@ def adult_result_rows(root, minor_names):
         name, club = (r.get("氏名") or "").strip(), players_mod.norm(r.get("所属") or "")
         if not r.get("開催回ID") or not name:
             continue
-        if (r.get("種別") or "").strip() not in ADULT_DIVISIONS or SCHOOL_CLUB_RE.search(club) \
+        if r["開催回ID"] not in adult_events or (r.get("種別") or "").strip() not in ADULT_DIVISIONS or SCHOOL_CLUB_RE.search(club) \
                 or any(w in club for w in YOUTH_CLUB_WORDS) \
                 or players_mod.same_name(name) in minor_names:
             dropped += 1
@@ -95,7 +99,13 @@ def synonyms(root):
     return groups + EXTRA_SYNONYMS
 
 
-def write(root, ctx, faq, news_articles, report):
+def adult_events(data):
+    """大人が出る大会(ADULT_GROUPS のどれかに当たる大会)の開催回ID"""
+    groups = {x["id"]: set(x.get("groups") or []) for x in data.get("series", [])}
+    return {e["id"] for e in data.get("events", []) if groups.get(e.get("series"), set()) & ADULT_GROUPS}
+
+
+def write(root, data, ctx, faq, news_articles, report):
     """assets/search.json(日本語)か assets/search-en.json(英語)を書く。faq は build_pages.faq_items() の結果"""
     en = i18n.en()
     by_name, roman = {}, {}
@@ -104,7 +114,7 @@ def write(root, ctx, faq, news_articles, report):
             by_name.setdefault(players_mod.same_name(k), set()).add(p["id"])
         if p.get("roman"):
             roman[p["id"]] = p["roman"]
-    rows, dropped = adult_result_rows(root, minor_names(root))
+    rows, dropped = adult_result_rows(root, minor_names(root), adult_events(data))
     res = []
     for r in rows:
         ids = by_name.get(players_mod.same_name(r["氏名"]), set())
@@ -118,8 +128,7 @@ def write(root, ctx, faq, news_articles, report):
         res.append(row)
     news = [] if en else [{"u": f"/news/{a['slug']}/", "t": a.get("title", ""), "l": a.get("lead", ""), "d": a.get("date", ""),
                            "c": a.get("category", ""), "g": a.get("tags", [])} for a in news_articles]
-    faq_rows = [{"q": q, "a": a, "u": (link[0] if link[0].startswith("/en/") or link[0] == "/" and en else i18n.U(link[0])) if link else ""}
-                for q, a, link in faq]
+    faq_rows = [{"q": q, "a": a} for q, a, _ in faq]  # 検索では /faq/ へリンクする
     doc = {"news": news, "res": res, "faq": faq_rows, "syn": synonyms(root)}
     os.makedirs(os.path.join(root, "assets"), exist_ok=True)
     name = "search-en.json" if en else "search.json"
