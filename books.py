@@ -247,6 +247,28 @@ def fetch(root="."):
     return report
 
 
+def author_names(raw):
+    """著者の文字を、人ごとの名前のリストにする(#301)。図書館のデータ(openBD)は「姓,名,生年-」の形で、
+    人の間は空白か「/」(例:「山田,幸雄,1955- 上地,優歩」→ ["山田幸雄", "上地優歩"]、「沼尻,直,-2004」→ ["沼尻直"])。
+    カンマの無いもの(「布施鋼治」「日本オリンピックアカデミー」)はそのまま"""
+    out = []
+    for part in re.split(r"[\s/]+", (raw or "").strip()):
+        if not part:
+            continue
+        if "," in part:
+            bits = [x for x in part.split(",") if x and not re.fullmatch(r"\d{0,4}-\d{0,4}", x)]
+            part = "".join(bits)
+        if part and part not in out:
+            out.append(part)
+    return out
+
+
+def author_text(raw):
+    """ページ・説明文に出す著者(人の間は「・」)。著者が1人で形を変えるところが無ければ、元の文字のまま"""
+    names = author_names(raw)
+    return "・".join(names) if any("," in x for x in re.split(r"[\s/]+", raw or "")) else (raw or "").strip()
+
+
 def load(root, ctx, report):
     """books.json と books_cache.json から、ページに出す本の一覧を作る"""
     raw = load_json(os.path.join(root, BOOKS_JSON), None)
@@ -279,6 +301,9 @@ def load(root, ctx, report):
         for k in ("title", "authors", "publisher", "pubdate", "cover", "description"):
             if b.get(k):
                 d[k] = b[k]
+        # 構造化データ(Book.author の Person)用に人ごとの名前も持つ。ページの文字は「・」でつなぐ(#301)
+        d["author_list"] = author_names(d["authors"]) if "," in d["authors"] else []
+        d["authors"] = author_text(d["authors"])
         if not d.get("title"):
             if b.get("_order") is not None:
                 report["shelf_without_data"] = report.get("shelf_without_data", 0) + 1
@@ -373,7 +398,7 @@ def build(root, ctx, bp, report):
         jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), dict({
             "@type": "Book", "name": b["title"], "url": bp.SITE + path},
             **({"isbn": b["isbn"]} if is_isbn(b["isbn"]) else {}),
-            **({"author": b["authors"]} if b["authors"] else {}), **({"publisher": b["publisher"]} if b["publisher"] else {}),
+            **({"author": [{"@type": "Person", "name": x} for x in b["author_list"]] if b.get("author_list") else b["authors"]} if b["authors"] else {}), **({"publisher": b["publisher"]} if b["publisher"] else {}),
             **({"datePublished": pub_iso(b["pubdate"])} if pub_iso(b["pubdate"]) else {}),
             **({"image": b["cover"]} if b.get("cover") else {}))]}
         h = bp.head(f"{title}|書籍|{bp.SITE_NAME}", desc, path, b.get("cover") or "", jsonld, ctx["css"], alternates=False)
