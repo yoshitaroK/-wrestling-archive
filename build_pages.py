@@ -80,6 +80,50 @@ def fmt_date(iso):
     return f"{int(y)}年{int(m)}月{int(d)}日"
 
 
+# 都道府県(会場名の「千葉・」「茨城県水戸市・」から、SportsEvent の住所を作る。#299)
+PREFS = ("北海道 青森 岩手 宮城 秋田 山形 福島 茨城 栃木 群馬 埼玉 千葉 東京 神奈川 新潟 富山 石川 福井 山梨 長野 岐阜 静岡 愛知 三重 "
+         "滋賀 京都 大阪 兵庫 奈良 和歌山 鳥取 島根 岡山 広島 山口 徳島 香川 愛媛 高知 福岡 佐賀 長崎 熊本 大分 宮崎 鹿児島 沖縄").split()
+# 英語版の住所に入れる都道府県名(英語のページに日本語の県名を入れない)
+PREFS_EN = ("Hokkaido Aomori Iwate Miyagi Akita Yamagata Fukushima Ibaraki Tochigi Gunma Saitama Chiba Tokyo Kanagawa Niigata Toyama "
+            "Ishikawa Fukui Yamanashi Nagano Gifu Shizuoka Aichi Mie Shiga Kyoto Osaka Hyogo Nara Wakayama Tottori Shimane Okayama "
+            "Hiroshima Yamaguchi Tokushima Kagawa Ehime Kochi Fukuoka Saga Nagasaki Kumamoto Oita Miyazaki Kagoshima Okinawa").split()
+# 海外の会場は「パリ(フランス)」の形。対応表にある国だけ ISO の国コードを入れる
+COUNTRY_CODES = {"フランス": "FR", "セルビア": "RS", "ノルウェー": "NO", "アメリカ": "US", "ハンガリー": "HU", "トルコ": "TR",
+                 "クロアチア": "HR", "カザフスタン": "KZ", "中国": "CN", "韓国": "KR", "モンゴル": "MN", "イタリア": "IT",
+                 "スペイン": "ES", "ポーランド": "PL", "アルバニア": "AL", "キルギス": "KG", "ウズベキスタン": "UZ", "タイ": "TH",
+                 "ヨルダン": "JO", "インド": "IN", "ブルガリア": "BG", "ルーマニア": "RO", "エジプト": "EG", "カナダ": "CA"}
+
+
+def venue_address(venue, hall="", en=False):
+    """会場名から schema.org の PostalAddress を作る。会場名に書いてあることだけを使う(分からなければ None)。
+    英語版(en=True)は都道府県をローマ字にし、日本語の市の名前・地名は入れない(国コードは入れる)。
+    例:「千葉・佐倉市民体育館」→ 千葉県 / 「茨城県水戸市・青柳公園水戸市民体育館」→ 茨城県・水戸市 / 「パリ(フランス)」→ パリ・FR"""
+    venue = (venue or "").strip()
+    addr = {}
+    if "/" in venue or "/" in venue:
+        venue = ""  # 会場が2つある回(「山口・…/東京・駒沢体育館」)は、片方の県だけ書くと間違いになるので住所を作らない
+    m = re.match(r"^([^・()()]+?)(?:・|$)", venue)
+    head_ = m.group(1) if m and "・" in venue else venue
+    for p in PREFS:
+        if head_.startswith(p):
+            rest = head_[len(p):]
+            rest = rest[1:] if rest[:1] in ("都", "道", "府", "県") else rest
+            if rest and not re.fullmatch(r"[^\s]+?[市区町村]", rest):
+                break  # 「大阪」「東京」のあとに市町村ではない文字が続く(会場名そのもの)ときは使わない
+            addr["addressRegion"] = PREFS_EN[PREFS.index(p)] if en else p + ("" if p == "北海道" else "都" if p == "東京" else "府" if p in ("京都", "大阪") else "県")
+            if rest and not en:
+                addr["addressLocality"] = rest
+            addr["addressCountry"] = "JP"
+            break
+    else:
+        m = re.fullmatch(r"([^()()]+)[((]([^()()]+)[))]", venue)
+        if m and m.group(2) in COUNTRY_CODES:
+            addr = dict({} if en else {"addressLocality": m.group(1).strip()}, addressCountry=COUNTRY_CODES[m.group(2)])
+    if hall:
+        addr["streetAddress"] = hall
+    return dict({"@type": "PostalAddress"}, **addr) if addr else None
+
+
 def fmt_range(a, b):
     if not a:
         return L("日付未確認", "Date TBC")
@@ -602,9 +646,12 @@ def event_page(ev, ctx):
               "eventStatus": "https://schema.org/" + SCHEMA_STATUS.get(status, "EventScheduled")}
         if venue:
             se["location"] = {"@type": "Place", "name": venue}
-            hall = (ev.get("organizers") or {}).get("会場", "")
-            if hall and not i18n.en():
-                se["location"]["address"] = hall  # 例:「駒沢オリンピック公園総合運動場体育館 〒154-0013 世田谷区駒沢公園1-1」
+            # 住所:会場名の都道府県・市(英語版はローマ字の都道府県と国コードだけ)と、overrides の「会場」の文字
+            # (例:「駒沢オリンピック公園総合運動場体育館 〒154-0013 世田谷区駒沢公園1-1」)。#299
+            hall = (ev.get("organizers") or {}).get("会場", "") if not i18n.en() else ""
+            addr = venue_address(ev.get("venue") or "", hall, en=i18n.en())
+            if addr:
+                se["location"]["address"] = addr
         org = (ev.get("organizers") or {}).get("主催", "")
         if org and not i18n.en():
             se["organizer"] = [{"@type": "Organization", "name": o.strip()} for o in re.split(r"[、,]", org) if o.strip()]
