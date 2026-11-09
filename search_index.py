@@ -33,6 +33,7 @@ SCHOOL_CLUB_RE = re.compile(r"(高|高校|高等学校|高専|中|中学|中学�
 # 大人が出る大会の区分(data.json の series[].groups)。高校・中学・少年少女・年代別だけの大会の結果は、部の名前が
 # 「男子グレコローマン」「女子」でも入れない(高校の大会では学校名が「高」なしで書かれることも多いため)
 ADULT_GROUPS = {"一般", "大学", "社会人", "女子", "マスターズ"}
+YOUTH_GROUPS = {"高校", "中学", "少年少女", "年代別"}
 # 英語版の部名(players.DIVISION_EN に無いもの)
 DIVISION_EN = {"シニア": "Senior", "男子グレコローマン": "Men's Greco-Roman"}
 # 子どものクラブ・学校の部(所属にこの言葉を含む行は外す。大人の指導者の所属かもしれないが、念のため)
@@ -102,7 +103,10 @@ def synonyms(root):
 def adult_events(data):
     """大人が出る大会(ADULT_GROUPS のどれかに当たる大会)の開催回ID"""
     groups = {x["id"]: set(x.get("groups") or []) for x in data.get("series", [])}
-    return {e["id"] for e in data.get("events", []) if groups.get(e.get("series"), set()) & ADULT_GROUPS}
+    def adult(g):
+        # 子どもの区分も付いている大会(ジュニアクイーンズカップ [女子, 年代別] など)は、「一般」があるときだけ(国体 [一般, 高校])
+        return bool(g & ADULT_GROUPS) and (not (g & YOUTH_GROUPS) or "一般" in g)
+    return {e["id"] for e in data.get("events", []) if adult(groups.get(e.get("series"), set()))}
 
 
 def write(root, data, ctx, faq, news_articles, report):
