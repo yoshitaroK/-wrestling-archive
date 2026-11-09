@@ -619,22 +619,25 @@ def event_page(ev, ctx):
     if ev["id"] in ctx.get("same_name", ()) and ev.get("start") and not ev.get("derived"):
         day = fmt_date(ev["start"])[5:] if not i18n.en() else fmt_date(ev["start"]).rsplit(",", 1)[0]
     yr = f"{ev['year']}" + (L(f"年({day})", f" ({day})") if day else L("年", ""))
+    # 説明文の後ろの「いつ・どこで」。日付が推定(derived)の回は「開催」と書かず、本文と同じく動画の配信日を書く。
+    # 文の終わりの「。」/「.」は1つだけにする(#300。前は推定の回が「…本。。」になっていた)
     if i18n.en():
+        when = (f" Video publish dates: {rng} (official dates not yet confirmed)." if ev.get("derived") else
+                f" Held {rng}" + (f" at {venue}." if venue else ".")) if ev.get("start") else (f" Venue: {venue}." if venue and not ev.get("derived") else "")
         title = f"{name} {yr} – {i18n.plural(len(vids), 'video')} | {site_name()}"
-        desc = f"{name} ({ev['year']}): {i18n.plural(len(vids), 'stream/video', 'streams/videos')}. {counts}." + (
-            f" Held {rng}" if ev.get("start") and not ev.get("derived") else "") + (
-            f" at {venue}." if venue and not ev.get("derived") else "")
+        desc = f"{name} ({ev['year']}): {i18n.plural(len(vids), 'stream/video', 'streams/videos')}. {counts}." + when
         if not vids:
             title = f"{name} {yr} – Photos | {site_name()}"
-            desc = f"{name} ({ev['year']}): photos." + (f" Held {rng}" if ev.get("start") else "") + (f" at {venue}." if venue else "")
+            desc = f"{name} ({ev['year']}): photos." + when
     else:
+        jv = ev.get("venue") if not ev.get("derived") else ""
+        when = (f"動画の配信日は{rng}(公式の開催日は確認中)。" if ev.get("derived") else
+                f"{rng}開催" + (f"、会場は{jv}。" if jv else "。")) if ev.get("start") else (f"会場は{jv}。" if jv else "")
         title = f"{name} {yr} 配信動画一覧({len(vids)}本)|{SITE_NAME}"
-        desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + (
-            f"{rng}開催" if ev.get("start") and not ev.get("derived") else "") + (
-            f"、会場は{ev['venue']}。" if ev.get("venue") and not ev.get("derived") else "。")
+        desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + when
         if not vids:
             title = f"{name} {yr} 写真|{SITE_NAME}"
-            desc = f"{name}({ev['year']}年)の写真。" + (f"{rng}開催" if ev.get("start") else "") + (f"、会場は{ev['venue']}。" if ev.get("venue") else "。")
+            desc = f"{name}({ev['year']}年)の写真。" + when
     dated = re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (series_name(s), spath),
               (year_label(ev["year"]) + ((L("(", " (") + (fmt_date(ev['start'])[5:] if not i18n.en() else fmt_date(ev['start']).rsplit(',', 1)[0]) + ")") if dated else ""), None)]
