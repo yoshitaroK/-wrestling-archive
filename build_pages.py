@@ -2021,6 +2021,7 @@ def build(root=HERE, inline_css=False, only=None):
     # 書籍(books.json と books_cache.json)。選手ページの「関連する本」でも使うので先に読む
     import books
     books_report = {"errors": [], "warnings": []}
+    search_report = {}
     try:
         ctx["books"] = books.load(root, ctx, books_report)
     except Exception as ex:
@@ -2111,6 +2112,9 @@ def build(root=HERE, inline_css=False, only=None):
             pages.append((*privacy_page(ctx), PRIVACY_UPDATED))
             # よくある質問
             pages.append((*faq_page(data, listed, ctx), data.get("as_of")))
+            # トップの検索欄で、ニュース・大会の結果(速報)の大人の部・よくある質問も探せるように(assets/search.json)
+            import search_index
+            search_index.write(root, data, ctx, faq_items(data, listed, ctx.get("players")), ctx.get("news_articles") or [], search_report)
             # 運営者情報
             pages.append((*about_page(data, listed, ctx), data.get("as_of")))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))
@@ -2127,6 +2131,7 @@ def build(root=HERE, inline_css=False, only=None):
                 report["photos"] = photo_report
                 report["news"] = news_report
                 report["books"] = books_report
+                report["search"] = search_report
                 report["tech"] = {"shown": len(shown), "by_category": dict(cnt), "moved_to_tournament": to_tournament,
                                   "unclassified_count": len(unclassified),
                                   "tech_unclassified": [{"video_id": v["id"], "title": v["t"], "channel": v["_ch"]} for v in unclassified]}

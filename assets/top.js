@@ -546,7 +546,7 @@ function videoHits(){
   V.forEach(function(v){
     if(seen[v.id]) return;
     var ev = v.e && E[v.e], se = S[v.s || (ev && ev.series)];
-    var ok = toks.every(function(t){ return v.key.indexOf(t)>=0 || (/^(19|20)\d{2}$/.test(t) && ev && String(ev.year)===t); });
+    var ok = toks.every(function(t){ return hasTok(v.key, t) || (/^(19|20)\d{2}$/.test(t) && ev && String(ev.year)===t); });
     if(!ok || !vidOk(v)) return;
     if(st.c && !(se && se.groups.indexOf(st.c)>=0)) return;
     if(st.sc && !(se && se.scope===st.sc)) return;
@@ -625,6 +625,76 @@ function uwwSection(us){
     }).join('')+'</ul>'+
     '<p class="hint"><a href="'+U('/uww/')+'">'+(us.length>MAX ? L('ほかの'+(us.length-MAX)+'本は国際大会のページで見る','See '+(us.length-MAX)+' more on the International videos page') : L('国際大会のページを見る','Open the International videos page'))+'</a></p></section>';
 }
+/* ---------- ニュース・大会の結果(速報)・よくある質問(assets/search.json。検索欄にフォーカスしたとき・文字を打ったときだけ読む) ---------- */
+// 結果は大人の部だけ(高校生以下の部・高校生・中学生の行は search_index.py で外してある)
+var SX = null, sxLoading = false, SYN = {};
+function loadSearch(){
+  if(SX || sxLoading) return; sxLoading = true;
+  fetch(L('/assets/search.json','/assets/search-en.json'),{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    d = d || {};
+    // 言い換え:同じ組の言葉は、どれで検索しても同じものが見つかる(国体=国スポ=国民スポーツ大会 など)
+    (d.syn||[]).forEach(function(g){ var ks = g.map(skey).filter(Boolean); ks.forEach(function(k){ var cur = SYN[k] || (SYN[k] = [k]); ks.forEach(function(x){ if(cur.indexOf(x)<0) cur.push(x); }); }); });
+    SX = {
+      news: (d.news||[]).map(function(a){ a.key = skey([a.t, a.l, a.c, a.d.slice(0,4)].concat(a.g||[]).join(' ')); return a; }),
+      res: (d.res||[]).map(function(r){
+        var ev = E[r[0]] || {}, se = S[ev.series] || {};
+        var o = {eid:r[0], dv:r[1], w:r[2], rk:r[3], n:r[4], pf:r[5], cl:r[6], pid:r[7], dve:r[8]||r[1], cle:r[9]||r[6], ne:r[10]||'', ev:ev, se:se};
+        o.key = skey([ev.name, N(ev.name), se.name, N(se.name)].concat(se.aliases||[], [ev.year, r[1], r[8]||'', r[2], r[3], r[3]==='1位'?'優勝':'', r[4], r[10]||'', r[5], r[6]]).join(' '));
+        return o;
+      }),
+      faq: (d.faq||[]).map(function(f){ f.key = skey(f.q+' '+f.a); return f; })
+    };
+    if(st.q) render();
+  }).catch(function(){ SX = {news:[], res:[], faq:[]}; });
+}
+// 検索語 t(skey 済み)が key に入っているか。言い換えがある言葉は、どれか1つが入っていればよい
+function hasTok(key, t){ var vs = SYN[t] || [t]; for(var i=0;i<vs.length;i++){ if(key.indexOf(vs[i])>=0) return true; } return false; }
+function sxHits(kind){
+  if(!st.q) return [];
+  if(!SX){ loadSearch(); return []; }
+  var toks = st.q.split(/\s+/).map(skey).filter(Boolean); if(!toks.length) return [];
+  return SX[kind].filter(function(x){ return toks.every(function(t){ return hasTok(x.key, t); }); });
+}
+function resultsSection(rs){
+  if(!rs.length) return '';
+  // 当てはまる行が多いとき(大会名だけで探したときなど)は、優勝した人から先に出す
+  var MAX = 12, groups = [], byE = {};
+  rs = rs.map(function(r,i){ return [parseInt(r.rk,10)||99, i, r]; }).sort(function(a,b){ return a[0]-b[0] || a[1]-b[1]; }).map(function(x){ return x[2]; });
+  rs.slice(0,MAX).forEach(function(r){ if(!byE[r.eid]){ byE[r.eid] = {r:r, rows:[]}; groups.push(byE[r.eid]); } byE[r.eid].rows.push(r); });
+  var cnt = {}; rs.forEach(function(r){ cnt[r.eid] = (cnt[r.eid]||0)+1; });
+  return '<section class="section psec"><h2>'+L('大会の結果(速報)','Results (live)')+'<small class="hint" style="margin-left:8px">'+L(rs.length+'件', plural(rs.length,'result'))+'</small></h2>'+
+    '<p class="hint">'+L('決勝・準決勝に進んだ選手と5位の選手です。大人の部だけを載せています。','Finalists, semifinalists and 5th-place finishers. Senior (adult) divisions only.')+'</p>'+
+    groups.map(function(g){
+      var ev = g.r.ev, href = eventPage(g.r.eid), nm = N(ev.name||'')+(ev.year?' '+yl(ev.year):'');
+      var more = cnt[g.r.eid] - g.rows.length;
+      return '<div class="rsgrp"><h3>'+(href?'<a href="'+esc(href)+'">'+esc(nm)+'</a>':esc(nm))+'</h3><ul class="rslist">'+
+        g.rows.map(function(r){
+          var who = LANG==='en' ? (r.ne || r.n) : r.n, nl = LANG==='en' && !r.ne ? ' lang="ja"' : '';
+          var name = r.pid ? '<a href="'+U('/players/'+r.pid+'/')+'"'+nl+'>'+esc(who)+'</a>' : '<span'+nl+'>'+esc(who)+'</span>';
+          var where = [r.pf, LANG==='en' ? r.cle : r.cl].filter(Boolean).join(L('・',', '));
+          return '<li><b class="rk">'+esc(LANG==='en' ? r.rk.replace(/^(\d+)位$/, function(m,n){ return n==='1'?'1st':n==='2'?'2nd':n==='3'?'3rd':n+'th'; }) : r.rk)+'</b> '+name+
+            (where?' <small'+(LANG==='en'?' lang="ja"':'')+'>'+esc(where)+'</small>':'')+'<span class="rsdv">'+esc(LANG==='en' ? r.dve : r.dv)+' '+esc(r.w)+'</span></li>';
+        }).join('')+'</ul>'+
+        (more>0 && href ? '<p class="hint"><a href="'+esc(href)+'">'+L('ほかの'+more+'件は開催回のページで見る','See '+more+' more on the edition page')+'</a></p>' : '')+'</div>';
+    }).join('')+'</section>';
+}
+function newsSection(ns){
+  if(!ns.length) return '';
+  var MAX = 5;
+  return '<section class="section psec"><h2>'+L('ニュース','News')+'<small class="hint" style="margin-left:8px">'+L(ns.length+'件', plural(ns.length,'article'))+'</small></h2><ul class="nslist">'+
+    ns.slice(0,MAX).map(function(a){
+      return '<li><a href="'+esc(a.u)+'"><span class="nsm">'+esc(fmtDate(a.d))+(a.c?' ・ '+esc(a.c):'')+'</span><span class="nst">'+esc(a.t)+'</span>'+(a.l?'<span class="nsl">'+esc(a.l)+'</span>':'')+'</a></li>';
+    }).join('')+'</ul>'+
+    '<p class="hint"><a href="/news/">'+(ns.length>MAX ? 'ほかの'+(ns.length-MAX)+'件はニュースの一覧で見る' : 'ニュースの一覧を見る')+'</a></p></section>';
+}
+function faqSection(fs){
+  if(!fs.length) return '';
+  var MAX = 3;
+  return '<section class="section psec"><h2>'+L('よくある質問','FAQ')+'</h2><ul class="nslist">'+
+    fs.slice(0,MAX).map(function(f){
+      return '<li><a href="'+esc(U('/faq/'))+'"><span class="nst">'+esc(f.q)+'</span><span class="nsl">'+esc(f.a)+'</span></a></li>';
+    }).join('')+'</ul></section>';
+}
 function looseSection(){
   var list = loose.filter(vidOk); if(!list.length) return '';
   moreCache['loose']=list;
@@ -637,20 +707,23 @@ function render(){
   // 選手名で一致した選手は、大会より上に出す
   var ph = st.s ? [] : playerHits();
   var uh = st.s ? [] : uwwHits();
+  var rh = st.s ? [] : sxHits('res'), nh = st.s ? [] : sxHits('news'), fh = st.s ? [] : sxHits('faq');
   renderStatus(list, st.q && (vr.hits.length || !list.length) ? vr.hits.length : null, ph.length);
   var anyFilter = st.q||st.y||st.c||st.sty||st.sc||st.k||st.all;
   var h = '';
   document.getElementById('jhero').classList.toggle('compact', !!(anyFilter || st.s));
   if(!anyFilter && !st.s) h += renderShelves();
   h += playerSection(ph);
+  h += resultsSection(rh);
+  h += newsSection(nh);
   h += uwwSection(uh);
   // 大会が0件で動画だけ見つかったときは、動画を先に出す
   var videosFirst = !list.length && vr.hits.length && !st.s;
   if(videosFirst){
-    h += '<p class="noser">'+L('大会名では一致しませんでしたが、動画タイトルで'+vr.hits.length+'本見つかりました。','No tournament matched, but '+plural(vr.hits.length,'video')+' matched by title.')+'</p>' + videoSearch(vr, true);
+    h += '<p class="noser">'+L('大会名では一致しませんでしたが、動画タイトルで'+vr.hits.length+'本見つかりました。','No tournament matched, but '+plural(vr.hits.length,'video')+' matched by title.')+'</p>' + videoSearch(vr, true) + faqSection(fh);
     document.getElementById('main').innerHTML = h; afterRender(); return;
   }
-  if(!list.length && !st.s && (ph.length || uh.length)){ document.getElementById('main').innerHTML = h; afterRender(); return; }
+  if(!list.length && !st.s && (ph.length || uh.length || rh.length || nh.length || fh.length)){ h += faqSection(fh); document.getElementById('main').innerHTML = h; afterRender(); return; }
   if(!list.length && !st.s){
     h += '<div class="empty"><p>'+L('<strong>条件に合う大会・動画はありません。</strong>検索語を短くするか、条件を外してください。','<strong>No tournaments or videos match.</strong> Try a shorter search or remove filters. Video titles are in Japanese, so English words only match tournament names.')+'</p>'+
       '<p>'+L('いまの条件:','Current filters: ')+esc(currentConditions())+'</p><button type="button" class="clear" id="clear">'+L('条件をすべてクリア','Clear all filters')+'</button></div>';
@@ -667,6 +740,7 @@ function render(){
   }
   h += '</section>';
   h += videoSearch(vr, false);
+  h += faqSection(fh);
   if(!st.q && !st.s) h += looseSection();
   document.getElementById('main').innerHTML = h;
   afterRender();
@@ -703,6 +777,8 @@ document.getElementById('q').addEventListener('input', function(ev){
   clearTimeout(qTimer); var val = ev.target.value;
   qTimer = setTimeout(function(){ st.q = val.trim(); legacyNote=''; commit(false); }, 180);
 });
+// 検索用のデータは、検索欄を使い始めたときに初めて読む(トップを開いた時点では読まない)
+document.getElementById('q').addEventListener('focus', function(){ loadPlayers(); loadUww(); loadSearch(); });
 document.getElementById('q').addEventListener('keydown', function(ev){ if(ev.key==='Enter'){ clearTimeout(qTimer); st.q = ev.target.value.trim(); commit(true); } });
 [['f-year','y'],['f-cat','c'],['f-style','sty'],['f-scope','sc'],['f-kind','k']].forEach(function(p){
   document.getElementById(p[0]).addEventListener('change', function(ev){ st[p[1]] = ev.target.value; if(p[1]==='y') st.e=''; commit(true); });
