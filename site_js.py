@@ -16,6 +16,7 @@
 - ヘッダーの検索欄(<form class="hsearch">)で、トップページの検索に移る
 - スマートフォンで、虫めがねのボタン(<button class="hs-btn">)を押すと検索欄を開く。html に hs を付けて、描く前から検索欄をたたんでおく
 - スマートフォンのメニュー(横に動く1段)を、今いるページの項目が見える位置まで動かす
+- パンくずの右の「共有」ボタン(<button data-share>)。スマートフォンでは共有の画面を開き、パソコンではページのリンクをコピーする
 - 長いページで「ページの先頭へ戻る」ボタン(<button class="totop">)を出す
 - 画像が読み込めないときに消す(<img data-gone>。書籍の表紙など)
 - トップページを開いた最初の1回だけ、ロゴの動き(intro)を出す(<script data-intro>)
@@ -115,9 +116,18 @@ document.addEventListener('click',function(ev){
   var o=f.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');
   if(o)f.q.focus();
 });
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('[data-share]');
+  if(!b)return;
+  var c=document.querySelector('link[rel="canonical"]'),u=c&&c.href||location.href.split('#')[0],en=d.lang==='en',s=b.querySelector('span');
+  if(navigator.share){navigator.share({title:document.title,url:u}).catch(function(){});return;}
+  function say(t){s.textContent=t;b.classList.add('ok');setTimeout(function(){s.textContent=en?'Share':'共有';b.classList.remove('ok');},2400);}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(function(){say(en?'Link copied':'リンクをコピーしました');},function(){window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);});
+  else window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);
+});
 document.addEventListener('DOMContentLoaded',function(){
   var n=document.querySelector('.topnav'),c=n&&n.querySelector('[aria-current]');
-  if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-(n.clientWidth-c.offsetWidth)/2);
+  if(c&&n.scrollWidth>n.clientWidth){var nr=n.getBoundingClientRect(),cr=c.getBoundingClientRect();if(cr.right>nr.right-40)n.scrollLeft=cr.left-nr.left-(nr.width-cr.width)/2;}
   var b=document.createElement('button'),on=false;
   b.type='button';b.className='totop';b.setAttribute('aria-label',d.lang==='en'?'Back to top':'ページの先頭へ戻る');
   b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14.5l6-6 6 6"/></svg>';

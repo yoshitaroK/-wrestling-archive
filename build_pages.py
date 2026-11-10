@@ -381,7 +381,10 @@ def breadcrumb_html(items):
         last = i == len(items) - 1
         lis.append(f'<li><span aria-current="page">{e(name)}</span></li>' if last or not path
                    else f'<li><a href="{e(U(path))}">{e(name)}</a></li>')
-    return f'<nav class="crumbs" aria-label="{L("現在の位置", "Breadcrumb")}"><ol>{"".join(lis)}</ol></nav>'
+    # 右端の「共有」ボタンは head.js が動かす(スマートフォンでは共有の画面を開き、パソコンではページのリンクをコピーする)
+    share = ('<button type="button" class="share-btn" data-share><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 7.5 12 3.5l4 4M5 12v7h14v-7"/></svg>'
+             f'<span aria-live="polite">{L("共有", "Share")}</span></button>')
+    return f'<div class="crumbs-row"><nav class="crumbs" aria-label="{L("現在の位置", "Breadcrumb")}"><ol>{"".join(lis)}</ol></nav>{share}</div>'
 
 
 def breadcrumb_ld(items):
