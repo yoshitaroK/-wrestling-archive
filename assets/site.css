@@ -25,6 +25,24 @@ button,input,select{font:inherit;color:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tabnum,.num{font-variant-numeric:tabular-nums}
 .num{font-family:var(--num);font-weight:600;letter-spacing:.01em}
+/* 日本語の見出しは、言葉の切れ目で折り返す(対応しているブラウザだけ。名前の途中で行が変わりにくくなる) */
+:lang(ja) :is(h1,h2,h3,.fn){word-break:auto-phrase}
+/* ページを移るときに、ふわっと切り替える(対応しているブラウザだけ) */
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.16s}
+/* パンくずの右の「共有」ボタン(head.js が動かす) */
+.crumbs-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.crumbs-row .crumbs{min-width:0;padding-top:5px}
+.crumbs-row .crumbs ol{margin-bottom:0}
+.share-btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:3px 12px 3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink2);font-size:12px;font-weight:500;line-height:1.3;cursor:pointer;white-space:nowrap}
+.share-btn:hover{border-color:var(--pink);color:var(--pink)}
+.share-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.share-btn.ok{border-color:var(--pink);color:var(--pink)}
+/* 長いページで出る「ページの先頭へ戻る」ボタン(head.js が置く) */
+.totop{position:fixed;right:16px;bottom:16px;z-index:15;width:44px;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line-hi);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:var(--shadow-hi);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+.totop.on{opacity:1;visibility:visible;transform:none}
+.totop:hover{border-color:var(--pink);color:var(--pink)}
+.totop svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 
 /* ヘッダー */
 .brand{display:flex;align-items:center;gap:8px 28px;flex-wrap:wrap;padding:10px 0 0}
@@ -57,6 +75,11 @@ button,input,select{font:inherit;color:inherit}
 .hsearch button{flex:0 0 auto;width:38px;border:0;background:var(--pink-fill);color:#fff;cursor:pointer;display:grid;place-items:center}
 .hsearch button:hover{filter:brightness(1.12)}
 .hsearch svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+/* スマートフォンで検索欄を開くボタン(パソコンの幅では出さない) */
+.hs-btn{display:none;flex:0 0 auto;width:36px;height:36px;place-items:center;padding:0;border:1px solid rgba(255,255,255,.4);border-radius:999px;background:transparent;color:var(--on-navy);cursor:pointer}
+.hs-btn:hover,.hs-btn[aria-expanded="true"]{border-color:#fff;background:rgba(255,255,255,.1)}
+.hs-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.hs-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
 .mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .orig{font-size:12px;color:var(--ink3);margin-top:-4px}
@@ -219,6 +242,8 @@ main{padding:10px 0 60px}
 .shelf{margin:0 0 30px}
 .shelf h2,.section h2{font-size:19px;font-weight:700;margin:0 0 12px;letter-spacing:.04em}
 .shelf .sub{font-weight:400;font-size:12px;color:var(--ink3);margin-left:8px}
+/* 棚の見出しの左に赤い線を引く(ニュースの記事やフッターの見出しと同じ形) */
+.shelf h2,.listhead h2{padding-left:11px;border-left:4px solid var(--pink-fill);line-height:1.35}
 .shelf-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .shelf-h h2{margin-bottom:4px}
 .shelf .all{flex:0 0 auto;border:0;background:none;padding:4px 0;font:inherit;font-size:13px;color:var(--ink2);text-decoration:none;cursor:pointer;white-space:nowrap}
@@ -337,10 +362,18 @@ details.loose summary{cursor:pointer;font-weight:700}
 footer{font-size:12px}
 footer p{margin:0 0 6px;max-width:76ch}
 .site-foot{background:var(--navy-2);color:var(--on-navy-2);border-top:1px solid rgba(255,255,255,.08);margin-top:40px}
-.site-foot .wrap{padding-top:28px;padding-bottom:44px}
+.site-foot .wrap{padding-top:36px;padding-bottom:40px}
 .site-foot a{color:#fff;text-underline-offset:3px}
-.site-foot p:first-child{font-size:13.5px;font-weight:500;color:var(--on-navy-2);margin-bottom:16px;line-height:2}
-.site-foot .foot-sns{margin:0 0 16px}
+/* フッターの上の段:ロゴと説明、リンクの列(site_frame.py) */
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:28px 32px;padding-bottom:24px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.foot-logo{display:inline-block;margin-bottom:10px}
+.foot-logo img{display:block;height:44px;width:auto}
+.foot-brand p{font-size:12.5px;line-height:1.8;max-width:30em;margin-bottom:14px}
+.foot-h{margin:0 0 8px;padding-left:9px;border-left:3px solid var(--pink-fill);font-size:12px;font-weight:700;letter-spacing:.08em;line-height:1.3;color:var(--on-navy-2)}
+.foot-col ul{list-style:none;margin:0;padding:0}
+.foot-col a{display:block;padding:6px 0;font-size:14px;font-weight:500;line-height:1.5;text-decoration:none}
+.foot-col a:hover{text-decoration:underline}
+.site-foot .foot-sns{margin:0}
 .site-foot .foot-sns a{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border:1px solid rgba(255,255,255,.28);border-radius:999px;text-decoration:none;font-size:13px;font-weight:500}
 .site-foot .foot-sns a:hover{border-color:#fff}
 .site-foot .foot-sns svg{width:18px;height:18px;display:block}
@@ -352,10 +385,18 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand{gap:0 12px;padding-top:8px}
   .home{padding-bottom:6px}
   .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
-  /* 項目が5つになったので、狭い画面では横にはみ出さず2行に折り返す */
-  .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:0 14px;flex-wrap:wrap;padding-top:2px}
-  .topnav a{font-size:13px;padding:6px 0 8px;letter-spacing:0}
+  .official .ot-l{display:none}
+  /* メニューは1段にして、入りきらない分は指で横に動かす(右端を薄くして、続きがあることを示す) */
+  .brand .topnav{order:4;flex-basis:100%;min-width:0;margin:0 -20px;padding:0 36px 0 20px;gap:0 18px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+  .brand .topnav::-webkit-scrollbar{display:none}
+  .topnav a{flex:0 0 auto;font-size:13.5px;padding:10px 0 9px;letter-spacing:0}
   .hsearch{order:5;width:100%;margin:2px 0 10px}
+  /* 検索欄は虫めがねのボタンで開く(head.js が html に hs を付けたときだけ。付かなければ検索欄をそのまま出す) */
+  html.hs .hs-btn{display:inline-grid;order:3;margin:0 0 6px auto}
+  html.hs .hsearch:not(.open){display:none}
+  .foot-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px}
+  .foot-brand{grid-column:1/-1}
+  .foot-col a{padding:9px 0}
   .rslist li{padding:8px 12px}
   .rslist .rsdv{flex-basis:100%;margin-left:0;padding-left:calc(2.6em + 8px);box-sizing:border-box}
   .top{position:static}
@@ -381,6 +422,8 @@ footer p{margin:0 0 6px;max-width:76ch}
   .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
   .row{grid-auto-columns:41%;gap:10px}
+  .shelf h2,.listhead h2{font-size:17.5px;padding-left:8px;border-left-width:3px}
+  .shelf .sub{display:block;margin:3px 0 0}
   .sbody{padding:2px 12px 16px}
   .shead .sthumb{flex-basis:112px}
   .shead{gap:10px;padding:10px}
@@ -402,7 +445,7 @@ html.intro .jhero h1{animation:jh-rise .7s .1s cubic-bezier(.2,.7,.2,1) both}
 html.intro .jlead{animation:jh-rise .7s .3s cubic-bezier(.2,.7,.2,1) both}
 html.intro .jhero .searchrow{animation:jh-rise .7s .5s cubic-bezier(.2,.7,.2,1) both}
 html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}@view-transition{navigation:none}}
 
 .bk-n{font-size:14px;font-weight:500;color:var(--ink3);margin-left:6px}
 .bk-cats{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}

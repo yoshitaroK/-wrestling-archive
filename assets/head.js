@@ -48,6 +48,37 @@ document.addEventListener('error',function(ev){
   if(i.hasAttribute('data-thumb'))thumbFail(i);
   else if(i.hasAttribute('data-gone'))i.remove();
 },true);
+d.classList.add('hs');
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('.hs-btn');
+  if(!b)return;
+  var f=document.getElementById('hsearch');if(!f)return;
+  var o=f.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');
+  if(o)f.q.focus();
+});
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('[data-share]');
+  if(!b)return;
+  var c=document.querySelector('link[rel="canonical"]'),u=c&&c.href||location.href.split('#')[0],en=d.lang==='en',s=b.querySelector('span');
+  if(navigator.share){navigator.share({title:document.title,url:u}).catch(function(){});return;}
+  function say(t){s.textContent=t;b.classList.add('ok');setTimeout(function(){s.textContent=en?'Share':'共有';b.classList.remove('ok');},2400);}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(function(){say(en?'Link copied':'リンクをコピーしました');},function(){window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);});
+  else window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);
+});
+document.addEventListener('DOMContentLoaded',function(){
+  var n=document.querySelector('.topnav'),c=n&&n.querySelector('[aria-current]');
+  if(c&&n.scrollWidth>n.clientWidth){var nr=n.getBoundingClientRect(),cr=c.getBoundingClientRect();if(cr.right>nr.right-40)n.scrollLeft=cr.left-nr.left-(nr.width-cr.width)/2;}
+  var b=document.createElement('button'),on=false;
+  b.type='button';b.className='totop';b.setAttribute('aria-label',d.lang==='en'?'Back to top':'ページの先頭へ戻る');
+  b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14.5l6-6 6 6"/></svg>';
+  document.body.appendChild(b);
+  function chk(){var v=window.scrollY>window.innerHeight*1.5;if(v!==on){on=v;b.classList.toggle('on',v);}}
+  window.addEventListener('scroll',chk,{passive:true});chk();
+  b.addEventListener('click',function(){
+    var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({top:0,behavior:calm?'auto':'smooth'});
+  });
+});
 document.addEventListener('click',function(ev){
   var a=ev.target.closest&&ev.target.closest('a.lang[data-lang]');
   if(!a)return;
