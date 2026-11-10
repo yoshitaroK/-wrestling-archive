@@ -29,6 +29,12 @@ function mulberry32(a) {
   };
 }
 
+// 試合の作戦の選び方: smart=相手の型を見て有利な作戦 / random=でたらめ / atk=いつも攻め
+// 例: node game/sim.js 3000 play=random
+const TACTIC_MODE = (process.argv.slice(3).find(a => a.startsWith('play=')) || 'play=smart').split('=')[1];
+const TACTIC = TACTIC_MODE === 'smart' ? WL.smartTactic
+  : TACTIC_MODE === 'random' ? () => WL.TACTICS[Math.floor(Math.random() * 3)].id
+  : () => 'atk';
 const STAT_MENU = { str: 'muscle', sta: 'run', tec: 'tech', spd: 'dash', men: 'mind' };
 const WEIGHT = { str: 1, sta: 0.8, tec: 1.3, spd: 1, men: 0.9 };
 
@@ -88,6 +94,7 @@ function play(strategy, seed, keepGoing) {
       const r = WL.train(g, strategy(g, rnd));
       if (r && r.injured) injuries++;
     } else if (g.phase === 'tournament') {
+      WL.autoTournament(g, TACTIC);
       WL.finishTournament(g);
     } else if (g.phase === 'yearEnd') {
       powerAt[g.age] = WL.power(g);

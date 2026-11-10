@@ -143,6 +143,201 @@ ul.plain li { padding: 4px 0; border-bottom: 1px dashed var(--line); font-size: 
 @media (prefers-reduced-motion: reduce) { .rays, .confetti i, .flag { animation: none; } .confetti { display: none; } }
 @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .pop { animation: pop .25s ease-out; }
+
+/* ===== v2: 試合シーン・キャラクター・演出 ===== */
+h1, h2, h3, .btn, .big { font-weight: 800; }
+.logo { text-align: center; padding: 18px 0 4px; }
+.logo .en { color: var(--gold); letter-spacing: .34em; font-size: 11px; font-weight: 700; }
+.logo h1 { font-size: 40px; letter-spacing: .04em; margin: 2px 0; font-weight: 900;
+  background: linear-gradient(180deg, #fff3c4 0%, var(--gold2) 40%, #b9832a 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 3px 0 #5a0a16) drop-shadow(0 0 18px rgba(200,16,46,.5)); }
+.logo .road { color: #fff; font-size: 15px; letter-spacing: .12em; }
+.minirow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+.minirow .btn { margin: 0; padding: 9px 2px; font-size: 12px; background: var(--panel2); border: 1px solid var(--line); color: var(--text); font-weight: 600; }
+.minirow .btn b { display: block; font-size: 20px; }
+#soundBtn { position: fixed; right: 8px; top: 8px; z-index: 50; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line);
+  background: rgba(20,14,12,.85); color: #fff; font-size: 17px; cursor: pointer; }
+
+/* 会場 */
+.arena { position: relative; height: 236px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); margin: 10px 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,240,200,.22), transparent 70%),
+    radial-gradient(circle at 12% 30%, rgba(255,255,255,.08) 0 1.5px, transparent 2px) 0 0 / 13px 11px,
+    radial-gradient(circle at 60% 60%, rgba(255,255,255,.06) 0 1.5px, transparent 2px) 5px 6px / 17px 13px,
+    linear-gradient(180deg, #0b0a12 0%, #1b1220 55%, #2a1518 100%); }
+.arena.olympics { background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,230,150,.38), transparent 70%),
+    radial-gradient(circle at 12% 30%, rgba(255,220,120,.16) 0 1.5px, transparent 2px) 0 0 / 13px 11px,
+    radial-gradient(circle at 60% 60%, rgba(255,255,255,.1) 0 1.5px, transparent 2px) 5px 6px / 17px 13px,
+    linear-gradient(180deg, #0a0c1c 0%, #1a1630 55%, #33200f 100%); }
+.arena.dojo { background: linear-gradient(180deg, #2b1d14 0%, #3a2618 60%, #24160e 100%); }
+.arena.park { background: linear-gradient(180deg, #23405c 0%, #3d6a7a 55%, #2c4a2c 56%, #1d331f 100%); }
+.arena .beam { position: absolute; top: -20px; width: 120px; height: 300px; background: linear-gradient(180deg, rgba(255,244,200,.22), transparent 80%);
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); pointer-events: none; }
+.arena .beam.l { left: 4%; transform: rotate(14deg); } .arena .beam.r { right: 4%; transform: rotate(-14deg); }
+.matfloor { position: absolute; left: -12%; right: -12%; bottom: -70px; height: 150px; border-radius: 50%;
+  background: radial-gradient(ellipse at center, #e9b92f 0 22%, #c8102e 22% 27%, #e9b92f 27% 58%, #c8102e 58% 66%, #1f3f8f 66% 100%);
+  box-shadow: 0 -4px 24px rgba(0,0,0,.5) inset; }
+.arena.dojo .matfloor { background: radial-gradient(ellipse at center, #7da05a 0 60%, #5d7d43 60% 100%); }
+.arena.park .matfloor { display: none; }
+.fw { position: absolute; bottom: 30px; width: 104px; height: 139px; --dir: 1; transform-origin: 50% 100%; }
+.fw.a { left: calc(50% - 112px); } .fw.b { left: calc(50% + 8px); --dir: -1; }
+.fw svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.fw.b svg, .flipx svg { transform: scaleX(-1); }
+.fw.solo { left: calc(50% - 52px); }
+.fw .shadow { position: absolute; left: 14%; right: 14%; bottom: -5px; height: 10px; border-radius: 50%; background: rgba(0,0,0,.35); }
+.fw.bob { animation: bob 1.1s ease-in-out infinite alternate; }
+.fw.b.bob { animation-delay: .35s; }
+@keyframes bob { from { transform: translateY(0) scaleY(1); } to { transform: translateY(2px) scaleY(.975); } }
+.fw.atk { animation: atk .62s cubic-bezier(.3,.8,.4,1); }
+@keyframes atk { 0% { transform: none; } 45% { transform: translateX(calc(var(--dir) * 62px)) translateY(8px) rotate(calc(var(--dir) * 16deg)); } 100% { transform: none; } }
+.fw.hit { animation: hit .62s ease-out; }
+@keyframes hit { 0%, 30% { transform: none; } 55% { transform: translateX(calc(var(--dir) * -20px)) rotate(calc(var(--dir) * -24deg)); } 100% { transform: none; } }
+.fw.push { animation: push .62s ease-out; }
+@keyframes push { 0% { transform: none; } 50% { transform: translateX(calc(var(--dir) * 34px)) rotate(calc(var(--dir) * 6deg)); } 100% { transform: none; } }
+.fw.throw { animation: throwm .8s ease-in-out; }
+@keyframes throwm { 0% { transform: none; } 40% { transform: translateX(calc(var(--dir) * 50px)) translateY(-18px) rotate(calc(var(--dir) * -30deg)); } 100% { transform: none; } }
+.fw.fly { animation: fly .8s ease-in-out; }
+@keyframes fly { 0%, 25% { transform: none; } 55% { transform: translateY(-64px) rotate(calc(var(--dir) * -170deg)); } 80% { transform: translateY(6px) rotate(calc(var(--dir) * -80deg)); } 100% { transform: none; } }
+.fw.down { transform: translateY(34px) translateX(calc(var(--dir) * -10px)) rotate(calc(var(--dir) * -84deg)); transition: transform .45s ease-in; }
+.fw.pin { transform: translateX(calc(var(--dir) * 58px)) translateY(14px) rotate(calc(var(--dir) * 28deg)); transition: transform .45s ease-in; }
+.fw.sad { transform: translateY(6px) scale(.96); filter: saturate(.5) brightness(.8); transition: all .5s; }
+.fw.jump { animation: jump .55s ease-out infinite alternate; }
+@keyframes jump { from { transform: translateY(0); } to { transform: translateY(-16px); } }
+.sb { position: absolute; left: 8px; right: 8px; top: 8px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: center; z-index: 3; }
+.sb .t { border-radius: 8px; padding: 4px 8px; background: rgba(10,8,8,.82); display: flex; justify-content: space-between; align-items: center; gap: 6px; min-width: 0; }
+.sb .t.me { border-left: 5px solid #e22a48; } .sb .t.op { border-right: 5px solid #2f66e0; flex-direction: row-reverse; }
+.sb .t.op.rival { border-right-color: #c9a227; } .sb .t.op.champ { border-right-color: #23a56b; }
+.sb .n { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sb .s { font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1; }
+.sb .s.bump { animation: bump .4s; }
+@keyframes bump { 40% { transform: scale(1.7); color: var(--gold2); } }
+.sb .mid { text-align: center; font-size: 10px; color: var(--gold2); background: rgba(10,8,8,.82); border-radius: 8px; padding: 3px 7px; line-height: 1.3; }
+.sb .mid b { display: block; font-size: 14px; color: #fff; font-variant-numeric: tabular-nums; }
+.callout { position: absolute; left: 0; right: 0; top: 62px; text-align: center; z-index: 4; pointer-events: none; font-weight: 900; font-size: 20px;
+  text-shadow: 0 2px 0 #000, 0 0 14px rgba(0,0,0,.9); animation: callout 1s ease-out both; }
+.callout.me { color: var(--gold2); } .callout.op { color: #8fb4ff; }
+.callout small { display: block; font-size: 30px; }
+@keyframes callout { 0% { transform: translateY(16px) scale(.6); opacity: 0; } 25% { transform: none; opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
+.bannerx { position: absolute; left: 0; right: 0; top: 78px; text-align: center; z-index: 5; font-weight: 900; font-size: 34px; letter-spacing: .08em;
+  animation: bannerin .5s cubic-bezier(.2,1.6,.4,1) both; text-shadow: 0 3px 0 #000, 0 0 22px rgba(0,0,0,.9); }
+.bannerx.win { color: var(--gold2); } .bannerx.lose { color: #b9b0aa; } .bannerx.info { color: #fff; font-size: 24px; }
+@keyframes bannerin { from { transform: scale(2.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.arena.flash::after { content: ''; position: absolute; inset: 0; background: #fff; animation: flash .35s ease-out both; pointer-events: none; z-index: 6; }
+@keyframes flash { from { opacity: .7; } to { opacity: 0; } }
+.arena.shake { animation: shake .3s; }
+@keyframes shake { 25% { transform: translate(3px, -2px); } 50% { transform: translate(-3px, 2px); } 75% { transform: translate(2px, 1px); } }
+.live { min-height: 66px; font-size: 13px; background: #0e0a09; border-radius: 8px; padding: 8px 10px; }
+.live div { animation: pop .2s ease-out; }
+.readrow { display: flex; align-items: center; gap: 8px; background: #0e0a09; border-radius: 10px; padding: 8px 10px; margin: 8px 0; font-size: 13px; }
+.readrow .q { font-size: 22px; }
+.tactics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.tactics .btn { margin: 0; padding: 10px 4px; font-size: 14px; background: var(--panel2); border: 1px solid var(--line); line-height: 1.35; }
+.tactics .btn b { display: block; font-size: 24px; }
+.tactics .btn span { display: block; font-size: 10px; color: var(--muted); font-weight: 400; }
+.tactics .btn.good { border-color: var(--gold); box-shadow: 0 0 10px rgba(217,173,60,.3) inset; }
+.rps { font-size: 11px; color: var(--muted); text-align: center; margin-top: 6px; }
+.gauge { position: relative; height: 34px; border-radius: 17px; background: #3a1418; overflow: hidden; margin: 12px 0; border: 1px solid var(--line); }
+.gauge .ok { position: absolute; left: 27%; width: 46%; top: 0; bottom: 0; background: #7a5a16; }
+.gauge .great { position: absolute; left: 43%; width: 14%; top: 0; bottom: 0; background: var(--gold2); }
+.gauge .cur { position: absolute; top: -3px; bottom: -3px; width: 6px; margin-left: -3px; background: #fff; border-radius: 3px; box-shadow: 0 0 8px #fff; animation: sweep .85s linear infinite alternate; }
+@keyframes sweep { from { left: 2%; } to { left: 98%; } }
+
+/* 育成画面 */
+.hero { position: relative; display: grid; grid-template-columns: 112px 1fr; gap: 6px; align-items: end; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); margin: 8px 0; min-height: 150px; }
+.hero .arena { margin: 0; height: 150px; border: 0; border-radius: 0; }
+.hero .fw { width: 92px; height: 123px; bottom: 12px; left: calc(50% - 46px); }
+.hero .matfloor { bottom: -112px; }
+.hero .info { padding: 10px 10px 10px 4px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; background: var(--panel); min-width: 0; }
+.hero .nm { font-size: 19px; font-weight: 900; word-break: break-all; line-height: 1.2; }
+.hero .st { font-size: 11px; color: var(--muted); }
+.hero .age { font-size: 34px; font-weight: 900; color: var(--gold2); line-height: 1.1; }
+.hero .age small { font-size: 13px; color: var(--muted); }
+.life { display: flex; gap: 1.5px; margin-top: 6px; }
+.life i { flex: 1; height: 7px; border-radius: 2px; background: #3a2a25; }
+.life i.past { background: #7c5a50; } .life i.now { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.life i.oly { outline: 1px solid var(--gold); } .life i.g { background: var(--gold2); } .life i.s { background: #cfcfcf; } .life i.b { background: #c7834b; }
+.delta { display: inline-block; font-size: 10px; color: #7be0a5; font-weight: 800; margin-left: 2px; animation: pop .4s; }
+.delta.neg { color: #ff7b8b; }
+.bar i.grow { animation: grow .7s ease-out both; }
+@keyframes grow { from { width: var(--from); filter: brightness(2.2); } }
+.stat { grid-template-columns: 72px 1fr 62px; }
+.menus .btn { display: grid; grid-template-columns: 30px 1fr; column-gap: 6px; align-items: center; }
+.menus .btn em { grid-row: span 3; font-style: normal; font-size: 24px; text-align: center; }
+.menus .btn b, .menus .btn span { grid-column: 2; }
+
+/* 殿堂・実績・その他 */
+.hallrow { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.hallrow .rk { font-weight: 900; color: var(--gold2); text-align: center; }
+.hallrow .hn { font-weight: 800; word-break: break-all; }
+.hallrow .hd { font-size: 11px; color: var(--muted); }
+.hallrow .hm { font-size: 18px; white-space: nowrap; }
+.achs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ach { border: 1px solid var(--line); border-radius: 10px; padding: 8px; background: var(--panel2); font-size: 12px; opacity: .45; }
+.ach.on { opacity: 1; border-color: var(--gold); }
+.ach b { display: block; font-size: 13px; color: var(--gold2); }
+.ach .ic { font-size: 22px; float: right; }
+#toasts { position: fixed; left: 0; right: 0; top: 10px; z-index: 60; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; }
+.toast { background: linear-gradient(180deg, #3a2a08, #1f1604); border: 1px solid var(--gold); color: var(--gold2); border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 800;
+  box-shadow: 0 6px 20px rgba(0,0,0,.6); animation: toast 3.4s ease-in-out both; }
+@keyframes toast { 0% { transform: translateY(-40px); opacity: 0; } 10%, 85% { transform: none; opacity: 1; } 100% { transform: translateY(-20px); opacity: 0; } }
+.chart { width: 100%; height: 120px; display: block; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; margin: 8px 0; }
+.kpis div { background: var(--panel2); border-radius: 8px; padding: 6px 2px; font-size: 10px; color: var(--muted); }
+.kpis b { display: block; font-size: 18px; color: var(--gold2); }
+.sharecard { width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; margin: 8px 0; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 70; display: flex; align-items: center; justify-content: center; padding: 14px; }
+.overlay .card { max-width: 440px; width: 100%; max-height: 88vh; overflow: auto; }
+.babyfig { width: 150px; height: 150px; margin: 0 auto; display: block; animation: bob 1.4s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .fw.bob, .fw.jump, .babyfig { animation: none; } }
+
+/* ===== v2: 全体の質感 ===== */
+body { background:
+  radial-gradient(ellipse 90% 40% at 50% -5%, rgba(200,16,46,.38), transparent 70%),
+  radial-gradient(ellipse 80% 30% at 50% 105%, rgba(217,173,60,.16), transparent 70%),
+  repeating-linear-gradient(135deg, rgba(255,255,255,.018) 0 2px, transparent 2px 9px),
+  #0f0b0b; background-attachment: fixed; }
+#app { padding-top: 50px; }
+#topbar { position: fixed; left: 0; right: 0; top: 0; height: 42px; z-index: 40; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, rgba(15,10,10,.96), rgba(15,10,10,.78)); border-bottom: 1px solid #3a2823; backdrop-filter: blur(6px); }
+#topbar b { font-size: 12px; letter-spacing: .32em; color: var(--gold); font-weight: 800; }
+#topbar b i { font-style: normal; color: var(--red); }
+#soundBtn { top: 4px; width: 34px; height: 34px; font-size: 15px; }
+.card { background: linear-gradient(180deg, #2a1d1a 0%, #1b1312 100%); border: 1px solid #4a352d; border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06); }
+.card.gold { border-color: var(--gold); background: linear-gradient(180deg, #33250f 0%, #1c1410 70%); box-shadow: 0 0 0 1px rgba(243,210,122,.25), 0 10px 30px rgba(217,173,60,.18), inset 0 1px 0 rgba(255,255,255,.1); }
+.card.red { border-color: #a01228; background: linear-gradient(180deg, #3a1118 0%, #1c1212 80%); }
+.card h3 { margin: 14px 0 4px; padding-left: 9px; border-left: 4px solid var(--gold); font-size: 15px; }
+.card h3:first-child { margin-top: 0; }
+.btn { border-radius: 14px; letter-spacing: .04em; text-shadow: 0 1px 0 rgba(0,0,0,.35);
+  background: linear-gradient(180deg, #ef2d4d 0%, #c8102e 48%, #96091f 100%); box-shadow: 0 4px 0 #5a0714, 0 8px 18px rgba(200,16,46,.28), inset 0 1px 0 rgba(255,255,255,.35); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #5a0714, inset 0 1px 0 rgba(255,255,255,.2); filter: none; }
+.btn.gold { background: linear-gradient(180deg, #fff0b8 0%, #f3d27a 40%, #c9952b 100%); box-shadow: 0 4px 0 #7d5a12, 0 8px 18px rgba(217,173,60,.3), inset 0 1px 0 rgba(255,255,255,.7); text-shadow: 0 1px 0 rgba(255,255,255,.5); }
+.btn.gold:active { box-shadow: 0 1px 0 #7d5a12; }
+.btn.ghost, .minirow .btn, .menus .btn, .tactics .btn, .btn.choice { box-shadow: 0 3px 0 #120c0b, inset 0 1px 0 rgba(255,255,255,.07); text-shadow: none; }
+.menus .btn, .btn.choice, .minirow .btn { background: linear-gradient(180deg, #35262180, #241917), #2a1f1c; border: 1px solid #523a31; }
+.menus .btn.rest { background: linear-gradient(180deg, #1f3327, #152219); border-color: #2f5a41; }
+.menus .btn.spar { border-color: #8a2a2a; }
+.tactics .btn { padding: 12px 4px; border-radius: 14px; }
+.tactics .btn[data-id=atk] { background: linear-gradient(180deg, #5a1820, #2c1013); border-color: #b3283b; }
+.tactics .btn[data-id=ctr] { background: linear-gradient(180deg, #1c2f5c, #121a30); border-color: #3f6fd6; }
+.tactics .btn[data-id=def] { background: linear-gradient(180deg, #1d4a35, #11241b); border-color: #2fa06c; }
+.tactics .btn b { font-size: 30px; }
+.seasons div { border-radius: 999px; font-weight: 700; padding: 5px 0; border: 1px solid #3d2d28; }
+.seasons .now { background: linear-gradient(180deg, #ef2d4d, #a80c25); border-color: #ff6b82; box-shadow: 0 0 12px rgba(200,16,46,.6); }
+.seasons .tour { border-color: #7d5a12; }
+.bar { height: 14px; border-radius: 7px; background: #0a0707; box-shadow: inset 0 2px 3px rgba(0,0,0,.7); }
+.bar i { background: linear-gradient(180deg, #ff5a74, #c8102e 55%, #8e0b20); border-radius: 7px; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+.msg { border-left: 4px solid var(--gold); background: linear-gradient(90deg, #2a1f0d, #140f0c); border-radius: 10px; }
+.arena, .hero { box-shadow: 0 10px 26px rgba(0,0,0,.5); border-color: #4a352d; }
+.bannerx { top: 58px; }
+.vs .side { background: linear-gradient(180deg, #33241f, #221816); border: 1px solid #4a352d; }
+.vs .side.me { border-color: var(--red); }
+.result { font-size: 24px; }
+.period { border-radius: 10px; border: 1px solid #2a1f1c; }
+.endfig { width: 120px; margin: 0 auto 4px; position: relative; z-index: 1; }
+.endfig svg { width: 100%; display: block; overflow: visible; }
+ul.plain li b { color: var(--gold2); }
 </style>
 </head>
 <body>
@@ -164,7 +359,10 @@ var WL = (function () {
     declineOther: 2,     // 31歳以降、年末にほかの3能力が下がる量
     olyStep: 5.5,        // オリンピックの相手が4年ごとに強くなる量(基準68)
     trialsStep: 5,       // 代表選考会の相手が4年ごとに強くなる量(基準67)
-    topBonus: 3,         // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
+    topBonus: 4.5,       // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
+    legendBonus: 2,      // 24・28・32歳で3連覇した人だけ、36歳の代表選考会とオリンピックで相手から引く強さ
+    tactic: 4,           // 作戦が当たったときに有利になる量(戦闘力の差に足す)
+    styleSwitch: 0.35,   // 第2ピリオドで相手が作戦を変えてくる確率
     randomEventRate: 0.35
   };
 
@@ -263,6 +461,14 @@ var WL = (function () {
   }
 
   // ---- 新しい人生 ----
+  // 記録用の入れ物(古いセーブデータにも足す。乱数は進めない)
+  function ensure(g) {
+    if (!g.id) g.id = 'g' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36);
+    if (!g.rec) g.rec = { inj: 0, falls: 0, matches: 0, wins: 0, peak: 0 };
+    if (!g.hist) g.hist = [];
+    return g;
+  }
+
   function newGame(name) {
     var g = {
       v: 1, name: name, pref: pick(PREFS), age: 0, phase: 'birth',
@@ -271,6 +477,7 @@ var WL = (function () {
       titles: [], medals: [], log: [], lastMsg: '', event: null,
       tour: null, tourStep: 0, yearNotes: [], ending: null
     };
+    ensure(g);
     STATS.forEach(function (s) {
       g.talent[s] = Math.round(rnd(0.85, 1.3) * 100) / 100;
       g.stats[s] = ri(3, 8);
@@ -358,6 +565,15 @@ var WL = (function () {
       ok: function () { return true; }, apply: function (g) { addStat(g, 'spd', 3); } }
   ];
 
+  // 24・28・32歳でオリンピック金メダル(3連覇)
+  function threePeat(g) {
+    var ages = g.medals.filter(function (m) { return m.medal === '金'; }).map(function (m) { return m.age; });
+    return [24, 28, 32].every(function (a) { return ages.indexOf(a) >= 0; });
+  }
+  function legendBonusFor(g, t) {
+    return g.age === 36 && (t.kind === 'trials' || t.kind === 'olympics') && threePeat(g) ? BAL.legendBonus : 0;
+  }
+
   function makeEvent(g) {
     var a = g.age;
     if (a === 6) return { id: 'school', title: '小学校に入学', text: g.name + 'は小学生になった。\n体を動かすのが大好きな毎日。春・夏・秋に何をするか選ぼう。' };
@@ -376,6 +592,7 @@ var WL = (function () {
       return { id: 'after', title: '進路選択:高校卒業後', text: '高校卒業。これからどこで強くなる?',
         options: ['univ', 'corp', 'abroad'].map(function (k) { return { id: k, label: af[k].name, desc: af[k].desc }; }) };
     }
+    if (a === 36 && threePeat(g)) return { id: 'legend', title: '4連覇への挑戦', text: '24歳・28歳・32歳——オリンピック3連覇。\n世界中が「史上初の4連覇なるか」と' + g.name + 'に注目している。\n\n王者の風格に、対戦相手たちはマットに上がる前から押されている。\n(今年の代表選考会とオリンピックでは、相手が少し弱くなる)' };
     if (a >= 8 && rand() < BAL.randomEventRate) {
       var pool = RANDOM_EVENTS.filter(function (e) { return e.ok(g); });
       var e = pick(pool);
@@ -420,13 +637,16 @@ var WL = (function () {
     if (!m || g.phase !== 'train') return null;
     var fc = fatigueCoef(g.fatigue);
     var parts = [];
+    var gains = {};
     for (var s in m.gain) {
       var d = growth(g, s, m.gain[s], fc);
+      gains[s] = d;
       parts.push(STAT_NAMES[s] + '+' + r1(d));
     }
     var before = g.fatigue;
     addFatigue(g, m.fat + (menuId === 'rest' ? 0 : courseFat(g)));
     var fd = Math.round(g.fatigue - before);
+    g.lastGains = { menu: menuId, gains: gains, fat: fd };
     var msg = m.name + 'をした!' + (parts.length ? ' ' + parts.join('、') : '') + '(疲労' + (fd >= 0 ? '+' : '') + fd + ')';
     if (fc < 1) msg += '\n疲れていて、思うように身につかなかった…';
     var injured = false;
@@ -437,6 +657,7 @@ var WL = (function () {
     g.season++;
     if (injured) {
       g.injured = true;
+      ensure(g).rec.inj++;
       msg += '\n💥 ケガをしてしまった! 残りの練習はリハビリになり、今年の大会は欠場…';
       while (g.season < 3) { addFatigue(g, -25); g.season++; }
     }
@@ -469,7 +690,7 @@ var WL = (function () {
   }
 
   function makeOpponent(g, t, r) {
-    var S = t.str * BAL.oppScale;
+    var S = t.str * BAL.oppScale - legendBonusFor(g, t);
     var isFinal = r === t.rounds;
     if (isFinal && t.rounds >= 3) {
       var p = S + 4 + rnd(-2.5, 2.5);
@@ -507,89 +728,168 @@ var WL = (function () {
     return lines;
   }
 
-  function simulateMatch(g, opp) {
+  // ---- 試合(1ピリオドずつ、作戦を選んで進める) ----
+  // 作戦は3すくみ: 攻め(atk)は 守り型(def)に強い / カウンター(ctr)は 攻め型(atk)に強い / じっくり(def)は カウンター型(ctr)に強い
+  var TACTICS = [
+    { id: 'atk', name: 'ガンガン攻める', short: '攻め', beats: 'def', desc: '守りを固める相手を崩す' },
+    { id: 'ctr', name: 'カウンター狙い', short: 'カウンター', beats: 'atk', desc: '攻めてくる相手の力を利用する' },
+    { id: 'def', name: 'じっくり組み手', short: 'じっくり', beats: 'ctr', desc: 'カウンター狙いの相手にスキを与えない' }
+  ];
+  var TACTIC_BY_ID = {};
+  TACTICS.forEach(function (t) { TACTIC_BY_ID[t.id] = t; });
+  var STYLE_NAMES = { atk: '攻め型', ctr: 'カウンター型', def: '守り型' };
+  function tacticEdge(my, style) {
+    if (TACTIC_BY_ID[my].beats === style) return 1;
+    if (TACTIC_BY_ID[style].beats === my) return -1;
+    return 0;
+  }
+
+  function startTournament(g, t) {
+    g.tour = { name: t.name, kind: t.kind, str: t.str, rounds: t.rounds, r: 0, matches: [], won: false, over: false, sum: false,
+      intro: true, place: '', medal: null, next: null, cur: null, bronze: false };
+    g.tourStep = 0;
+    g.phase = 'tournament';
+  }
+
+  // 次の試合の相手を決める
+  function prepareMatch(g) {
+    var t = g.tour;
+    if (!t || t.over || (t.cur && !t.cur.done)) return;
+    t.intro = false;
+    var opp, round;
+    if (t.bronze) {
+      var bf = foreignName();
+      opp = { name: bf.name, from: bf.country, power: t.str * BAL.oppScale - 3 + rnd(-2, 2) };
+      round = '3位決定戦';
+    } else {
+      t.r++;
+      opp = makeOpponent(g, t, t.r);
+      round = roundName(t.r, t.rounds);
+    }
     var P = matchPower(g);
     var diff = P - opp.power;
     var fall = null;
     if (Math.abs(diff) > 20 && rand() < 0.2) fall = { period: ri(1, 2), by: diff > 0 ? 'me' : 'opp' };
-    var periods = [];
-    var me = 0, op = 0;
-    var mm = myMoves(g), om = oppMoves(opp.power);
-    for (var p = 1; p <= 2; p++) {
-      var a = Math.max(0, Math.round(2 + diff / 7 + rnd(-2.5, 2.5)));
-      var b = Math.max(0, Math.round(2 - diff / 7 + rnd(-2.5, 2.5)));
-      var lines = narrate(a, mm, 'me').concat(narrate(b, om, 'opp'));
-      // 交互に並べ替え
-      for (var i = lines.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var tmp = lines[i]; lines[i] = lines[j]; lines[j] = tmp; }
-      me += a; op += b;
-      periods.push({ me: a, opp: b, lines: lines });
-      if (fall && fall.period === p) break;
-    }
-    var win, method;
-    if (fall) {
-      win = fall.by === 'me';
-      method = win ? 'フォール勝ち' : 'フォール負け';
-    } else if (me !== op) {
-      win = me > op;
-      method = win ? '判定勝ち' : '判定負け';
-    } else {
-      var pw = clamp(0.5 + diff / 100 + (g.stats.men - 50) / 200, 0.1, 0.9);
-      win = rand() < pw;
-      method = win ? '同点・ラストポイントで勝ち' : '同点・ラストポイントで負け';
-    }
-    addStat(g, 'men', win ? 0.6 : 0.3);
-    if (opp.rival && g.rival) { if (win) g.rival.w++; else g.rival.l++; }
-    return {
-      opp: { name: opp.name, from: opp.from, power: Math.round(opp.power), rival: !!opp.rival, champ: opp.champ || '' },
-      myPower: Math.round(P), periods: periods, me: me, op: op, win: win, method: method, fall: fall
+    var style = pick(['atk', 'ctr', 'def']);
+    t.cur = {
+      round: round,
+      opp: { name: opp.name, from: opp.from, power: Math.round(opp.power), rival: !!opp.rival, champ: opp.champ || '', style: style,
+        hidden: !!(opp.rival || opp.champ) },
+      oppPower: opp.power, myPower: Math.round(P), diff: diff, fall: fall,
+      periods: [], me: 0, op: 0, done: false, tie: false, win: false, method: ''
     };
   }
 
-  function simulateTournament(g, t) {
-    var tour = { name: t.name, kind: t.kind, str: t.str, rounds: t.rounds, matches: [], won: false, place: '', medal: null };
-    var R = t.rounds;
-    for (var r = 1; r <= R; r++) {
-      var opp = makeOpponent(g, t, r);
-      var m = simulateMatch(g, opp);
-      m.round = roundName(r, R);
-      tour.matches.push(m);
-      if (!m.win) {
-        if (t.kind === 'olympics' && r === R - 1) {
-          var bopp = { name: '', from: '', power: t.str * BAL.oppScale - 3 + rnd(-2, 2) };
-          var bf = foreignName(); bopp.name = bf.name; bopp.from = bf.country;
-          var bm = simulateMatch(g, bopp);
-          bm.round = '3位決定戦';
-          tour.matches.push(bm);
-          if (bm.win) { tour.medal = '銅'; tour.place = '銅メダル'; } else { tour.place = '4位'; }
-        } else if (r === R) {
-          tour.place = t.kind === 'olympics' ? '銀メダル' : '準優勝';
-          if (t.kind === 'olympics') tour.medal = '銀';
-        } else if (r === R - 1) {
-          tour.place = 'ベスト4';
-        } else {
-          tour.place = m.round + '敗退';
-        }
-        break;
-      }
-      if (r === R) {
-        tour.won = true;
-        tour.place = t.kind === 'olympics' ? '金メダル' : '優勝';
-        if (t.kind === 'olympics') tour.medal = '金';
-      }
+  // 1ピリオド戦う
+  function playPeriod(g, tactic) {
+    var t = g.tour, m = t && t.cur;
+    if (!m || m.done || m.tie || m.periods.length >= 2 || !TACTIC_BY_ID[tactic]) return null;
+    var pn = m.periods.length + 1;
+    // 第2ピリオドは相手が作戦を変えてくることがある
+    var switched = false;
+    if (pn === 2 && rand() < BAL.styleSwitch) {
+      var others = ['atk', 'ctr', 'def'].filter(function (x) { return x !== m.opp.style; });
+      m.opp.style = pick(others);
+      switched = true;
     }
-    if (tour.won) g.titles.push({ age: g.age, name: t.name });
-    if (tour.medal) g.medals.push({ age: g.age, medal: tour.medal });
-    if (isIntl(t) || tour.won) g.log.push({ age: g.age, name: t.name, place: tour.place });
-    tour.next = tour.won ? followUp(g, t) : null;
-    return tour;
+    var edge = tacticEdge(tactic, m.opp.style);
+    var d = m.diff + edge * BAL.tactic;
+    var a = Math.max(0, Math.round(2 + d / 7 + rnd(-2.5, 2.5)));
+    var b = Math.max(0, Math.round(2 - d / 7 + rnd(-2.5, 2.5)));
+    var lines = narrate(a, myMoves(g), 'me').concat(narrate(b, oppMoves(m.oppPower), 'opp'));
+    for (var i = lines.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var tmp = lines[i]; lines[i] = lines[j]; lines[j] = tmp; }
+    m.me += a; m.op += b;
+    var per = { me: a, opp: b, lines: lines, tactic: tactic, style: m.opp.style, edge: edge, switched: switched };
+    m.periods.push(per);
+    m.opp.hidden = false;
+    if (m.fall && m.fall.period === pn) {
+      finishMatch(g, m.fall.by === 'me', m.fall.by === 'me' ? 'フォール勝ち' : 'フォール負け');
+    } else if (pn === 2) {
+      if (m.me !== m.op) finishMatch(g, m.me > m.op, m.me > m.op ? '判定勝ち' : '判定負け');
+      else m.tie = true;
+    }
+    return per;
+  }
+
+  // 同点のとき: 最後の1ポイント勝負。quality は ミニゲームの出来('great' / 'ok' / 'miss')。'auto' は自動
+  function resolveTie(g, quality) {
+    var t = g.tour, m = t && t.cur;
+    if (!m || m.done || !m.tie) return;
+    var pw = clamp(0.5 + m.diff / 100 + (g.stats.men - 50) / 200, 0.1, 0.9);
+    if (quality === 'great') pw = Math.max(pw, 0.9);
+    else if (quality === 'miss') pw = Math.min(pw, 0.2);
+    var win = rand() < pw;
+    m.tie = false;
+    m.tieQuality = quality;
+    finishMatch(g, win, win ? '同点・ラストポイントで勝ち' : '同点・ラストポイントで負け');
+  }
+
+  function finishMatch(g, win, method) {
+    var t = g.tour, m = t.cur;
+    m.done = true; m.win = win; m.method = method;
+    addStat(g, 'men', win ? 0.6 : 0.3);
+    var rec = ensure(g).rec;
+    rec.matches++;
+    if (win) rec.wins++;
+    if (m.fall && win) rec.falls++;
+    if (m.opp.rival && g.rival) { if (win) g.rival.w++; else g.rival.l++; }
+    t.matches.push(m);
+    var R = t.rounds, oly = t.kind === 'olympics';
+    if (t.bronze) {
+      t.bronze = false; t.over = true;
+      if (win) { t.medal = '銅'; t.place = '銅メダル'; } else t.place = '4位';
+    } else if (!win) {
+      if (oly && t.r === R - 1) t.bronze = true;
+      else {
+        t.over = true;
+        if (t.r === R) { t.place = oly ? '銀メダル' : '準優勝'; if (oly) t.medal = '銀'; }
+        else if (t.r === R - 1) t.place = 'ベスト4';
+        else t.place = m.round + '敗退';
+      }
+    } else if (t.r === R) {
+      t.over = true; t.won = true;
+      t.place = oly ? '金メダル' : '優勝';
+      if (oly) t.medal = '金';
+    }
+    if (t.over) {
+      if (t.won) g.titles.push({ age: g.age, name: t.name });
+      if (t.medal) g.medals.push({ age: g.age, medal: t.medal });
+      if (isIntl(t) || t.won) g.log.push({ age: g.age, name: t.name, place: t.place });
+      t.next = t.won ? followUp(g, t) : null;
+    }
+  }
+
+  // 試合結果を見たあと「つぎへ」
+  function advanceTournament(g) {
+    var t = g.tour;
+    if (!t || g.phase !== 'tournament') return;
+    if (t.intro) { prepareMatch(g); return; }
+    if (t.cur && !t.cur.done) return;
+    if (t.over) { t.sum = true; t.cur = null; return; }
+    prepareMatch(g);
+  }
+
+  // 自動プレイ用: 大会を最後まで進める。chooser(g, 試合) が作戦を返す
+  function autoTournament(g, chooser) {
+    var guard = 0;
+    while (g.phase === 'tournament' && g.tour && !g.tour.sum && guard++ < 200) {
+      var m = g.tour.cur;
+      if (m && !m.done) {
+        if (m.tie) resolveTie(g, 'auto');
+        else playPeriod(g, chooser ? chooser(g, m) : 'atk');
+      } else advanceTournament(g);
+    }
+  }
+  // 相手の型が見えていれば有利な作戦、見えなければ攻め
+  function smartTactic(g, m) {
+    if (m.opp.hidden) return 'atk';
+    return TACTICS.filter(function (x) { return x.beats === m.opp.style; })[0].id;
   }
 
   function afterSeasons(g) {
     var t = tournamentFor(g.age);
     if (t && !g.injured) {
-      g.tour = simulateTournament(g, t);
-      g.tourStep = 0;
-      g.phase = 'tournament';
+      startTournament(g, t);
     } else {
       if (t) g.yearNotes.push('ケガのため「' + t.name + '」は欠場した。');
       else if (g.age >= 6) g.yearNotes.push('今年は大会がない。');
@@ -601,6 +901,7 @@ var WL = (function () {
   function finishTournament(g) {
     if (g.phase !== 'tournament' || !g.tour) return;
     var t = g.tour;
+    if (!t.sum && !t.legacy) return;
     g.yearNotes.push(t.name + ':' + t.place);
     if (t.medal === '金') {
       g.ending = { type: 'gold', age: g.age };
@@ -608,8 +909,7 @@ var WL = (function () {
       return;
     }
     if (t.next) {
-      g.tour = simulateTournament(g, t.next);
-      g.tourStep = 0;
+      startTournament(g, t.next);
       return;
     }
     endYear(g);
@@ -627,6 +927,9 @@ var WL = (function () {
     }
     addFatigue(g, -10);
     if (g.injured) g.fatigue = Math.min(g.fatigue, 30);
+    ensure(g);
+    if (!g.hist.length || g.hist[g.hist.length - 1].a !== g.age) g.hist.push({ a: g.age, p: Math.round(power(g)) });
+    g.rec.peak = Math.max(g.rec.peak, Math.round(power(g)));
     g.phase = 'yearEnd';
   }
 
@@ -662,8 +965,10 @@ var WL = (function () {
   return {
     STATS: STATS, STAT_NAMES: STAT_NAMES, MENUS: MENUS, INFANCY: INFANCY, COURSES: COURSES, BAL: BAL,
     OLYMPIC_AGES: OLYMPIC_AGES, MOVES: MOVES,
-    setRandom: setRandom, newGame: newGame, goldCount: goldCount, continueAfterGold: continueAfterGold, retireAfterGold: retireAfterGold, startInfancy: startInfancy, chooseInfancy: chooseInfancy,
+    setRandom: setRandom, newGame: newGame, ensure: ensure, goldCount: goldCount, continueAfterGold: continueAfterGold, retireAfterGold: retireAfterGold, startInfancy: startInfancy, chooseInfancy: chooseInfancy,
     resolveEvent: resolveEvent, train: train, finishTournament: finishTournament, nextYear: nextYear,
+    TACTICS: TACTICS, STYLE_NAMES: STYLE_NAMES, tacticEdge: tacticEdge, playPeriod: playPeriod, resolveTie: resolveTie,
+    advanceTournament: advanceTournament, autoTournament: autoTournament, smartTactic: smartTactic,
     tournamentFor: tournamentFor, power: power, matchPower: matchPower, stars: stars, stageName: stageName,
     ageCoef: ageCoef, fatigueCoef: fatigueCoef, courseMul: courseMul, courseFat: courseFat
   };
@@ -677,8 +982,16 @@ if (typeof module !== 'undefined') module.exports = WL;
 (function () {
   var SAVE_KEY = 'wrestlingLife.save.v1';
   var NAME_KEY = 'wrestlingLife.lastName';
+  var HALL_KEY = 'wrestlingLife.hall.v1';
+  var ACH_KEY = 'wrestlingLife.ach.v1';
+  var SET_KEY = 'wrestlingLife.settings.v1';
+  var GAME_URL = 'https://japanwrestlingchannel.com/game/';
   var app = document.getElementById('app');
   var g = null;
+  var view = 'title';        // タイトルまわりの画面: title / hall / ach
+  var fresh = false;         // 直前の操作が練習だったか(伸びた量を光らせる)
+  var animToken = 0;         // 画面が変わったら試合アニメを止めるための番号
+  var skipAnim = false;
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -688,19 +1001,227 @@ if (typeof module !== 'undefined') module.exports = WL;
   function storeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function storeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function storeDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function jsonGet(k, def) { try { var v = JSON.parse(storeGet(k)); return v == null ? def : v; } catch (e) { return def; } }
   function save() { if (g) storeSet(SAVE_KEY, JSON.stringify(g)); }
   function load() {
-    var s = storeGet(SAVE_KEY);
-    if (!s) return null;
-    try { var d = JSON.parse(s); return d && d.v === 1 && d.phase ? d : null; } catch (e) { return null; }
+    var d = jsonGet(SAVE_KEY, null);
+    if (!d || d.v !== 1 || !d.phase) return null;
+    WL.ensure(d);
+    // 古い版の大会データ(結果が先に全部決まっていた)は、結果まとめから再開する
+    if (d.phase === 'tournament' && d.tour && d.tour.r === undefined) { d.tour.legacy = true; d.tour.sum = true; d.tour.over = true; d.tour.cur = null; }
+    return d;
   }
+  function resumable(d) { return d && (d.phase !== 'ending' || (d.ending && d.ending.type === 'gold' && !d.ending.done)); }
   function starStr(n) { return '★★★'.slice(0, n) + '☆☆☆'.slice(0, 3 - n); }
   function n0(v) { return Math.floor(v); }
+  function sleep(ms) {
+    var tok = animToken;
+    return new Promise(function (res, rej) {
+      if (skipAnim) ms = 0; else ms = ms * (settings.fast ? 0.45 : 1);
+      setTimeout(function () { if (tok !== animToken) rej(new Error('cancel')); else res(); }, ms);
+    });
+  }
+  function $(sel) { return app.querySelector(sel); }
 
+  // ---- 設定・効果音(音はすべてその場で合成。ファイルは使わない) ----
+  var settings = jsonGet(SET_KEY, { sound: true, fast: false });
+  function saveSettings() { storeSet(SET_KEY, JSON.stringify(settings)); }
+  var actx = null, noiseBuf = null;
+  function audio() {
+    if (!settings.sound) return null;
+    try {
+      if (!actx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        actx = new AC();
+        noiseBuf = actx.createBuffer(1, actx.sampleRate, actx.sampleRate);
+        var d = noiseBuf.getChannelData(0);
+        for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      }
+      if (actx.state === 'suspended') actx.resume();
+      return actx;
+    } catch (e) { return null; }
+  }
+  function tone(freq, dur, type, vol, delay, slideTo) {
+    var c = audio(); if (!c) return;
+    var t = c.currentTime + (delay || 0);
+    var o = c.createOscillator(), v = c.createGain();
+    o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+    v.gain.setValueAtTime(0.0001, t);
+    v.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.012);
+    v.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(v); v.connect(c.destination); o.start(t); o.stop(t + dur + 0.03);
+  }
+  function noise(dur, vol, freq, q, delay) {
+    var c = audio(); if (!c) return;
+    var t = c.currentTime + (delay || 0);
+    var s = c.createBufferSource(), f = c.createBiquadFilter(), v = c.createGain();
+    s.buffer = noiseBuf; s.loop = true;
+    f.type = 'bandpass'; f.frequency.value = freq || 1200; f.Q.value = q || 0.7;
+    v.gain.setValueAtTime(0.0001, t);
+    v.gain.exponentialRampToValueAtTime(vol || 0.1, t + dur * 0.25);
+    v.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(v); v.connect(c.destination); s.start(t); s.stop(t + dur + 0.05);
+  }
+  var SFX = {
+    click: function () { tone(520, 0.06, 'triangle', 0.06); },
+    train: function () { tone(330, 0.09, 'square', 0.05); tone(440, 0.09, 'square', 0.05, 0.09); tone(660, 0.14, 'square', 0.05, 0.18); },
+    rest: function () { tone(660, 0.25, 'sine', 0.07, 0, 440); tone(440, 0.4, 'sine', 0.06, 0.2, 330); },
+    hurt: function () { tone(180, 0.35, 'sawtooth', 0.12, 0, 60); noise(0.25, 0.12, 300, 1); },
+    whistle: function () { tone(2700, 0.32, 'square', 0.035); tone(2760, 0.32, 'square', 0.035); },
+    buzzer: function () { tone(190, 0.5, 'sawtooth', 0.08); tone(196, 0.5, 'square', 0.04); },
+    thud: function () { tone(140, 0.2, 'sine', 0.22, 0, 45); noise(0.12, 0.1, 220, 1); },
+    point: function () { tone(880, 0.09, 'triangle', 0.1); tone(1320, 0.16, 'triangle', 0.1, 0.08); noise(0.7, 0.07, 1500, 0.5, 0.05); },
+    pointOpp: function () { tone(330, 0.12, 'triangle', 0.09); tone(247, 0.2, 'triangle', 0.09, 0.1); },
+    big: function () { tone(660, 0.1, 'square', 0.08); tone(880, 0.1, 'square', 0.08, 0.09); tone(1320, 0.3, 'square', 0.08, 0.18); noise(1.3, 0.13, 1400, 0.4, 0.1); },
+    cheer: function (len) { noise(len || 1.8, 0.14, 1300, 0.4); noise(len || 1.8, 0.07, 2600, 0.6, 0.1); },
+    win: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f, 0.22, 'triangle', 0.11, i * 0.11); }); SFX.cheer(1.6); },
+    lose: function () { [392, 349, 294, 220].forEach(function (f, i) { tone(f, 0.3, 'sine', 0.09, i * 0.2); }); },
+    fanfare: function () {
+      [[523, 0], [523, .16], [523, .32], [698, .48], [880, .8], [784, 1.1], [880, 1.25], [1047, 1.45]].forEach(function (n) { tone(n[0], n[0] === 1047 ? 0.9 : 0.24, 'square', 0.07, n[1]); tone(n[0] / 2, 0.24, 'triangle', 0.08, n[1]); });
+      SFX.cheer(3);
+    },
+    unlock: function () { tone(988, 0.09, 'triangle', 0.09); tone(1319, 0.09, 'triangle', 0.09, 0.09); tone(1976, 0.25, 'triangle', 0.09, 0.18); },
+    event: function () { tone(587, 0.12, 'sine', 0.08); tone(880, 0.25, 'sine', 0.08, 0.12); },
+    gauge: function () { tone(1200, 0.05, 'square', 0.05); }
+  };
+  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+
+  // ---- 絵(SVGをその場で描く) ----
+  var SKIN = '#f2c9a4', HAIR = '#241812';
+  var POSES = {
+    stance: { hip: [50, 96], sh: [70, 64], head: [85, 48], kB: [38, 122], fB: [30, 150], kF: [66, 120], fF: [76, 150], eB: [82, 84], hB: [99, 86], eF: [90, 76], hF: [107, 66], face: 1 },
+    idle: { hip: [55, 94], sh: [55, 56], head: [55, 35], kB: [49, 122], fB: [45, 150], kF: [61, 122], fF: [65, 150], eB: [39, 74], hB: [46, 91], eF: [71, 74], hF: [64, 91], face: 0 },
+    tired: { hip: [55, 96], sh: [57, 60], head: [59, 41], kB: [48, 124], fB: [45, 150], kF: [62, 124], fF: [65, 150], eB: [44, 80], hB: [43, 100], eF: [70, 82], hF: [71, 102], face: 0 },
+    win: { hip: [55, 94], sh: [55, 56], head: [55, 35], kB: [48, 122], fB: [43, 150], kF: [62, 122], fF: [67, 150], eB: [36, 44], hB: [29, 18], eF: [74, 44], hF: [81, 18], face: 0 }
+  };
+  // o: { pose, color, trim, age, sweat, bandage, belt }
+  function fig(o) {
+    var age = o.age == null ? 25 : o.age;
+    var S = age < 10 ? 0.64 : age < 13 ? 0.74 : age < 16 ? 0.85 : age < 19 ? 0.94 : 1;
+    var R = age < 13 ? 15 : age < 16 ? 14 : 13;
+    var P = POSES[o.pose || 'stance'];
+    function pt(k) { var p = P[k]; return [(55 + (p[0] - 55) * S).toFixed(1), (150 - (150 - p[1]) * S).toFixed(1)]; }
+    function ln(a, b, col, w) { var A = pt(a), B = pt(b); return '<line x1="' + A[0] + '" y1="' + A[1] + '" x2="' + B[0] + '" y2="' + B[1] + '" stroke="' + col + '" stroke-width="' + (w * S).toFixed(1) + '" stroke-linecap="round"/>'; }
+    var col = o.color || '#d31f3c', trim = o.trim || '#ffffff';
+    var shoe = '#1c1c22';
+    function leg(k, f) {
+      var F = pt(f), dx = P.face ? 7 : (f === 'fB' ? -4 : 4);
+      return ln('hip', k, col, 14) + ln(k, f, SKIN, 10) +
+        '<line x1="' + F[0] + '" y1="' + F[1] + '" x2="' + (+F[0] + dx * S).toFixed(1) + '" y2="' + F[1] + '" stroke="' + shoe + '" stroke-width="' + (9 * S).toFixed(1) + '" stroke-linecap="round"/>';
+    }
+    function arm(e, h) { return ln('sh', e, SKIN, 9) + ln(e, h, SKIN, 8); }
+    var H = pt('head'), hx = +H[0], hy = +H[1];
+    var fx = P.face ? 2.5 : 0;
+    var head = '<circle cx="' + hx + '" cy="' + hy + '" r="' + R + '" fill="' + HAIR + '"/>' +
+      '<circle cx="' + (hx + fx) + '" cy="' + (hy + 3) + '" r="' + (R - 2) + '" fill="' + SKIN + '"/>';
+    if (age >= 31) head += '<path d="M' + (hx + fx - R + 4) + ' ' + (hy + 7) + ' q' + (R - 4) + ' ' + (R - 3) + ' ' + (2 * R - 8) + ' 0" fill="none" stroke="' + HAIR + '" stroke-width="2.4" opacity=".55"/>';
+    if (P.face) head += '<circle cx="' + (hx + 7) + '" cy="' + (hy + 2) + '" r="1.6" fill="#1a1a1a"/><path d="M' + (hx + 3) + ' ' + (hy - 2) + ' l8 1.5" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/>';
+    else if (o.pose === 'tired') head += '<path d="M' + (hx - 7) + ' ' + (hy + 2) + ' l4 2 l-4 2 M' + (hx + 7) + ' ' + (hy + 2) + ' l-4 2 l4 2" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="' + hx + '" cy="' + (hy + 9) + '" rx="2.2" ry="1.6" fill="#7a3b2e"/>';
+    else head += '<circle cx="' + (hx - 4.5) + '" cy="' + (hy + 2) + '" r="1.6" fill="#1a1a1a"/><circle cx="' + (hx + 4.5) + '" cy="' + (hy + 2) + '" r="1.6" fill="#1a1a1a"/>' +
+      (o.pose === 'win' ? '<path d="M' + (hx - 5) + ' ' + (hy + 6) + ' q5 6 10 0 z" fill="#7a2b22"/>' : '<path d="M' + (hx - 3.5) + ' ' + (hy + 7.5) + ' q3.5 2.5 7 0" fill="none" stroke="#7a3b2e" stroke-width="1.5" stroke-linecap="round"/>');
+    if (o.bandage) head += '<path d="M' + (hx - R + 1) + ' ' + (hy - 3) + ' l' + (2 * R - 2) + ' -5" stroke="#fff" stroke-width="5" stroke-linecap="round"/>';
+    if (o.sweat) head += '<path d="M' + (hx + R + 3) + ' ' + (hy - 6) + ' q4 7 0 9 q-4 -2 0 -9z" fill="#8fd3ff"/><path d="M' + (hx - R - 5) + ' ' + (hy + 2) + ' q3 6 0 7 q-3 -1 0 -7z" fill="#8fd3ff"/>';
+    var A = pt('hip'), B = pt('sh');
+    var torso = ln('hip', 'sh', col, 23) +
+      '<line x1="' + A[0] + '" y1="' + A[1] + '" x2="' + B[0] + '" y2="' + B[1] + '" stroke="' + trim + '" stroke-width="' + (3 * S).toFixed(1) + '" stroke-linecap="round" opacity=".85"/>';
+    if (o.medal) torso += '<circle cx="' + B[0] + '" cy="' + (+B[1] + 20 * S) + '" r="' + (6 * S) + '" fill="#f3d27a" stroke="#b9832a" stroke-width="1.5"/>';
+    return '<svg viewBox="0 0 110 152" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      arm('eB', 'hB') + leg('kB', 'fB') + torso + leg('kF', 'fF') + head + arm('eF', 'hF') + '</svg>';
+  }
+  function babyFig() {
+    return '<svg class="babyfig" viewBox="0 0 150 150" aria-hidden="true"><ellipse cx="75" cy="104" rx="36" ry="34" fill="#fff4dc"/><path d="M45 96 q30 26 60 0" fill="none" stroke="#e6cf9c" stroke-width="5"/>' +
+      '<circle cx="75" cy="56" r="30" fill="' + SKIN + '"/><path d="M68 28 q8 -12 12 0" fill="none" stroke="' + HAIR + '" stroke-width="4" stroke-linecap="round"/>' +
+      '<circle cx="64" cy="56" r="3" fill="#1a1a1a"/><circle cx="86" cy="56" r="3" fill="#1a1a1a"/><circle cx="56" cy="66" r="5" fill="#f5a39a" opacity=".7"/><circle cx="94" cy="66" r="5" fill="#f5a39a" opacity=".7"/>' +
+      '<path d="M68 68 q7 7 14 0 z" fill="#7a2b22"/><circle cx="42" cy="92" r="8" fill="' + SKIN + '"/><circle cx="108" cy="92" r="8" fill="' + SKIN + '"/></svg>';
+  }
+  function myColors() { return g && g.age < 8 ? { color: '#4b9bd6', trim: '#ffffff' } : { color: '#d31f3c', trim: '#ffffff' }; }
+  function oppColors(o) { return o.rival ? { color: '#2b2b36', trim: '#d9ad3c' } : o.champ ? { color: '#168a5a', trim: '#f3d27a' } : { color: '#2456c9', trim: '#ffffff' }; }
+  function fwrap(side, inner, cls) { return '<div class="fw ' + side + ' ' + (cls || '') + '"><div class="shadow"></div>' + inner + '</div>'; }
+
+  // ---- 実績 ----
+  function hasTitle(n) { return g.titles.some(function (t) { return t.name === n; }); }
+  function countTitle(n) { return g.titles.filter(function (t) { return t.name === n; }).length; }
+  function goldsOf(x) { return x.medals.filter(function (m) { return m.medal === '金'; }); }
+  function retired() { return g.phase === 'ending' && (g.ending.type === 'retire' || g.ending.done); }
+  var ACHS = [
+    { id: 'first', ic: '🏆', n: 'はじめての優勝', d: '大会で初めて優勝する', t: function () { return g.titles.length >= 1; } },
+    { id: 'kid', ic: '🧒', n: '全国少年王者', d: '全国少年大会で優勝', t: function () { return hasTitle('全国少年大会'); } },
+    { id: 'zenchu', ic: '🎒', n: '全中王者', d: '全国中学大会で優勝', t: function () { return hasTitle('全国中学大会'); } },
+    { id: 'asia', ic: '🌏', n: 'アジアの星', d: 'U15アジア選手権で優勝', t: function () { return hasTitle('U15アジア選手権'); } },
+    { id: 'ih', ic: '🔥', n: 'インターハイ王者', d: 'インターハイで優勝', t: function () { return hasTitle('インターハイ'); } },
+    { id: 'japan', ic: '🗾', n: '日本一', d: '全日本選手権で優勝', t: function () { return hasTitle('全日本選手権'); } },
+    { id: 'world', ic: '🌐', n: '世界王者', d: '世界選手権で優勝', t: function () { return hasTitle('世界選手権'); } },
+    { id: 'world5', ic: '👑', n: '絶対王者', d: '世界選手権で5回優勝', t: function () { return countTitle('世界選手権') >= 5; } },
+    { id: 'olyin', ic: '🎌', n: 'オリンピアン', d: 'オリンピックに出場する', t: function () { return g.log.some(function (l) { return l.name === 'オリンピック'; }) || (g.tour && g.tour.kind === 'olympics'); } },
+    { id: 'bronze', ic: '🥉', n: '銅メダリスト', d: 'オリンピックで銅メダル', t: function () { return g.medals.some(function (m) { return m.medal === '銅'; }); } },
+    { id: 'silver', ic: '🥈', n: '銀メダリスト', d: 'オリンピックで銀メダル', t: function () { return g.medals.some(function (m) { return m.medal === '銀'; }); } },
+    { id: 'gold', ic: '🥇', n: '金メダリスト', d: 'オリンピックで金メダル', t: function () { return goldsOf(g).length >= 1; } },
+    { id: 'gold24', ic: '⚡', n: '若き天才', d: '24歳で金メダル', t: function () { return goldsOf(g).some(function (m) { return m.age === 24; }); } },
+    { id: 'late', ic: '🌅', n: '遅咲きの花', d: '32歳以降に初めての金メダル', t: function () { var x = goldsOf(g); return x.length > 0 && x[0].age >= 32; } },
+    { id: 'gold2', ic: '✌️', n: '連覇', d: '金メダルを2個取る', t: function () { return goldsOf(g).length >= 2; } },
+    { id: 'gold3', ic: '🏛', n: '3連覇の伝説', d: '金メダルを3個取る', t: function () { return goldsOf(g).length >= 3; } },
+    { id: 'gold4', ic: '🌟', n: '史上初の4連覇', d: '金メダルを4個取る', t: function () { return goldsOf(g).length >= 4; } },
+    { id: 'allmedal', ic: '🎖', n: 'メダルコレクター', d: '金・銀・銅をすべて取る', t: function () { return ['金', '銀', '銅'].every(function (k) { return g.medals.some(function (m) { return m.medal === k; }); }); } },
+    { id: 'rival10', ic: '⚔️', n: 'ライバルを超えて', d: 'ライバルに10勝する', t: function () { return g.rival && g.rival.w >= 10; } },
+    { id: 'rivalp', ic: '😤', n: '一度も負けない', d: 'ライバルに10勝以上・無敗で引退', t: function () { return retired() && g.rival && g.rival.w >= 10 && g.rival.l === 0; } },
+    { id: 'fall10', ic: '💥', n: 'フォールの鬼', d: 'フォール勝ちを10回', t: function () { return g.rec.falls >= 10; } },
+    { id: 'win100', ic: '💯', n: '通算100勝', d: '試合に100回勝つ', t: function () { return g.rec.wins >= 100; } },
+    { id: 'iron', ic: '🦾', n: '鉄人', d: '一度もケガをせずに引退', t: function () { return retired() && g.rec.inj === 0; } },
+    { id: 'p80', ic: '📈', n: '世界レベル', d: '戦闘力80に到達', t: function () { return WL.power(g) >= 80; } },
+    { id: 'p90', ic: '🚀', n: '人類最強クラス', d: '戦闘力90に到達', t: function () { return WL.power(g) >= 90; } },
+    { id: 'suplex', ic: '🌀', n: 'スープレックス習得', d: '技術を90まで上げる', t: function () { return g.stats.tec >= 90; } },
+    { id: 'titles20', ic: '🏅', n: 'タイトルホルダー', d: '優勝を20回', t: function () { return g.titles.length >= 20; } },
+    { id: 'lives5', ic: '♻️', n: '輪廻転生', d: '5回の人生を最後まで生きる', t: function () { return jsonGet(HALL_KEY, []).length >= 5; } }
+  ];
+  function toast(html) {
+    var box = document.getElementById('toasts');
+    var d = document.createElement('div'); d.className = 'toast'; d.innerHTML = html;
+    box.appendChild(d); setTimeout(function () { d.remove(); }, 3500);
+  }
+  function checkAch() {
+    if (!g || g.age < 6) return;
+    var got = jsonGet(ACH_KEY, {}), news = [];
+    ACHS.forEach(function (a) { if (!got[a.id]) { var ok = false; try { ok = a.t(); } catch (e) {} if (ok) { got[a.id] = Date.now(); news.push(a); } } });
+    if (news.length) {
+      storeSet(ACH_KEY, JSON.stringify(got));
+      news.forEach(function (a, i) { setTimeout(function () { toast(a.ic + ' 実績解除:' + esc(a.n)); SFX.unlock(); }, 500 + i * 900); });
+    }
+  }
+
+  // ---- 殿堂 ----
+  function honorAny(x) {
+    x = x || g;
+    var gs = goldsOf(x);
+    if (gs.length) return honorTitle();
+    if (x.medals.some(function (m) { return m.medal === '銀'; })) return 'あと一歩に迫った銀メダリスト';
+    if (x.medals.some(function (m) { return m.medal === '銅'; })) return '誇り高き銅メダリスト';
+    if (x.titles.some(function (t) { return t.name === '世界選手権'; })) return '無冠の世界王者';
+    if (x.log.some(function (l) { return l.name === 'オリンピック'; })) return 'オリンピアン';
+    if (x.titles.some(function (t) { return t.name === '全日本選手権'; })) return '日本王者';
+    if (x.titles.length >= 5) return '名選手';
+    return '不屈の挑戦者';
+  }
+  function recordHall() {
+    var hall = jsonGet(HALL_KEY, []);
+    if (hall.some(function (h) { return h.id === g.id; })) return;
+    var c = function (k) { return g.medals.filter(function (m) { return m.medal === k; }).length; };
+    var world = countTitle('世界選手権');
+    var e = { id: g.id, name: g.name, pref: g.pref, age: g.ending.age, gold: c('金'), silver: c('銀'), bronze: c('銅'), world: world, titles: g.titles.length,
+      rw: g.rival ? g.rival.w : 0, rl: g.rival ? g.rival.l : 0, wins: g.rec.wins, matches: g.rec.matches, peak: g.rec.peak, honor: honorAny(), date: Date.now() };
+    e.score = e.gold * 1000 + e.silver * 300 + e.bronze * 150 + world * 80 + e.titles * 10 + e.peak;
+    hall.push(e);
+    hall.sort(function (a, b) { return b.score - a.score; });
+    storeSet(HALL_KEY, JSON.stringify(hall.slice(0, 50)));
+  }
+
+  // ---- 描画 ----
   function render() {
+    animToken++; skipAnim = false;
     save();
     var html;
-    if (!g) html = titleScreen();
+    if (!g) html = view === 'hall' ? hallScreen() : view === 'ach' ? achScreen() : titleScreen();
     else switch (g.phase) {
       case 'birth': html = birthScreen(); break;
       case 'infancy': html = infancyScreen(); break;
@@ -713,23 +1234,61 @@ if (typeof module !== 'undefined') module.exports = WL;
     }
     app.innerHTML = '<div class="pop">' + html + '</div>';
     window.scrollTo(0, 0);
+    document.getElementById('soundBtn').textContent = settings.sound ? '🔊' : '🔇';
+    checkAch();
+    afterRender();
+  }
+  function afterRender() {
+    var c = document.getElementById('shareCanvasHost');
+    if (c) drawShareCard();
   }
 
   // ---- 1. タイトル ----
   function titleScreen() {
     var saved = load();
-    var resumable = saved && (saved.phase !== 'ending' || (saved.ending && saved.ending.type === 'gold' && !saved.ending.done));
+    var ok = resumable(saved);
     var last = storeGet(NAME_KEY) || '';
-    return '<div class="title-logo"><div class="sub">WRESTLING LIFE</div><h1>レスリング人生</h1>' +
-      '<div class="road">〜オリンピックへの道〜</div></div>' +
-      '<div class="mat">🤼</div>' +
+    var got = Object.keys(jsonGet(ACH_KEY, {})).length;
+    var hall = jsonGet(HALL_KEY, []);
+    return '<div class="logo"><div class="en">WRESTLING LIFE</div><h1>レスリング人生</h1><div class="road">〜オリンピックへの道〜</div></div>' +
+      '<div class="arena olympics"><div class="beam l"></div><div class="beam r"></div><div class="matfloor"></div>' +
+      fwrap('a', fig({ pose: 'stance', color: '#d31f3c' }), 'bob') + fwrap('b', fig({ pose: 'stance', color: '#2456c9' }), 'bob') + '</div>' +
       '<div class="card"><div class="label">選手の名前</div>' +
       '<input type="text" id="nameInput" maxlength="12" placeholder="例:田中 レス太郎" value="' + esc(last) + '">' +
       '<button class="btn" data-act="new">はじめから</button>' +
-      '<button class="btn gold" data-act="continue"' + (resumable ? '' : ' disabled') + '>つづきから' +
-      (resumable ? '(' + esc(saved.name) + '・' + saved.age + '歳)' : '') + '</button></div>' +
-      '<div class="card small muted">毎年「春・夏・秋」の3回、練習メニューを選び、冬の大会に挑もう。<br>' +
-      '36歳までにオリンピックで金メダルを取れればクリア! 疲れをためすぎるとケガをするので、休養も大事。</div>';
+      '<button class="btn gold" data-act="continue"' + (ok ? '' : ' disabled') + '>つづきから' + (ok ? '(' + esc(saved.name) + '・' + saved.age + '歳)' : '') + '</button>' +
+      '<div class="minirow"><button class="btn" data-act="hall"><b>🏛</b>殿堂 ' + hall.length + '</button><button class="btn" data-act="ach"><b>🎖</b>実績 ' + got + '/' + ACHS.length + '</button>' +
+      '<button class="btn" data-act="help"><b>❓</b>遊び方</button><button class="btn" data-act="speed"><b>' + (settings.fast ? '⏩' : '▶️') + '</b>試合' + (settings.fast ? '高速' : '標準') + '</button></div></div>' +
+      '<div class="card small muted">生まれてから36歳まで。練習で鍛え、試合では相手の出方を読んで作戦を選ぶ。<br>めざすはオリンピックの金メダル!</div>';
+  }
+  function helpOverlay() {
+    return '<div class="overlay" data-act="closeHelp"><div class="card gold"><h2>遊び方</h2>' +
+      '<h3 style="margin-top:10px">① 育てる</h3><p class="small">毎年「春・夏・秋」の3回、練習を選ぶ。疲労がたまると伸びが悪くなり、80を超えるとケガをしやすい。大会の前は休養して疲れを抜こう。</p>' +
+      '<h3>② 試合で作戦を選ぶ</h3><p class="small">試合は2ピリオド。ピリオドごとに作戦を1つ選ぶ。作戦は3すくみ:</p>' +
+      '<p class="small">⚔️ <b>攻め</b> は 🛡 守り型 に強い<br>🌀 <b>カウンター</b> は ⚔️ 攻め型 に強い<br>🤝 <b>じっくり</b> は 🌀 カウンター型 に強い</p>' +
+      '<p class="small">相手の型は表示されるが、ライバルや王者は第1ピリオドが終わるまで分からない。第2ピリオドで作戦を変えてくる相手もいる。</p>' +
+      '<h3>③ 同点なら一発勝負</h3><p class="small">ゲージが金色の真ん中に来た瞬間に「今だ!」を押すと、ラストポイントを取りやすい。</p>' +
+      '<h3>④ ゴール</h3><p class="small">24・28・32・36歳のオリンピックで金メダル。取ったあとも現役を続けて連覇をねらえる。結果は「殿堂」に残る。</p>' +
+      '<button class="btn" data-act="closeHelp">とじる</button></div></div>';
+  }
+  function hallScreen() {
+    var hall = jsonGet(HALL_KEY, []);
+    var rows = hall.map(function (h, i) {
+      var medals = '🥇'.repeat(Math.min(h.gold, 4)) + '🥈'.repeat(Math.min(h.silver, 3)) + '🥉'.repeat(Math.min(h.bronze, 3));
+      return '<div class="hallrow"><div class="rk">' + (i + 1) + '</div><div><div class="hn">' + esc(h.name) + ' <span class="tag gold">' + esc(h.honor) + '</span></div>' +
+        '<div class="hd">' + esc(h.pref) + '・' + h.age + '歳で引退・優勝' + h.titles + '回・世界' + h.world + '回・' + h.wins + '勝' + (h.matches - h.wins) + '敗・最高戦闘力' + h.peak + '</div></div>' +
+        '<div class="hm">' + (medals || '—') + '</div></div>';
+    }).join('');
+    var golds = hall.filter(function (h) { return h.gold > 0; }).length;
+    return '<div class="card gold"><h2>🏛 殿堂</h2><p class="small muted">これまでに生きた人生の記録(この端末に保存)。' + hall.length + '人中、金メダリスト' + golds + '人。</p>' +
+      (rows || '<p class="center muted">まだ記録がありません。<br>最初の人生を最後まで生きてみよう。</p>') + '</div>' +
+      '<button class="btn" data-act="back">もどる</button>';
+  }
+  function achScreen() {
+    var got = jsonGet(ACH_KEY, {});
+    return '<div class="card gold"><h2>🎖 実績 ' + Object.keys(got).length + '/' + ACHS.length + '</h2><div class="achs" style="margin-top:10px">' +
+      ACHS.map(function (a) { return '<div class="ach ' + (got[a.id] ? 'on' : '') + '"><span class="ic">' + (got[a.id] ? a.ic : '🔒') + '</span><b>' + esc(a.n) + '</b>' + esc(a.d) + '</div>'; }).join('') +
+      '</div></div><button class="btn" data-act="back">もどる</button>';
   }
 
   // ---- 2. 誕生 ----
@@ -737,7 +1296,7 @@ if (typeof module !== 'undefined') module.exports = WL;
     var rows = WL.STATS.map(function (s) {
       return '<li>' + WL.STAT_NAMES[s] + ' <span class="gold-t">' + starStr(WL.stars(g.talent[s])) + '</span></li>';
     }).join('');
-    return '<div class="center" style="padding-top:20px"><div class="medal">👶</div><h2>おめでとうございます!</h2></div>' +
+    return '<div class="center" style="padding-top:14px">' + babyFig() + '<h2>おめでとうございます!</h2></div>' +
       '<div class="card"><div class="big center">' + esc(g.name) + '</div>' +
       '<p class="center">' + esc(g.pref) + 'で元気な赤ちゃんが生まれた!</p>' +
       '<div class="label">生まれつきの才能(★が多いほど伸びやすい)</div><ul class="plain">' + rows + '</ul></div>' +
@@ -746,11 +1305,55 @@ if (typeof module !== 'undefined') module.exports = WL;
 
   // ---- 3. 幼少期 ----
   function infancyScreen() {
-    return '<div class="card"><div class="label">0〜5歳</div><h2>どんなふうに育てる?</h2>' +
+    var ic = { outdoor: '🌳', grapple: '🤼', books: '📚' };
+    return '<div class="center">' + babyFig() + '</div><div class="card"><div class="label">0〜5歳</div><h2>どんなふうに育てる?</h2>' +
       '<p class="muted small">幼いころの過ごし方で、得意なことが変わる。</p>' +
       WL.INFANCY.map(function (c) {
-        return '<button class="btn choice" data-act="infancy" data-id="' + c.id + '"><b>' + esc(c.label) + '</b><span>' + esc(c.desc) + '</span></button>';
+        return '<button class="btn choice" data-act="infancy" data-id="' + c.id + '"><b>' + ic[c.id] + ' ' + esc(c.label) + '</b><span>' + esc(c.desc) + '</span></button>';
       }).join('') + '</div>';
+  }
+
+  // ---- 共通: 主人公のカード ----
+  function sceneClass() { return g.age < 8 ? 'park' : g.age < 16 ? 'dojo' : ''; }
+  function lifeStrip() {
+    var html = '';
+    for (var a = 6; a <= 36; a++) {
+      var md = g.medals.filter(function (m) { return m.age === a; })[0];
+      var cls = a === g.age ? 'now' : a < g.age ? 'past' : '';
+      if (WL.OLYMPIC_AGES.indexOf(a) >= 0) cls += ' oly';
+      if (md) cls += md.medal === '金' ? ' g' : md.medal === '銀' ? ' s' : ' b';
+      html += '<i class="' + cls + '"></i>';
+    }
+    return '<div class="life" title="6歳〜36歳">' + html + '</div>';
+  }
+  function hero(pose) {
+    var c = myColors();
+    var tired = g.fatigue > 65;
+    var p = pose || (tired ? 'tired' : 'idle');
+    var nextOly = WL.OLYMPIC_AGES.filter(function (a) { return a >= g.age; })[0];
+    return '<div class="hero"><div class="arena ' + sceneClass() + '"><div class="matfloor"></div>' +
+      fwrap('solo', fig({ pose: p, color: c.color, age: g.age, sweat: tired, bandage: g.injured, medal: goldsOf(g).length > 0 }), 'bob') + '</div>' +
+      '<div class="info"><div class="nm">' + esc(g.name) + '</div><div class="st">' + esc(WL.stageName(g)) + '・' + esc(g.pref) + '出身</div>' +
+      '<div class="age">' + g.age + '<small>歳' + (nextOly ? (nextOly === g.age ? ' 🏅オリンピックの年!' : ' 次の五輪まで' + (nextOly - g.age) + '年') : '') + '</small></div>' + lifeStrip() + '</div></div>';
+  }
+  function statsPanel(showDelta) {
+    var lg = showDelta && fresh && g.lastGains ? g.lastGains : null;
+    var html = WL.STATS.map(function (s) {
+      var v = g.stats[s];
+      var d = lg && lg.gains[s] ? lg.gains[s] : 0;
+      return '<div class="stat"><div class="nm">' + WL.STAT_NAMES[s] + '<small>' + starStr(WL.stars(g.talent[s])) + '</small></div>' +
+        '<div class="bar"><i' + (d ? ' class="grow" style="--from:' + (v - d) + '%;width:' + v + '%"' : ' style="width:' + v + '%"') + '></i></div>' +
+        '<div class="v">' + n0(v) + (d ? '<span class="delta">+' + (Math.round(d * 10) / 10) + '</span>' : '') + '</div></div>';
+    }).join('');
+    var f = g.fatigue;
+    var fd = lg ? lg.fat : 0;
+    var fl = f > 85 ? '<span class="red-t">限界</span>' : f > 65 ? '<span class="red-t">ヘトヘト</span>' : f > 50 ? '<span class="gold-t">疲れぎみ</span>' : '<span class="green-t">元気</span>';
+    html += '<div class="stat"><div class="nm">疲労</div><div class="bar fat"><i' + (fd ? ' class="grow" style="--from:' + (f - fd) + '%;width:' + f + '%"' : ' style="width:' + f + '%"') + '></i></div>' +
+      '<div class="v">' + n0(f) + (fd ? '<span class="delta ' + (fd > 0 ? 'neg' : '') + '">' + (fd > 0 ? '+' : '') + fd + '</span>' : '') + '</div></div>';
+    html += '<div class="power"><span>戦闘力 <b class="gold-t">' + n0(WL.power(g)) + '</b>' +
+      (f > 50 ? '(試合では ' + n0(WL.matchPower(g)) + ')' : '') + '</span><span>' + fl + '</span></div>';
+    if (g.rival) html += '<div class="small muted">ライバル ' + esc(g.rival.name) + ':' + g.rival.w + '勝' + g.rival.l + '敗</div>';
+    return '<div class="card">' + html + '</div>';
   }
 
   // ---- 4. 年初イベント ----
@@ -765,28 +1368,11 @@ if (typeof module !== 'undefined') module.exports = WL;
     } else {
       body += '<button class="btn" data-act="event" data-id="">練習へ</button>';
     }
-    return header() + (g.lastMsg && !e.options ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + body + '</div>';
+    return hero() + (g.lastMsg && !e.options ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + body + '</div>';
   }
 
   // ---- 5. 練習 ----
-  function header() {
-    return '<div class="hdr"><div><div class="nm">' + esc(g.name) + '</div><div class="st">' + esc(WL.stageName(g)) + '・' + esc(g.pref) + '出身</div></div>' +
-      '<div class="age">' + g.age + '<small>歳</small></div></div>';
-  }
-  function statsPanel() {
-    var html = WL.STATS.map(function (s) {
-      var v = g.stats[s];
-      return '<div class="stat"><div class="nm">' + WL.STAT_NAMES[s] + '<small>' + starStr(WL.stars(g.talent[s])) + '</small></div>' +
-        '<div class="bar"><i style="width:' + v + '%"></i></div><div class="v">' + n0(v) + '</div></div>';
-    }).join('');
-    var f = g.fatigue;
-    var fl = f > 85 ? '<span class="red-t">限界</span>' : f > 65 ? '<span class="red-t">ヘトヘト</span>' : f > 50 ? '<span class="gold-t">疲れぎみ</span>' : '<span class="green-t">元気</span>';
-    html += '<div class="stat"><div class="nm">疲労</div><div class="bar fat"><i style="width:' + f + '%"></i></div><div class="v">' + n0(f) + '</div></div>';
-    html += '<div class="power"><span>戦闘力 <b class="gold-t">' + n0(WL.power(g)) + '</b>' +
-      (f > 50 ? '(試合では ' + n0(WL.matchPower(g)) + ')' : '') + '</span><span>' + fl + '</span></div>';
-    if (g.rival) html += '<div class="small muted">ライバル ' + esc(g.rival.name) + ':' + g.rival.w + '勝' + g.rival.l + '敗</div>';
-    return '<div class="card">' + html + '</div>';
-  }
+  var MENU_ICON = { muscle: '💪', run: '🏃', tech: '🤼', dash: '⚡', spar: '🥊', mind: '🧘', rest: '😴' };
   function trainScreen() {
     var t = WL.tournamentFor(g.age);
     var names = ['春', '夏', '秋'];
@@ -797,60 +1383,110 @@ if (typeof module !== 'undefined') module.exports = WL;
       (t.kind === 'trials' ? '<span class="tag gold">五輪イヤー</span>' : '') : '今年は大会なし';
     var menus = WL.MENUS.map(function (m) {
       var gains = Object.keys(m.gain).map(function (s) { return WL.STAT_NAMES[s] + '+' + m.gain[s]; }).join(' ');
-      var extra = m.id === 'rest' ? '' : WL.courseFat(g);
-      var fat = m.fat + (extra || 0);
-      return '<button class="btn ' + m.id + '" data-act="train" data-id="' + m.id + '"><b>' + esc(m.name) + '</b><span>' +
+      var fat = m.fat + (m.id === 'rest' ? 0 : WL.courseFat(g));
+      return '<button class="btn ' + m.id + '" data-act="train" data-id="' + m.id + '"><em>' + MENU_ICON[m.id] + '</em><b>' + esc(m.name) + '</b><span>' +
         (gains || '疲れをとる') + '</span><span>疲労' + (fat > 0 ? '+' : '') + fat + (m.injury ? '・ケガ注意' : '') + '</span></button>';
     }).join('');
     var tips = [];
     if (g.master > 1) tips.push('師匠の指導で今年の成長×' + g.master);
     if (g.season === 2 && t && g.fatigue > 50) tips.push('大会前に疲れを抜いておくと試合で力を出せる');
     if (g.fatigue > 80) tips.push('疲労80超はケガをしやすい!');
-    return header() +
+    else if (g.fatigue > 65) tips.push('疲労65超は練習の伸びが落ちる');
+    return hero() +
       '<div class="seasons">' + seasons + '</div>' +
       '<div class="small">' + tourLine + '</div>' +
-      statsPanel() +
+      statsPanel(true) +
       (g.lastMsg ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') +
       (tips.length ? '<div class="small gold-t">💡 ' + tips.map(esc).join('<br>💡 ') + '</div>' : '') +
-      '<div class="label" style="margin-top:8px">' + ['春', '夏', '秋'][g.season] + 'の練習メニューを選ぶ</div>' +
+      '<div class="label" style="margin-top:8px">' + names[g.season] + 'の練習メニューを選ぶ</div>' +
       '<div class="menus">' + menus + '</div>' +
       '<button class="btn ghost" data-act="toTitle" style="margin-top:18px">タイトルへ(自動でセーブされています)</button>';
   }
 
   // ---- 6. 大会 ----
+  var TACTIC_ICON = { atk: '⚔️', ctr: '🌀', def: '🤝' };
+  var STYLE_ICON = { atk: '⚔️', ctr: '🌀', def: '🛡' };
   function lineText(l, oppName) {
     var who = l.who === 'me' ? esc(g.name) : esc(oppName);
     return '<div class="' + (l.who === 'me' ? 'gold-t' : 'muted') + '">' + who + 'の' + esc(l.move) + '! +' + l.pts + '</div>';
   }
+  function tourHead(t) {
+    return '<div class="card ' + (t.kind === 'olympics' ? 'gold' : 'red') + ' center" style="padding:8px"><div class="label">' + g.age + '歳の冬</div>' +
+      '<h2 style="font-size:19px">' + (t.kind === 'olympics' ? '🏅 ' : t.kind === 'world' || t.kind === 'asia' ? '🌏 ' : '🏆 ') + esc(t.name) + '</h2></div>';
+  }
+  // 試合会場。sm/so は表示する得点、poseA/poseB は立ち姿
+  function arenaHTML(t, m, sm, so, pn, opt) {
+    opt = opt || {};
+    var o = m.opp, oc = oppColors(o), mc = myColors();
+    return '<div class="arena ' + (t.kind === 'olympics' ? 'olympics' : '') + '" id="arena"><div class="beam l"></div><div class="beam r"></div><div class="matfloor"></div>' +
+      '<div class="sb"><div class="t me"><span class="n">' + esc(g.name) + '</span><span class="s" id="sm">' + sm + '</span></div>' +
+      '<div class="mid">' + esc(m.round) + '<b id="pd">' + (pn ? '第' + pn + 'P' : '—') + '</b></div>' +
+      '<div class="t op ' + (o.rival ? 'rival' : o.champ ? 'champ' : '') + '"><span class="n">' + esc(o.name) + '</span><span class="s" id="so">' + so + '</span></div></div>' +
+      fwrap('a', fig({ pose: opt.poseA || 'stance', color: mc.color, age: g.age }), opt.clsA || 'bob') +
+      fwrap('b', fig({ pose: opt.poseB || 'stance', color: oc.color, trim: oc.trim, age: g.age }), opt.clsB || 'bob') +
+      (opt.banner || '') + '</div>';
+  }
+  function oppCard(m) {
+    var o = m.opp;
+    return '<div class="vs"><div class="side me"><b>' + esc(g.name) + '</b><div class="p">戦闘力 ' + m.myPower + '</div></div><div class="x">VS</div>' +
+      '<div class="side"><b>' + esc(o.name) + '</b>' + (o.rival ? '<span class="tag">ライバル</span>' : '') + (o.champ ? '<span class="tag gold">' + esc(o.champ === true ? '世界王者' : o.champ) + '</span>' : '') +
+      '<div class="p">' + esc(o.from) + '・戦闘力 ' + o.power + '</div></div></div>';
+  }
+  function tacticPanel(m) {
+    var pn = m.periods.length + 1;
+    var o = m.opp;
+    var read;
+    if (o.hidden) read = '<span class="q">❓</span><div><b>相手の型が読めない…</b><br><span class="muted">' + (o.rival ? 'ライバル' : '王者') + 'は手の内を見せない。第1ピリオドで見きわめよう。</span></div>';
+    else read = '<span class="q">' + STYLE_ICON[o.style] + '</span><div>相手は <b class="gold-t">' + WL.STYLE_NAMES[o.style] + '</b>' +
+      (pn === 2 ? '<br><span class="muted">ただし、作戦を変えてくるかもしれない。</span>' : '') + '</div>';
+    var btns = WL.TACTICS.map(function (tc) {
+      return '<button class="btn" data-act="tactic" data-id="' + tc.id + '"><b>' + TACTIC_ICON[tc.id] + '</b>' + esc(tc.short) + '<span>' + STYLE_ICON[tc.beats] + WL.STYLE_NAMES[tc.beats] + 'に強い</span></button>';
+    }).join('');
+    return '<div class="card"><div class="label">第' + pn + 'ピリオドの作戦を選ぶ' + (pn === 2 ? '(いま ' + m.me + '-' + m.op + ')' : '') + '</div>' +
+      '<div class="readrow">' + read + '</div><div class="tactics">' + btns + '</div>' +
+      '<div class="rps">⚔️攻め ▶ 🛡守り型 / 🌀カウンター ▶ ⚔️攻め型 / 🤝じっくり ▶ 🌀カウンター型</div></div>';
+  }
+  function tiePanel(m) {
+    return '<div class="card gold center"><h2>同点! ラストポイント勝負</h2><p class="small">' + m.me + '-' + m.op + '。白い線が<b class="gold-t">金色</b>の真ん中に来た瞬間に押せ!</p>' +
+      '<div class="gauge" id="gauge"><div class="ok"></div><div class="great"></div><div class="cur" id="gcur"></div></div>' +
+      '<button class="btn gold" data-act="tieTap" style="font-size:22px;padding:18px">今だ!</button></div>';
+  }
+  function matchLog(m) {
+    var html = '';
+    m.periods.forEach(function (p, i) {
+      var edge = p.edge === undefined ? '' : p.edge > 0 ? ' <span class="tag gold">作戦的中</span>' : p.edge < 0 ? ' <span class="tag">読まれた</span>' : '';
+      html += '<div class="period"><span class="ph">第' + (i + 1) + 'ピリオド ' + p.me + '-' + p.opp + '</span>' + edge +
+        (p.lines.length ? p.lines.map(function (l) { return lineText(l, m.opp.name); }).join('') : '<div class="muted">お互い得点なし</div>') +
+        (m.fall && m.fall.period === i + 1 ? '<div class="' + (m.win ? 'gold-t' : 'red-t') + '"><b>' + (m.win ? esc(g.name) : esc(m.opp.name)) + 'がフォール!</b></div>' : '') + '</div>';
+    });
+    return html;
+  }
   function tournamentScreen() {
     var t = g.tour;
-    var step = g.tourStep;
-    var head = '<div class="card ' + (t.kind === 'olympics' ? 'gold' : 'red') + ' center"><div class="label">' + g.age + '歳の冬</div>' +
-      '<h2>' + (t.kind === 'olympics' ? '🏅 ' : t.kind === 'world' || t.kind === 'asia' ? '🌏 ' : '🏆 ') + esc(t.name) + '</h2></div>';
-    if (step === 0) {
-      return header() + (g.lastMsg ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + head +
+    var head = tourHead(t);
+    if (t.sum) return head + tourSummary(t);
+    if (t.intro) {
+      return hero('stance') + (g.lastMsg ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') + head +
         '<div class="card center">全' + t.rounds + '試合のトーナメント。<br>' + esc(g.name) + 'の戦闘力:<b class="gold-t">' + n0(WL.matchPower(g)) + '</b>' +
         (g.fatigue > 50 ? '<br><span class="red-t small">疲れが残っていて本来の力を出しきれない…</span>' : '') + '</div>' +
-        '<button class="btn" data-act="tourNext">試合開始!</button>';
+        '<button class="btn" data-act="tourAdvance">会場へ向かう</button>';
     }
-    if (step <= t.matches.length) {
-      var m = t.matches[step - 1];
-      var o = m.opp;
-      var html = head + '<div class="card"><div class="center gold-t"><b>' + esc(m.round) + '</b>' + (o.rival ? '<span class="tag">宿命のライバル</span>' : '') + (o.champ ? '<span class="tag gold">' + esc(o.champ === true ? '世界王者' : o.champ) + '</span>' : '') + '</div>' +
-        '<div class="vs"><div class="side me"><b>' + esc(g.name) + '</b><div class="p">戦闘力 ' + m.myPower + '</div></div><div class="x">VS</div>' +
-        '<div class="side"><b>' + esc(o.name) + '</b><div class="p">' + esc(o.from) + '・戦闘力 ' + o.power + '</div></div></div>' +
-        '<div class="score">' + m.me + ' - ' + m.op + '</div>';
-      m.periods.forEach(function (p, i) {
-        html += '<div class="period"><span class="ph">第' + (i + 1) + 'ピリオド ' + p.me + '-' + p.opp + '</span>' +
-          (p.lines.length ? p.lines.map(function (l) { return lineText(l, o.name); }).join('') : '<div class="muted">お互い得点なし</div>') +
-          (m.fall && m.fall.period === i + 1 ? '<div class="' + (m.win ? 'gold-t' : 'red-t') + '"><b>' + (m.win ? esc(g.name) : esc(o.name)) + 'がフォール!</b></div>' : '') + '</div>';
-      });
-      html += '<div class="result ' + (m.win ? 'win' : 'lose') + '">' + (m.win ? '◯ ' : '✕ ') + esc(m.method) + '</div>';
-      if (o.rival) html += '<div class="center small muted">ライバルとの通算:' + g.rival.w + '勝' + g.rival.l + '敗</div>';
-      html += '</div><button class="btn" data-act="tourNext">つぎへ</button>';
-      return html;
+    var m = t.cur;
+    if (!m) return head + tourSummary(t);
+    if (m.done) {
+      var banner = '<div class="bannerx ' + (m.win ? 'win' : 'lose') + '">' + (m.win ? 'WIN!' : 'LOSE…') + '</div>';
+      return head + arenaHTML(t, m, m.me, m.op, 0, { poseA: m.win ? 'win' : 'tired', clsA: m.win ? 'jump' : 'sad', poseB: m.win ? 'tired' : 'win', clsB: m.win ? 'sad' : 'jump', banner: banner }) +
+        '<div class="card">' + oppCard(m) + matchLog(m) +
+        '<div class="result ' + (m.win ? 'win' : 'lose') + '">' + (m.win ? '◯ ' : '✕ ') + esc(m.method) + '</div>' +
+        (m.opp.rival ? '<div class="center small muted">ライバルとの通算:' + g.rival.w + '勝' + g.rival.l + '敗</div>' : '') + '</div>' +
+        '<button class="btn" data-act="tourAdvance">つぎへ</button>';
     }
-    // 結果まとめ
+    var pn = m.periods.length + 1;
+    return head + arenaHTML(t, m, m.me, m.op, m.tie ? 2 : pn) +
+      (m.periods.length ? '' : '<div class="card" style="padding:10px">' + oppCard(m) + '</div>') +
+      (m.tie ? tiePanel(m) : tacticPanel(m));
+  }
+  function tourSummary(t) {
     var res = '<div class="card center ' + (t.won ? 'gold' : '') + '">';
     if (t.medal) res += '<div class="medal">' + ({ '金': '🥇', '銀': '🥈', '銅': '🥉' })[t.medal] + '</div>';
     else if (t.won) res += '<div class="medal">🏆</div>';
@@ -861,24 +1497,102 @@ if (typeof module !== 'undefined') module.exports = WL;
     if (t.next) res += '<p class="gold-t">' + (t.next.kind === 'olympics' ? '🎌 オリンピック代表に内定! ついに夢の舞台へ!' : t.next.kind === 'asia' ? '🌏 U15アジア選手権の日本代表に選ばれた! はじめての国際大会だ!' : '🌏 世界選手権の日本代表に選ばれた!') + '</p>';
     else if (t.kind === 'trials') res += '<p class="muted">代表の座には届かなかった…。次のオリンピックは4年後。</p>';
     res += '</div><button class="btn' + (t.next ? ' gold' : '') + '" data-act="tourDone">' + (t.next ? esc(t.next.name) + 'へ' : 'つぎへ') + '</button>';
-    return head + res;
+    return res;
+  }
+
+  // 試合のアニメーション(1ピリオドぶん)
+  function setCls(sel, cls) { var e = $(sel); if (!e) return; e.className = e.className.replace(/\b(bob|atk|hit|push|throw|fly|down|pin|sad|jump)\b/g, '').trim() + ' ' + cls; void e.offsetWidth; }
+  function callout(who, big, small) {
+    var a = $('#arena'); if (!a) return;
+    var old = a.querySelector('.callout'); if (old) old.remove();
+    var d = document.createElement('div'); d.className = 'callout ' + who; d.innerHTML = '<small>' + big + '</small>' + small; a.appendChild(d);
+  }
+  function banner(cls, text) {
+    var a = $('#arena'); if (!a) return;
+    var old = a.querySelector('.bannerx'); if (old) old.remove();
+    if (!text) return;
+    var d = document.createElement('div'); d.className = 'bannerx ' + cls; d.textContent = text; a.appendChild(d);
+  }
+  function fx(cls) { var a = $('#arena'); if (!a) return; a.classList.remove('flash', 'shake'); void a.offsetWidth; a.classList.add(cls); }
+  function liveAdd(html) { var l = $('#live'); if (!l) return; var d = document.createElement('div'); d.innerHTML = html; l.appendChild(d); while (l.children.length > 4) l.removeChild(l.firstChild); }
+  function setScore(id, v) { var e = $('#' + id); if (!e) return; e.textContent = v; e.classList.remove('bump'); void e.offsetWidth; e.classList.add('bump'); }
+
+  async function animatePeriod(m, per, pn, before) {
+    var t = g.tour;
+    var sm = before.me, so = before.op;
+    app.innerHTML = '<div>' + tourHead(t) + arenaHTML(t, m, sm, so, pn) +
+      '<div class="card"><div class="live" id="live"></div><button class="btn ghost" data-act="skip">スキップ ⏩</button></div></div>';
+    try {
+      var tc = WL.TACTICS.filter(function (x) { return x.id === per.tactic; })[0];
+      banner('info', '第' + pn + 'ピリオド'); SFX.whistle();
+      await sleep(800);
+      banner('', '');
+      if (per.switched) { liveAdd('<span class="red-t">相手が作戦を変えてきた!</span>'); await sleep(500); }
+      liveAdd(TACTIC_ICON[per.tactic] + ' ' + esc(tc.short) + ' vs ' + STYLE_ICON[per.style] + ' ' + WL.STYLE_NAMES[per.style] + ' → ' +
+        (per.edge > 0 ? '<b class="gold-t">作戦的中! 有利に進める</b>' : per.edge < 0 ? '<b class="red-t">読まれた! 苦しい展開</b>' : '互角の組み手'));
+      if (per.edge > 0) SFX.event();
+      await sleep(900);
+      if (!per.lines.length) { liveAdd('<span class="muted">両者ゆずらず、得点なし…</span>'); await sleep(900); }
+      for (var i = 0; i < per.lines.length; i++) {
+        var l = per.lines[i];
+        var me = l.who === 'me';
+        var A = me ? '.fw.a' : '.fw.b', D = me ? '.fw.b' : '.fw.a';
+        if (l.pts >= 4) { setCls(A, 'throw'); setCls(D, 'fly'); }
+        else if (l.pts === 1) { setCls(A, 'push'); setCls(D, 'hit'); }
+        else { setCls(A, 'atk'); setCls(D, 'hit'); }
+        await sleep(260);
+        SFX.thud(); if (l.pts >= 4) fx('shake');
+        if (me) { sm += l.pts; setScore('sm', sm); if (l.pts >= 4) SFX.big(); else SFX.point(); buzz(l.pts >= 4 ? 60 : 25); }
+        else { so += l.pts; setScore('so', so); SFX.pointOpp(); }
+        callout(me ? 'me' : 'op', '+' + l.pts, esc(l.move) + '!');
+        liveAdd(lineText(l, m.opp.name));
+        await sleep(l.pts >= 4 ? 1000 : 780);
+        setCls(A, 'bob'); setCls(D, 'bob');
+      }
+      if (m.fall && m.fall.period === pn) {
+        var meF = m.fall.by === 'me';
+        setCls(meF ? '.fw.a' : '.fw.b', 'pin'); setCls(meF ? '.fw.b' : '.fw.a', 'down');
+        await sleep(420); SFX.thud(); fx('flash'); banner(meF ? 'win' : 'lose', 'フォール!'); if (meF) SFX.big();
+        liveAdd('<b class="' + (meF ? 'gold-t' : 'red-t') + '">' + (meF ? esc(g.name) : esc(m.opp.name)) + 'がフォール!</b>');
+        await sleep(1300);
+      } else { SFX.buzzer(); await sleep(450); }
+      if (m.done) await finishAnim(m);
+    } catch (e) { if (e.message !== 'cancel') throw e; return; }
+    render();
+    if (m.done) { if (m.win) SFX.win(); else SFX.lose(); }
+  }
+  async function finishAnim(m) {
+    banner(m.win ? 'win' : 'lose', m.win ? 'WIN!' : 'LOSE…');
+    fx('flash');
+    await sleep(500);
+  }
+  async function tieAnim(m, q) {
+    try {
+      var me = m.win;
+      liveAdd('');
+      setCls(me ? '.fw.a' : '.fw.b', 'atk'); setCls(me ? '.fw.b' : '.fw.a', 'hit');
+      await sleep(260); SFX.thud(); fx('flash');
+      callout(me ? 'me' : 'op', 'ラストポイント', me ? '取った!' : '取られた…');
+      if (me) SFX.big(); else SFX.pointOpp();
+      await sleep(1100);
+    } catch (e) { if (e.message !== 'cancel') throw e; return; }
+    render();
+    if (m.win) SFX.win(); else SFX.lose();
   }
 
   // ---- 年末 ----
   function yearEndScreen() {
     var notes = g.yearNotes.length ? g.yearNotes : ['おだやかな1年だった。'];
-    var nextOly = WL.OLYMPIC_AGES.filter(function (a) { return a > g.age; })[0];
     var last = g.age >= 36;
-    return header() +
+    return hero() +
       (g.lastMsg && !g.tour ? '<div class="msg">' + esc(g.lastMsg) + '</div>' : '') +
       '<div class="card"><h2>' + g.age + '歳の1年が終わった</h2><ul class="plain">' +
-      notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' +
-      (nextOly && g.age >= 10 ? '<div class="small muted">次のオリンピックまで あと' + (nextOly - g.age) + '年(' + nextOly + '歳)</div>' : '') + '</div>' +
-      statsPanel() +
+      notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></div>' +
+      statsPanel(false) +
       '<button class="btn" data-act="nextYear">' + (last ? '現役を終える…' : (g.age + 1) + '歳へ') + '</button>';
   }
 
-  // ---- 7. エンディング ----
+    // ---- 7. エンディング ----
   // 金メダルの特別エンディング(人生の中身でセリフが変わる)
   function confetti() {
     var colors = ['#f3d27a', '#d9ad3c', '#c8102e', '#ffffff', '#4caf7a', '#5b9bd5'];
@@ -988,57 +1702,211 @@ if (typeof module !== 'undefined') module.exports = WL;
       var i = g.ending.scene || 0;
       if (!g.ending.done) return i < scenes.length ? goldSceneScreen(scenes, i) : goldChoiceScreen();
     }
+    recordHall();
     var gs = golds();
     var lastGold = gs.length ? gs[gs.length - 1].age : 0;
     var top = gold
-      ? confetti() + '<div class="medal">🥇</div><h1 class="center gold-t" style="font-size:24px">オリンピック金メダル' + (gs.length >= 2 ? gs.length + '個!' : '!') + '</h1><p class="center">' +
+      ? confetti() + '<div class="endfig">' + fig({ pose: 'win', color: '#d31f3c', age: Math.min(g.ending.age, 36), medal: true }) + '</div><h1 class="center gold-t" style="font-size:24px">オリンピック金メダル' + (gs.length >= 2 ? gs.length + '個!' : '!') + '</h1><p class="center">' +
         (gs.length >= 2 || g.ending.age > lastGold ? gs.map(function (m) { return m.age + '歳'; }).join('・') + 'で金メダル!<br>' + esc(g.name) + 'は' + g.ending.age + '歳で現役を引退した。' :
           g.ending.age + '歳、' + esc(g.name) + 'はついに世界の頂点に立った!') + '</p><div class="center"><span class="honor">' + esc(honorTitle()) + '</span></div>'
-      : '<div class="medal">🎌</div><h1 class="center">引退</h1><p class="center">' + g.ending.age + '歳。' + esc(g.name) + 'は静かにマットを降りた。<br>金メダルには届かなかったが、その挑戦は多くの人の心に残った。</p>';
-    var titles = g.titles.length ? g.titles.map(function (t) { return '<li>' + t.age + '歳 ' + esc(t.name) + ' 優勝</li>'; }).join('') : '<li class="muted">なし</li>';
+      : '<div class="endfig">' + fig({ pose: 'idle', color: '#d31f3c', age: 36 }) + '</div><h1 class="center">引退</h1><p class="center">' + g.ending.age + '歳。' + esc(g.name) + 'は静かにマットを降りた。<br>金メダルには届かなかったが、その挑戦は多くの人の心に残った。</p><div class="center"><span class="honor">' + esc(honorAny()) + '</span></div>';
+    var tnames = [], tmap = {};
+    g.titles.forEach(function (t) { if (!tmap[t.name]) { tmap[t.name] = []; tnames.push(t.name); } tmap[t.name].push(t.age); });
+    var titles = tnames.length ? tnames.map(function (n) {
+      var a = tmap[n];
+      return '<li>' + esc(n) + (a.length > 1 ? ' <b>×' + a.length + '</b>' : '') + ' <span class="muted small">' + (a.length > 6 ? a[0] + '〜' + a[a.length - 1] + '歳' : a.join('・') + '歳') + '</span></li>';
+    }).join('') : '<li class="muted">なし</li>';
     var medals = g.medals.length ? g.medals.map(function (m) { return '<li>' + m.age + '歳 オリンピック ' + ({ '金': '🥇金', '銀': '🥈銀', '銅': '🥉銅' })[m.medal] + 'メダル</li>'; }).join('') : '<li class="muted">なし</li>';
-    var oly = g.log.filter(function (l) { return l.name === 'オリンピック' || l.name === '世界選手権' || l.name === 'U15アジア選手権'; });
+    var oly = g.log.filter(function (l) { return l.name === '世界選手権' || l.name === 'U15アジア選手権' || (l.name === 'オリンピック' && l.place.indexOf('メダル') < 0); });
     return '<div class="card ' + (gold ? 'gold' : '') + '" style="position:relative;overflow:hidden">' + top + '</div>' +
       '<div class="card"><h3>🏅 メダル</h3><ul class="plain">' + medals + '</ul>' +
       (oly.length ? '<h3>🌏 国際大会</h3><ul class="plain">' + oly.map(function (l) { return '<li>' + l.age + '歳 ' + esc(l.name) + ' ' + esc(l.place) + '</li>'; }).join('') + '</ul>' : '') +
       '<h3>🏆 優勝歴(' + g.titles.length + '回)</h3><ul class="plain">' + titles + '</ul>' +
       (g.rival ? '<h3>⚔️ ライバル ' + esc(g.rival.name) + '</h3><p>通算 ' + g.rival.w + '勝' + g.rival.l + '敗</p>' : '') + '</div>' +
-      statsPanel() +
+      statsPanel(false) + endingExtras() +
       '<button class="btn gold" data-act="reborn">生まれ変わる</button>';
   }
 
+  // ---- エンディングの追加パーツ(戦闘力の歩み・通算成績・結果カード) ----
+  function powerChart() {
+    var h = g.hist || [];
+    if (h.length < 3) return '';
+    var W = 320, H = 120, x0 = 22, y0 = 100;
+    var maxP = Math.max(100, Math.max.apply(null, h.map(function (p) { return p.p; })));
+    function X(a) { return x0 + (a - 6) / 30 * (W - x0 - 20); }
+    function Y(p) { return y0 - p / maxP * 88; }
+    var pts = h.map(function (p) { return X(p.a).toFixed(1) + ',' + Y(p.p).toFixed(1); }).join(' ');
+    var marks = WL.OLYMPIC_AGES.map(function (a) {
+      var md = g.medals.filter(function (m) { return m.age === a; })[0];
+      return '<line x1="' + X(a) + '" y1="10" x2="' + X(a) + '" y2="' + y0 + '" stroke="#5a4a22" stroke-dasharray="3 3"/>' +
+        '<text x="' + X(a) + '" y="114" fill="#b3a49b" font-size="9" text-anchor="middle">' + a + '歳</text>' +
+        (md ? '<text x="' + X(a) + '" y="14" font-size="12" text-anchor="middle">' + ({ '金': '🥇', '銀': '🥈', '銅': '🥉' })[md.medal] + '</text>' : '');
+    }).join('');
+    return '<h3>📈 戦闘力の歩み</h3><svg class="chart" viewBox="0 0 ' + W + ' ' + H + '"><line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W - 4) + '" y2="' + y0 + '" stroke="#3d2d28"/>' +
+      '<text x="2" y="' + (Y(50) + 3) + '" fill="#b3a49b" font-size="9">50</text><line x1="' + x0 + '" y1="' + Y(50) + '" x2="' + (W - 4) + '" y2="' + Y(50) + '" stroke="#2a1f1c"/>' + marks +
+      '<polyline points="' + pts + '" fill="none" stroke="#f3d27a" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+  }
+  function endingExtras() {
+    var r = g.rec;
+    return '<div class="card">' + powerChart() +
+      '<div class="kpis"><div><b>' + r.wins + '</b>勝</div><div><b>' + (r.matches - r.wins) + '</b>敗</div><div><b>' + r.falls + '</b>フォール勝ち</div><div><b>' + r.peak + '</b>最高戦闘力</div></div>' +
+      '<div class="small muted center">ケガ ' + r.inj + '回' + (r.matches ? '・勝率 ' + Math.round(r.wins / r.matches * 100) + '%' : '') + '</div></div>' +
+      '<div class="card"><h3>📸 結果カード</h3><div id="shareCanvasHost"></div>' +
+      '<div class="row"><button class="btn gold" data-act="saveCard">画像を保存</button><button class="btn" data-act="share">シェアする</button></div></div>';
+  }
+  var cardData = null;
+  function drawShareCard() {
+    var host = document.getElementById('shareCanvasHost');
+    if (!host) return;
+    var W = 1080, H = 1350, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var x = c.getContext('2d');
+    var gold = goldsOf(g).length;
+    var bg = x.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#0d0a12'); bg.addColorStop(0.55, gold ? '#3a2408' : '#2a1014'); bg.addColorStop(1, '#120d0c');
+    x.fillStyle = bg; x.fillRect(0, 0, W, H);
+    // 光のすじ
+    x.save(); x.translate(W / 2, 430); x.globalAlpha = 0.09; x.fillStyle = '#f3d27a';
+    for (var i = 0; i < 18; i++) { x.rotate(Math.PI / 9); x.beginPath(); x.moveTo(0, 0); x.lineTo(-70, -1100); x.lineTo(70, -1100); x.fill(); }
+    x.restore();
+    x.strokeStyle = '#d9ad3c'; x.lineWidth = 8; x.strokeRect(28, 28, W - 56, H - 56);
+    x.textAlign = 'center'; x.fillStyle = '#d9ad3c';
+    var F = '"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif';
+    x.font = '700 34px ' + F; x.fillText('W R E S T L I N G   L I F E', W / 2, 110);
+    x.fillStyle = '#fff'; x.font = '900 64px ' + F; x.fillText('レスリング人生', W / 2, 195);
+    var c2 = function (k) { return g.medals.filter(function (m) { return m.medal === k; }).length; };
+    var medals = '🥇'.repeat(Math.min(c2('金'), 4)) + '🥈'.repeat(Math.min(c2('銀'), 3)) + '🥉'.repeat(Math.min(c2('銅'), 3));
+    x.font = '150px ' + F; x.fillText(medals || '🤼', W / 2, 400);
+    x.fillStyle = '#fff3c4'; var nm = g.name, fs = 110;
+    do { x.font = '900 ' + fs + 'px ' + F; fs -= 6; } while (x.measureText(nm).width > W - 160 && fs > 40);
+    x.fillText(nm, W / 2, 560);
+    // 称号
+    var honor = honorAny(); x.font = '800 48px ' + F;
+    var hw = x.measureText(honor).width + 90;
+    x.strokeStyle = '#f3d27a'; x.lineWidth = 4; x.beginPath();
+    var hx = W / 2 - hw / 2, hy = 610, hh = 84, rr = 42;
+    x.moveTo(hx + rr, hy); x.arcTo(hx + hw, hy, hx + hw, hy + hh, rr); x.arcTo(hx + hw, hy + hh, hx, hy + hh, rr); x.arcTo(hx, hy + hh, hx, hy, rr); x.arcTo(hx, hy, hx + hw, hy, rr); x.stroke();
+    x.fillStyle = '#f3d27a'; x.fillText(honor, W / 2, hy + 59);
+    var rows = [
+      ['出身', g.pref + '・' + g.ending.age + '歳で引退'],
+      ['オリンピック', '金' + c2('金') + ' 銀' + c2('銀') + ' 銅' + c2('銅')],
+      ['世界選手権', '優勝 ' + countTitle('世界選手権') + '回'],
+      ['通算', g.rec.wins + '勝' + (g.rec.matches - g.rec.wins) + '敗・優勝' + g.titles.length + '回'],
+      ['ライバル', g.rival ? g.rival.name + ' に ' + g.rival.w + '勝' + g.rival.l + '敗' : '—'],
+      ['最高戦闘力', String(g.rec.peak)]
+    ];
+    rows.forEach(function (r, i) {
+      var y = 800 + i * 74;
+      x.textAlign = 'left'; x.fillStyle = '#b3a49b'; x.font = '600 36px ' + F; x.fillText(r[0], 110, y);
+      x.textAlign = 'right'; x.fillStyle = '#fff'; x.font = '800 42px ' + F;
+      var v = r[1], s2 = 42; while (x.measureText(v).width > 640 && s2 > 24) { s2 -= 2; x.font = '800 ' + s2 + 'px ' + F; }
+      x.fillText(v, W - 110, y);
+      x.strokeStyle = 'rgba(255,255,255,.12)'; x.lineWidth = 2; x.beginPath(); x.moveTo(110, y + 22); x.lineTo(W - 110, y + 22); x.stroke();
+    });
+    x.textAlign = 'center'; x.fillStyle = '#d9ad3c'; x.font = '700 34px ' + F; x.fillText('japanwrestlingchannel.com/game', W / 2, H - 70);
+    try { cardData = c.toDataURL('image/png'); } catch (e) { cardData = null; }
+    host.innerHTML = cardData ? '<img class="sharecard" alt="結果カード" src="' + cardData + '">' : '';
+  }
+  function shareText() {
+    var c2 = function (k) { return g.medals.filter(function (m) { return m.medal === k; }).length; };
+    return '【レスリング人生】' + g.name + '(' + g.pref + ')の人生:' + honorAny() + '。オリンピック 金' + c2('金') + ' 銀' + c2('銀') + ' 銅' + c2('銅') +
+      '、通算' + g.rec.wins + '勝' + (g.rec.matches - g.rec.wins) + '敗。 #レスリング人生';
+  }
+  function doShare() {
+    var text = shareText();
+    function fallback() {
+      var done = function () { toast('📋 結果をコピーしました'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text + ' ' + GAME_URL).then(done, function () { prompt('コピーしてください', text + ' ' + GAME_URL); });
+      else prompt('コピーしてください', text + ' ' + GAME_URL);
+    }
+    if (!navigator.share) return fallback();
+    var data = { title: 'レスリング人生', text: text, url: GAME_URL };
+    if (cardData && window.File && navigator.canShare) {
+      try {
+        var bin = atob(cardData.split(',')[1]), arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        var file = new File([arr], 'wrestling-life.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) data.files = [file];
+      } catch (e) {}
+    }
+    navigator.share(data).catch(function () {});
+  }
+  function saveCard() {
+    if (!cardData) return;
+    var a = document.createElement('a'); a.href = cardData; a.download = 'wrestling-life-' + g.name + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('📸 画像を保存しました');
+  }
+
   // ---- 操作 ----
-  app.addEventListener('click', function (ev) {
+  var busy = false;
+  document.addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-act]');
     if (!b || b.disabled) return;
     var act = b.getAttribute('data-act');
     var id = b.getAttribute('data-id');
+    if (act === 'sound') { settings.sound = !settings.sound; saveSettings(); b.textContent = settings.sound ? '🔊' : '🔇'; if (settings.sound) SFX.click(); return; }
+    if (act === 'closeHelp') { var ov = document.querySelector('.overlay'); if (ov && (ev.target === ov || ev.target.closest('button'))) ov.remove(); return; }
+    if (act === 'help') { SFX.click(); document.body.insertAdjacentHTML('beforeend', helpOverlay()); return; }
+    if (act === 'skip') { skipAnim = true; return; }
+    if (act === 'saveCard') { saveCard(); return; }
+    if (act === 'share') { doShare(); return; }
+    var wasFresh = false;
     if (act === 'new') {
       var input = document.getElementById('nameInput');
       var name = (input.value || '').trim().slice(0, 12);
       if (!name) { input.focus(); input.placeholder = '名前を入れてください'; return; }
       var saved = load();
-      if (saved && (saved.phase !== 'ending' || (saved.ending && saved.ending.type === 'gold' && !saved.ending.done)) && !confirm('いまのセーブデータ(' + saved.name + '・' + saved.age + '歳)は消えます。はじめからにしますか?')) return;
+      if (resumable(saved) && !confirm('いまのセーブデータ(' + saved.name + '・' + saved.age + '歳)は消えます。はじめからにしますか?')) return;
       storeSet(NAME_KEY, name);
-      g = WL.newGame(name);
-    } else if (act === 'continue') {
-      g = load();
-    } else if (act === 'toInfancy') WL.startInfancy(g);
-    else if (act === 'infancy') WL.chooseInfancy(g, id);
-    else if (act === 'event') WL.resolveEvent(g, id);
-    else if (act === 'train') WL.train(g, id);
-    else if (act === 'tourNext') g.tourStep++;
-    else if (act === 'tourDone') WL.finishTournament(g);
-    else if (act === 'nextYear') WL.nextYear(g);
-    else if (act === 'endingNext') g.ending.scene = (g.ending.scene || 0) + 1;
-    else if (act === 'goldContinue') WL.continueAfterGold(g);
-    else if (act === 'goldRetire') WL.retireAfterGold(g);
-    else if (act === 'toTitle') { save(); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
-    else if (act === 'reborn') { storeDel(SAVE_KEY); g = null; app.innerHTML = '<div class="pop">' + titleScreen() + '</div>'; return; }
+      g = WL.newGame(name); SFX.event();
+    } else if (act === 'continue') { g = load(); SFX.click(); }
+    else if (act === 'hall' || act === 'ach') { view = act; SFX.click(); }
+    else if (act === 'back') { view = 'title'; SFX.click(); }
+    else if (act === 'speed') { settings.fast = !settings.fast; saveSettings(); SFX.click(); }
+    else if (act === 'toInfancy') { WL.startInfancy(g); SFX.click(); }
+    else if (act === 'infancy') { WL.chooseInfancy(g, id); SFX.train(); }
+    else if (act === 'event') { WL.resolveEvent(g, id); SFX.click(); }
+    else if (act === 'train') {
+      var r = WL.train(g, id); wasFresh = true;
+      if (r && r.injured) { SFX.hurt(); buzz(200); } else if (id === 'rest') SFX.rest(); else SFX.train();
+    }
+    else if (act === 'tourAdvance') { WL.advanceTournament(g); SFX.click(); if (g.tour && g.tour.cur && !g.tour.cur.periods.length) SFX.cheer(1.2); }
+    else if (act === 'tactic') {
+      var m = g.tour.cur; if (!m || m.done || m.tie) return;
+      var before = { me: m.me, op: m.op }, pn = m.periods.length + 1;
+      var per = WL.playPeriod(g, id); if (!per) return;
+      save(); animToken++; skipAnim = false; SFX.click();
+      animatePeriod(m, per, pn, before);
+      return;
+    }
+    else if (act === 'tieTap') {
+      var m2 = g.tour.cur; if (!m2 || !m2.tie) return;
+      var ga = document.getElementById('gauge'), cu = document.getElementById('gcur');
+      var gr = ga.getBoundingClientRect(), cr = cu.getBoundingClientRect();
+      var pos = ((cr.left + cr.width / 2) - gr.left) / gr.width;
+      var q = pos >= 0.43 && pos <= 0.57 ? 'great' : pos >= 0.27 && pos <= 0.73 ? 'ok' : 'miss';
+      cu.style.animationPlayState = 'paused'; SFX.gauge();
+      toast(q === 'great' ? '🎯 完ぺきなタイミング!' : q === 'ok' ? '👌 まずまずのタイミング' : '😣 タイミングがずれた…');
+      WL.resolveTie(g, q); save(); animToken++; skipAnim = false;
+      b.disabled = true;
+      tieAnim(m2, q);
+      return;
+    }
+    else if (act === 'tourDone') { WL.finishTournament(g); if (g.phase === 'ending') SFX.fanfare(); else SFX.click(); }
+    else if (act === 'nextYear') { WL.nextYear(g); if (g.phase === 'event') SFX.event(); else SFX.click(); }
+    else if (act === 'endingNext') { g.ending.scene = (g.ending.scene || 0) + 1; SFX.click(); }
+    else if (act === 'goldContinue') { WL.continueAfterGold(g); SFX.click(); }
+    else if (act === 'goldRetire') { WL.retireAfterGold(g); SFX.click(); }
+    else if (act === 'toTitle') { save(); g = null; view = 'title'; SFX.click(); }
+    else if (act === 'reborn') { storeDel(SAVE_KEY); g = null; view = 'title'; SFX.click(); }
+    else return;
+    fresh = wasFresh;
     render();
   });
 
-  app.innerHTML = titleScreen();
+  document.body.insertAdjacentHTML('beforeend', '<div id="topbar"><b>WRESTLING <i>●</i> LIFE</b></div><button id="soundBtn" data-act="sound" aria-label="音のオン・オフ">🔊</button><div id="toasts"></div>');
+  render();
 })();
 </script>
 </body>
