@@ -435,7 +435,15 @@ footer p{margin:0 0 6px;max-width:76ch}
 html.overlay .tstrip+.jhero{margin-top:calc(-53px - var(--hdr-h,0px))}
 html.overlay .tstrip+.jhero .jhero-in{padding-top:calc(101px + var(--hdr-h,0px))}
 .jhero .jhero-in{min-height:640px;justify-content:flex-end;padding-bottom:52px}
-.jhero-scrim{background:linear-gradient(to top,rgba(8,8,10,.94) 0,rgba(8,8,10,.5) 36%,rgba(8,8,10,0) 64%),linear-gradient(to bottom,rgba(8,8,10,.6) 0,rgba(8,8,10,0) 190px)}
+.jhero-scrim{background:linear-gradient(to top,rgba(8,8,10,.94) 0,rgba(8,8,10,.5) 36%,rgba(8,8,10,0) 64%),linear-gradient(to bottom,rgba(8,8,10,.82) 0,rgba(8,8,10,.5) 130px,rgba(8,8,10,0) 240px)}
+/* 背景が動画の絵(YouTube のサムネイル。白地に文字が入っていることが多い)のときは、ぼかして暗くした背景にする。絵そのものは右に小さく出す(.fposter) */
+.jhero-img.yt{filter:blur(24px) brightness(.4) saturate(1.2);transform:scale(1.14)}
+html.intro .jhero-img.yt.on{animation:none}
+.feat-main{flex:1 1 380px}
+.fside{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:18px;max-width:100%}
+.fposter{display:block;width:400px;max-width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:var(--navy);box-shadow:0 18px 44px rgba(0,0,0,.6)}
+.fposter img{display:block;width:100%;height:100%;object-fit:cover}
+:lang(en) .feat .fn{font-size:50px}
 .feat{padding-top:0}
 .feat-main{max-width:900px}
 .fkick{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px}
@@ -505,6 +513,10 @@ html.nohero.overlay .top.see-through{background:rgba(11,11,14,.96);border-bottom
   .ts{min-width:160px;padding-right:16px;margin-right:16px}
   .jhero .jhero-in{min-height:500px;padding-bottom:40px}
   html.overlay .tstrip+.jhero .jhero-in{padding-top:calc(75px + var(--hdr-h,0px))}
+  .feat{flex-direction:column;align-items:stretch;flex-wrap:nowrap}
+  .feat-main{flex:0 0 auto}
+  .fside{display:contents}
+  .fposter{order:-1;width:100%}
   .feat .fn{font-size:36px;line-height:1.2}
   :lang(en) .feat .fn{font-size:29px}
   .feat .badge-l .en{font-size:15px}
