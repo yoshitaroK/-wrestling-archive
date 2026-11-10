@@ -10,6 +10,7 @@ import json
 import os
 
 import i18n
+import site_frame
 
 SITE = "https://japanwrestlingchannel.com"
 DESC = ("The official Japan Wrestling Channel archive of Japanese wrestling streams and videos (from Japan Wrestling Channel and others), "
@@ -30,8 +31,7 @@ PAIRS = [
     ('<meta property="og:url" content="https://japanwrestlingchannel.com/">', '<meta property="og:url" content="https://japanwrestlingchannel.com/en/">'),
     ('<meta property="og:image" content="https://japanwrestlingchannel.com/ogp.png?v=2">', '<meta property="og:image" content="https://japanwrestlingchannel.com/ogp-en.png?v=1">'),
     ('aria-label="レスリング配信アーカイブ(トップへ)"', 'aria-label="Japan Wrestling Archive (home)"'),
-    ('<span class="official-t">Japan Wrestling Channel 公式サイト</span>',
-     '<span class="official-t">Official site of Japan Wrestling Channel</span>'),
+    (site_frame.official_text(False), site_frame.official_text(True)),
     ('<a class="lang" href="/en/" hreflang="en" lang="en" title="English version" data-lang="en">English</a>',
      '<a class="lang" href="/" hreflang="ja" lang="ja" title="日本語版を表示" data-lang="ja">日本語</a>'),
     ('<nav class="topnav" aria-label="メニュー"><a href="/events/">大会一覧</a><a href="/news/">ニュース</a><a href="/players/">選手</a><a href="/books/">書籍</a><a href="/events/calendar/">カレンダー</a><a href="/technique/">技術動画</a><a href="/photos/">写真</a><a href="/uww/">国際大会</a></nav>',
@@ -52,10 +52,9 @@ PAIRS = [
     ('<label>動画の種類<select id="f-kind"><option value="">すべて</option></select></label>', '<label>Video type<select id="f-kind"><option value="">All</option></select></label>'),
     ('<label class="check"><input type="checkbox" id="f-all"> 動画のない大会・開催回も表示</label>', '<label class="check"><input type="checkbox" id="f-all"> Include tournaments without videos</label>'),
     ('<div class="loading">データを読み込んでいます</div>', '<div class="loading">Loading data…</div>'),
-    ('<p><a href="/news/">ニュース</a>・<a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/champions/">歴代優勝者</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>',
-     '<p><a href="/en/events/">Tournaments (all tournament pages)</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/about/">About</a> · <a href="/en/faq/">FAQ</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/" hreflang="ja" lang="ja">日本語</a></p>'),
-    ('<p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>',
-     '<p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. Videos play right on this site in the YouTube player. Video titles are shown as originally published, in Japanese.</p>'),
+    (site_frame.foot_grid(False), site_frame.foot_grid(True)),
+    ('<p>動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>',
+     '<p>Videos play right on this site in the YouTube player. Video titles are shown as originally published, in Japanese.</p>'),
     ('<p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>',
      '<p>Dates, venues and sources come from our tournament reference data (as of <span id="master-asof"></span>). Source types (JWF event pages, annual reports, records from the former JWF site, specialist media, etc.) are shown for each edition. Organizer relationships are shown only where documented. English names of tournaments and venues are our own translations.</p>'),
     ('<p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>',

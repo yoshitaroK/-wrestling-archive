@@ -18,6 +18,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
 import i18n
+import site_frame
 import site_js
 import video_player
 from i18n import L, U, N, T
@@ -239,7 +240,7 @@ def lang_switch(path):
 
 def official_bar(lang_link=""):
     """ヘッダーの上の細い帯(公式サイトであることと、言語の切り替え)"""
-    return (f'<div class="official"><div class="wrap"><span class="official-t">{L("Japan Wrestling Channel 公式サイト", "Official site of Japan Wrestling Channel")}</span>'
+    return (f'<div class="official"><div class="wrap">{site_frame.official_text(i18n.en())}'
             f'<span class="official-r">{TOP_SNS}{lang_link}</span></div></div>')
 
 
@@ -257,7 +258,7 @@ def nav_links(path):
 def header_search():
     """どのページにもある検索欄。送るとトップページ(大会の検索)に移り、入れた言葉で検索する"""
     label = L("大会名・選手名で検索", "Search tournaments & players")
-    return (f'<form class="hsearch" role="search" action="{U("/")}" method="get">'
+    return (f'<form class="hsearch" id="hsearch" role="search" action="{U("/")}" method="get">'
             f'<label class="sr" for="hq">{label}</label><input id="hq" name="q" type="search" autocomplete="off" placeholder="{label}">'
             f'<button type="submit" aria-label="{L("検索", "Search")}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button></form>')
 
@@ -268,7 +269,6 @@ ORG_SAME_AS = ["https://www.instagram.com/japan_wrestlingchannel/"]
 # 一番上の帯に出す Instagram のボタン
 TOP_SNS = '<a class="ig" href="https://www.instagram.com/japan_wrestlingchannel/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Instagram</a>'
 # フッターに出す SNS(アイコンと名前)。増やすときは ORG_SAME_AS にも足す
-FOOT_SNS = '<p class="foot-sns"><a href="https://www.instagram.com/japan_wrestlingchannel/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Instagram</a></p>'
 
 
 def org_ld():
@@ -347,6 +347,7 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 {official_bar(lang_switch(path) if alternates else '')}
 <header class="top"><div class="wrap"><div class="brand">
 <a class="home" href="{U('/')}" aria-label="{e(site_name())}{L('(トップへ)', ' (home)')}"><img class="logo-img" src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="145" height="54"><span class="logo-type"><span class="ac">ARCHIVE</span></span></a>
+<button type="button" class="hs-btn" aria-controls="hsearch" aria-expanded="false" aria-label="{L('検索欄を開く', 'Open search')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button>
 <nav class="topnav" aria-label="{L('メニュー', 'Menu')}">{nav_links(path)}</nav>
 {header_search()}
 </div></div></header>
@@ -354,23 +355,20 @@ def head(title, desc, path, og_image, jsonld, css, alternates=True):
 
 
 def footer(as_of):
+    """どのページにも共通のフッター。上の段(ロゴ・リンクの列)は site_frame.py、下の段はデータの注意書き"""
     if i18n.en():
-        return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/en/events/">Tournaments</a> · <a href="/en/events/calendar/">Calendar</a> · <a href="/en/technique/">Technique videos</a> · <a href="/en/photos/">Photos</a> · <a href="/en/players/">Players</a> · <a href="/en/uww/">International videos</a> · <a href="/en/about/">About</a> · <a href="/en/faq/">FAQ</a> · <a href="/en/contact.html">Contact</a> · <a href="/en/privacy/">Privacy Policy</a> · <a href="/">日本語</a></p>
-{FOOT_SNS}
-<p>The official archive of Japan Wrestling Channel. It organizes Japanese wrestling videos published on YouTube (Japan Wrestling Channel and others) by tournament. Videos play right on this site in the YouTube player. Video titles are shown as originally published, in Japanese.</p>
-<p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>
-<p>Data updated: {e(fmt_date(as_of))}</p>
-</div></footer>
-</body>
-</html>
-"""
+        notes = ('<p>Videos play right on this site in the YouTube player. Video titles are shown as originally published, in Japanese.</p>\n'
+                 '<p>Dates, venues and sources come from our tournament reference data. Videos not yet confirmed to belong to a specific edition are marked "Pending review". English names of tournaments and venues are our own translations.</p>\n'
+                 f'<p>Data updated: {e(fmt_date(as_of))}</p>')
+    else:
+        notes = ('<p>動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>\n'
+                 '<p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>\n'
+                 f'<p>データ更新:{e(fmt_date(as_of))}</p>')
     return f"""<footer class="site-foot"><div class="wrap">
-<p><a href="/news/">ニュース</a>・<a href="/events/">大会一覧</a>・<a href="/books/">書籍</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
-{FOOT_SNS}
-<p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>
-<p>開催日・会場・出典は照合用の大会データに基づきます。動画と開催回の対応が確定していないものは「確認待ち」として区別しています。</p>
-<p>データ更新:{e(fmt_date(as_of))}</p>
+{site_frame.foot_grid(i18n.en())}
+<div class="foot-notes">
+{notes}
+</div>
 </div></footer>
 </body>
 </html>

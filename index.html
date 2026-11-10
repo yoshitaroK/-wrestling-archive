@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#08080a">
-<script src="/assets/head.js?v=5" data-redirect data-intro data-overlay></script>
+<script src="/assets/head.js?v=6" data-redirect data-intro data-overlay></script>
 <meta name="description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
 <link rel="alternate" hreflang="ja" href="https://japanwrestlingchannel.com/">
@@ -63,6 +63,16 @@ button,input,select{font:inherit;color:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tabnum,.num{font-variant-numeric:tabular-nums}
 .num{font-family:var(--num);font-weight:600;letter-spacing:.01em}
+/* 日本語の見出しは、言葉の切れ目で折り返す(対応しているブラウザだけ。名前の途中で行が変わりにくくなる) */
+:lang(ja) :is(h1,h2,h3,.fn){word-break:auto-phrase}
+/* ページを移るときに、ふわっと切り替える(対応しているブラウザだけ) */
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.16s}
+/* 長いページで出る「ページの先頭へ戻る」ボタン(head.js が置く) */
+.totop{position:fixed;right:16px;bottom:16px;z-index:15;width:44px;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line-hi);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:var(--shadow-hi);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+.totop.on{opacity:1;visibility:visible;transform:none}
+.totop:hover{border-color:var(--pink);color:var(--pink)}
+.totop svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 
 /* ヘッダー */
 .brand{display:flex;align-items:center;gap:8px 28px;flex-wrap:wrap;padding:10px 0 0}
@@ -95,6 +105,11 @@ button,input,select{font:inherit;color:inherit}
 .hsearch button{flex:0 0 auto;width:38px;border:0;background:var(--pink-fill);color:#fff;cursor:pointer;display:grid;place-items:center}
 .hsearch button:hover{filter:brightness(1.12)}
 .hsearch svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+/* スマートフォンで検索欄を開くボタン(パソコンの幅では出さない) */
+.hs-btn{display:none;flex:0 0 auto;width:36px;height:36px;place-items:center;padding:0;border:1px solid rgba(255,255,255,.4);border-radius:999px;background:transparent;color:var(--on-navy);cursor:pointer}
+.hs-btn:hover,.hs-btn[aria-expanded="true"]{border-color:#fff;background:rgba(255,255,255,.1)}
+.hs-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.hs-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
 .mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .orig{font-size:12px;color:var(--ink3);margin-top:-4px}
@@ -375,10 +390,18 @@ details.loose summary{cursor:pointer;font-weight:700}
 footer{font-size:12px}
 footer p{margin:0 0 6px;max-width:76ch}
 .site-foot{background:var(--navy-2);color:var(--on-navy-2);border-top:1px solid rgba(255,255,255,.08);margin-top:40px}
-.site-foot .wrap{padding-top:28px;padding-bottom:44px}
+.site-foot .wrap{padding-top:36px;padding-bottom:40px}
 .site-foot a{color:#fff;text-underline-offset:3px}
-.site-foot p:first-child{font-size:13.5px;font-weight:500;color:var(--on-navy-2);margin-bottom:16px;line-height:2}
-.site-foot .foot-sns{margin:0 0 16px}
+/* フッターの上の段:ロゴと説明、リンクの列(site_frame.py) */
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:28px 32px;padding-bottom:24px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.foot-logo{display:inline-block;margin-bottom:10px}
+.foot-logo img{display:block;height:44px;width:auto}
+.foot-brand p{font-size:12.5px;line-height:1.8;max-width:30em;margin-bottom:14px}
+.foot-h{margin:0 0 8px;padding-left:9px;border-left:3px solid var(--pink-fill);font-size:12px;font-weight:700;letter-spacing:.08em;line-height:1.3;color:var(--on-navy-2)}
+.foot-col ul{list-style:none;margin:0;padding:0}
+.foot-col a{display:block;padding:6px 0;font-size:14px;font-weight:500;line-height:1.5;text-decoration:none}
+.foot-col a:hover{text-decoration:underline}
+.site-foot .foot-sns{margin:0}
 .site-foot .foot-sns a{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border:1px solid rgba(255,255,255,.28);border-radius:999px;text-decoration:none;font-size:13px;font-weight:500}
 .site-foot .foot-sns a:hover{border-color:#fff}
 .site-foot .foot-sns svg{width:18px;height:18px;display:block}
@@ -390,10 +413,18 @@ footer p{margin:0 0 6px;max-width:76ch}
   .brand{gap:0 12px;padding-top:8px}
   .home{padding-bottom:6px}
   .brand .theme-btn{order:3;width:30px;height:30px;margin:0 0 6px auto}
-  /* 項目が5つになったので、狭い画面では横にはみ出さず2行に折り返す */
-  .brand .topnav{order:4;flex-basis:100%;margin-left:0;gap:0 14px;flex-wrap:wrap;padding-top:2px}
-  .topnav a{font-size:13px;padding:6px 0 8px;letter-spacing:0}
+  .official .ot-l{display:none}
+  /* メニューは1段にして、入りきらない分は指で横に動かす(右端を薄くして、続きがあることを示す) */
+  .brand .topnav{order:4;flex-basis:100%;min-width:0;margin:0 -20px;padding:0 36px 0 20px;gap:0 18px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+  .brand .topnav::-webkit-scrollbar{display:none}
+  .topnav a{flex:0 0 auto;font-size:13.5px;padding:10px 0 9px;letter-spacing:0}
   .hsearch{order:5;width:100%;margin:2px 0 10px}
+  /* 検索欄は虫めがねのボタンで開く(head.js が html に hs を付けたときだけ。付かなければ検索欄をそのまま出す) */
+  html.hs .hs-btn{display:inline-grid;order:3;margin:0 0 6px auto}
+  html.hs .hsearch:not(.open){display:none}
+  .foot-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px}
+  .foot-brand{grid-column:1/-1}
+  .foot-col a{padding:9px 0}
   .rslist li{padding:8px 12px}
   .rslist .rsdv{flex-basis:100%;margin-left:0;padding-left:calc(2.6em + 8px);box-sizing:border-box}
   .top{position:static}
@@ -440,12 +471,12 @@ html.intro .jhero h1{animation:jh-rise .7s .1s cubic-bezier(.2,.7,.2,1) both}
 html.intro .jlead{animation:jh-rise .7s .3s cubic-bezier(.2,.7,.2,1) both}
 html.intro .jhero .searchrow{animation:jh-rise .7s .5s cubic-bezier(.2,.7,.2,1) both}
 html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}@view-transition{navigation:none}}
 </style>
 </head>
 <body>
 <a class="skip" href="#q">検索へ移動</a>
-<div class="official"><div class="wrap"><span class="official-t">Japan Wrestling Channel 公式サイト</span><span class="official-r"><a class="ig" href="https://www.instagram.com/japan_wrestlingchannel/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Instagram</a><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" data-lang="en">English</a></span></div></div>
+<div class="official"><div class="wrap"><span class="official-t"><span><span class="ot-l">Japan Wrestling Channel </span>公式サイト</span></span><span class="official-r"><a class="ig" href="https://www.instagram.com/japan_wrestlingchannel/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Instagram</a><a class="lang" href="/en/" hreflang="en" lang="en" title="English version" data-lang="en">English</a></span></div></div>
 <header class="top">
   <div class="wrap">
     <div class="brand">
@@ -456,7 +487,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
   </div>
 </header>
 <section class="jhero" id="jhero" aria-labelledby="jhero-h">
-  <!--pre:img--><img class="jhero-img on" id="jhero-img" alt="" decoding="async" fetchpriority="high" src="https://i.ytimg.com/vi/3ODw89F0CXc/maxresdefault.jpg" referrerpolicy="no-referrer"><!--/pre:img-->
+  <!--pre:img--><img class="jhero-img" id="jhero-img" alt="" decoding="async" fetchpriority="high"><!--/pre:img-->
   <div class="jhero-scrim"></div>
   <div class="wrap jhero-in">
     <h1 id="jhero-h">レスリング配信アーカイブ</h1>
@@ -467,7 +498,7 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
       <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索">
     </div>
     <p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
-    <!--pre:feat--><div class="feat" id="feat" data-pre><div class="feat-main" aria-live="polite"><div class="badge-l">まもなく開催</div><a class="fn" href="/events/university-championship/2026/">第52回内閣総理大臣杯 令和8年度全日本大学レスリング選手権大会</a><div class="fm"><span><span class="num">6</span>本</span><span>2026年11月14日〜15日</span><span>大阪</span></div><div class="ctas"><a class="cta" href="https://jwfcssite.wixsite.com/naikaku2026" target="_blank" rel="noopener">大会公式サイトを見る ↗</a><a class="cta2" href="/events/university-championship/2026/">大会ページへ</a></div></div><div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="前の特集">‹</button><div class="fdots"><button type="button" data-featto="0" aria-label="1件目(5件中)" aria-current="true"></button><button type="button" data-featto="1" aria-label="2件目(5件中)"></button><button type="button" data-featto="2" aria-label="3件目(5件中)"></button><button type="button" data-featto="3" aria-label="4件目(5件中)"></button><button type="button" data-featto="4" aria-label="5件目(5件中)"></button></div><button type="button" class="fb" data-feat="1" aria-label="次の特集">›</button></div></div><!--/pre:feat-->
+    <!--pre:feat--><div class="feat" id="feat" hidden data-wait></div><!--/pre:feat-->
   </div>
   <!--pre:credit--><a class="jcredit" id="jhero-credit" hidden></a><!--/pre:credit-->
 </section>
@@ -486,15 +517,21 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
     </div>
 </div>
 
-<main class="wrap" id="main"><!--pre:main--><section class="shelf" aria-labelledby="row1-h"><div class="shelf-h"><h2 id="row1-h">これから開催される大会<span class="sub">配信枠が公開されています</span></h2><a class="all" href="/events/calendar/">カレンダーを見る ›</a></div><div class="rowwrap"><button type="button" class="rbtn prev" data-row="row1" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button><div class="row" id="row1"><a class="tile" href="/events/university-championship/2026/"><div class="thumb" style="background:linear-gradient(156deg,#16161c,#34343f)"><img src="https://i.ytimg.com/vi/EzNtAVy0Gbw/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本大学選手権</div></div><div class="tt">全日本大学選手権</div><div class="tm"><span class="num">6</span>本 2026年 11/14〜11/15</div></a></div><button type="button" class="rbtn next" data-row="row1" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section><section class="shelf" aria-labelledby="row2-h"><div class="shelf-h"><h2 id="row2-h">最近開催された大会</h2><a class="all" href="/events/">すべて見る ›</a></div><div class="rowwrap"><button type="button" class="rbtn prev" data-row="row2" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button><div class="row" id="row2"><a class="tile" href="/events/shakaijin-open/2026/"><div class="thumb" style="background:linear-gradient(139deg,#3c0e18,#9a1a30)"><img src="https://i.ytimg.com/vi/wFHhXe2dZMs/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全国社会人オープン選手権</div></div><div class="tt">全国社会人オープン選手権</div><div class="tm"><span class="num">6</span>本 2026年 10/31〜11/1</div></a><a class="tile" href="/events/women-open/2026/"><div class="thumb" style="background:linear-gradient(120deg,#20202a,#45454f)"><div class="ph">全日本女子オープン選手権</div></div><div class="tt">全日本女子オープン選手権</div><div class="tm">2026年 結果あり 10/24〜10/25</div></a><a class="tile" href="/events/university-greco/2026/"><div class="thumb" style="background:linear-gradient(125deg,#16161c,#6e1424)"><img src="https://i.ytimg.com/vi/TJIFrZnoXhw/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本大学グレコローマン選手権</div></div><div class="tt">全日本大学グレコローマン選手権</div><div class="tm"><span class="num">6</span>本 2026年 10/23〜10/24</div></a><a class="tile" href="/events/kokutai/2026/"><div class="thumb"><img src="/assets/feature/kokutai-2026-s.jpg" srcset="/assets/feature/kokutai-2026-s.jpg 480w, /assets/feature/kokutai-2026-m.jpg 960w" sizes="(max-width:760px) 41vw, 260px" alt="" loading="lazy" decoding="async" style="object-position:22% 50%"></div><div class="tt">国民体育大会・国民スポーツ大会</div><div class="tm">2026年 結果あり 10/12〜10/15</div></a><a class="tile" href="/events/x-fujinami-cup/2026/"><div class="thumb" style="background:linear-gradient(156deg,#20202a,#45454f)"><img src="https://i.ytimg.com/vi/Ws5t8t9twn4/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">藤波朱理杯 三重県少年少女レスリング大会</div></div><div class="tt">藤波朱理杯 三重県少年少女レスリング大会</div><div class="tm"><span class="num">6</span>本 2026年 8/29〜8/30</div></a><a class="tile" href="/events/intercollegiate/2026/"><div class="thumb" style="background:linear-gradient(129deg,#16161c,#6e1424)"><img src="https://i.ytimg.com/vi/6Ctm4FfMSdg/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本学生選手権（インカレ）</div></div><div class="tt">全日本学生選手権（インカレ）</div><div class="tm"><span class="num">16</span>本 2026年 8/20〜8/23</div></a><a class="tile" href="/events/highschool-greco/2026/"><div class="thumb" style="background:linear-gradient(104deg,#20202a,#45454f)"><img src="https://i.ytimg.com/vi/qygMvZ8GuJo/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全国高校生グレコローマン選手権</div></div><div class="tt">全国高校生グレコローマン選手権</div><div class="tm"><span class="num">12</span>本 2026年 8/14〜8/16</div></a><a class="tile" href="/events/east-spring/2026/"><div class="thumb" style="background:linear-gradient(127deg,#5a1220,#18181e)"><img src="https://i.ytimg.com/vi/Tx0aOFXsGmY/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">東日本学生選手権（春季大会）</div></div><div class="tt">東日本学生選手権（春季大会）</div><div class="tm"><span class="num">11</span>本 2026年 7/13〜7/15</div></a><a class="tile" href="/events/shakaijin/2026/"><div class="thumb" style="background:linear-gradient(121deg,#16161c,#6e1424)"><img src="https://i.ytimg.com/vi/tc2xpsewZjo/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本社会人選手権</div></div><div class="tt">全日本社会人選手権</div><div class="tm"><span class="num">6</span>本 2026年 7/11〜7/12</div></a><a class="tile" href="/events/x-ibaraki-junior/2026/"><div class="thumb" style="background:linear-gradient(101deg,#7a1628,#26262e)"><img src="https://i.ytimg.com/vi/5jQg4RoQZDE/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">茨城ジュニア大会</div></div><div class="tt">茨城ジュニア大会</div><div class="tm"><span class="num">3</span>本 2026年 7/4</div></a><a class="tile" href="/events/x-east-kids/2026/"><div class="thumb" style="background:linear-gradient(128deg,#20202a,#45454f)"><img src="https://i.ytimg.com/vi/Z1rWNjGiOCE/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">東日本少年少女レスリング選手権大会</div></div><div class="tt">東日本少年少女レスリング選手権大会</div><div class="tm"><span class="num">6</span>本 2026年 6/28</div></a><a class="tile" href="/events/east-league/2026/"><div class="thumb" style="background:linear-gradient(119deg,#3c0e18,#9a1a30)"><img src="https://i.ytimg.com/vi/uok4sLchzbM/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">東日本学生リーグ戦</div></div><div class="tt">東日本学生リーグ戦</div><div class="tm"><span class="num">11</span>本 2026年 6/16〜6/18</div></a></div><button type="button" class="rbtn next" data-row="row2" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section><!--/pre:main--></main>
+<main class="wrap" id="main"><!--pre:main--><div class="loading">データを読み込んでいます</div><!--/pre:main--></main>
 
 <footer class="site-foot"><div class="wrap">
-  <p><a href="/news/">ニュース</a>・<a href="/events/">大会一覧(すべての大会のページ)</a>・<a href="/events/calendar/">大会カレンダー</a>・<a href="/technique/">技術動画</a>・<a href="/photos/">写真</a>・<a href="/players/">選手検索</a>・<a href="/champions/">歴代優勝者</a>・<a href="/uww/">国際大会</a>・<a href="/about/">運営者情報</a>・<a href="/faq/">よくある質問</a>・<a href="/contact.html">お問い合わせ</a>・<a href="/privacy/">プライバシーポリシー</a>・<a href="/en/" hreflang="en" lang="en">English</a></p>
-  <p class="foot-sns"><a href="https://www.instagram.com/japan_wrestlingchannel/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Instagram</a></p>
-  <p>このサイトは Japan Wrestling Channel 公式の配信アーカイブです。Japan Wrestling Channel などの YouTube で公開されているレスリングの動画を、大会ごとに整理しています。動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>
+<div class="foot-grid">
+<div class="foot-brand"><a class="foot-logo" href="/"><img src="/assets/logo.png" alt="JAPAN WRESTLING CHANNEL" width="118" height="44" loading="lazy"></a><p>Japan Wrestling Channel 公式の配信アーカイブです。YouTube で公開されているレスリングの動画を、大会ごとに整理しています。</p><p class="foot-sns"><a href="https://www.instagram.com/japan_wrestlingchannel/" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Instagram</a></p></div>
+<nav class="foot-col" aria-label="大会・動画"><p class="foot-h">大会・動画</p><ul><li><a href="/events/">大会一覧</a></li><li><a href="/events/calendar/">大会カレンダー</a></li><li><a href="/champions/">歴代優勝者</a></li><li><a href="/uww/">国際大会</a></li><li><a href="/technique/">技術動画</a></li></ul></nav>
+<nav class="foot-col" aria-label="読む・調べる"><p class="foot-h">読む・調べる</p><ul><li><a href="/news/">ニュース</a></li><li><a href="/players/">選手検索</a></li><li><a href="/photos/">写真</a></li><li><a href="/books/">書籍</a></li></ul></nav>
+<nav class="foot-col" aria-label="このサイトについて"><p class="foot-h">このサイトについて</p><ul><li><a href="/about/">運営者情報</a></li><li><a href="/faq/">よくある質問</a></li><li><a href="/contact.html">お問い合わせ</a></li><li><a href="/privacy/">プライバシーポリシー</a></li><li><a href="/en/" hreflang="en" lang="en">English</a></li></ul></nav>
+</div>
+<div class="foot-notes">
+  <p>動画はこのサイトの中(YouTube のプレーヤー)で再生できます。</p>
   <p>大会の開催日・会場・出典は照合用の大会データ(<span id="master-asof"></span>時点)に基づきます。出典の種類(日本協会の大会ページ、事業報告書、旧協会サイト由来の記録、専門媒体の記事など)は各開催回に表示しています。主催・公認の関係は資料に記載があるものだけを示しています。</p>
   <p>動画と開催回の対応には根拠を表示しています。「確認待ち」は大会名や年が曖昧なため、候補を示しているだけの動画です。</p>
   <p id="build-info"></p>
+</div>
 </div></footer>
 
 <script defer src="/assets/player.js?v=1"></script>

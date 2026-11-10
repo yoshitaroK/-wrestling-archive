@@ -14,6 +14,9 @@
 - YouTube のサムネイルが読み込めないときに、別の大きさの画像に替える(<img data-thumb>)
 - ヘッダーの言語切り替え(<a class="lang" data-lang>)で、選んだ言語を覚える
 - ヘッダーの検索欄(<form class="hsearch">)で、トップページの検索に移る
+- スマートフォンで、虫めがねのボタン(<button class="hs-btn">)を押すと検索欄を開く。html に hs を付けて、描く前から検索欄をたたんでおく
+- スマートフォンのメニュー(横に動く1段)を、今いるページの項目が見える位置まで動かす
+- 長いページで「ページの先頭へ戻る」ボタン(<button class="totop">)を出す
 - 画像が読み込めないときに消す(<img data-gone>。書籍の表紙など)
 - トップページを開いた最初の1回だけ、ロゴの動き(intro)を出す(<script data-intro>)
 - トップページのメニューを特集の写真の上に重ねる html.overlay と、メニューの高さ --hdr-h を、描く前から付ける(<script data-overlay>)。
@@ -38,7 +41,7 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 """
 import os
 
-HEAD_VER = "5"
+HEAD_VER = "6"
 SITE_VER = "3"
 CONTACT_VER = "1"
 
@@ -104,6 +107,28 @@ document.addEventListener('error',function(ev){
   if(i.hasAttribute('data-thumb'))thumbFail(i);
   else if(i.hasAttribute('data-gone'))i.remove();
 },true);
+d.classList.add('hs');
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('.hs-btn');
+  if(!b)return;
+  var f=document.getElementById('hsearch');if(!f)return;
+  var o=f.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');
+  if(o)f.q.focus();
+});
+document.addEventListener('DOMContentLoaded',function(){
+  var n=document.querySelector('.topnav'),c=n&&n.querySelector('[aria-current]');
+  if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-(n.clientWidth-c.offsetWidth)/2);
+  var b=document.createElement('button'),on=false;
+  b.type='button';b.className='totop';b.setAttribute('aria-label',d.lang==='en'?'Back to top':'ページの先頭へ戻る');
+  b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14.5l6-6 6 6"/></svg>';
+  document.body.appendChild(b);
+  function chk(){var v=window.scrollY>window.innerHeight*1.5;if(v!==on){on=v;b.classList.toggle('on',v);}}
+  window.addEventListener('scroll',chk,{passive:true});chk();
+  b.addEventListener('click',function(){
+    var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({top:0,behavior:calm?'auto':'smooth'});
+  });
+});
 document.addEventListener('click',function(ev){
   var a=ev.target.closest&&ev.target.closest('a.lang[data-lang]');
   if(!a)return;
