@@ -361,7 +361,7 @@ function showFeature(i){
   featI = (i + FEAT.length) % FEAT.length;
   var f = FEAT[featI], box = document.getElementById('feat'), img = document.getElementById('jhero-img'), cr = document.getElementById('jhero-credit');
   var t = FEAT_TXT[f.kind];
-  var dn = (f.kind==='soon'||f.kind==='upcoming') ? daysTo(f.start) : 0;
+  var dn = (f.kind==='soon'||f.kind==='upcoming') ? daysTo(f.start) : 0, yt = !f.art && !f.photo && !!f.vid;
   box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="fkick"><span class="badge-l'+(f.kind==='live'?' live':'')+'">'+L('<span class="en" aria-hidden="true">'+FEAT_EN[f.kind]+'</span>','')+t[0]+'</span>'+
     (dn>0 ? '<span class="fcd">'+L('あと<b>'+dn+'</b>日','<b>'+dn+'</b> '+(dn===1?'day':'days')+' to go')+'</span>' : '')+'</div>'+
     '<a class="fn" href="'+esc(f.href)+'">'+(f.short ? esc(f.short)+' <span class="fy">'+esc(f.year)+'</span>' : esc(f.name))+'</a>'+
@@ -369,10 +369,13 @@ function showFeature(i){
     (f.meta?'<div class="fm">'+f.meta+'</div>':'')+
     (f.ext ? '<div class="ctas"><a class="cta" href="'+esc(f.ext)+'" target="_blank" rel="noopener">'+(LANG==='ja' && f.extLabel ? esc(f.extLabel)+'を見る' : t[1])+' ↗</a><a class="cta2" href="'+esc(f.href)+'">'+L('大会ページへ','Tournament page')+'</a></div>'
            : '<a class="cta" href="'+esc(f.href)+'" tabindex="-1">'+t[1]+'</a>')+'</div>'+
+    // 背景が動画の絵(文字入りのことが多い)のときは、背景はぼかして暗くし、絵そのものは横に小さく出す(yt)
+    '<div class="fside">'+(yt ? '<a class="fposter" href="'+esc(f.href)+'" tabindex="-1" aria-hidden="true"><img src="https://i.ytimg.com/vi/'+encodeURIComponent(f.vid)+'/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" data-thumb></a>' : '')+
     (FEAT.length>1 ? '<div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="'+L('前の特集','Previous')+'">‹</button><div class="fdots">'+
       FEAT.map(function(x,k){ return '<button type="button" data-featto="'+k+'" aria-label="'+L((k+1)+'件目('+FEAT.length+'件中)','Item '+(k+1)+' of '+FEAT.length)+'"'+(k===featI?' aria-current="true"':'')+'></button>'; }).join('')+
-      '</div><button type="button" class="fb" data-feat="1" aria-label="'+L('次の特集','Next')+'">›</button></div>' : '');
+      '</div><button type="button" class="fb" data-feat="1" aria-label="'+L('次の特集','Next')+'">›</button></div>' : '')+'</div>';
   box.hidden = false;
+  img.classList.toggle('yt', yt);
   // ビルドのときに HTML に書き込まれた特集(top_prerender.py。#288)と同じ写真なら、付け直さない(消えて出直すちらつきを出さない)
   var want = f.art ? f.art.src : f.photo ? f.photo.src : f.vid ? 'https://i.ytimg.com/vi/'+encodeURIComponent(f.vid)+'/maxresdefault.jpg' : '';
   if(box.hasAttribute('data-pre')){ box.removeAttribute('data-pre'); if(want && img.getAttribute('src')===want){ img.onerror = function(){ if(this.src.indexOf('ytimg')>=0) thumbFail(this); }; return; } }
