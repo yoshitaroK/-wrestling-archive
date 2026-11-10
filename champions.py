@@ -555,6 +555,7 @@ table.champs tbody th a{color:var(--pink);text-decoration:none}
 table.champs tbody th a:hover{text-decoration:underline}
 table.champs td .cw{display:block;font-weight:700}
 table.champs td .cw+.cw{margin-top:6px}
+table.champs td .cw a,table.rank td.rn a,table.champs th a{padding:5px 0}
 table.rank tbody th{text-align:center;min-width:3em}
 table.rank td.rn{font-weight:700;font-size:15px}
 table.rank td.rc b{font-family:var(--num);font-size:20px;color:var(--pink);margin-right:2px}

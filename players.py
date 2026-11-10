@@ -650,6 +650,7 @@ table.winners{border-collapse:collapse;width:100%;font-size:14px}
 table.winners th{width:64px;padding:8px 10px 8px 0;text-align:left;vertical-align:top;color:var(--ink3);font-weight:500;white-space:nowrap;border-bottom:1px solid var(--line)}
 table.winners td{padding:6px 0;border-bottom:1px solid var(--line)}
 table.winners .wr{display:inline-block;margin:2px 14px 2px 0}
+table.winners .wr a{padding:5px 0}
 table.winners .wr b{color:var(--pink);font-weight:700;margin-right:2px}
 table.winners .wr small{color:var(--ink3);font-size:12px}
 .winners-box h3{font-size:15px;margin:14px 0 4px}
@@ -658,7 +659,18 @@ table.results{border-collapse:collapse;width:100%;min-width:560px;font-size:14px
 table.results th,table.results td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
 table.results th{color:var(--ink3);font-weight:500;font-size:12px}
 table.results td b{color:var(--pink)}
-@media(max-width:600px){table.results{min-width:0;font-size:13px}table.results th,table.results td{padding:8px 5px}table.results th:first-child,table.results td:first-child{padding-left:0}table.results td:nth-child(2){white-space:normal;min-width:7em;line-height:1.5}}
+/* スマートフォンでは表をやめて、1大会を1つのかたまりにする(1行目=大会名、2行目=年・スタイル・階級・成績・出典)。細い列で大会名が何行にも折れないように */
+@media(max-width:600px){
+  table.results{min-width:0;font-size:13.5px;display:block}
+  table.results thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  table.results tbody{display:block}
+  table.results tr{display:grid;grid-template-columns:auto auto auto 1fr auto;align-items:baseline;gap:4px 12px;padding:11px 0;border-bottom:1px solid var(--line)}
+  table.results td{display:block;padding:0;border:0;color:var(--ink2)}
+  table.results td:nth-child(2){grid-column:1/-1;grid-row:1;white-space:normal;line-height:1.55;font-size:14.5px;color:var(--ink)}
+  table.results td:nth-child(5){font-size:15px}
+  table.results td:nth-child(6){justify-self:end}
+}
+table.results td a{padding:5px 0}
 .pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}
 .pager button{min-width:38px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .pager button[aria-current]{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}

@@ -211,6 +211,6 @@ UWW_CSS = """
 .uww-g summary small{margin-left:8px;font-weight:400;font-size:12px;color:var(--ink3)}
 .uww-g .vlist{margin-top:10px}
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
-.uww-who a{margin-right:10px;font-weight:700}
+.uww-who a{margin-right:10px;font-weight:700;padding:6px 0}
 .vm .uww-ev{font-weight:700;color:var(--ink2)}
 """
