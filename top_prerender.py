@@ -262,6 +262,7 @@ class _Top:
         f, t = feat[0], self.FEAT_TXT[i18n.LANG][feat[0]["kind"]]
         n = len(feat)
         dn = self.days_to(f.get("start")) if f["kind"] in ('soon', 'upcoming') else 0
+        yt = bool(not f.get("art") and not f.get("photo") and f.get("vid"))  # top.js の showFeature と同じ
         box = ('<div class="feat-main" aria-live="polite"><div class="fkick"><span class="badge-l' + (' live' if f["kind"] == 'live' else '') + '">' +
                L('<span class="en" aria-hidden="true">' + self.FEAT_EN[f["kind"]] + '</span>', '') + t[0] + '</span>' +
                (('<span class="fcd">' + L(f"あと<b>{dn}</b>日", f"<b>{dn}</b> {'day' if dn == 1 else 'days'} to go") + '</span>') if dn > 0 else '') + '</div>' +
@@ -270,9 +271,10 @@ class _Top:
                ('<div class="fm">' + f["meta"] + '</div>' if f.get("meta") else '') +
                ('<div class="ctas"><a class="cta" href="' + esc(f["ext"]) + '" target="_blank" rel="noopener">' + (esc(f["extLabel"]) + 'を見る' if i18n.LANG == 'ja' and f.get("extLabel") else t[1]) + ' ↗</a><a class="cta2" href="' + esc(f["href"]) + '">' + L('大会ページへ', 'Tournament page') + '</a></div>'
                 if f.get("ext") else '<a class="cta" href="' + esc(f["href"]) + '" tabindex="-1">' + t[1] + '</a>') + '</div>' +
+               '<div class="fside">' + (('<a class="fposter" href="' + esc(f["href"]) + '" tabindex="-1" aria-hidden="true"><img src="https://i.ytimg.com/vi/' + esc(f["vid"]) + '/maxresdefault.jpg" alt="" referrerpolicy="no-referrer" data-thumb></a>') if yt else '') +
                ('<div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="' + L('前の特集', 'Previous') + '">‹</button><div class="fdots">' +
                 ''.join('<button type="button" data-featto="' + str(k) + '" aria-label="' + L(f"{k + 1}件目({n}件中)", f"Item {k + 1} of {n}") + '"' + (' aria-current="true"' if k == 0 else '') + '></button>' for k in range(n)) +
-                '</div><button type="button" class="fb" data-feat="1" aria-label="' + L('次の特集', 'Next') + '">›</button></div>' if n > 1 else ''))
+                '</div><button type="button" class="fb" data-feat="1" aria-label="' + L('次の特集', 'Next') + '">›</button></div>' if n > 1 else '') + '</div>')
         feat_div = '<div class="feat" id="feat" data-pre>' + box + '</div>'
         # 背景の写真(top.js の showFeature と同じ選び方)。class="on" を最初から付けて、top.js が同じ写真なら付け直さない
         a = ' class="jhero-img on" id="jhero-img" alt="" decoding="async" fetchpriority="high"'
@@ -285,7 +287,7 @@ class _Top:
             p = f["photo"]
             img = '<img' + a + ' sizes="100vw" srcset="' + esc(p.get("srcset", '')) + '" src="' + esc(p["src"]) + '"' + (f' width="{p["w"]}" height="{p["h"]}"' if p.get("w") and p.get("h") else '') + '>'
         elif f.get("vid"):
-            img = '<img' + a + ' src="https://i.ytimg.com/vi/' + esc(f["vid"]) + '/maxresdefault.jpg" referrerpolicy="no-referrer">'
+            img = '<img' + a.replace('jhero-img on', 'jhero-img on yt') + ' src="https://i.ytimg.com/vi/' + esc(f["vid"]) + '/maxresdefault.jpg" referrerpolicy="no-referrer">'
         else:
             img = None
         credit = None
