@@ -10,7 +10,8 @@
   ふつうの rel="stylesheet" だと、別のサーバーから CSS が届くまで画面が一切描かれなかった(LCP が遅い)。
   ページの中に onload="..." を書かないのは、CSP で 'unsafe-inline' を外す計画(docs/security-headers.md)のため
 - 日本語以外のブラウザを英語版へ移す(日本語版のページだけ。<script data-redirect> のとき)
-- テーマ(明るい・暗い)の切り替え
+- テーマ(明るい・暗い)の切り替え。最初は誰にでも黒で出す(サイトの顔を1つにする。運営者の決定 2026-11-10)。
+  トップページのボタンで白を選んだ人には、次からも白で出す(localStorage の theme2)
 - YouTube のサムネイルが読み込めないときに、別の大きさの画像に替える(<img data-thumb>)
 - ヘッダーの言語切り替え(<a class="lang" data-lang>)で、選んだ言語を覚える
 - ヘッダーの検索欄(<form class="hsearch">)で、トップページの検索に移る
@@ -42,7 +43,7 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 """
 import os
 
-HEAD_VER = "6"
+HEAD_VER = "7"
 SITE_VER = "3"
 CONTACT_VER = "1"
 
@@ -73,12 +74,11 @@ if(me&&me.hasAttribute('data-redirect'))(function(){
   if(!l||/(^|,)ja/.test(l))return;
   location.replace('/en'+location.pathname+location.search+location.hash);
 })();
-var m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)'),t;
-try{t=sessionStorage.getItem('theme');localStorage.removeItem('theme');}catch(e){}
+var t;
+try{t=localStorage.getItem('theme2');localStorage.removeItem('theme');sessionStorage.removeItem('theme');}catch(e){}
 function set(v){d.setAttribute('data-theme',v);var c=document.querySelector('meta[name="theme-color"]');if(c)c.content=v==='light'?'#0b0b0e':'#08080a';}
-set(t==='light'||t==='dark'?t:(m&&m.matches?'light':'dark'));
-if(m&&m.addEventListener&&t!=='light'&&t!=='dark')m.addEventListener('change',function(e){try{if(sessionStorage.getItem('theme'))return;}catch(x){}set(e.matches?'light':'dark');});
-window.__setTheme=function(v){set(v);try{sessionStorage.setItem('theme',v);}catch(e){}};
+set(t==='light'?'light':'dark');
+window.__setTheme=function(v){set(v);try{localStorage.setItem('theme2',v);}catch(e){}};
 if(me&&me.hasAttribute('data-intro'))(function(){
   try{if(location.hash||location.search||sessionStorage.getItem('intro'))return;sessionStorage.setItem('intro','1');}catch(e){return;}
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;

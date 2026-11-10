@@ -193,6 +193,7 @@ class _Top:
             v = next((x for x in vs if x.get("k") == 'match'), vs[0] if vs else None)
             return {"kind": kind, "href": self.event_page(e["id"]) or self.link_to(e["series"], e["id"]),
                     "name": L(e.get("official_name") or e.get("name"), self.N(s["name"] if s else e.get("name")) + ' ' + str(e["year"])),
+                    "short": self.N(s["name"] if s else e.get("name")), "year": e["year"], "off": L(e.get("official_name") or e.get("name") or '', ''), "start": e.get("start"),
                     "meta": '<span><span class="num">' + str(e.get("n", 0)) + '</span>' + L('本', ' videos') + '</span><span>' + esc(fmt_range(e.get("start"), e.get("end"))) + '</span>' +
                             ('<span>' + esc(self.N(e["venue"])) + '</span>' if e.get("venue") else ''),
                     "photo": photo_for(e), "vid": v["id"] if v else ''}
@@ -246,13 +247,26 @@ class _Top:
                'recent': ['Latest tournament', 'Watch the streams'], 'upcoming': ['Upcoming tournament', 'See the stream schedule'], 'photo': ['New photos', 'See the photos']},
     }
 
+    FEAT_EN = {'soon': 'UPCOMING', 'live': 'LIVE', 'result': 'RESULTS', 'recent': 'LATEST', 'upcoming': 'UPCOMING', 'photo': 'PHOTOS'}
+
+    def days_to(self, start):
+        """top.js の daysTo と同じ。日本時間の今日から開催日まで何日か"""
+        if not start:
+            return 0
+        return (datetime.date.fromisoformat(start[:10]) - datetime.date.fromisoformat(self.today)).days
+
     def feature_html(self, feat):
         """showFeature(0) と同じ HTML。特集が無いときは None(空の形のまま)"""
         if not feat:
             return None
         f, t = feat[0], self.FEAT_TXT[i18n.LANG][feat[0]["kind"]]
         n = len(feat)
-        box = ('<div class="feat-main" aria-live="polite"><div class="badge-l' + (' live' if f["kind"] == 'live' else '') + '">' + t[0] + '</div><a class="fn" href="' + esc(f["href"]) + '">' + esc(f["name"]) + '</a>' +
+        dn = self.days_to(f.get("start")) if f["kind"] in ('soon', 'upcoming') else 0
+        box = ('<div class="feat-main" aria-live="polite"><div class="fkick"><span class="badge-l' + (' live' if f["kind"] == 'live' else '') + '">' +
+               L('<span class="en" aria-hidden="true">' + self.FEAT_EN[f["kind"]] + '</span>', '') + t[0] + '</span>' +
+               (('<span class="fcd">' + L(f"あと<b>{dn}</b>日", f"<b>{dn}</b> {'day' if dn == 1 else 'days'} to go") + '</span>') if dn > 0 else '') + '</div>' +
+               '<a class="fn" href="' + esc(f["href"]) + '">' + ((esc(f["short"]) + ' <span class="fy">' + esc(f["year"]) + '</span>') if f.get("short") else esc(f["name"])) + '</a>' +
+               (('<div class="foff">' + esc(f["off"]) + '</div>') if f.get("off") and f["off"] != f.get("short") else '') +
                ('<div class="fm">' + f["meta"] + '</div>' if f.get("meta") else '') +
                ('<div class="ctas"><a class="cta" href="' + esc(f["ext"]) + '" target="_blank" rel="noopener">' + (esc(f["extLabel"]) + 'を見る' if i18n.LANG == 'ja' and f.get("extLabel") else t[1]) + ' ↗</a><a class="cta2" href="' + esc(f["href"]) + '">' + L('大会ページへ', 'Tournament page') + '</a></div>'
                 if f.get("ext") else '<a class="cta" href="' + esc(f["href"]) + '" tabindex="-1">' + t[1] + '</a>') + '</div>' +
@@ -300,11 +314,11 @@ class _Top:
                 '<div class="tt">' + esc(self.N(s["name"] if s else e.get("name"))) + '</div><div class="tm">' + cnt + fmt_short(e.get("start")) +
                 ((L('〜', '–') + fmt_short(e["end"])) if e.get("end") and e["end"] != e.get("start") else '') + '</div></a>')
 
-    def shelf(self, k, title, sub, tiles, more):
+    def shelf(self, k, title, sub, tiles, more, en=''):
         if not tiles:
             return ''
         rid = f"row{k}"
-        return ('<section class="shelf" aria-labelledby="' + rid + '-h"><div class="shelf-h"><h2 id="' + rid + '-h">' + esc(title) + ('<span class="sub">' + esc(sub) + '</span>' if sub else '') + '</h2>' + (more or '') + '</div>' +
+        return ('<section class="shelf" aria-labelledby="' + rid + '-h"><div class="shelf-h"><h2 id="' + rid + '-h"' + (' data-en="' + en + '"' if en and i18n.LANG == 'ja' else '') + '>' + esc(title) + ('<span class="sub">' + esc(sub) + '</span>' if sub else '') + '</h2>' + (more or '') + '</div>' +
                 '<div class="rowwrap"><button type="button" class="rbtn prev" data-row="' + rid + '" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button>' +
                 '<div class="row" id="' + rid + '">' + ''.join(tiles) + '</div>' +
                 '<button type="button" class="rbtn next" data-row="' + rid + '" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section>')
@@ -318,11 +332,11 @@ class _Top:
         if future:
             k += 1
             h += self.shelf(k, L('これから開催される大会', 'Upcoming tournaments'), L('配信枠が公開されています', 'Stream pages are already published'),
-                            [self.tile_event(e) for e in future], '<a class="all" href="' + self.U('/events/calendar/') + '">' + L('カレンダーを見る ›', 'See the calendar ›') + '</a>')
+                            [self.tile_event(e) for e in future], '<a class="all" href="' + self.U('/events/calendar/') + '">' + L('カレンダーを見る ›', 'See the calendar ›') + '</a>', 'UPCOMING')
         if past:
             k += 1
             h += self.shelf(k, L('最近開催された大会', 'Recent tournaments'), '', [self.tile_event(e) for e in past],
-                            '<a class="all" href="' + self.U('/events/') + '">' + L('すべて見る ›', 'See all ›') + '</a>')
+                            '<a class="all" href="' + self.U('/events/') + '">' + L('すべて見る ›', 'See all ›') + '</a>', 'RESULTS')
         return h or None
 
 
