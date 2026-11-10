@@ -2096,6 +2096,11 @@ def build(root=HERE, inline_css=False, only=None):
             pages.extend(news.build(root, ctx, me, news_report))
             # llms-full.txt にニュースの一覧を載せるため(エラーは上の news_report に出ているので、ここでは捨てる)
             ctx["news_articles"] = news.load(root, {"errors": [], "warnings": []})
+            # トップページの「最新ニュース」(assets/home.json の news。日本語版だけ)。新しい6本の題名・区分・日付・書き出しと、記事に付いている写真
+            if not i18n.en():
+                home[lang]["news"] = [dict({"slug": a["slug"], "title": a["title"], "category": a.get("category") or "", "date": a["date"], "lead": a.get("lead") or ""},
+                                           **({"img": f"/{news.IMAGE_DIR}/{a['image']['file']}", "w": a["image"].get("w"), "h": a["image"].get("h")} if a.get("image") else {}))
+                                      for a in ctx["news_articles"][:6]]
             # 書籍(/books/)。日本語版だけ
             try:
                 pages.extend(books.build(root, ctx, me, books_report))

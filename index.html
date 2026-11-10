@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#08080a">
-<script src="/assets/head.js?v=6" data-redirect data-intro data-overlay></script>
+<script src="/assets/head.js?v=7" data-redirect data-intro data-overlay></script>
 <meta name="description" content="Japan Wrestling Channel 公式の配信アーカイブです。レスリングの配信・動画を、大会名・開催年・日程から探せます。天皇杯、明治杯、インカレ、インターハイなどの配信をまとめています。">
 <link rel="canonical" href="https://japanwrestlingchannel.com/">
 <link rel="alternate" hreflang="ja" href="https://japanwrestlingchannel.com/">
@@ -47,6 +47,7 @@
   --card-r:8px; --shadow-hi:0 14px 34px rgba(0,0,0,.55); --hero-fade:#08080a;
   --st-cancel:#ff8a80; --st-cancel-bg:#3a1a18; --st-plan:#8cb8ee; --st-plan-bg:#16263a; --st-post:#e9c46a; --st-post-bg:#33280f;
   --st-unk:#b9b8c0; --st-unk-bg:#26262b; --unl:#e3cf95; --unl-bg:#2b2616; --unl-line:#4a4128;
+  --hero-accent:#ff4458;
   --font:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
   --num:'Teko','Noto Sans JP',sans-serif;
 }
@@ -121,7 +122,7 @@ button,input,select{font:inherit;color:inherit}
 .vtr{font-size:13px;line-height:1.5;color:var(--ink2);margin-top:2px}
 .mt{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .orig{font-size:12px;color:var(--ink3);margin-top:-4px}
-/* 白ベース。初めて来た人は端末の設定に合わせ、トップページ右上のボタンで選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
+/* 白ベース。最初は誰にでも黒で出し、トップページ右上のボタンで白を選ぶとその色を覚える(data-theme はページ先頭のスクリプトが付ける) */
 :root[data-theme="light"]{
     color-scheme:light;
     --bg:#f6f6f8; --bg2:#ffffff; --surface:#ffffff; --surface-2:#ececf0; --ink:#121216; --ink2:#4a4a55; --ink3:#6b6b75; --line:#e2e2e8; --line-hi:#b5b5c0;
@@ -150,14 +151,6 @@ button,input,select{font:inherit;color:inherit}
 .jhero-img.on{opacity:1}
 .jhero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,10,.88) 0%,rgba(8,8,10,.6) 50%,rgba(8,8,10,.25) 100%)}
 .jhero-in{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:440px;padding-top:56px;padding-bottom:64px}
-.jhero h1{margin:0 0 10px;font-size:42px;font-weight:900;line-height:1.25;letter-spacing:.02em;max-width:16em;text-shadow:0 2px 16px rgba(0,0,0,.35)}
-.jlead{margin:0 0 22px;font-size:15px;color:#e4e9f3;max-width:56em}
-.jlead .num{color:#fff;font-size:21px;margin:0 2px}
-.jhero .searchrow{max-width:700px}
-.jhero .searchrow input{border:0;border-radius:6px;padding:15px 18px;font-size:17px;background:#fff;color:#16161a;box-shadow:0 8px 28px rgba(0,0,0,.35)}
-.jhero .searchrow input::placeholder{color:#6b6b75}
-.jhero .searchrow input:focus{outline:none;box-shadow:0 0 0 4px var(--pink),0 8px 28px rgba(0,0,0,.35)}
-.jhero .hint{color:#e8edf6;margin-top:8px;display:block;width:fit-content;max-width:100%;background:rgba(8,8,10,.62);padding:3px 8px;border-radius:6px}
 .jcredit{position:absolute;right:12px;bottom:10px;max-width:calc(100% - 24px);font-size:11.5px;line-height:1.5;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:5px 9px;text-decoration:none}
 .jcredit:hover{text-decoration:underline}
 .jcredit:focus-visible{outline:2px solid #fff;outline-offset:2px}
@@ -170,8 +163,6 @@ html.overlay .top.see-through{background:transparent;border-bottom-color:transpa
 /* 特集(最近の大会・これからの大会・新しい写真を ‹ › で切り替える。自動では動かない) */
 .jhero-scrim{background:linear-gradient(to top,var(--hero-fade) 0,rgba(8,8,10,0) 38%),linear-gradient(to bottom,rgba(8,8,10,.65) 0,rgba(8,8,10,0) 160px),linear-gradient(90deg,rgba(8,8,10,.85) 0%,rgba(8,8,10,.5) 50%,rgba(8,8,10,.1) 100%)}
 .jhero .jhero-in{min-height:640px;justify-content:flex-start}
-.jhero h1{font-size:28px;font-weight:700;letter-spacing:.04em;margin-bottom:6px}
-.jlead{font-size:14px;margin-bottom:18px}
 .feat{margin-top:auto;padding-top:48px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}
 .feat-main{min-width:0;max-width:760px}
 .feat .badge-l{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;background:var(--pink-fill);color:#fff;border-radius:4px;padding:2px 9px;margin-bottom:12px}
@@ -198,9 +189,6 @@ html.overlay .top.see-through{background:transparent;border-bottom-color:transpa
 .fdots button{width:22px;height:22px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
 .fdots button::before{content:"";width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.4);transition:width .2s,background .2s}
 .fdots button[aria-current="true"]::before{width:22px;background:#fff}
-/* 検索・絞り込みをしているときは特集をしまって、結果をすぐ見せる */
-.jhero.compact .jhero-in{min-height:0;padding-bottom:40px}
-.jhero.compact .feat{display:none}
 /* 特集はデータが届くまで中身がないので、読み込み中から場所を取っておく(届いて広がると下がずれる=CLS。#286)。top.js が描き終えたら data-wait を外す */
 .feat[data-wait]{visibility:hidden;min-height:280px}
 
@@ -280,8 +268,6 @@ main{padding:10px 0 60px}
 .shelf{margin:0 0 30px}
 .shelf h2,.section h2{font-size:19px;font-weight:700;margin:0 0 12px;letter-spacing:.04em}
 .shelf .sub{font-weight:400;font-size:12px;color:var(--ink3);margin-left:8px}
-/* 棚の見出しの左に赤い線を引く(ニュースの記事やフッターの見出しと同じ形) */
-.shelf h2,.listhead h2{padding-left:11px;border-left:4px solid var(--pink-fill);line-height:1.35}
 .shelf-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .shelf-h h2{margin-bottom:4px}
 .shelf .all{flex:0 0 auto;border:0;background:none;padding:4px 0;font:inherit;font-size:13px;color:var(--ink2);text-decoration:none;cursor:pointer;white-space:nowrap}
@@ -445,23 +431,16 @@ footer p{margin:0 0 6px;max-width:76ch}
   .top{position:relative}
   .jhero-in,.jhero .jhero-in{min-height:0;padding-top:26px;padding-bottom:46px}
   html.overlay .jhero-in{padding-top:calc(22px + var(--hdr-h,0px))}
-  .jhero h1{font-size:20px;margin-bottom:6px}
   .feat{padding-top:30px;gap:16px}
   .feat .fn{font-size:22px}
   .feat .fm{font-size:12.5px}
   .feat .fm .num{font-size:17px}
   .feat .cta{margin-top:14px;padding:10px 18px;font-size:13.5px}
   .fnav .fb{width:36px;height:36px;font-size:19px}
-  .jlead{font-size:12.5px;margin-bottom:14px}
-  .jlead .num{font-size:17px}
-  .jhero .searchrow input{padding:13px 14px;font-size:16px}
-  .jhero .hint{font-size:11.5px}
   .jcredit{font-size:10.5px;right:8px;bottom:7px;max-width:calc(100% - 16px);padding:6px 9px}
   .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
   .row{grid-auto-columns:41%;gap:10px}
-  .shelf h2,.listhead h2{font-size:17.5px;padding-left:8px;border-left-width:3px}
-  .shelf .sub{display:block;margin:3px 0 0}
   .sbody{padding:2px 12px 16px}
   .shead .sthumb{flex-basis:112px}
   .shead{gap:10px;padding:10px}
@@ -475,14 +454,125 @@ footer p{margin:0 0 6px;max-width:76ch}
   .facts{grid-template-columns:1fr}
   .facts dt{margin-top:6px}
 }
+/* ===== トップページの作り替え(2026-11。特集を主役に・上の帯・検索の帯・最新ニュース・強い見出し) ===== */
+.logo-type .ac{color:var(--on-navy)}
+/* いちばん上の細い帯(top.js の renderStrip)。高さを決めておき、中身が入っても下がずれないようにする */
+.tstrip{position:relative;z-index:21;height:53px;overflow:hidden;background:var(--navy-2);color:var(--on-navy);border-bottom:1px solid rgba(255,255,255,.1)}
+.tstrip[hidden]{display:block;visibility:hidden}
+.tstrip .wrap{display:flex;overflow-x:auto;scrollbar-width:none}
+.tstrip .wrap::-webkit-scrollbar{display:none}
+.ts{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:190px;height:52px;padding:2px 22px 0 0;margin-right:22px;border-right:1px solid rgba(255,255,255,.12);color:var(--on-navy);text-decoration:none}
+.ts:last-child{border-right:0;margin-right:0}
+.ts-k{display:flex;align-items:center;gap:8px;font-family:var(--num);font-weight:500;font-size:14.5px;letter-spacing:.12em;line-height:1.2;color:var(--on-navy-2)}
+.ts-k i{font-style:normal;font-weight:600;font-size:13px;padding:2px 7px 0;border-radius:2px;background:rgba(255,255,255,.14);color:var(--on-navy)}
+.ts.next .ts-k i,.ts.live .ts-k i{background:var(--pink-fill)}
+.ts-t{font-size:13.5px;font-weight:700;line-height:1.35;white-space:nowrap}
+.ts:hover .ts-t{text-decoration:underline}
+.ts:focus-visible{outline:2px solid var(--on-navy);outline-offset:-3px}
+/* 特集:写真は帯とメニューの下まで敷き、文字は下に寄せて大きく出す */
+html.overlay .tstrip+.jhero{margin-top:calc(-53px - var(--hdr-h,0px))}
+html.overlay .tstrip+.jhero .jhero-in{padding-top:calc(101px + var(--hdr-h,0px))}
+.jhero .jhero-in{min-height:640px;justify-content:flex-end;padding-bottom:52px}
+.jhero-scrim{background:linear-gradient(to top,rgba(8,8,10,.94) 0,rgba(8,8,10,.5) 36%,rgba(8,8,10,0) 64%),linear-gradient(to bottom,rgba(8,8,10,.6) 0,rgba(8,8,10,0) 190px)}
+.feat{padding-top:0}
+.feat-main{max-width:900px}
+.fkick{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px}
+.feat .badge-l{display:inline-flex;align-items:center;gap:8px;margin-bottom:0;padding:3px 11px;border-radius:3px;font-size:13px}
+.feat .badge-l .en{font-family:var(--num);font-weight:600;font-size:17px;letter-spacing:.12em;line-height:1;padding-top:3px}
+.fcd{display:inline-flex;align-items:baseline;gap:3px;font-size:14px;font-weight:700;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.fcd b{font-family:var(--num);font-weight:600;font-size:34px;line-height:1}
+.feat .fn{font-size:64px;font-weight:900;line-height:1.14;letter-spacing:0;-webkit-line-clamp:3}
+.feat .fn .fy{font-family:var(--num);font-weight:600;font-size:1.12em;letter-spacing:.02em;color:var(--hero-accent);white-space:nowrap}
+.foff{margin-top:10px;max-width:44em;font-size:15px;font-weight:500;line-height:1.6;color:#e4e4ea;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.feat .fm{margin-top:14px;font-size:15px}
+.feat .fm .num{font-size:24px}
+.feat .cta,.feat .cta2{border-radius:999px;padding:13px 26px;font-size:15px}
+/* 検索・絞り込みをしているときは、特集と上の帯をしまって結果をすぐ見せる(top.js が html に nohero を付ける) */
+html.nohero .jhero,html.nohero .tstrip{display:none}
+html.nohero.overlay .top.see-through{background:rgba(11,11,14,.96);border-bottom-color:rgba(255,255,255,.08);-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px)}
+/* 検索の帯 */
+.sband{background:var(--bg2);border-bottom:1px solid var(--line)}
+.sband .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding-top:14px;padding-bottom:14px}
+.sband .searchrow{position:relative;flex:1 1 340px;min-width:0}
+.sband .searchrow svg{position:absolute;left:18px;top:50%;width:18px;height:18px;margin-top:-9px;fill:none;stroke:var(--ink3);stroke-width:2.4;stroke-linecap:round;pointer-events:none}
+.sband .searchrow input{border:1px solid var(--line-hi);border-radius:999px;padding:12px 18px 12px 46px;font-size:16px}
+.qchips{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.qchips button,.qchips a{display:inline-flex;align-items:center;gap:6px;min-height:40px;margin:0;padding:6px 15px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px;font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer}
+.qchips button:hover,.qchips a:hover{border-color:var(--pink);color:var(--pink)}
+.qchips .ftoggle{font-weight:700}
+.sband .hint{display:none;flex-basis:100%;margin:0}
+.sband:focus-within .hint{display:block}
+.searchbox{padding:0}
+.status[hidden]{display:none}
+.status{margin-bottom:6px}
+/* 棚の見出し:太く大きく。上に細い英字(data-en)を添える */
+#main{padding-top:34px}
+#main .shelf{margin-bottom:44px}
+#main .shelf-h{align-items:flex-end}
+#main .shelf h2,.tnews h2,.listhead h2{font-size:24px;font-weight:900;letter-spacing:.01em;line-height:1.35}
+#main .shelf h2[data-en]::before,.tnews h2[data-en]::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:15px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+#main .shelf .sub{display:block;margin:2px 0 0}
+#main .shelf .all,.tnews .all{flex:0 0 auto;margin-bottom:4px;padding:6px 14px;border:1px solid var(--line-hi);border-radius:999px;background:none;color:var(--ink);font:inherit;font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer}
+#main .shelf .all:hover,.tnews .all:hover{border-color:var(--pink);color:var(--pink)}
+#main .row{grid-auto-columns:300px;gap:16px}
+#main .tile .tt{font-size:15px;font-weight:700}
+/* 最新ニュース(top.js の newsBlock)。左に大きな1本、右に日付つきの列 */
+.tnews{margin:0 0 48px}
+.tnews .shelf-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.tnews h2{margin:0 0 4px}
+.tnews-in{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px 36px;align-items:start;margin-top:14px}
+.tn-lead{display:flex;flex-direction:column;gap:6px;color:var(--ink);text-decoration:none}
+.tn-lead img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px;margin-bottom:8px;background:var(--surface-2)}
+.tn-lead.noimg{padding:26px 28px 28px;border:1px solid var(--line);border-top:3px solid var(--pink-fill);border-radius:10px;background:var(--surface)}
+.tn-c{font-size:12px;font-weight:700;color:var(--ink3)}
+.tn-lead .tn-c{color:var(--pink)}
+.tn-lead .tn-t{font-size:26px;font-weight:900;line-height:1.4}
+.tn-lead.noimg .tn-t{font-size:30px}
+.tn-l{font-size:14px;line-height:1.8;color:var(--ink2)}
+.tn-lead:hover .tn-t,.tn-rank a:hover .tn-t{text-decoration:underline}
+.tn-rank{list-style:none;margin:0;padding:0;border-top:2px solid var(--pink-fill)}
+.tn-rank a{display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:12px;padding:13px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.tn-rank .tn-d{grid-row:1/3;font-family:var(--num);font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;color:var(--pink)}
+.tn-rank .tn-t{font-size:15px;font-weight:700;line-height:1.55}
+/* 「すべての大会を見る」ボタン(一覧は大会一覧のページへ) */
+.allbtn{display:flex;justify-content:center;margin:8px 0 0}
+.allbtn a{display:inline-flex;align-items:baseline;gap:8px;padding:15px 34px;border-radius:999px;background:var(--pink-fill);color:#fff;font-size:16px;font-weight:700;text-decoration:none}
+.allbtn a:hover{filter:brightness(1.12)}
+.allbtn .num{font-size:22px}
+@media (max-width:760px){
+  .ts{min-width:160px;padding-right:16px;margin-right:16px}
+  .jhero .jhero-in{min-height:500px;padding-bottom:40px}
+  html.overlay .tstrip+.jhero .jhero-in{padding-top:calc(75px + var(--hdr-h,0px))}
+  .feat .fn{font-size:36px;line-height:1.2}
+  :lang(en) .feat .fn{font-size:29px}
+  .feat .badge-l .en{font-size:15px}
+  .fcd b{font-size:27px}
+  .foff{font-size:12.5px}
+  .feat .fm{font-size:13px}
+  .feat .fm .num{font-size:19px}
+  .feat .cta,.feat .cta2{padding:11px 20px;font-size:14px}
+  .sband .wrap{padding-top:12px;padding-bottom:12px}
+  .sband .searchrow{flex-basis:100%}
+  .qchips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px;min-width:0;max-width:100vw}
+  .qchips::-webkit-scrollbar{display:none}
+  .qchips>*{flex:0 0 auto}
+  #main{padding-top:26px}
+  #main .shelf{margin-bottom:36px}
+  #main .shelf h2,.tnews h2,.listhead h2{font-size:19px}
+  #main .shelf .all,.tnews .all{padding:5px 11px;font-size:12px}
+  #main .row{grid-auto-columns:62%;gap:12px}
+  #main .tile .tt{font-size:14px}
+  .tnews{margin-bottom:38px}
+  .tnews-in{grid-template-columns:1fr;gap:18px}
+  .tn-lead .tn-t{font-size:21px}
+  .tn-lead.noimg{padding:18px 18px 20px}
+  .tn-lead.noimg .tn-t{font-size:22px}
+  .allbtn a{padding:14px 26px;font-size:15px}
+}
 /* 入口の演出(トップページ・ブラウザを開いて最初の1回だけ。html に intro が付いたときだけ動く) */
 @keyframes jh-zoom{from{transform:scale(1.12)}to{transform:scale(1)}}
 @keyframes jh-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 html.intro .jhero-img.on{animation:jh-zoom 7s cubic-bezier(.2,.6,.2,1) both}
-html.intro .jhero h1{animation:jh-rise .7s .1s cubic-bezier(.2,.7,.2,1) both}
-html.intro .jlead{animation:jh-rise .7s .3s cubic-bezier(.2,.7,.2,1) both}
-html.intro .jhero .searchrow{animation:jh-rise .7s .5s cubic-bezier(.2,.7,.2,1) both}
-html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}@view-transition{navigation:none}}
 </style>
 </head>
@@ -498,25 +588,33 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
     </div>
   </div>
 </header>
+<!-- いちばん上の細い帯(開催中・これからの大会と、終わった大会)。top.js が中身を入れる。高さは先に取っておく -->
+<nav class="tstrip" id="tstrip" aria-label="これからの大会と最近の結果"></nav>
 <section class="jhero" id="jhero" aria-labelledby="jhero-h">
-  <!--pre:img--><img class="jhero-img on" id="jhero-img" alt="" decoding="async" fetchpriority="high" src="https://i.ytimg.com/vi/3ODw89F0CXc/maxresdefault.jpg" referrerpolicy="no-referrer"><!--/pre:img-->
+  <!--pre:img--><img class="jhero-img" id="jhero-img" alt="" decoding="async" fetchpriority="high"><!--/pre:img-->
   <div class="jhero-scrim"></div>
   <div class="wrap jhero-in">
-    <h1 id="jhero-h">レスリング配信アーカイブ</h1>
-    <p class="jlead" id="tagline">Japan Wrestling Channel 公式 · レスリングの配信・動画を、大会名・開催年・日程から探せます。収録<b class="num" id="stat-v"></b>本</p>
+    <h1 id="jhero-h" class="sr">レスリング配信アーカイブ</h1>
+    <p class="sr" id="tagline">Japan Wrestling Channel 公式 · レスリングの配信・動画を、大会名・開催年・日程から探せます。収録<b class="num" id="stat-v"></b>本</p>
     <script src="/assets/uww-count.js"></script>
-    <div class="searchrow" role="search">
-      <label for="q" class="sr">大会名・通称・選手名・動画タイトルで検索</label>
-      <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索">
-    </div>
-    <p class="hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
-    <!--pre:feat--><div class="feat" id="feat" data-pre><div class="feat-main" aria-live="polite"><div class="badge-l">まもなく開催</div><a class="fn" href="/events/university-championship/2026/">第52回内閣総理大臣杯 令和8年度全日本大学レスリング選手権大会</a><div class="fm"><span><span class="num">6</span>本</span><span>2026年11月14日〜15日</span><span>大阪</span></div><div class="ctas"><a class="cta" href="https://jwfcssite.wixsite.com/naikaku2026" target="_blank" rel="noopener">大会公式サイトを見る ↗</a><a class="cta2" href="/events/university-championship/2026/">大会ページへ</a></div></div><div class="fnav"><button type="button" class="fb" data-feat="-1" aria-label="前の特集">‹</button><div class="fdots"><button type="button" data-featto="0" aria-label="1件目(5件中)" aria-current="true"></button><button type="button" data-featto="1" aria-label="2件目(5件中)"></button><button type="button" data-featto="2" aria-label="3件目(5件中)"></button><button type="button" data-featto="3" aria-label="4件目(5件中)"></button><button type="button" data-featto="4" aria-label="5件目(5件中)"></button></div><button type="button" class="fb" data-feat="1" aria-label="次の特集">›</button></div></div><!--/pre:feat-->
+    <!--pre:feat--><div class="feat" id="feat" hidden data-wait></div><!--/pre:feat-->
   </div>
   <!--pre:credit--><a class="jcredit" id="jhero-credit" hidden></a><!--/pre:credit-->
 </section>
+<!-- 検索の帯:検索欄と、よく使う絞り込み -->
+<div class="sband">
+  <div class="wrap">
+    <div class="searchrow" role="search">
+      <label for="q" class="sr">大会名・通称・選手名・動画タイトルで検索</label>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+      <input id="q" type="search" autocomplete="off" placeholder="大会名・選手名で検索" aria-describedby="q-hint">
+    </div>
+    <div class="qchips"><button type="button" data-cat="大学">大学</button><button type="button" data-cat="高校">高校</button><button type="button" data-cat="社会人">社会人</button><button type="button" data-cat="少年少女">少年少女</button><a href="/uww/">国際大会</a><button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filters">絞り込み</button></div>
+    <p class="hint" id="q-hint">通称・略称や選手名(ふりがなでも可)でも探せます。スペースで区切ると複数の語で絞り込みます(例:天皇杯 2022)。</p>
+  </div>
+</div>
 <div class="wrap">
     <div class="searchbox" role="group" aria-label="絞り込み">
-      <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filters">絞り込み</button>
       <div class="filters" id="filters">
         <label>開催年<select id="f-year"><option value="">すべて</option></select></label>
         <label>区分<select id="f-cat"><option value="">すべて</option></select></label>
@@ -525,11 +623,11 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
         <label>動画の種類<select id="f-kind"><option value="">すべて</option></select></label>
         <label class="check"><input type="checkbox" id="f-all"> 動画のない大会・開催回も表示</label>
       </div>
-      <div class="status" id="status" aria-live="polite"></div>
+      <div class="status" id="status" aria-live="polite" hidden></div>
     </div>
 </div>
 
-<main class="wrap" id="main"><!--pre:main--><section class="shelf" aria-labelledby="row1-h"><div class="shelf-h"><h2 id="row1-h">これから開催される大会<span class="sub">配信枠が公開されています</span></h2><a class="all" href="/events/calendar/">カレンダーを見る ›</a></div><div class="rowwrap"><button type="button" class="rbtn prev" data-row="row1" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button><div class="row" id="row1"><a class="tile" href="/events/university-championship/2026/"><div class="thumb" style="background:linear-gradient(156deg,#16161c,#34343f)"><img src="https://i.ytimg.com/vi/EzNtAVy0Gbw/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本大学選手権</div></div><div class="tt">全日本大学選手権</div><div class="tm"><span class="num">6</span>本 2026年 11/14〜11/15</div></a></div><button type="button" class="rbtn next" data-row="row1" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section><section class="shelf" aria-labelledby="row2-h"><div class="shelf-h"><h2 id="row2-h">最近開催された大会</h2><a class="all" href="/events/">すべて見る ›</a></div><div class="rowwrap"><button type="button" class="rbtn prev" data-row="row2" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button><div class="row" id="row2"><a class="tile" href="/events/shakaijin-open/2026/"><div class="thumb" style="background:linear-gradient(139deg,#3c0e18,#9a1a30)"><img src="https://i.ytimg.com/vi/wFHhXe2dZMs/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全国社会人オープン選手権</div></div><div class="tt">全国社会人オープン選手権</div><div class="tm"><span class="num">6</span>本 2026年 10/31〜11/1</div></a><a class="tile" href="/events/women-open/2026/"><div class="thumb" style="background:linear-gradient(120deg,#20202a,#45454f)"><div class="ph">全日本女子オープン選手権</div></div><div class="tt">全日本女子オープン選手権</div><div class="tm">2026年 結果あり 10/24〜10/25</div></a><a class="tile" href="/events/university-greco/2026/"><div class="thumb" style="background:linear-gradient(125deg,#16161c,#6e1424)"><img src="https://i.ytimg.com/vi/TJIFrZnoXhw/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本大学グレコローマン選手権</div></div><div class="tt">全日本大学グレコローマン選手権</div><div class="tm"><span class="num">6</span>本 2026年 10/23〜10/24</div></a><a class="tile" href="/events/kokutai/2026/"><div class="thumb"><img src="/assets/feature/kokutai-2026-s.jpg" srcset="/assets/feature/kokutai-2026-s.jpg 480w, /assets/feature/kokutai-2026-m.jpg 960w" sizes="(max-width:760px) 41vw, 260px" alt="" loading="lazy" decoding="async" style="object-position:22% 50%"></div><div class="tt">国民体育大会・国民スポーツ大会</div><div class="tm">2026年 結果あり 10/12〜10/15</div></a><a class="tile" href="/events/x-fujinami-cup/2026/"><div class="thumb" style="background:linear-gradient(156deg,#20202a,#45454f)"><img src="https://i.ytimg.com/vi/Ws5t8t9twn4/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">藤波朱理杯 三重県少年少女レスリング大会</div></div><div class="tt">藤波朱理杯 三重県少年少女レスリング大会</div><div class="tm"><span class="num">6</span>本 2026年 8/29〜8/30</div></a><a class="tile" href="/events/intercollegiate/2026/"><div class="thumb" style="background:linear-gradient(129deg,#16161c,#6e1424)"><img src="https://i.ytimg.com/vi/6Ctm4FfMSdg/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本学生選手権（インカレ）</div></div><div class="tt">全日本学生選手権（インカレ）</div><div class="tm"><span class="num">16</span>本 2026年 8/20〜8/23</div></a><a class="tile" href="/events/highschool-greco/2026/"><div class="thumb" style="background:linear-gradient(104deg,#20202a,#45454f)"><img src="https://i.ytimg.com/vi/qygMvZ8GuJo/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全国高校生グレコローマン選手権</div></div><div class="tt">全国高校生グレコローマン選手権</div><div class="tm"><span class="num">12</span>本 2026年 8/14〜8/16</div></a><a class="tile" href="/events/east-spring/2026/"><div class="thumb" style="background:linear-gradient(127deg,#5a1220,#18181e)"><img src="https://i.ytimg.com/vi/Tx0aOFXsGmY/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">東日本学生選手権（春季大会）</div></div><div class="tt">東日本学生選手権（春季大会）</div><div class="tm"><span class="num">11</span>本 2026年 7/13〜7/15</div></a><a class="tile" href="/events/shakaijin/2026/"><div class="thumb" style="background:linear-gradient(121deg,#16161c,#6e1424)"><img src="https://i.ytimg.com/vi/tc2xpsewZjo/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">全日本社会人選手権</div></div><div class="tt">全日本社会人選手権</div><div class="tm"><span class="num">6</span>本 2026年 7/11〜7/12</div></a><a class="tile" href="/events/x-ibaraki-junior/2026/"><div class="thumb" style="background:linear-gradient(101deg,#7a1628,#26262e)"><img src="https://i.ytimg.com/vi/5jQg4RoQZDE/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">茨城ジュニア大会</div></div><div class="tt">茨城ジュニア大会</div><div class="tm"><span class="num">3</span>本 2026年 7/4</div></a><a class="tile" href="/events/x-east-kids/2026/"><div class="thumb" style="background:linear-gradient(128deg,#20202a,#45454f)"><img src="https://i.ytimg.com/vi/Z1rWNjGiOCE/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">東日本少年少女レスリング選手権大会</div></div><div class="tt">東日本少年少女レスリング選手権大会</div><div class="tm"><span class="num">6</span>本 2026年 6/28</div></a><a class="tile" href="/events/east-league/2026/"><div class="thumb" style="background:linear-gradient(119deg,#3c0e18,#9a1a30)"><img src="https://i.ytimg.com/vi/uok4sLchzbM/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" data-thumb><div class="ph">東日本学生リーグ戦</div></div><div class="tt">東日本学生リーグ戦</div><div class="tm"><span class="num">11</span>本 2026年 6/16〜6/18</div></a></div><button type="button" class="rbtn next" data-row="row2" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section><!--/pre:main--></main>
+<main class="wrap" id="main"><!--pre:main--><div class="loading">データを読み込んでいます</div><!--/pre:main--></main>
 
 <footer class="site-foot"><div class="wrap">
 <div class="foot-grid">
@@ -547,6 +645,6 @@ html.intro .jhero .hint{animation:jh-rise .7s .65s cubic-bezier(.2,.7,.2,1) both
 </div></footer>
 
 <script defer src="/assets/player.js?v=1"></script>
-<script src="/assets/top.js?v=13"></script>
+<script src="/assets/top.js?v=14"></script>
 </body>
 </html>

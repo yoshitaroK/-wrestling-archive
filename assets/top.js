@@ -274,10 +274,11 @@ function tileSeries(s){
 }
 // 横に流れる列。tiles は1枚ずつの HTML、more は見出しの右の「すべて見る」
 var shelfN = 0;
-function shelf(title, sub, tiles, more){
+// en は見出しの上に添える細い英字(日本語版だけ。飾りなので CSS の ::before で出し、読み上げには入れない)
+function shelf(title, sub, tiles, more, en){
   if(!tiles.length) return '';
   var id = 'row'+(++shelfN);
-  return '<section class="shelf" aria-labelledby="'+id+'-h"><div class="shelf-h"><h2 id="'+id+'-h">'+esc(title)+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'</h2>'+(more||'')+'</div>'+
+  return '<section class="shelf" aria-labelledby="'+id+'-h"><div class="shelf-h"><h2 id="'+id+'-h"'+(en && LANG==='ja' ? ' data-en="'+en+'"' : '')+'>'+esc(title)+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'</h2>'+(more||'')+'</div>'+
     '<div class="rowwrap"><button type="button" class="rbtn prev" data-row="'+id+'" data-dir="-1" tabindex="-1" aria-hidden="true">‹</button>'+
     '<div class="row" id="'+id+'">'+tiles.join('')+'</div>'+
     '<button type="button" class="rbtn next" data-row="'+id+'" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section>';
@@ -288,7 +289,7 @@ function updRow(r){
   if(t) w.style.setProperty('--rb-h', t.offsetHeight+'px');
   p.disabled = r.scrollLeft <= 4; n.disabled = r.scrollLeft + r.clientWidth >= r.scrollWidth - 4;
 }
-var SHELF_CATS = L([['大学','大学の大会'],['高校','高校の大会'],['社会人','社会人の大会'],['少年少女','少年少女の大会']],
+var SHELF_CATS = L([['大学','大学の大会','UNIVERSITY'],['高校','高校の大会','HIGH SCHOOL'],['社会人','社会人の大会','CLUB & CORPORATE'],['少年少女','少年少女の大会','KIDS']],
                    [['大学','University'],['高校','High school'],['社会人','Working adults'],['少年少女','Kids']]);
 
 /* ---------- 特集(トップの大きな写真。‹ › で切り替える) ---------- */
@@ -320,7 +321,9 @@ function buildFeature(){
   }
   function evSlide(e, kind){
     var s = S[e.series], vs = byEvent[e.id]||[], v = vs.filter(function(x){return x.k==='match';})[0] || vs[0];
+    // 大きく出すのは短い呼び名と年(short・year)。正式な大会名(off)はその下に小さく出す(日本語版だけ)
     return {kind:kind, href:eventPage(e.id)||linkTo(e.series,e.id), name:L(e.official_name||e.name, N(s?s.name:e.name)+' '+e.year),
+      short:N(s?s.name:e.name), year:e.year, off:L(e.official_name||e.name||'', ''), start:e.start,
       meta:'<span><span class="num">'+e.n+'</span>'+L('本',' videos')+'</span><span>'+esc(fmtRange(e.start,e.end))+'</span>'+(e.venue?'<span>'+esc(N(e.venue))+'</span>':''),
       photo:photoFor(e), vid:v?v.id:''};
   }
@@ -347,6 +350,10 @@ function buildFeature(){
   HERO.forEach(function(p,i){ if(!used[i] && out.length<5){ used[i]=1; out.push({kind:'photo', href:p.href, name:p.label, meta:'', photo:p, vid:''}); } });
   return out;
 }
+// 特集の印に添える細い英字(日本語版だけ)
+var FEAT_EN = {soon:'UPCOMING', live:'LIVE', result:'RESULTS', recent:'LATEST', upcoming:'UPCOMING', photo:'PHOTOS'};
+// 開催まであと何日か(日本時間の今日から数える。当日・過ぎた日は出さない)
+function daysTo(start){ if(!start) return 0; var t = jstDate(new Date().toISOString()); return Math.round((Date.parse(start.slice(0,10)+'T00:00:00Z') - Date.parse(t+'T00:00:00Z'))/864e5); }
 var FEAT_TXT = L({soon:['まもなく開催','大会公式サイトを見る'], live:['開催中','結果・速報を見る'], result:['結果が出ています','結果を見る'], recent:['最近開催された大会','配信一覧を見る'], upcoming:['これから開催される大会','配信予定を見る'], photo:['新しく載った写真','写真を見る']},
                  {soon:['Starting soon','See the official site'], live:['Happening now','See the live results'], result:['Results are in','See the results'], recent:['Latest tournament','Watch the streams'], upcoming:['Upcoming tournament','See the stream schedule'], photo:['New photos','See the photos']});
 function showFeature(i){
@@ -354,7 +361,11 @@ function showFeature(i){
   featI = (i + FEAT.length) % FEAT.length;
   var f = FEAT[featI], box = document.getElementById('feat'), img = document.getElementById('jhero-img'), cr = document.getElementById('jhero-credit');
   var t = FEAT_TXT[f.kind];
-  box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="badge-l'+(f.kind==='live'?' live':'')+'">'+t[0]+'</div><a class="fn" href="'+esc(f.href)+'">'+esc(f.name)+'</a>'+
+  var dn = (f.kind==='soon'||f.kind==='upcoming') ? daysTo(f.start) : 0;
+  box.innerHTML = '<div class="feat-main" aria-live="polite"><div class="fkick"><span class="badge-l'+(f.kind==='live'?' live':'')+'">'+L('<span class="en" aria-hidden="true">'+FEAT_EN[f.kind]+'</span>','')+t[0]+'</span>'+
+    (dn>0 ? '<span class="fcd">'+L('あと<b>'+dn+'</b>日','<b>'+dn+'</b> '+(dn===1?'day':'days')+' to go')+'</span>' : '')+'</div>'+
+    '<a class="fn" href="'+esc(f.href)+'">'+(f.short ? esc(f.short)+' <span class="fy">'+esc(f.year)+'</span>' : esc(f.name))+'</a>'+
+    (f.off && f.off!==f.short ? '<div class="foff">'+esc(f.off)+'</div>' : '')+
     (f.meta?'<div class="fm">'+f.meta+'</div>':'')+
     (f.ext ? '<div class="ctas"><a class="cta" href="'+esc(f.ext)+'" target="_blank" rel="noopener">'+(LANG==='ja' && f.extLabel ? esc(f.extLabel)+'を見る' : t[1])+' ↗</a><a class="cta2" href="'+esc(f.href)+'">'+L('大会ページへ','Tournament page')+'</a></div>'
            : '<a class="cta" href="'+esc(f.href)+'" tabindex="-1">'+t[1]+'</a>')+'</div>'+
@@ -385,27 +396,59 @@ function renderShelves(){
   var recent = V.filter(function(v){ return v.vs!=='unavailable'; }).slice().sort(function(a,b){ return a.p<b.p?1:-1; }).slice(0,12);
   var rich = DATA.series.filter(function(s){ return s.master && s.n>0; }).sort(function(a,b){ return b.n-a.n; }).slice(0,12);
   var h = '';
-  if(future.length) h += shelf(L('これから開催される大会','Upcoming tournaments'), L('配信枠が公開されています','Stream pages are already published'), future.map(tileEvent), '<a class="all" href="'+U('/events/calendar/')+'">'+L('カレンダーを見る ›','See the calendar ›')+'</a>');
-  h += shelf(L('最近開催された大会','Recent tournaments'), '', past.map(tileEvent), '<a class="all" href="'+U('/events/')+'">'+L('すべて見る ›','See all ›')+'</a>');
+  if(future.length) h += shelf(L('これから開催される大会','Upcoming tournaments'), L('配信枠が公開されています','Stream pages are already published'), future.map(tileEvent), '<a class="all" href="'+U('/events/calendar/')+'">'+L('カレンダーを見る ›','See the calendar ›')+'</a>', 'UPCOMING');
+  h += shelf(L('最近開催された大会','Recent tournaments'), '', past.map(tileEvent), '<a class="all" href="'+U('/events/')+'">'+L('すべて見る ›','See all ›')+'</a>', 'RESULTS');
+  h += newsBlock();
   h += shelf(L('最近追加した動画','Recently added videos'), L('YouTubeへの公開が新しい順','Newest on YouTube first'), recent.map(function(v){
     var s = v.s && S[v.s];
     return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, s?N(s.name):'')+'<div class="tt"'+L('',' lang="ja"')+'>'+esc(v.t)+'</div><div class="tm">'+L(esc(fmtDate(jstDate(v.p)))+'に公開','Published '+esc(fmtDate(jstDate(v.p))))+'</div></a>';
-  }));
+  }), '', 'NEW VIDEOS');
   // 区分ごとの列(開催日の新しい大会から)
   SHELF_CATS.forEach(function(c){
     var list = DATA.series.filter(function(s){ return s.n>0 && (s.groups||[]).indexOf(c[0])>=0; }).sort(function(a,b){ return (b.latest||'') < (a.latest||'') ? -1 : 1; }).slice(0,12);
-    if(list.length) h += shelf(c[1], '', list.map(tileSeries), '<button type="button" class="all" data-cat="'+esc(c[0])+'">'+L('すべて見る ›','See all ›')+'</button>');
+    if(list.length) h += shelf(c[1], '', list.map(tileSeries), '<button type="button" class="all" data-cat="'+esc(c[0])+'">'+L('すべて見る ›','See all ›')+'</button>', c[2]);
   });
   var tech = HOME.tech || [];
   if(tech.length) h += shelf(L('技術動画','Technique videos'), L('レスリングクラブが公開している技術・トレーニングの動画','Technique and training videos from wrestling clubs'), tech.map(function(v){
     return '<a class="tile" href="'+esc(yt(v.id))+'" target="_blank" rel="noopener">'+thumb(v.id, v.cat)+'<div class="tt"'+L('',' lang="ja"')+'>'+esc(v.t)+'</div><div class="tm">'+esc(v.cat)+'</div></a>';
-  }), '<a class="all" href="'+U('/technique/')+'">'+L('すべて見る ›','See all ›')+'</a>');
+  }), '<a class="all" href="'+U('/technique/')+'">'+L('すべて見る ›','See all ›')+'</a>', 'TECHNIQUE');
   var photos = HOME.photos || [];
   if(photos.length) h += shelf(L('写真','Photos'), L('大会で撮影された写真','Photos taken at tournaments'), photos.map(function(p){
     return '<a class="tile" href="'+esc(p.href)+'"><div class="thumb photo"><img src="'+esc(p.src)+'" alt="" loading="lazy" decoding="async"></div><div class="tt">'+esc(p.label)+'</div><div class="tm"><span class="num">'+p.n+'</span>'+L('枚',' photos')+'</div></a>';
-  }), '<a class="all" href="'+U('/photos/')+'">'+L('すべて見る ›','See all ›')+'</a>');
-  h += shelf(L('動画が充実している大会','Tournaments with the most videos'), L('収録本数の多い順','Most videos first'), rich.map(tileSeries));
+  }), '<a class="all" href="'+U('/photos/')+'">'+L('すべて見る ›','See all ›')+'</a>', 'PHOTOS');
+  h += shelf(L('動画が充実している大会','Tournaments with the most videos'), L('収録本数の多い順','Most videos first'), rich.map(tileSeries), '', 'MOST VIDEOS');
+  // すべての大会の一覧はトップには並べず、大会一覧のページへ送る(検索・絞り込みをしたときは、今までどおりこのページに結果を出す)
+  var nSer = DATA.series.filter(function(s){ return s.n>0; }).length;
+  h += '<p class="allbtn"><a href="'+U('/events/')+'">'+L('すべての大会を見る <b class="num">'+nSer+'</b>大会','See all <b class="num">'+nSer+'</b> tournaments')+'</a></p>';
   return h;
+}
+// 最新ニュース(日本語版だけ。assets/home.json の news)。1本目を大きく、残りは番号つきで並べる。写真は記事に付いているときだけ出す
+function newsBlock(){
+  var ns = HOME.news || []; if(!ns.length) return '';
+  function day(d){ var p = d.split('-'); return (+p[1])+'/'+(+p[2]); }
+  var a = ns[0];
+  return '<section class="tnews" aria-labelledby="tnews-h"><div class="shelf-h"><h2 id="tnews-h" data-en="NEWS">最新ニュース</h2><a class="all" href="/news/">すべて見る ›</a></div>'+
+    '<div class="tnews-in"><a class="tn-lead'+(a.img?'':' noimg')+'" href="/news/'+esc(a.slug)+'/">'+
+    (a.img ? '<img src="'+esc(a.img)+'" alt="" loading="lazy" decoding="async"'+(a.w&&a.h?' width="'+a.w+'" height="'+a.h+'"':'')+'>' : '')+
+    '<span class="tn-c">'+esc(a.category)+'・'+day(a.date)+'</span><span class="tn-t">'+esc(a.title)+'</span><span class="tn-l">'+esc(a.lead)+'</span></a>'+
+    '<ol class="tn-rank">'+ns.slice(1,6).map(function(x){ return '<li><a href="/news/'+esc(x.slug)+'/"><span class="tn-d" aria-hidden="true">'+x.date.slice(5).replace('-','.')+'</span><span class="tn-c">'+esc(x.category)+'<span class="sr">・'+day(x.date)+'</span></span><span class="tn-t">'+esc(x.title)+'</span></a></li>'; }).join('')+'</ol></div></section>';
+}
+// いちばん上の細い帯:開催中・これからの大会(NEXT)と、終わった大会(RESULT)。大会名・日付・リンクだけで、選手の名前は入れない
+function renderStrip(){
+  var box = document.getElementById('tstrip'); if(!box) return;
+  var today = jstDate(new Date().toISOString());
+  function d2(iso){ var p = iso.slice(0,10).split('-'); return p[1]+'.'+p[2]; }
+  function item(e, kind){
+    var s = S[e.series], lab = {live:'LIVE', next:'NEXT', res:'RESULT'}[kind];
+    var href = eventPage(e.id) || (kind==='res' ? linkTo(e.series,e.id) : U('/events/calendar/'));
+    return '<a class="ts '+kind+'" href="'+esc(href)+'"><span class="ts-k"><i>'+lab+'</i>'+d2(e.start)+(e.end&&e.end!==e.start?' – '+d2(e.end):'')+'</span><span class="ts-t">'+esc(N(s?s.name:e.name))+'</span></a>';
+  }
+  var ok = function(e){ return e.start && e.status!=='cancelled' && e.status!=='postponed'; };
+  var live = DATA.events.filter(function(e){ return ok(e) && e.start<=today && (e.end||e.start)>=today; });
+  var next = DATA.events.filter(function(e){ return ok(e) && e.start>today; }).sort(function(a,b){ return a.start<b.start?-1:1; }).slice(0, live.length?1:2);
+  var res = DATA.events.filter(function(e){ return ok(e) && (e.end||e.start)<today && (e.n>0 || (e.links && e.links.length && PAGES[e.id])); }).sort(function(a,b){ return a.start<b.start?1:-1; }).slice(0,4);
+  var h = live.map(function(e){ return item(e,'live'); }).concat(next.map(function(e){ return item(e,'next'); }), res.map(function(e){ return item(e,'res'); })).join('');
+  if(h) box.innerHTML = '<div class="wrap">'+h+'</div>'; else box.hidden = true;
 }
 function videoRow(v, showBasis){
   var meta = [];
@@ -711,8 +754,10 @@ function render(){
   renderStatus(list, st.q && (vr.hits.length || !list.length) ? vr.hits.length : null, ph.length);
   var anyFilter = st.q||st.y||st.c||st.sty||st.sc||st.k||st.all;
   var h = '';
-  document.getElementById('jhero').classList.toggle('compact', !!(anyFilter || st.s));
-  if(!anyFilter && !st.s) h += renderShelves();
+  // 検索・絞り込みをしているときは特集と上の帯をしまって、結果をすぐ見せる
+  document.documentElement.classList.toggle('nohero', !!(anyFilter || st.s));
+  document.getElementById('status').hidden = !(anyFilter || st.s || legacyNote);
+  if(!anyFilter && !st.s){ document.getElementById('main').innerHTML = renderShelves(); afterRender(); return; }
   h += playerSection(ph);
   h += resultsSection(rh);
   h += newsSection(nh);
@@ -812,6 +857,7 @@ themeLabel();
 
 readHash();
 if(st.s) pendingScroll = 's-'+st.s;
+renderStrip();
 FEAT = buildFeature(); showFeature(0);
 document.getElementById('feat').removeAttribute('data-wait');
 render();
