@@ -280,6 +280,8 @@ main{padding:10px 0 60px}
 .shelf{margin:0 0 30px}
 .shelf h2,.section h2{font-size:19px;font-weight:700;margin:0 0 12px;letter-spacing:.04em}
 .shelf .sub{font-weight:400;font-size:12px;color:var(--ink3);margin-left:8px}
+/* 棚の見出しの左に赤い線を引く(ニュースの記事やフッターの見出しと同じ形) */
+.shelf h2,.listhead h2{padding-left:11px;border-left:4px solid var(--pink-fill);line-height:1.35}
 .shelf-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .shelf-h h2{margin-bottom:4px}
 .shelf .all{flex:0 0 auto;border:0;background:none;padding:4px 0;font:inherit;font-size:13px;color:var(--ink2);text-decoration:none;cursor:pointer;white-space:nowrap}
@@ -458,6 +460,8 @@ footer p{margin:0 0 6px;max-width:76ch}
   .jcredit .jl{display:none}
   .hero .hn{font-size:21px}
   .row{grid-auto-columns:41%;gap:10px}
+  .shelf h2,.listhead h2{font-size:17.5px;padding-left:8px;border-left-width:3px}
+  .shelf .sub{display:block;margin:3px 0 0}
   .sbody{padding:2px 12px 16px}
   .shead .sthumb{flex-basis:112px}
   .shead{gap:10px;padding:10px}
