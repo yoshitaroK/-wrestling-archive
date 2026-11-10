@@ -612,6 +612,16 @@ PHOTO_CSS += """
 .pc-t{font-weight:700;font-size:15px;line-height:1.4}
 .pc-s{font-size:12.5px;color:var(--ink2)}
 .pc-c{font-size:11.5px;color:var(--ink3)}
+/* スマートフォンでは大会の写真を2列に並べる(1列だと1つが大きすぎて、30大会を見るのに長くスクロールすることになる) */
+@media (max-width:520px){
+  .page .pcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .page .pcards a{border-radius:10px;padding-bottom:10px}
+  .pc-img{margin-bottom:6px}
+  .pc-t,.pc-s,.pc-c{padding:0 9px}
+  .pc-t{font-size:13.5px}
+  .pc-s{font-size:11.5px}
+  .pc-c{font-size:10.5px}
+}
 .badge.ph{background:var(--pink-tint);color:var(--pink-deep)}
 .pback{margin:22px 0 32px;justify-content:center}
 .pmark{margin-left:6px;font-size:.9em;text-decoration:none}

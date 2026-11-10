@@ -1794,7 +1794,8 @@ PAGE_CSS = """
 .ptable th{background:var(--surface);font-weight:700}
 .crumbs ol{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:4px;font-size:12px;color:var(--ink3)}
 .crumbs li+li::before{content:"/";margin-right:4px;color:var(--line)}
-.crumbs a{color:var(--ink2);text-decoration:none}.crumbs a:hover{color:var(--pink)}
+/* 文字だけの小さなリンクは、上下に押せる範囲を広げる(並びは変わらない) */
+.crumbs a{color:var(--ink2);text-decoration:none;padding:7px 0}.crumbs a:hover{color:var(--pink)}
 .page h1{font-size:28px;font-weight:700;line-height:1.35;margin:0 0 8px;letter-spacing:.03em}
 .page h1 .yr-h{font-family:var(--num);font-weight:600;font-size:1.25em;color:var(--pink);letter-spacing:.02em}
 .lead{color:var(--ink2);margin:0 0 14px;max-width:70ch}
@@ -1827,6 +1828,7 @@ a.yr{text-decoration:none}
 .elink.primary{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
 .elink.primary:hover{filter:brightness(1.12)}
 .tosearch-line{margin:26px 0 0;font-size:13px}
+.tosearch-line a,.page .facts dd a{padding:6px 0}
 .page .section{margin-top:24px}
 .page .aliases{margin:0 0 6px}
 .occ{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
