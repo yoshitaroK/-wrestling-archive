@@ -1514,7 +1514,7 @@ def faq_page(data, series_list, ctx):
     for q, a, link in items:
         h += f'<section class="section faq"><h2>{e(q)}</h2><p>{e(a)}</p>'
         if link:
-            href = link[0] if link[0].startswith("/en/") or link[0] == "/" and i18n.en() else U(link[0])
+            href = link[0] if link[0].startswith("/en/") else U(link[0])
             h += f'<p><a href="{e(href)}">{e(link[1])} →</a></p>'
         h += "</section>"
     h += "</main>" + footer(ctx["as_of"])
