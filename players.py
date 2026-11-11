@@ -468,6 +468,100 @@ def winners_summary(ev, ctx):
     return len({p["id"] for p, _ in lst}), any(is_uww(r) for _, r in lst)
 
 
+STYLE_ORDER = ["フリースタイル", "グレコローマン", "女子"]
+
+
+def style_key(s):
+    """スタイルの並び順(フリースタイル → グレコローマン → 女子。新人戦はそのあと)。入賞者の欄と優勝者の欄で同じ順にする"""
+    base = s.replace("新人戦", "").strip()
+    return ("新人戦" in s, STYLE_ORDER.index(base) if base in STYLE_ORDER else 9, s)
+
+
+def winners_source(uww):
+    """入賞者の欄・優勝者の欄に出す出典の文(同じ文を2つの欄で使う。国際大会の回は UWW の公式結果)"""
+    if uww:
+        return L("世界レスリング連合(UWW)の公式結果から作っています。", "From the official results of United World Wrestling (UWW).")
+    return L("日本レスリング協会の入賞者一覧から作っています。", "From the Japan Wrestling Federation medalist list.")
+
+
+def champions(ev, ctx):
+    """開催回ページの頭に出す「掲載している優勝者」。[(スタイル, [(階級, [(選手, 成績の行)])])]。出さない回は []。
+    入賞者の欄(winners_html)と同じ一覧 ctx["winners"](players.load が「未成年=いいえ」「公開=はい」で選んだ人だけ)から
+    「1位」の行を取るだけで、高校生以下かどうかの判定をここで別に作らない。
+    1位の人が一覧にいない階級(高校生以下・掲載していない選手)は載せない。ほかの選手で埋めない(#314)"""
+    if not winners_summary(ev, ctx):
+        return []
+    by_style = defaultdict(lambda: defaultdict(list))
+    for p, r in ctx["winners"][ev["id"]]:
+        if (r.get("成績") or "").strip() == "1位":
+            by_style[r.get("スタイル", "")][r.get("階級", "")].append((p, r))
+    return [(st, [(w, sorted(by_style[st][w], key=lambda x: pname(x[0]))) for w in sorted(by_style[st], key=weight_key)])
+            for st in sorted(by_style, key=style_key)]
+
+
+def champions_count(ev, ctx):
+    return len({p["id"] for _, ws in champions(ev, ctx) for _, lst in ws for p, _ in lst})
+
+
+def champions_text(ev, ctx):
+    """優勝者の一覧を1つの文にしたもの(構造化データの説明文に入れる)。無ければ空文字。
+    例:「フリースタイル 57kg 小川 大和、61kg 長谷川 敏裕/グレコローマン 55kg …」"""
+    parts = []
+    for st, ws in champions(ev, ctx):
+        names = L("、", ", ").join(f"{w} {L('・', ' & ').join(pname(p) for p, _ in lst)}" for w, lst in ws)
+        parts.append(f"{N(st)} {names}".strip())
+    return L("/", "; ").join(parts)
+
+
+def champions_html(ev, ctx, bp):
+    """開催回ページの頭の「掲載している優勝者」の欄。すぐ下に入賞者の欄(winners_html)を続ける。
+    パソコンはスタイルを横に並べ、スマートフォンはスタイルの切り替え(ラジオボタンと CSS だけ。JS なし)で1つずつ見せる。
+    どのスタイルの名前も HTML にはいつも入っている(見せ方だけを CSS で変える)"""
+    summ = winners_summary(ev, ctx)
+    if not summ:
+        return ""
+    e = bp.e
+    groups = champions(ev, ctx)
+    full = winners_html(ev, ctx, bp)
+    if not groups:
+        # 1位の人が1人も載っていない回は、入賞者の欄だけを同じ場所に出す
+        return f'<section class="ev-champs" id="champions">{full}</section>'
+    lst = ctx["winners"][ev["id"]]
+    n, uww = summ
+    m = champions_count(ev, ctx)
+    # 出典:成績の行(player_results.csv)の「出典URL」。同じ URL は1回だけ、多いときは最初の6つ
+    urls = list(dict.fromkeys(r.get("出典URL", "") for _, r in lst if (r.get("出典URL") or "").startswith("http")))[:6]
+    src = ""
+    if len(urls) == 1:
+        src = f' <a href="{e(urls[0])}" target="_blank" rel="noopener">{L("出典", "Source")} ↗</a>'
+    elif urls:
+        src = " " + L("出典:", "Sources: ") + " ".join(
+            f'<a href="{e(u)}" target="_blank" rel="noopener">{i} ↗</a>' for i, u in enumerate(urls, start=1))
+    note = winners_source(uww) + L("掲載していない階級・選手もあります。", " Some weight classes and players are not listed.")
+    title = L("掲載している優勝者", "Champions listed here") if not uww else L("掲載している優勝者(日本代表)", "Team Japan champions listed here")
+    tabs = len(groups) > 1
+    h = (f'<section class="ev-champs" id="champions" aria-labelledby="champions-h"><div class="wc-head">'
+         f'<h2 id="champions-h">{title} <small>{L(f"{m}人", i18n.plural(m, "player"))}</small></h2>'
+         f'<p class="hint">{note}{src}</p></div>')
+    if tabs:
+        # 切り替えのラジオボタン(スマートフォンの幅だけで使う。ラベルは下の .wc-tabs)
+        h += "".join(f'<input class="wc-r" type="radio" name="wc-style" id="wc-{i}"{" checked" if i == 1 else ""}>'
+                     for i in range(1, len(groups) + 1))
+        h += '<div class="wc-tabs">' + "".join(
+            f'<label for="wc-{i}">{e(N(st))}<small>{len(ws)}</small></label>' for i, (st, ws) in enumerate(groups, start=1)) + "</div>"
+    h += '<div class="wc-cols">'
+    for st, ws in groups:
+        rows = ""
+        for w, ps in ws:
+            names = "".join(
+                f'<span class="wc-n"><a href="{U("/players/" + p["id"] + "/")}">{e(pname(p))}</a>'
+                f'{(" <small>" + e(N(p["club"])) + "</small>") if p["club"] else ""}</span>' for p, _ in ps)
+            rows += f'<li><span class="wc-w">{e(w)}</span><span class="wc-p">{names}</span></li>'
+        h += f'<div class="wc-col"><h3>{e(N(st))}</h3><ul>{rows}</ul></div>'
+    h += "</div>" + full + "</section>"
+    return h
+
+
 def winners_html(ev, ctx, bp):
     """開催回ページの「入賞者」の欄(公開している選手だけ)"""
     summ = winners_summary(ev, ctx)
@@ -478,13 +572,8 @@ def winners_html(ev, ctx, bp):
     by_style = defaultdict(lambda: defaultdict(list))
     for p, r in lst:
         by_style[r.get("スタイル", "")][r.get("階級", "")].append((p, r))
-    style_order = ["フリースタイル", "グレコローマン", "女子"]
-
-    def skey(s):
-        base = s.replace("新人戦", "").strip()
-        return ("新人戦" in s, style_order.index(base) if base in style_order else 9, s)
     body = ""
-    for st in sorted(by_style, key=skey):
+    for st in sorted(by_style, key=style_key):
         rows = ""
         for w in sorted(by_style[st], key=weight_key):
             cells = []
@@ -497,12 +586,10 @@ def winners_html(ev, ctx, bp):
     if uww:
         # オリンピック・世界選手権は入賞していない人も載せるので「日本代表」とする
         summary = L(f"日本代表の成績({n}人)", "Team Japan results (" + i18n.plural(n, "player") + ")")
-        hint = L("世界レスリング連合(UWW)の公式結果から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
-                 "From the official results of United World Wrestling (UWW). Select a name to open the player page. Some players are not listed.")
     else:
         summary = L(f"入賞者({n}人)", "Medalists (" + i18n.plural(n, "player") + ")")
-        hint = L("日本レスリング協会の入賞者一覧から作っています。選手名から選手ページへ移れます。掲載していない選手もいます。",
-                 "From the Japan Wrestling Federation medalist list. Select a name to open the player page. Some players are not listed.")
+    hint = winners_source(uww) + L("選手名から選手ページへ移れます。掲載していない選手もいます。",
+                                   " Select a name to open the player page. Some players are not listed.")
     return (f'<details class="more-box winners-box" id="winners"><summary>{summary}</summary><p class="hint">{hint}</p>' + body + "</details>")
 
 
