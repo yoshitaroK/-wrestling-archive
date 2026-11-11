@@ -82,6 +82,8 @@ OLYMPICS = {
     "オリンピック(パリ 1924)": ("パリ 1924 オリンピック代表", "Paris 1924 Olympian", "Olympic Games Paris 1924"),
 }
 OLYMPEDIA = "https://www.olympedia.org/"
+# 選手一覧の「オリンピックに出た選手」で、畳まずに出す人数(新しい大会・良い成績の順で先頭から)
+OLY_FIRST = 8
 # 1968年までの階級の呼び方(player_results.csv の階級)→ 英語
 WEIGHT_EN = {"フライ級": "Flyweight", "バンタム級": "Bantamweight", "フェザー級": "Featherweight",
              "ライト級": "Lightweight", "ウェルター級": "Welterweight"}
@@ -595,7 +597,11 @@ def featured_html(players, e):
              f"Wrestlers who competed at the events listed on this site (Olympic Games: {games_en}; World Championships: {span}), from the official results of United World Wrestling (UWW) and, for Olympic medalists up to 2016, Olympedia. Some wrestlers are not listed.") + "</p>")
     if oly:
         h += (f'<h3>{L("オリンピック", "Olympic Games")}<small>{L(f"{len(oly)}人", i18n.plural(len(oly), "wrestler"))}</small></h3>'
-              f'<ul class="px-fl">{"".join(x[1] for x in oly)}</ul>')
+              f'<ul class="px-fl">{"".join(x[1] for x in oly[:OLY_FIRST])}</ul>')
+        if len(oly) > OLY_FIRST:  # 人数が多いので、残りは畳んでおく(押すと開く)
+            rest = oly[OLY_FIRST:]
+            more = L(f"オリンピックに出たほかの選手({len(rest)}人)", f"More Olympians ({i18n.plural(len(rest), 'wrestler')})")
+            h += f'<details class="px-more"><summary>{more}</summary><ul class="px-fl">{"".join(x[1] for x in rest)}</ul></details>'
     if wc:
         more = L(f"世界選手権に出た選手({len(wc)}人)", f"World Championships ({i18n.plural(len(wc), 'wrestler')})")
         note = L("上のオリンピックに出た選手は除いています。", "Excluding the Olympians above.") if oly else ""
