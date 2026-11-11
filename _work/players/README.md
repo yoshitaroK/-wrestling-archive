@@ -97,6 +97,13 @@
 - players.csv にいないので足していない人:(UWW の表記のまま)パリ 2024 の Tsugumi SAKURAI、東京 2020 の TAKAHASHI Yuki・OTOGURO Takuto・OTOGURO Keisuke・Shohei YABIKU・Mayu SHIDOCHI MUKAIDA・Risako KINJO・KAWAI Yukako・DOSHO Sara・MINAGAWA Hiroe
   (選手ページは協会の入賞者一覧から作っているので、最近の国内大会に出ていない人はいない)
 
+## 2016年までのオリンピックのメダリスト(2026-11-12、運営者の依頼)
+- 対象:1924年パリ〜2016年リオの日本のメダリスト全員(70件)。2020・2024 は上の UWW の行のまま(東京 2020 の乙黒 拓斗さんだけ、ローマ字の誤りで UWW の行が無かったので足した)
+- 出典:Olympedia(https://www.olympedia.org/countries/JPN/sports/WRE)。各行の出典URLは Olympedia の種目の結果のページ(https://www.olympedia.org/results/…)。作業環境のネットワーク設定で `www.olympedia.org` を許可している
+- 選手ページが無かった45人は players.csv に手で足した(所属・ふりがなは空。ローマ字は Olympedia の綴り)。手で足した選手と成績は `make_players_csv.py` で作り直しても残る
+- 大会名は「オリンピック(ロンドン)」のように開催地。パリ 1924・東京 1964 は 2024・2020 と分けるため年を付ける。1968年までの階級は「フェザー級」などの名前のまま(英語版は players.py の WEIGHT_EN)
+- 結婚で姓が変わって2人に分かれていた向田 真優 → 志土地 真優、川井 梨紗子 → 金城 梨紗子 を1人にまとめた(ALIAS)。前の姓は別表記に入れた
+
 ## 世界選手権・U23世界選手権の成績(4回目の /grill-me で決定)
 - 出典:オリンピックと同じく UWW の公式結果の冊子。入れた大会は `uww_results.py` の GAMES
   - 世界選手権:2021(オスロ)・2022(ベオグラード)・2023(ベオグラード)・2025(ザグレブ)・2026(アスタナ)
