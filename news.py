@@ -257,7 +257,36 @@ def build(root, ctx, bp, report):
             "@type": "NewsArticle", "headline": a["title"], "datePublished": a["date"], "description": desc,
             "url": bp.SITE + path, "mainEntityOfPage": bp.SITE + path, "inLanguage": "ja",
             "author": {"@type": "Organization", "name": bp.SITE_NAME, "url": bp.SITE + "/about/"},
-            "publisher": {"@type": "Organization", "name": bp.SITE_NAME}}]}
+            "publisher": {"@id": bp.ORG_ID}}]}
+        # 発行者は、同じページの @graph にある運営者(Organization。bp.head が足す)を @id で指す。
+        # 記事の区分・タグ・どの大会の話か・出てくる選手も、機械で読めるようにする(ページの横の欄と同じ範囲)
+        art_ld = jsonld["@graph"][1]
+        if a.get("category"):
+            art_ld["articleSection"] = a["category"]
+        if a.get("tags"):
+            art_ld["keywords"] = [str(t) for t in a["tags"]]
+        eid = a.get("event_id")
+        if eid and eid in ctx["slugs"]:
+            ev = ctx["events_by_id"][eid]
+            s = ctx["S"].get(ev["series"], {"id": ev["series"], "name": ev["name"]})
+            eurl = bp.SITE + "/events/" + ctx["slugs"][eid] + "/"
+            ename = f"{bp.event_name(ev, s)} {ev['year']}"
+            venue = bp.N(ev.get("venue"))
+            if ev.get("start") and venue and not ev.get("derived"):
+                # 開催回のページの SportsEvent と同じ項目(開催日・会場)。そろわない回は、ページへの参照だけにする
+                about = {"@type": "SportsEvent", "name": ename, "sport": "Wrestling", "url": eurl,
+                         "startDate": ev["start"], "endDate": ev.get("end") or ev["start"],
+                         "eventStatus": "https://schema.org/" + bp.SCHEMA_STATUS.get(bp.view_status(ev), "EventScheduled"),
+                         "location": {"@type": "Place", "name": venue}}
+                addr = bp.venue_address(ev.get("venue") or "", (ev.get("organizers") or {}).get("会場", ""))
+                if addr:
+                    about["location"]["address"] = addr
+            else:
+                about = {"@type": "WebPage", "name": ename, "url": eurl}
+            art_ld["about"] = about
+        # 出てくる選手は、横の欄「記事に出てくる選手」と同じ一覧(選手ページがある人だけ。高校生以下は入らない)
+        if players:
+            art_ld["mentions"] = [{"@type": "Person", "name": p["name"], "url": bp.SITE + "/players/" + p["id"] + "/"} for p in players]
         # 記事の元になった発表・記事(news.json の sources)。AI や検索エンジンが出典を機械で読めるようにする
         srcs = [s for s in a.get("sources") or [] if isinstance(s, str) and s.startswith("http")]
         if srcs:
