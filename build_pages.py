@@ -652,7 +652,7 @@ def event_page(ev, ctx):
             adds = ([f"日本代表{n_w}人の成績を掲載。"] if uww else
                     ([f"入賞者{n_w}人(うち優勝者{n_c}人)を掲載。"] if n_c else []) + [f"入賞者{n_w}人を掲載。"])
             desc += next((a for a in adds if len(desc) + len(a) <= 120), "")
-    dated =re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
+    dated = re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (series_name(s), spath),
               (year_label(ev["year"]) + ((L("(", " (") + (fmt_date(ev['start'])[5:] if not i18n.en() else fmt_date(ev['start']).rsplit(',', 1)[0]) + ")") if dated else ""), None)]
 
@@ -1978,11 +1978,11 @@ a.yr{text-decoration:none}
 .ev-k dt{font-size:11.5px;color:var(--ink3);letter-spacing:.06em}
 .ev-k dd{margin:2px 0 0;font-size:16px;font-weight:700;line-height:1.5;word-break:break-word}
 .ev-k dd a{font-weight:700}
-.ev-k dd .calm{display:inline-block;margin-left:8px;padding:4px 0;font-size:12px;font-weight:400;color:var(--ink3);white-space:nowrap}
+.ev-k dd .calm{display:inline-block;padding:4px 0;font-size:12px;font-weight:400;color:var(--ink3);white-space:nowrap}
 .ev-k .sessions{list-style:none;margin:0;padding:0;font-size:14px;font-weight:500}
 .ev-jump{display:flex;gap:6px;overflow-x:auto;margin:14px 0 0;padding:2px 2px 4px;scrollbar-width:thin}
-.ev-jump a{flex:0 0 auto;display:inline-flex;align-items:baseline;gap:5px;min-height:36px;box-sizing:border-box;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg2);color:var(--ink);font-size:13px;text-decoration:none}
-.ev-jump a b{font-family:var(--num);font-weight:600;font-size:15px;color:var(--ink3)}
+.ev-jump a{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;min-height:36px;box-sizing:border-box;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg2);color:var(--ink);font-size:13px;text-decoration:none}
+.ev-jump a b{font-family:var(--num);font-weight:600;font-size:14px;line-height:1;color:var(--ink3)}
 .ev-jump a:hover{border-color:var(--pink)}
 .ev-anchor,.ev-champs,#ev-news,#related,#sources{scroll-margin-top:84px}
 .ev-champs{position:relative;margin-top:22px}
