@@ -1426,44 +1426,105 @@ def tech_pages(tech, cats, shown, ctx):
 
 # ---------------------------------------------------------------- 大会一覧・404
 
+# 大会一覧で、大会を分ける種別の順。大会データの groups のうち、この順でいちばん先に出てくるものの欄に入れる
+INDEX_GROUPS = [("一般", "OPEN"), ("大学", "UNIVERSITY"), ("社会人", "WORKING ADULTS"), ("高校", "HIGH SCHOOL"), ("中学", "JUNIOR HIGH"),
+                ("少年少女", "KIDS"), ("年代別", "AGE GROUP"), ("女子", "WOMEN"), ("マスターズ", "MASTERS"), ("ビーチ", "BEACH")]
+
+
 def index_page(ctx, series_list):
+    """大会一覧(/events/)。#319 で作り替え:頭(英字+大きい題+数字の帯)→ 種別の入口 → 最近開催された大会(絵つき)→ 種別ごとの一覧(全大会)。
+    高校生以下が出る大会は、大会ページと同じく試合の絵を出さず、年の数字の板にする"""
     path = "/events/"
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), None)]
     total = sum(x.get("n", 0) for x in series_list)
-    title = L(f"大会一覧({len(series_list)}大会・{total}本)|{SITE_NAME}", f"Tournaments ({len(series_list)} tournaments, {total} videos) | {site_name()}")
-    desc = L(f"Japan Wrestling Channel で配信されたレスリング大会{len(series_list)}大会の一覧。天皇杯全日本選手権、明治杯、インカレ、インターハイなどの配信を開催年ごとに探せます。",
-             f"{len(series_list)} Japanese wrestling tournaments streamed by Japan Wrestling Channel and others, including the Emperor's Cup, Meiji Cup, Inter-College and Inter-High. Browse streams by year.")
-    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": L("大会一覧", "Tournaments"), "url": SITE + U(path),
-        "hasPart": [{"@type": "WebPage", "name": N(x["name"]), "url": SITE + U(f"/events/{x['id']}/")} for x in series_list]}]}
-    h = head(title, desc, path, "", jsonld, ctx["css"])
-    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{L('大会一覧', 'Tournaments')}</h1>"
-    h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。開催日の新しい順に並んでいます。スタイルや開催年での絞り込みは検索ページで行えます。",
-                                  f"{len(series_list)} tournaments with videos, most recent first. Use the search page to filter by style or year.")) + '</p>'
-    h += '<ul class="egrid">'
+    n_ed = sum(len([v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]) for x in series_list)
+    title = L(f"レスリング大会一覧({len(series_list)}大会・動画{total}本)|{SITE_NAME}",
+              f"Japanese Wrestling Tournaments ({len(series_list)}, {total} videos) | {site_name()}")
+    desc = L(f"日本のレスリング大会{len(series_list)}大会の一覧。天皇杯・明治杯・インカレ・インターハイから少年少女の大会まで、種別ごとに開催日・会場と配信動画{total}本を探せます。",
+             f"{len(series_list)} Japanese wrestling tournaments, from the Emperor's Cup, Meiji Cup, Inter-College and Inter-High to kids' events. "
+             f"Browse dates, venues and {total} videos by category.")
+
+    def cat_of(x):
+        gs = x.get("groups") or []
+        return next((g for g, _ in INDEX_GROUPS if g in gs), "その他")
+
+    cats = {}
     for x in series_list:
+        cats.setdefault(cat_of(x), []).append(x)
+    order = [(g, en) for g, en in INDEX_GROUPS if g in cats] + ([("その他", "OTHER")] if "その他" in cats else [])
+
+    def cat_id(g):
+        return "g-" + str([c for c, _ in INDEX_GROUPS + [("その他", "")]].index(g) + 1)
+
+    def info(x):
         evs = [v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]
         span = year_span([v["year"] for v in evs], L("開催年を確認中", "Years TBC"))
-        tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in x.get("groups") or [])
-        if x.get("scope") == "海外":
-            tags += f'<span class="tag">{L("海外", "Overseas")}</span>'
         has_photo = f'/events/{x["id"]}/' in ctx["photo_paths"] or any(
             f'/events/{ctx["slugs"][v["id"]]}/' in ctx["photo_paths"] for v in ctx["events_by_series"].get(x["id"], []) if v["id"] in ctx["slugs"])
-        # カードの絵は、いちばん新しい開催回の試合の動画のサムネイル
+        return evs, span, has_photo
+
+    items = [{"@type": "ListItem", "position": i + 1, "url": SITE + U(f"/events/{x['id']}/"), "name": N(x["name"])} for i, x in enumerate(series_list)]
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
+        "@type": "CollectionPage", "name": L("レスリング大会一覧", "Japanese wrestling tournaments"), "url": SITE + U(path),
+        "mainEntity": {"@type": "ItemList", "name": L("大会一覧", "Tournaments"), "numberOfItems": len(items), "itemListElement": items}}]}
+    h = head(title, desc, path, "", jsonld, ctx["css"])
+    h += '<main id="content" class="wrap page sx">' + breadcrumb_html(crumbs)
+
+    # ---- 頭
+    h += (f'<header class="sx-hero"><p class="sx-eye"><span class="sx-en">TOURNAMENTS</span></p>'
+          f'<h1>{L("レスリング大会一覧", "Wrestling Tournaments in Japan")}</h1>')
+    h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。上は最近開催された大会、下は種別(一般・大学・高校・少年少女など)ごとの一覧です。大会を選ぶと、開催年ごとの日程・会場・動画を見られます。",
+                                  f"{len(series_list)} tournaments with videos. Recently held tournaments come first, then every tournament by category. "
+                                  f"Pick one to see dates, venues and videos for each year.")) + "</p>"
+    stats = [(L("大会", "Tournaments"), f'<b class="num">{len(series_list)}</b>{L("大会", "")}'),
+             (L("動画のある開催回", "Editions with videos"), f'<b class="num">{n_ed}</b>{L("回", "")}'),
+             (L("動画", "Videos"), f'<b class="num">{total}</b>{L("本", "")}')]
+    h += '<dl class="sx-stats">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in stats) + "</dl></header>"
+
+    # ---- 種別の入口
+    doors = [f'<a href="#ix-recent">{L("最近の大会", "Recent")}</a>']
+    for g, _ in order:
+        doors.append(f'<a href="#{cat_id(g)}">{e(N(g) if g != "その他" else L("その他", "Other"))}<b class="num">{len(cats[g])}</b></a>')
+    doors.append(f'<a href="{U("/events/calendar/")}">{L("大会カレンダー", "Calendar")}</a>')
+    h += f'<nav class="sx-doors" aria-label="{L("種別から探す", "Browse by category")}">{"".join(doors)}</nav>'
+
+    # ---- 最近開催された大会(絵つき。新しい順に8つ)
+    h += f'<section class="section sx-sec" id="ix-recent">{sx_h2("最近開催された大会", "Recently held", "RECENT")}<ul class="egrid">'
+    for x in series_list[:8]:
+        evs, span, has_photo = info(x)
+        tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in x.get("groups") or [] if g != "未確認")
+        latest = max(evs, key=lambda v: v.get("start") or f"{v['year']}-00-00") if evs else None
         cover = ""
-        for ev in sorted(evs, key=lambda v: v.get("start") or "", reverse=True):
-            vs = ctx["by_event"].get(ev["id"], [])
-            m = next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
-            if m:
-                cover = m["id"]
-                break
-        cover = cover or next((v["id"] for v in ctx["loose_by_series"].get(x["id"], [])), "")
-        th = thumb(cover) if cover else '<div class="thumb"></div>'
+        if set(x.get("groups") or []) <= SERIES_COVER_GROUPS and x.get("groups"):
+            for ev in sorted(evs, key=lambda v: v.get("start") or "", reverse=True):
+                vs = ctx["by_event"].get(ev["id"], [])
+                m = next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
+                if m:
+                    cover = m["id"]
+                    break
+        if cover:
+            th = thumb(cover)
+        else:
+            th = f'<div class="thumb ix-plate"><span class="num">{latest["year"] if latest else ""}</span></div>'
         if has_photo:
             th = th[:-len("</div>")] + photo_mark() + "</div>"
         h += (f'<li><a class="tile" href="{U("/events/" + x["id"] + "/")}">{th}<span class="tt">{e(N(x["name"]))}</span>'
               f'<span class="tm"><span><b class="num">{x.get("n", 0)}</b>{L("本", " videos")}</span><span>{e(span)}</span>{tags}</span></a></li>')
-    h += "</ul></main>" + footer(ctx["as_of"])
+    h += "</ul></section>"
+
+    # ---- 種別ごとの一覧(すべての大会)
+    for g, en in order:
+        label = N(g) if g != "その他" else L("その他", "Other")
+        h += (f'<section class="section sx-sec" id="{cat_id(g)}">'
+              f'{sx_h2(f"{g}の大会({len(cats[g])})", f"{label} ({len(cats[g])})", en)}<ul class="sx-tl ix-list">')
+        for x in cats[g]:
+            evs, span, has_photo = info(x)
+            mark = photo_mark() if has_photo else ""
+            h += (f'<li><a href="{U("/events/" + x["id"] + "/")}"><span class="ob"><span class="ix-n">{e(N(x["name"]))}{mark}</span>'
+                  f'<span class="ov">{e(span)}{e(L("・", ", ") + L(str(len(evs)) + "開催回", i18n.plural(len(evs), "edition"))) if evs else ""}</span></span>'
+                  f'<span class="on"><b class="num">{x.get("n", 0)}</b>{L("本", "")}</span></a></li>')
+        h += "</ul></section>"
+    h += "</main>" + footer(ctx["as_of"])
     return path, h
 
 
@@ -2193,6 +2254,12 @@ a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);backgr
   .sx-tl{grid-template-columns:minmax(0,1fr);gap:6px}
   .sx-nl a{grid-template-columns:minmax(0,1fr);gap:0}
 }
+/* seo: 大会一覧(#319)。大会ページと同じ頭・入口・見出しに、種別ごとの一覧 */
+.ix-plate{display:grid;place-items:center;background:linear-gradient(135deg,var(--navy),var(--navy-2))}
+.ix-plate .num{font-size:clamp(44px,6vw,64px);line-height:1;color:var(--on-navy);letter-spacing:.03em}
+.sx-tl.ix-list a{grid-template-columns:minmax(0,1fr) auto}
+.ix-list .ix-n{font-size:14.5px;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
+.ix-list .ix-n .pmark{margin-left:6px;font-size:12px}
 """
 
 
