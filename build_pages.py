@@ -952,43 +952,163 @@ def series_summary(s, evs, name):
     return first
 
 
+# 大会(シリーズ)ページの「最新の開催回」に、試合動画の絵を大きく出してよい区分。
+# 高校生以下が出る大会(高校・中学・少年少女・年代別など)は、一人を大きく取り上げないように、絵を出さず年の数字の板にする
+SERIES_COVER_GROUPS = {"一般", "大学", "社会人", "マスターズ"}
+
+
+def sx_h2(ja, en, eye):
+    """大会ページ・大会一覧の欄の見出し。日本語版は上に細い英字(Teko)を添える(英語版は見出しが英語なので添えない)"""
+    eye_attr = "" if i18n.en() else f' data-en="{e(eye)}"'
+    return f'<h2 class="sx-h"{eye_attr}>{e(L(ja, en))}</h2>'
+
+
+def series_event_ld(x, s, ctx, series_id=None):
+    """大会ページの構造化データに入れる、各回の SportsEvent。名前・URL・@id は開催回ページ(event_page)と同じにする。
+    日付が推定の回・開催日が分からない回・ページが無い回は入れない(None)"""
+    if x.get("derived") or not x.get("start") or x["id"] not in ctx["slugs"]:
+        return None
+    url = SITE + U(f"/events/{ctx['slugs'][x['id']]}/")
+    day = ""
+    if x["id"] in ctx.get("same_name", ()):
+        day = fmt_date(x["start"])[5:] if not i18n.en() else fmt_date(x["start"]).rsplit(",", 1)[0]
+    se = {"@type": "SportsEvent", "@id": url + "#event", "name": f"{event_name(x, s)} {x['year']}" + (L(f"({day})", f" ({day})") if day else ""),
+          "sport": "Wrestling", "url": url, "startDate": x["start"], "endDate": x.get("end") or x["start"],
+          "eventStatus": "https://schema.org/" + SCHEMA_STATUS.get(view_status(x), "EventScheduled")}
+    venue = N(x.get("venue"))
+    if venue:
+        se["location"] = {"@type": "Place", "name": venue}
+        addr = venue_address(x.get("venue") or "", "", en=i18n.en())
+        if addr:
+            se["location"]["address"] = addr
+    if series_id:
+        se["superEvent"] = {"@id": series_id}
+    return se
+
+
+def series_ld(s, evs, name, path, alias, ctx):
+    """大会ページの構造化データ:大会そのもの(EventSeries)と、各回(SportsEvent)。大会データにあることだけを書く。
+    EventSeries の startDate・endDate は、日付が分かっているいちばん古い回の初日・いちばん新しい回の最終日。location は各回の会場(新しい順に5つまで)"""
+    url = SITE + U(path)
+    sid = url + "#series"
+    subs = [se for se in (series_event_ld(x, s, ctx, sid) for x in evs) if se]
+    if not subs:
+        return None
+    ser = {"@type": "EventSeries", "@id": sid, "name": name, "url": url, "about": {"@type": "Thing", "name": L("レスリング", "Wrestling")},
+           "startDate": min(se["startDate"] for se in subs), "endDate": max(se["endDate"] for se in subs)}
+    names = ([s["name"]] if name != s["name"] else []) + alias
+    if names:
+        ser["alternateName"] = names
+    places, seen = [], set()
+    for se in sorted(subs, key=lambda se: se["startDate"], reverse=True):
+        loc = se.get("location")
+        if loc and loc["name"] not in seen:
+            seen.add(loc["name"])
+            places.append(loc)
+    if places:
+        ser["location"] = places[:5]
+    if not i18n.en():
+        org = next(((x.get("organizers") or {}).get("主催") for x in reversed(evs) if (x.get("organizers") or {}).get("主催")), "")
+        if org:
+            ser["organizer"] = [{"@type": "Organization", "name": o.strip()} for o in re.split(r"[、,]", org) if o.strip()]
+    ser["subEvent"] = subs
+    return ser
+
+
 def series_page(s, ctx):
+    """大会(シリーズ)ページ(#319)。頭(英字+大きい題+数字の帯)→ 最新の開催回を大きく → 入口のボタン → 年表 → 大会について → ニュース → 写真。
+    選手の名前は出さない。出すのは大会データにあること(開催日・会場・本数)と、記事の見出しだけ"""
     path = f"/events/{s['id']}/"
     evs = ctx["events_by_series"].get(s["id"], [])
     with_v = [x for x in evs if x.get("n")]
     years = [x["year"] for x in with_v]
     span = year_span(years)
+    span_all = year_span([x["year"] for x in evs])
     loose = sorted(ctx["loose_by_series"].get(s["id"], []), key=lambda v: v.get("p") or "", reverse=True)
     total = s.get("n", 0)
     name = series_name(s)
+    slugs = ctx["slugs"]
+    sl = status_label()
+    import champions
+    has_champ = s["id"] in ctx.get("champions", {})
+
+    def cover_of(x):
+        vs = ctx["by_event"].get(x["id"], [])
+        return next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
+
+    def ev_url(x):
+        return U("/events/" + slugs[x["id"]] + "/")
+
+    def has_photo(x):
+        return x["id"] in slugs and f'/events/{slugs[x["id"]]}/' in ctx["photo_paths"]
+
     first_v = None
     for x in reversed(with_v):
-        vs = ctx["by_event"].get(x["id"], [])
-        first_v = next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
+        first_v = cover_of(x)
         if first_v:
             break
 
+    # いちばん新しい開催回(ページがある回のうち、開催済み・開催中のいちばん新しい回)と、これから開く回
+    order = sorted(evs, key=lambda x: (x.get("start") or f"{x['year']}-00-00"))
+    paged = [x for x in order if x["id"] in slugs]
+    done = [x for x in paged if view_status(x) not in ("scheduled", "cancelled", "postponed")]
+    feat = done[-1] if done else None
+    nxt = next((x for x in order if view_status(x) == "scheduled"), None)
+    feat_dated = bool(feat and feat.get("start") and not feat.get("derived"))
+
     alias = [a for a in (s.get("aliases") or []) if a != s["name"]]
+    summary = series_summary(s, evs, name)
+    # title:大会名を先頭に、検索される言葉(レスリング・動画・歴代優勝者・日程)を続ける。
+    # 「歴代優勝者」は /champions/ のページがある大会だけ、「日程」は公式の開催日が分かっている大会(master)だけに入れる
     if i18n.en():
-        title = f"{name} – Video Archive ({span}, {i18n.plural(total, 'video')}) | {site_name()}"
-        desc = f"{i18n.plural(total, 'stream/video', 'streams/videos')} from the {name}, organized by year. {span + ', ' if span else ''}{i18n.plural(len(with_v), 'edition')}." + (
-            f" Japanese name: {s['name']}." if name != s["name"] else "")
+        words = [w for w, ok in (("Videos", total), ("Champions", has_champ), ("Dates", s.get("master")), ("Photos", not total)) if ok]
+        tail = (", ".join(words[:-1]) + " & " + words[-1]) if len(words) > 1 else "".join(words)
+        title = f"{name} – {'' if 'wrestling' in name.lower() else 'Wrestling '}{tail} | {site_name()}"
+        if total and s.get("master"):
+            desc = (summary + " " if summary else "") + (
+                f"Dates, venues and {i18n.plural(total, 'video')} for {i18n.plural(len(evs), 'edition')} of the {name} ({span_all}), organized by year.")
+            if feat_dated:
+                desc += f" Latest: {fmt_range(feat.get('start'), feat.get('end'))}" + (f", {N(feat.get('venue'))}." if feat.get("venue") else ".")
+        elif total:
+            desc = f"{i18n.plural(total, 'stream/video', 'streams/videos')} from the {name}, organized by year. {span + ', ' if span else ''}{i18n.plural(len(with_v), 'edition')}."
+        else:
+            desc = f"Editions, photos and links for the {name}. No videos yet."
+        if name != s["name"] and len(desc) < 150:
+            desc += f" Japanese name: {s['name']}."
     else:
-        title = f"{s['name']} 配信動画アーカイブ({span}・{total}本)|{SITE_NAME}"
-        desc = f"{s['name']}の配信動画{total}本を開催年ごとに掲載。{span + '、' if span else ''}{len(with_v)}開催回。" + (f"別名:{'、'.join(alias[:4])}。" if alias else "")
-    if not total:
-        # 配信動画がまだない大会(写真・アルバムや結果のリンクだけの開催回がある)
-        title = L(f"{s['name']}|{SITE_NAME}", f"{name} | {site_name()}")
-        desc = L(f"{s['name']}の開催年ごとの情報・写真。配信動画はまだありません。", f"Editions, photos and links for the {name}. No videos yet.")
+        words = [w for w, ok in (("動画", total), ("歴代優勝者", has_champ), ("日程", s.get("master")), ("写真", not total)) if ok]
+        title = f"{s['name']}{' ' if 'レスリング' in s['name'] else '(レスリング)'}{'・'.join(words)}|{SITE_NAME}"
+        if total and s.get("master"):
+            desc = summary or f"{s['name']}{'' if 'レスリング' in s['name'] else '(レスリング)'}の開催日・会場と配信動画。"
+            desc += f"{span_all}の{len(evs)}開催回と、配信動画{total}本を年ごとに掲載。"
+            if feat_dated:
+                desc += f"最新は{fmt_range(feat.get('start'), feat.get('end'))}" + (f"、{feat['venue']}。" if feat.get("venue") else "。")
+        elif total:
+            desc = f"{s['name']}の配信動画{total}本を開催年ごとに掲載。{span + '、' if span else ''}{len(with_v)}開催回。"
+        else:
+            # 配信動画がまだない大会(写真・アルバムや結果のリンクだけの開催回がある)
+            desc = f"{s['name']}の開催年ごとの情報・写真。配信動画はまだありません。"
+        if alias and len(desc) < 100:
+            desc += f"別名:{'、'.join(alias[:3])}。"
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (name, None)]
-    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": L(f"{s['name']} 配信動画アーカイブ", f"{name} video archive"), "url": SITE + U(path),
-        "hasPart": [{"@type": "WebPage", "name": f"{name} {year_label(x['year'])}", "url": SITE + U(f"/events/{ctx['slugs'][x['id']]}/")}
-                    for x in with_v if x["id"] in ctx["slugs"]]}]}
+    page_ld = {"@type": "CollectionPage", "name": L(f"{s['name']} 配信動画アーカイブ", f"{name} video archive"), "url": SITE + U(path),
+               "hasPart": [{"@type": "WebPage", "name": f"{name} {year_label(x['year'])}", "url": SITE + U(f"/events/{slugs[x['id']]}/")}
+                           for x in with_v if x["id"] in slugs]}
+    graph = [breadcrumb_ld(crumbs), page_ld]
+    ser_ld = series_ld(s, evs, name, path, alias, ctx)
+    if ser_ld:
+        page_ld["mainEntity"] = {"@id": ser_ld["@id"]}
+        graph.append(ser_ld)
+    jsonld = {"@context": "https://schema.org", "@graph": graph}
 
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{first_v['id']}/hqdefault.jpg" if first_v else "", jsonld, ctx["css"])
-    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs)
-    h += f"<h1>{e(name)}</h1>"
+    h += '<main id="content" class="wrap page sx">' + breadcrumb_html(crumbs)
+
+    # ---- 頭:細い英字+大きい題+要約+数字の帯
+    tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in s.get("groups") or [] if g != "未確認")
+    if s.get("scope") == "海外":
+        tags += f'<span class="tag">{L("海外", "Overseas")}</span>'
+    h += f'<header class="sx-hero"><p class="sx-eye"><span class="sx-en">TOURNAMENT</span>{tags}</p><h1>{e(name)}</h1>'
     if i18n.en():
         lead = f"{i18n.plural(total, 'stream/video', 'streams/videos')} published on YouTube, organized by year." + (
             f" Videos are available for {i18n.plural(len(with_v), 'edition')} ({span})." if with_v else "")
@@ -1002,7 +1122,6 @@ def series_page(s, ctx):
             lead = "この大会の配信動画はまだありません。開催年を選ぶと、写真や結果のリンクを見られます。"
         if not s.get("master"):
             lead += "この大会の公式の開催日・会場は確認中です。"
-    summary = series_summary(s, evs, name)
     if summary:
         lead = summary + L("", " ") + lead
     h += f'<p class="lead">{e(lead)}</p>'
@@ -1011,33 +1130,132 @@ def series_page(s, ctx):
             h += f'<p class="aliases">Japanese name: <span lang="ja">{e(s["name"])}</span></p>'
     elif alias:
         h += f'<p class="aliases">この名前でも探せます:{e("、".join(alias))}</p>'
+    stats = []
+    if total:
+        stats.append((L("動画", "Videos"), f'<b class="num">{total}</b>{L("本", "")}'))
+    if evs:
+        ys = [x["year"] for x in evs]
+        stats.append((L("掲載している開催回", "Editions listed"), f'<b class="num">{len(evs)}</b>{L("回", "")}'))
+        stats.append((L("掲載している年", "Years listed"),
+                      f'<b class="num">{min(ys)}</b>' + (f'<span class="sx-to">–</span><b class="num">{max(ys)}</b>' if min(ys) != max(ys) else "") + L("年", "")))
+    month = series_month(evs) if s.get("master") else None
+    if month:
+        stats.append((L("例年の開催", "Usually held"), L(f'<b class="num">{month}</b>月ごろ', f'<b class="num">{MONTHS_EN[month - 1]}</b>')))
+    if stats:
+        h += '<dl class="sx-stats">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in stats) + "</dl>"
+    h += "</header>"
 
-    h += series_about(s, evs, ctx)
-    import champions
-    h += champions.link_html(s, ctx)
-    sl = status_label()
-    h += f'<section class="section"><h2>{L("開催年から選ぶ", "Choose a year")}</h2><ol class="occ">'
-    for x in reversed(evs):
+    # ---- 最新の開催回を大きく
+    def when_of(x):
+        return fmt_range(x.get("start"), x.get("end")) if x.get("start") else L("日付未確認", "Date TBC")
+
+    if feat or nxt:
+        h += f'<section class="section sx-sec sx-latest">{sx_h2("最新の開催回", "Latest edition", "LATEST")}'
+    if feat:
+        fs = view_status(feat)
+        badge = f'<span class="badge {e(fs)}">{e(sl[fs])}</span>' if fs in ("live", "postponed", "cancelled") else ""
+        cv = cover_of(feat) if set(s.get("groups") or []) <= SERIES_COVER_GROUPS and s.get("groups") else None
+        # 最初の画面に出る1枚なので lazy にしない。絵が読めないとき・絵を出さない大会は、下に敷いた年の数字が見える
+        img = (f'<img src="https://i.ytimg.com/vi/{e(cv["id"])}/hqdefault.jpg" alt="" width="480" height="270" decoding="async" '
+               f'fetchpriority="high" referrerpolicy="no-referrer" data-thumb>') if cv else ""
+        h += (f'<div class="sx-feat"><a class="sx-cover" href="{ev_url(feat)}" tabindex="-1" aria-hidden="true">'
+              f'<span class="sx-cy">{feat["year"]}</span>{img}</a><div class="sx-fb">'
+              f'<p class="sx-fy"><b class="num">{feat["year"]}</b>{L("年", "")}{badge}</p>'
+              f'<h3>{e(name)} {e(year_label(feat["year"]))}</h3><dl class="facts">')
+        if feat.get("derived"):
+            h += f'<dt>{L("動画の配信日", "Video dates")}</dt><dd>{e(when_of(feat))} <span class="calm">({L("公式の開催日は確認中", "official dates not yet confirmed")})</span></dd>'
+        else:
+            h += f'<dt>{L("開催日", "Dates")}</dt><dd>{e(when_of(feat))}</dd>'
+            if feat.get("venue"):
+                h += f'<dt>{L("会場", "Venue")}</dt><dd>{e(N(feat.get("venue")))}</dd>'
+        have = []
+        if feat.get("n"):
+            have.append(L(f"動画 {feat['n']}本", i18n.plural(feat["n"], "video")))
+        if has_photo(feat):
+            have.append(L("写真", "Photos"))
+        n_news = len(ctx.get("news_by_event", {}).get(feat["id"], [])) if not i18n.en() else 0
+        if n_news:
+            have.append(f"ニュース {n_news}本")
+        if have:
+            h += f'<dt>{L("このサイトにあるもの", "On this site")}</dt><dd>{e("・".join(have) if not i18n.en() else ", ".join(have))}</dd>'
+        h += (f'</dl><p class="elinks"><a class="elink primary" href="{ev_url(feat)}">'
+              f'{e(L(str(feat["year"]) + "年の大会を見る", "See the " + str(feat["year"]) + " edition"))}</a>')
+        lastv = next((x for x in reversed(paged) if x.get("n")), None)
+        if lastv and lastv is not feat and not feat.get("n"):
+            h += (f'<a class="elink" href="{ev_url(lastv)}">'
+                  f'{e(L(f"動画がある最新の回:{lastv["year"]}年({lastv["n"]}本)", f"Latest with videos: {lastv["year"]} ({lastv["n"]})"))}</a>')
+        h += "</p></div></div>"
+    if nxt:
+        inner = (f'<span class="badge scheduled">{e(sl["scheduled"])}</span><b>{L("次の開催", "Next edition")}</b>'
+                 f'<span>{e(when_of(nxt))}{e(L("・", ", ") + N(nxt.get("venue"))) if nxt.get("venue") else ""}</span>')
+        if nxt["id"] in slugs:
+            h += f'<a class="sx-next" href="{ev_url(nxt)}">{inner}<span class="sx-go">{L("くわしく見る", "Details")} →</span></a>'
+        else:
+            h += f'<p class="sx-next">{inner}</p>'
+    if feat or nxt:
+        h += "</section>"
+
+    # ---- ほかの欄(年表・ニュース・写真)を先に作り、あるものだけ入口のボタンにする
+    arts = []
+    if not i18n.en():
+        seen = set()
+        for x in evs:
+            for a in ctx.get("news_by_event", {}).get(x["id"], []):
+                if a["slug"] not in seen:
+                    seen.add(a["slug"])
+                    arts.append(a)
+        arts.sort(key=lambda a: a.get("date") or "", reverse=True)
+    gallery = ctx["gallery"](path, name)
+    photo_ev = next((x for x in reversed(paged) if has_photo(x)), None)
+
+    doors = []
+    if has_champ:
+        doors.append(f'<a class="main" href="{U("/champions/" + s["id"] + "/")}">{e(L(s["name"] + "の歴代優勝者を見る", "Past champions of the " + name))}</a>')
+    if len(evs) > 1:
+        doors.append(f'<a href="#sx-years">{L("開催年の一覧", "All years")}<b class="num">{len(evs)}</b></a>')
+    if arts:
+        doors.append(f'<a href="#sx-news">ニュース<b class="num">{len(arts)}</b></a>')
+    if gallery:
+        doors.append(f'<a href="#sx-photos">{L("写真", "Photos")}</a>')
+    elif photo_ev:
+        doors.append(f'<a href="{ev_url(photo_ev)}">{e(L(f"写真({photo_ev["year"]}年)", f"Photos ({photo_ev["year"]})"))}</a>')
+    doors.append(f'<a href="{U("/")}#s={e(s["id"])}">{L("スタイルなどで絞り込む", "Filter by style")}</a>')
+    h += f'<nav class="sx-doors" aria-label="{L("この大会のページ内の入口", "Shortcuts for this tournament")}">{"".join(doors)}</nav>'
+
+    # ---- 年表(すべての開催回。新しい順)
+    h += (f'<section class="section sx-sec" id="sx-years">'
+          f'{sx_h2(f"{s["name"]}の開催年({len(evs)}回)", f"{name}: all years ({len(evs)})", "HISTORY")}<ol class="sx-tl">')
+    for x in reversed(order):
         xs = view_status(x)
         badge = f'<span class="badge {e(xs)}">{e(sl[xs])}</span>' if xs in sl else ""
-        when = fmt_range(x.get("start"), x.get("end")) if x.get("start") else L("日付未確認", "Date TBC")
         cnt = (L("<b class=num>" + str(x.get("n")) + "</b>本", "<b class=num>" + str(x.get("n")) + "</b> " + ("video" if x.get("n") == 1 else "videos"))
                if x.get("n") else L("動画なし", "No videos"))
-        if x["id"] in ctx["slugs"] and f'/events/{ctx["slugs"][x["id"]]}/' in ctx["photo_paths"]:
+        if has_photo(x):
             badge += photo_mark()
-        body = (f'<span class="oy">{x["year"]}</span><span class="ob"><span class="od">{e(when)}{badge}</span>'
+        body = (f'<span class="oy">{x["year"]}</span><span class="ob"><span class="od">{e(when_of(x))}{badge}</span>'
                 f'<span class="ov">{e(N(x.get("venue")) or "")}</span></span><span class="on">{cnt}</span>')
-        if x["id"] in ctx["slugs"]:
-            h += f'<li><a href="{U("/events/" + ctx["slugs"][x["id"]] + "/")}">{body}</a></li>'
+        if x["id"] in slugs:
+            h += f'<li><a href="{ev_url(x)}">{body}</a></li>'
         else:
             h += f'<li class="off"><div>{body}</div></li>'
     h += "</ol></section>"
-    h += ctx["gallery"](path, name)
+
+    h += series_about(s, evs, ctx)
+
+    if arts:
+        h += f'<section class="section sx-sec" id="sx-news">{sx_h2(f"{s["name"]}のニュース", "", "NEWS")}<ul class="sx-nl">'
+        for a in arts[:8]:
+            d = (a.get("date") or "")[:10]
+            h += (f'<li><a href="{U("/news/" + a["slug"] + "/")}"><time datetime="{e(d)}">{e(d.replace("-", "."))}</time>'
+                  f'<span>{e(a["title"])}</span></a></li>')
+        h += f'</ul><p class="elinks"><a class="elink" href="{U("/news/")}">ニュースの一覧へ</a></p></section>'
+
+    if gallery:
+        h += f'<div id="sx-photos" class="sx-anchor">{gallery}</div>'
     if loose:
         h += vgroup(L("開催回を確認中の動画", "Videos with unconfirmed edition"),
                     L(f"この大会の動画ですが、どの年の開催回か特定できていません({len(loose)}本)",
                       f"Videos from this tournament whose year is not yet identified ({len(loose)})"), loose, show_basis=True)
-    h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
     h += "</main>" + footer(ctx["as_of"])
     return path, h
 
@@ -1208,44 +1426,105 @@ def tech_pages(tech, cats, shown, ctx):
 
 # ---------------------------------------------------------------- 大会一覧・404
 
+# 大会一覧で、大会を分ける種別の順。大会データの groups のうち、この順でいちばん先に出てくるものの欄に入れる
+INDEX_GROUPS = [("一般", "OPEN"), ("大学", "UNIVERSITY"), ("社会人", "WORKING ADULTS"), ("高校", "HIGH SCHOOL"), ("中学", "JUNIOR HIGH"),
+                ("少年少女", "KIDS"), ("年代別", "AGE GROUP"), ("女子", "WOMEN"), ("マスターズ", "MASTERS"), ("ビーチ", "BEACH")]
+
+
 def index_page(ctx, series_list):
+    """大会一覧(/events/)。#319 で作り替え:頭(英字+大きい題+数字の帯)→ 種別の入口 → 最近開催された大会(絵つき)→ 種別ごとの一覧(全大会)。
+    高校生以下が出る大会は、大会ページと同じく試合の絵を出さず、年の数字の板にする"""
     path = "/events/"
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), None)]
     total = sum(x.get("n", 0) for x in series_list)
-    title = L(f"大会一覧({len(series_list)}大会・{total}本)|{SITE_NAME}", f"Tournaments ({len(series_list)} tournaments, {total} videos) | {site_name()}")
-    desc = L(f"Japan Wrestling Channel で配信されたレスリング大会{len(series_list)}大会の一覧。天皇杯全日本選手権、明治杯、インカレ、インターハイなどの配信を開催年ごとに探せます。",
-             f"{len(series_list)} Japanese wrestling tournaments streamed by Japan Wrestling Channel and others, including the Emperor's Cup, Meiji Cup, Inter-College and Inter-High. Browse streams by year.")
-    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": L("大会一覧", "Tournaments"), "url": SITE + U(path),
-        "hasPart": [{"@type": "WebPage", "name": N(x["name"]), "url": SITE + U(f"/events/{x['id']}/")} for x in series_list]}]}
-    h = head(title, desc, path, "", jsonld, ctx["css"])
-    h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{L('大会一覧', 'Tournaments')}</h1>"
-    h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。開催日の新しい順に並んでいます。スタイルや開催年での絞り込みは検索ページで行えます。",
-                                  f"{len(series_list)} tournaments with videos, most recent first. Use the search page to filter by style or year.")) + '</p>'
-    h += '<ul class="egrid">'
+    n_ed = sum(len([v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]) for x in series_list)
+    title = L(f"レスリング大会一覧({len(series_list)}大会・動画{total}本)|{SITE_NAME}",
+              f"Japanese Wrestling Tournaments ({len(series_list)}, {total} videos) | {site_name()}")
+    desc = L(f"日本のレスリング大会{len(series_list)}大会の一覧。天皇杯・明治杯・インカレ・インターハイから少年少女の大会まで、種別ごとに開催日・会場と配信動画{total}本を探せます。",
+             f"{len(series_list)} Japanese wrestling tournaments, from the Emperor's Cup, Meiji Cup, Inter-College and Inter-High to kids' events. "
+             f"Browse dates, venues and {total} videos by category.")
+
+    def cat_of(x):
+        gs = x.get("groups") or []
+        return next((g for g, _ in INDEX_GROUPS if g in gs), "その他")
+
+    cats = {}
     for x in series_list:
+        cats.setdefault(cat_of(x), []).append(x)
+    order = [(g, en) for g, en in INDEX_GROUPS if g in cats] + ([("その他", "OTHER")] if "その他" in cats else [])
+
+    def cat_id(g):
+        return "g-" + str([c for c, _ in INDEX_GROUPS + [("その他", "")]].index(g) + 1)
+
+    def info(x):
         evs = [v for v in ctx["events_by_series"].get(x["id"], []) if v.get("n")]
         span = year_span([v["year"] for v in evs], L("開催年を確認中", "Years TBC"))
-        tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in x.get("groups") or [])
-        if x.get("scope") == "海外":
-            tags += f'<span class="tag">{L("海外", "Overseas")}</span>'
         has_photo = f'/events/{x["id"]}/' in ctx["photo_paths"] or any(
             f'/events/{ctx["slugs"][v["id"]]}/' in ctx["photo_paths"] for v in ctx["events_by_series"].get(x["id"], []) if v["id"] in ctx["slugs"])
-        # カードの絵は、いちばん新しい開催回の試合の動画のサムネイル
+        return evs, span, has_photo
+
+    items = [{"@type": "ListItem", "position": i + 1, "url": SITE + U(f"/events/{x['id']}/"), "name": N(x["name"])} for i, x in enumerate(series_list)]
+    jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
+        "@type": "CollectionPage", "name": L("レスリング大会一覧", "Japanese wrestling tournaments"), "url": SITE + U(path),
+        "mainEntity": {"@type": "ItemList", "name": L("大会一覧", "Tournaments"), "numberOfItems": len(items), "itemListElement": items}}]}
+    h = head(title, desc, path, "", jsonld, ctx["css"])
+    h += '<main id="content" class="wrap page sx">' + breadcrumb_html(crumbs)
+
+    # ---- 頭
+    h += (f'<header class="sx-hero"><p class="sx-eye"><span class="sx-en">TOURNAMENTS</span></p>'
+          f'<h1>{L("レスリング大会一覧", "Wrestling Tournaments in Japan")}</h1>')
+    h += '<p class="lead">' + e(L(f"配信動画のある{len(series_list)}大会です。上は最近開催された大会、下は種別(一般・大学・高校・少年少女など)ごとの一覧です。大会を選ぶと、開催年ごとの日程・会場・動画を見られます。",
+                                  f"{len(series_list)} tournaments with videos. Recently held tournaments come first, then every tournament by category. "
+                                  f"Pick one to see dates, venues and videos for each year.")) + "</p>"
+    stats = [(L("大会", "Tournaments"), f'<b class="num">{len(series_list)}</b>{L("大会", "")}'),
+             (L("動画のある開催回", "Editions with videos"), f'<b class="num">{n_ed}</b>{L("回", "")}'),
+             (L("動画", "Videos"), f'<b class="num">{total}</b>{L("本", "")}')]
+    h += '<dl class="sx-stats">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in stats) + "</dl></header>"
+
+    # ---- 種別の入口
+    doors = [f'<a href="#ix-recent">{L("最近の大会", "Recent")}</a>']
+    for g, _ in order:
+        doors.append(f'<a href="#{cat_id(g)}">{e(N(g) if g != "その他" else L("その他", "Other"))}<b class="num">{len(cats[g])}</b></a>')
+    doors.append(f'<a href="{U("/events/calendar/")}">{L("大会カレンダー", "Calendar")}</a>')
+    h += f'<nav class="sx-doors" aria-label="{L("種別から探す", "Browse by category")}">{"".join(doors)}</nav>'
+
+    # ---- 最近開催された大会(絵つき。新しい順に8つ)
+    h += f'<section class="section sx-sec" id="ix-recent">{sx_h2("最近開催された大会", "Recently held", "RECENT")}<ul class="egrid">'
+    for x in series_list[:8]:
+        evs, span, has_photo = info(x)
+        tags = "".join(f'<span class="tag">{e(N(g))}</span>' for g in x.get("groups") or [] if g != "未確認")
+        latest = max(evs, key=lambda v: v.get("start") or f"{v['year']}-00-00") if evs else None
         cover = ""
-        for ev in sorted(evs, key=lambda v: v.get("start") or "", reverse=True):
-            vs = ctx["by_event"].get(ev["id"], [])
-            m = next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
-            if m:
-                cover = m["id"]
-                break
-        cover = cover or next((v["id"] for v in ctx["loose_by_series"].get(x["id"], [])), "")
-        th = thumb(cover) if cover else '<div class="thumb"></div>'
+        if set(x.get("groups") or []) <= SERIES_COVER_GROUPS and x.get("groups"):
+            for ev in sorted(evs, key=lambda v: v.get("start") or "", reverse=True):
+                vs = ctx["by_event"].get(ev["id"], [])
+                m = next((v for v in vs if v.get("k") == "match"), vs[0] if vs else None)
+                if m:
+                    cover = m["id"]
+                    break
+        if cover:
+            th = thumb(cover)
+        else:
+            th = f'<div class="thumb ix-plate"><span class="num">{latest["year"] if latest else ""}</span></div>'
         if has_photo:
             th = th[:-len("</div>")] + photo_mark() + "</div>"
         h += (f'<li><a class="tile" href="{U("/events/" + x["id"] + "/")}">{th}<span class="tt">{e(N(x["name"]))}</span>'
               f'<span class="tm"><span><b class="num">{x.get("n", 0)}</b>{L("本", " videos")}</span><span>{e(span)}</span>{tags}</span></a></li>')
-    h += "</ul></main>" + footer(ctx["as_of"])
+    h += "</ul></section>"
+
+    # ---- 種別ごとの一覧(すべての大会)
+    for g, en in order:
+        label = N(g) if g != "その他" else L("その他", "Other")
+        h += (f'<section class="section sx-sec" id="{cat_id(g)}">'
+              f'{sx_h2(f"{g}の大会({len(cats[g])})", f"{label} ({len(cats[g])})", en)}<ul class="sx-tl ix-list">')
+        for x in cats[g]:
+            evs, span, has_photo = info(x)
+            mark = photo_mark() if has_photo else ""
+            h += (f'<li><a href="{U("/events/" + x["id"] + "/")}"><span class="ob"><span class="ix-n">{e(N(x["name"]))}{mark}</span>'
+                  f'<span class="ov">{e(span)}{e(L("・", ", ") + L(str(len(evs)) + "開催回", i18n.plural(len(evs), "edition"))) if evs else ""}</span></span>'
+                  f'<span class="on"><b class="num">{x.get("n", 0)}</b>{L("本", "")}</span></a></li>')
+        h += "</ul></section>"
+    h += "</main>" + footer(ctx["as_of"])
     return path, h
 
 
@@ -1898,6 +2177,89 @@ a.yr{text-decoration:none}
   .occ a,.occ .off>div{grid-template-columns:56px 1fr auto;gap:10px;padding:10px 12px}
   .occ .oy{font-size:22px}
 }
+/* seo: 大会(シリーズ)ページ(#319)。頭(英字+大きい題+数字の帯)・最新の開催回・入口のボタン・年表・ニュース */
+.sx-hero{margin:4px 0 0;padding:0 0 24px;border-bottom:1px solid var(--line)}
+.sx-eye{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 6px}
+.sx-en{margin-right:4px;font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.page .sx-hero h1{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.25;letter-spacing:.01em;margin:0 0 12px;text-wrap:balance;overflow-wrap:anywhere}
+.sx-hero .lead{margin:0 0 8px}
+.sx-hero .aliases{margin:0}
+.sx-stats{display:flex;flex-wrap:wrap;gap:14px 30px;margin:20px 0 0;padding:0}
+.sx-stats>div{min-width:0;padding-left:14px;border-left:1px solid var(--line-hi)}
+.sx-stats dt{font-size:12px;line-height:1.5;color:var(--ink3)}
+.sx-stats dd{margin:0;font-size:13px;line-height:1.2;color:var(--ink2);white-space:nowrap}
+.sx-stats dd .num{font-size:38px;line-height:1.05;color:var(--ink);margin-right:2px}
+.sx-stats .sx-to{margin:0 3px;font-family:var(--num);font-size:26px;color:var(--ink3)}
+.page .sx-sec{margin-top:38px;scroll-margin-top:96px}
+.sx-anchor{scroll-margin-top:96px}
+.page .sx-h{font-size:22px;font-weight:900;letter-spacing:.01em;line-height:1.35;margin:0 0 14px;overflow-wrap:anywhere}
+.sx-h[data-en]::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.sx-feat{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:28px;align-items:center}
+.sx-cover{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,var(--navy),var(--navy-2));text-decoration:none}
+.sx-cover .sx-cy{position:absolute;inset:0;display:grid;place-items:center;padding-top:.06em;font-family:var(--num);font-weight:600;font-size:clamp(88px,19vw,150px);line-height:1;letter-spacing:.03em;color:var(--on-navy)}
+.sx-cover .sx-cy::after{content:"";position:absolute;left:50%;bottom:14%;width:56px;height:4px;margin-left:-28px;border-radius:2px;background:var(--pink-fill)}
+.sx-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.sx-fb{min-width:0}
+.sx-fy{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;margin:0;font-size:15px;font-weight:700;color:var(--ink2)}
+.sx-fy .num{font-size:60px;line-height:1;color:var(--pink)}
+.sx-fy .badge{margin-left:6px;vertical-align:0;align-self:center}
+.sx-fb h3{margin:6px 0 10px;font-size:19px;font-weight:900;line-height:1.45;overflow-wrap:anywhere}
+.page .sx-fb .facts{margin:0;font-size:14px;gap:5px 16px}
+.page .sx-fb .facts .calm{margin-left:0;white-space:normal}
+.sx-fb .elinks{margin-top:18px}
+.sx-fb .elink{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;padding:9px 22px}
+.sx-next{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;min-height:48px;box-sizing:border-box;margin:20px 0 0;padding:11px 16px;border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px;text-decoration:none}
+a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);background:var(--surface-2)}
+.sx-next .badge{margin-left:0;vertical-align:0}
+.sx-next .sx-go{margin-left:auto;font-size:13px;font-weight:700;color:var(--pink);white-space:nowrap}
+.sx-doors{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0}
+.sx-doors a{display:inline-flex;align-items:center;gap:7px;min-height:44px;box-sizing:border-box;padding:8px 18px;border:1px solid var(--line-hi);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:700;line-height:1.4;text-decoration:none}
+.sx-doors a:hover{border-color:var(--pink);color:var(--pink)}
+.sx-doors a.main{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
+.sx-doors a.main:hover{filter:brightness(1.12);color:#fff}
+.sx-doors a .num{font-size:17px;line-height:1;color:var(--ink3)}
+.sx-tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sx-tl a,.sx-tl .off>div{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;height:100%;min-height:62px;box-sizing:border-box;padding:9px 12px;border:1px solid var(--line);border-radius:var(--card-r);background:var(--surface);color:var(--ink);text-decoration:none;transition:background .15s,border-color .15s}
+.sx-tl a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.sx-tl .off>div{opacity:.6}
+.sx-tl .oy{font-family:var(--num);font-weight:600;font-size:26px;line-height:1;color:var(--pink)}
+.sx-tl .off .oy{color:var(--ink3)}
+.sx-tl .ob{min-width:0;display:flex;flex-direction:column;gap:1px}
+.sx-tl .od{font-size:13px;line-height:1.5}
+.sx-tl .od .badge{margin-left:5px;vertical-align:1px}
+.sx-tl .ov{font-size:12px;line-height:1.5;color:var(--ink3);overflow-wrap:anywhere}
+.sx-tl .on{font-size:11px;color:var(--ink3);white-space:nowrap;text-align:right}
+.sx-tl .on .num{font-size:18px;color:var(--ink);margin-right:1px}
+.sx .about-series{margin-top:38px}
+.sx .about-series h2{font-size:22px;font-weight:900;letter-spacing:.01em}
+.sx-nl{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.sx-nl a{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;align-items:baseline;min-height:48px;box-sizing:border-box;padding:12px 2px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.sx-nl time{font-family:var(--num);font-weight:600;font-size:18px;letter-spacing:.02em;line-height:1.3;color:var(--ink3)}
+.sx-nl span{font-size:15px;font-weight:700;line-height:1.55;overflow-wrap:anywhere}
+.sx-nl a:hover span{color:var(--pink)}
+@media (max-width:980px){.sx-tl{grid-template-columns:repeat(2,minmax(0,1fr))}.sx-feat{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}}
+@media (max-width:640px){
+  .sx-hero{padding-bottom:20px}
+  .sx-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}
+  .sx-stats dd .num{font-size:32px}
+  .sx-stats .sx-to{font-size:22px;margin:0 2px}
+  .page .sx-sec,.sx .about-series{margin-top:32px}
+  .page .sx-h,.sx .about-series h2{font-size:20px}
+  .sx-feat{grid-template-columns:minmax(0,1fr);gap:14px}
+  .sx-fy .num{font-size:50px}
+  .sx-fb .elink{flex:1 1 100%;justify-content:center;text-align:center}
+  .sx-next .sx-go{margin-left:0;flex-basis:100%}
+  .sx-doors a{padding:8px 15px;font-size:13.5px}
+  .sx-doors a.main{flex:1 1 100%;justify-content:center;text-align:center}
+  .sx-tl{grid-template-columns:minmax(0,1fr);gap:6px}
+  .sx-nl a{grid-template-columns:minmax(0,1fr);gap:0}
+}
+/* seo: 大会一覧(#319)。大会ページと同じ頭・入口・見出しに、種別ごとの一覧 */
+.ix-plate{display:grid;place-items:center;background:linear-gradient(135deg,var(--navy),var(--navy-2))}
+.ix-plate .num{font-size:clamp(44px,6vw,64px);line-height:1;color:var(--on-navy);letter-spacing:.03em}
+.sx-tl.ix-list a{grid-template-columns:minmax(0,1fr) auto}
+.ix-list .ix-n{font-size:14.5px;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
+.ix-list .ix-n .pmark{margin-left:6px;font-size:12px}
 """
 
 
