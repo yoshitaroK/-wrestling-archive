@@ -630,6 +630,12 @@ def event_page(ev, ctx):
         if not vids:
             title = f"{name} {yr} – Photos | {site_name()}"
             desc = f"{name} ({ev['year']}): photos." + when
+        if summ:
+            n_w, uww = summ
+            n_c = players.champions_count(ev, ctx)
+            adds = ([f" Team Japan results: {i18n.plural(n_w, 'wrestler')}."] if uww else
+                    ([f" Lists {i18n.plural(n_w, 'medalist')} ({i18n.plural(n_c, 'champion')})."] if n_c else []) + [f" Lists {i18n.plural(n_w, 'medalist')}."])
+            desc += next((a for a in adds if len(desc) + len(a) <= 200), "")
     else:
         jv = ev.get("venue") if not ev.get("derived") else ""
         when = (f"動画の配信日は{rng}(公式の開催日は確認中)。" if ev.get("derived") else
@@ -639,15 +645,29 @@ def event_page(ev, ctx):
         if not vids:
             title = f"{name} {yr} 写真|{SITE_NAME}"
             desc = f"{name}({ev['year']}年)の写真。" + when
+        # 入賞者の欄がある回は、説明文の終わりに人数を足す(日付・会場より後ろ。全体で120字ほどに収まるときだけ。#314)
+        if summ:
+            n_w, uww = summ
+            n_c = players.champions_count(ev, ctx)
+            adds = ([f"日本代表{n_w}人の成績を掲載。"] if uww else
+                    ([f"入賞者{n_w}人(うち優勝者{n_c}人)を掲載。"] if n_c else []) + [f"入賞者{n_w}人を掲載。"])
+            desc += next((a for a in adds if len(desc) + len(a) <= 120), "")
     dated = re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", slugs[ev['id']].split('/')[-1])
     crumbs = [(L("トップ", "Home"), "/"), (L("大会一覧", "Tournaments"), "/events/"), (series_name(s), spath),
               (year_label(ev["year"]) + ((L("(", " (") + (fmt_date(ev['start'])[5:] if not i18n.en() else fmt_date(ev['start']).rsplit(',', 1)[0]) + ")") if dated else ""), None)]
 
     ld = [breadcrumb_ld(crumbs)]
     if not ev.get("derived") and ev.get("start"):
-        se = {"@type": "SportsEvent", "name": f"{name} {ev['year']}" + (L(f"({day})", f" ({day})") if day else ""), "sport": "Wrestling", "url": SITE + U(path),
+        # @id は「開催回ページの URL + #event」。大会(シリーズ)ページの subEvent から同じ @id で指せるようにする
+        se = {"@type": "SportsEvent", "@id": SITE + U(path) + "#event",
+              "name": f"{name} {ev['year']}" + (L(f"({day})", f" ({day})") if day else ""), "sport": "Wrestling", "url": SITE + U(path),
               "startDate": ev["start"], "endDate": ev.get("end") or ev["start"],
               "eventStatus": "https://schema.org/" + SCHEMA_STATUS.get(status, "EventScheduled")}
+        # 説明文:ページの最初の段落と同じ文。入賞者の欄がある回は、掲載している優勝者(入賞者の欄と同じ範囲の人だけ)も続ける(#314)
+        se["description"] = lead.replace("[[W]]", "").replace("[[/W]]", "")
+        champs = players.champions_text(ev, ctx)
+        if champs:
+            se["description"] += L(f"掲載している優勝者:{champs}。", f" Champions listed here: {champs}.")
         if venue:
             se["location"] = {"@type": "Place", "name": venue}
             # 住所:会場名の都道府県・市(英語版はローマ字の都道府県と国コードだけ)と、overrides の「会場」の文字
@@ -678,34 +698,40 @@ def event_page(ev, ctx):
     h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs)
     sl = status_label()
     badge = f'<span class="badge {e(status)}">{e(sl[status])}</span>' if status in sl else ""
+    # ページの頭(#314):細い英字と大会(シリーズ)へのリンク → 大きい題 → 最初の段落 → 要点の箱 → ボタン → ページ内の移動
+    h += ('<header class="ev-hero">'
+          f'<p class="ev-eyebrow"><span class="ev-en" aria-hidden="true">TOURNAMENT</span><a href="{U(spath)}">{e(series_name(s))}</a></p>')
     h += f'<h1>{e(name)} <span class="yr-h">{e(year_label(ev["year"]))}</span>{badge}</h1>'
     h += '<p class="lead">' + e(lead).replace("[[W]]", '<a href="#winners">').replace("[[/W]]", "</a>") + "</p>"
 
-    h += '<dl class="facts">'
+    # 要点の箱:開催日・会場・年度・収録など(値は前の表と同じ。<div> で1項目ずつ囲んでタイルにする)
+    def key(dt, dd, cls=""):
+        return f'<div class="ev-k{(" " + cls) if cls else ""}"><dt>{dt}</dt><dd>{dd}</dd></div>'
+    h += '<dl class="ev-key">'
     if ev.get("sessions"):
         ss = sorted(ev["sessions"], key=lambda x: x.get("start_date", ""))
-        h += f"<dt>{L('日程', 'Schedule')}</dt><dd><ul class=\"sessions\">" + "".join(
+        h += key(L('日程', 'Schedule'), '<ul class="sessions">' + "".join(
             f"<li>{e(fmt_range(x.get('start_date'), x.get('end_date')))} {e(N(x.get('label', '')))}"
-            f"{(L('(', ' (') + e(N(x['venue'])) + ')') if x.get('venue') else ''}</li>" for x in ss) + "</ul></dd>"
+            f"{(L('(', ' (') + e(N(x['venue'])) + ')') if x.get('venue') else ''}</li>" for x in ss) + "</ul>", "full")
     else:
         when = L("配信日", "Stream dates") if ev.get("derived") else L("開催日", "Dates")
         import calendar_page
         cal = calendar_page.month_url(ev.get("start"))
-        h += (f"<dt>{when}</dt><dd>{e(fmt_range(ev.get('start'), ev.get('end')))}{L('(予定)', ' (scheduled)') if status == 'scheduled' else ''}"
-              + (f' <a class="calm" href="{e(cal)}">{L("この月のカレンダー", "See this month on the calendar")}</a>' if cal else "") + "</dd>")
+        h += key(when, f"{e(fmt_range(ev.get('start'), ev.get('end')))}{L('(予定)', ' (scheduled)') if status == 'scheduled' else ''}"
+                 + (f' <a class="calm" href="{e(cal)}">{L("この月のカレンダー", "See this month on the calendar")}</a>' if cal else ""), "w")
         if venue:
-            h += f"<dt>{L('会場', 'Venue')}</dt><dd>{e(venue)}</dd>"
+            h += key(L('会場', 'Venue'), e(venue), "w")
     if ev.get("fy_label"):
-        h += f"<dt>{L('年度', 'Fiscal year')}</dt><dd>{e(N(ev['fy_label']))}</dd>"
-    h += f"<dt>{L('収録', 'Videos')}</dt><dd>{counts_links(vids, matches) or e(counts or L('配信動画なし', 'No videos yet'))}</dd>"
+        h += key(L('年度', 'Fiscal year'), e(N(ev['fy_label'])))
+    h += key(L('収録', 'Videos'), counts_links(vids, matches) or e(counts or L('配信動画なし', 'No videos yet')))
     if ev.get("group"):
         sib = [x for x in ctx["all_events"] if x.get("group") == ev["group"] and x["id"] != ev["id"]]
         if sib:
             def sib_name(x):
                 return N(S.get(x["series"], {}).get("name") or x["name"])
-            h += f"<dt>{L('同時開催', 'Held together with')}</dt><dd>" + L("、", ", ").join(
+            h += key(L('同時開催', 'Held together with'), L("、", ", ").join(
                 (f'<a href="{U("/events/" + slugs[x["id"]] + "/")}">{e(sib_name(x))}</a>' if x["id"] in slugs
-                 else e(sib_name(x))) for x in sib) + "</dd>"
+                 else e(sib_name(x))) for x in sib), "full")
     h += "</dl>"
     # 大会の公式サイト・結果など(overrides.json の event_links)と、日本レスリング協会の大会ページ(結果が載る)
     links = [(x["url"], (LINK_LABELS_EN[x["label"]] if x["label"] in LINK_LABELS_EN else N(x["label"])) if i18n.en() else x["label"])
@@ -725,16 +751,54 @@ def event_page(ev, ctx):
         gc, ic = calendar_page.add_to_calendar(ev["id"], f"{name} {year_label(ev['year'])}" if i18n.en() else name,
                                                ev["start"][:10], (ev.get("end") or ev["start"])[:10], venue or "", U(path), ctx)
         h += '<p class="elinks">' + calendar_page.add_buttons_html(gc, ic, e) + "</p>"
+
+    # 先に下の欄を作っておく(ページ内の移動チップに、ある欄だけを出すため)
+    import sys
+    bp = sys.modules[__name__]
+    champs_html = players.champions_html(ev, ctx, bp)
+    results_html = players.event_results_html(ev, ctx, bp)
+    news_html = ""
     # この大会のニュース(news.json の event_id が一致する記事。ニュースは日本語だけ)
     if not i18n.en():
         import news
-        h += news.event_section(ctx.get("news_by_event", {}).get(ev["id"]), e)
+        news_html = news.event_section(ctx.get("news_by_event", {}).get(ev["id"]), e)
+    gallery = ctx["gallery"](path, f"{name} {year_label(ev['year'])}")
+    rel_html = related_html(ev, ctx)
+    info_html = info_details(ev)
+
+    # ページ内の移動(動画は本題なので、結果のすぐ後ろ・最初の画面に置く)
+    jump = []
+    if champs_html:
+        jump.append(("#champions", L("日本代表の成績", "Team Japan results") if summ[1] else L("優勝者・入賞者", "Champions & medalists"), ""))
+    if results_html:
+        jump.append(("#results", L("結果(速報)", "Results (live)"), ""))
+    if vids:
+        jump.append(("#videos", L("動画", "Videos"), L(f"{len(vids)}本", str(len(vids)))))
+    if gallery:
+        jump.append(("#photos", L("写真", "Photos"), ""))
+    if news_html:
+        jump.append(("#ev-news", L("ニュース", "News"), ""))
+    if rel_html:
+        jump.append(("#related", L("関連する大会", "Related tournaments"), ""))
+    if info_html:
+        jump.append(("#sources", L("出典", "Sources"), ""))
+    if len(jump) > 1:
+        h += (f'<nav class="ev-jump" aria-label="{L("このページの内容", "On this page")}">' + "".join(
+            f'<a href="{a}">{t}{(" <b>" + n + "</b>") if n else ""}</a>' for a, t, n in jump) + "</nav>")
+    h += "</header>"
+
+    # 掲載している優勝者と入賞者の欄(頭のすぐ下。#314)
+    h += champs_html
+    h += news_html
 
     # 開催年の年表(ほかの年へのリンク)
     h += year_rail(s, ev["id"], ctx)
-    h += ctx["gallery"](path, f"{name} {year_label(ev['year'])}")
+    if gallery:
+        h += f'<div class="ev-anchor" id="photos">{gallery}</div>'
 
     # 動画(試合配信は日付→マット順)
+    if vids:
+        h += '<div class="ev-anchor" id="videos">'
     by_day = defaultdict(list)
     for v in matches:
         by_day[v.get("dh") or ""].append(v)
@@ -746,6 +810,8 @@ def event_page(ev, ctx):
     for k in KIND_ORDER[1:]:
         lst = sorted([v for v in vids if (v.get("k") or "other") == k], key=lambda v: v.get("p") or "", reverse=True)
         h += vgroup(kind_label(k), n_videos(len(lst)), lst, gid=k)
+    if vids:
+        h += "</div>"
     cands = [v for v in cand_by_event.get(ev["id"], []) if v["id"] not in uniq]
     if cands:
         h += ('<details class="more-box"><summary>' + L(f"この開催回の可能性がある動画(確認待ち {len(cands)}本)",
@@ -754,12 +820,10 @@ def event_page(ev, ctx):
                                      "The tournament name or year in these titles is ambiguous, so they are not yet confirmed for this edition. The basis is shown.") + '</p>'
               + vgroup(L("確認待ち", "Pending review"), n_videos(len(cands)), cands, show_basis=True) + '</details>')
 
-    import players
-    import sys
-    h += players.event_results_html(ev, ctx, sys.modules[__name__])
-    h += players.winners_html(ev, ctx, sys.modules[__name__])
-    h += related_html(ev, ctx)
-    h += info_details(ev)
+    if results_html:
+        h += f'<div class="ev-anchor" id="results">{results_html}</div>'
+    h += rel_html
+    h += info_html
     h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}&amp;e={e(ev["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
     h += "</main>" + footer(ctx["as_of"])
     return path, h
@@ -800,7 +864,7 @@ def related_html(ev, ctx):
             out += (f'<li><a href="{U("/events/" + slugs[x["id"]] + "/")}">{e(name)}</a>'
                     f'<small>{e(fmt_range(x.get("start"), x.get("end")))}</small></li>')
         return out
-    h = f'<section class="related"><h2>{L("関連する大会", "Related tournaments")}</h2><div class="rel-grid">'
+    h = f'<section class="related" id="related"><h2>{L("関連する大会", "Related tournaments")}</h2><div class="rel-grid">'
     if near:
         h += f'<div><h3>{L("同じ時期の大会", "Around the same time")}</h3><ul>{items(near)}</ul></div>'
     if same:
@@ -852,7 +916,7 @@ def info_details(ev):
                     "Official dates and venue are being confirmed. The dates shown are the video stream dates.") + "</dd>")
     if not rows:
         return ""
-    return f'<details class="more-box info"><summary>{L("大会情報・出典を詳しく見る", "Event details and sources")}</summary><dl class="facts">' + "".join(rows) + "</dl></details>"
+    return f'<details class="more-box info" id="sources"><summary>{L("大会情報・出典を詳しく見る", "Event details and sources")}</summary><dl class="facts">' + "".join(rows) + "</dl></details>"
 
 
 def year_rail(s, current_id, ctx):
@@ -2260,6 +2324,76 @@ a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);backgr
 .sx-tl.ix-list a{grid-template-columns:minmax(0,1fr) auto}
 .ix-list .ix-n{font-size:14.5px;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
 .ix-list .ix-n .pmark{margin-left:6px;font-size:12px}
+/* aio: 開催回ページ(頭・要点の箱・掲載している優勝者。#314) */
+.ev-hero{position:relative;margin:2px 0 0;padding:22px 24px 20px;background:linear-gradient(135deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ev-hero::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--pink-fill)}
+.ev-eyebrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:0 0 6px;font-size:13px;line-height:1.4}
+.ev-eyebrow .ev-en{font-family:var(--num);font-weight:600;font-size:15px;letter-spacing:.16em;color:var(--pink)}
+.ev-eyebrow a{color:var(--ink2);text-decoration:none;font-weight:700;padding:6px 0}
+.ev-eyebrow a::after{content:" ›";color:var(--ink3)}
+.ev-eyebrow a:hover{color:var(--pink)}
+.page .ev-hero h1{font-size:34px;font-weight:900;line-height:1.3;letter-spacing:.01em;margin:0 0 10px}
+.ev-hero .lead{margin:0;max-width:60em}
+.ev-key{display:flex;flex-wrap:wrap;gap:1px;margin:16px 0 0;background:var(--line);border:1px solid var(--line);border-radius:var(--card-r);overflow:hidden}
+.ev-k{flex:1 1 180px;min-width:0;padding:10px 14px 11px;background:var(--bg2)}
+.ev-k.full{flex-basis:100%}
+.ev-k dt{font-size:11.5px;color:var(--ink3);letter-spacing:.06em}
+.ev-k dd{margin:2px 0 0;font-size:16px;font-weight:700;line-height:1.5;word-break:break-word}
+.ev-k dd a{font-weight:700}
+.ev-k dd .calm{display:inline-block;padding:4px 0;font-size:12px;font-weight:400;color:var(--ink3);white-space:nowrap}
+.ev-k .sessions{list-style:none;margin:0;padding:0;font-size:14px;font-weight:500}
+.ev-jump{display:flex;gap:6px;overflow-x:auto;margin:14px 0 0;padding:2px 2px 4px;scrollbar-width:thin}
+.ev-jump a{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;min-height:36px;box-sizing:border-box;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg2);color:var(--ink);font-size:13px;text-decoration:none}
+.ev-jump a b{font-family:var(--num);font-weight:600;font-size:14px;line-height:1;color:var(--ink3)}
+.ev-jump a:hover{border-color:var(--pink)}
+.ev-anchor,.ev-champs,#ev-news,#related,#sources{scroll-margin-top:84px}
+.ev-champs{position:relative;margin-top:22px}
+.wc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;margin:0 0 10px}
+.page .wc-head h2{margin:0;padding-left:10px;border-left:3px solid var(--pink);font-size:19px;font-weight:700;letter-spacing:.04em}
+.wc-head h2 small{margin-left:4px;font-weight:400;font-size:12px;color:var(--ink3);letter-spacing:0}
+.wc-head .hint{margin:0}
+.wc-head .hint a{padding:6px 2px;white-space:nowrap}
+.wc-r,.wc-tabs{display:none}
+.wc-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.wc-col{min-width:0;padding:10px 14px 4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--card-r)}
+.wc-col h3{margin:0 0 6px;font-size:14px;font-weight:700;color:var(--ink2)}
+.wc-col ul{list-style:none;margin:0;padding:0}
+.wc-col li{display:grid;grid-template-columns:54px minmax(0,1fr);gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.5}
+.wc-w{font-family:var(--num);font-weight:600;font-size:18px;line-height:1.2;color:var(--pink);white-space:nowrap}
+.wc-n{display:block;word-break:break-word}
+.wc-n a{font-weight:700;color:var(--ink);text-decoration:none;padding:4px 0}
+.wc-n a:hover{color:var(--pink);text-decoration:underline}
+.wc-n small{margin-left:6px;font-size:12px;color:var(--ink3)}
+/* スタイルが1つだけの回は、階級を横に並べる */
+.wc-cols.one .wc-col ul{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));column-gap:28px}
+.ev-champs .more-box{margin-top:12px}
+@media (max-width:760px){
+  .ev-hero{padding:16px 14px 14px;border-radius:10px}
+  .page .ev-hero h1{font-size:24px}
+  .ev-hero .lead{font-size:14px}
+  .ev-k{flex:1 1 40%;padding:8px 12px 9px}
+  .ev-k.w{flex-basis:100%}
+  .ev-k dd{font-size:15px}
+  .ev-anchor,.ev-champs,#ev-news,#related,#sources{scroll-margin-top:150px}
+  /* スタイルの切り替え:ラジオボタンは見えない形で残す(キーボードで選べる)。選んだスタイルの列だけを見せる */
+  .wc-r{display:block;position:absolute;top:40px;left:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
+  .wc-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 8px}
+  .wc-tabs label{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;box-sizing:border-box;padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink2);font-size:13px;white-space:nowrap;font-weight:700;cursor:pointer}
+  .wc-tabs label small{font-family:var(--num);font-weight:600;font-size:15px;color:var(--ink3)}
+  .wc-r~.wc-cols{display:block}
+  .wc-r~.wc-cols .wc-col{display:none}
+  .wc-r~.wc-cols .wc-col h3{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #wc-1:checked~.wc-cols .wc-col:nth-child(1),#wc-2:checked~.wc-cols .wc-col:nth-child(2),#wc-3:checked~.wc-cols .wc-col:nth-child(3),#wc-4:checked~.wc-cols .wc-col:nth-child(4),#wc-5:checked~.wc-cols .wc-col:nth-child(5),#wc-6:checked~.wc-cols .wc-col:nth-child(6),#wc-7:checked~.wc-cols .wc-col:nth-child(7),#wc-8:checked~.wc-cols .wc-col:nth-child(8){display:block}
+  #wc-1:checked~.wc-tabs label:nth-child(1),#wc-2:checked~.wc-tabs label:nth-child(2),#wc-3:checked~.wc-tabs label:nth-child(3),#wc-4:checked~.wc-tabs label:nth-child(4),#wc-5:checked~.wc-tabs label:nth-child(5),#wc-6:checked~.wc-tabs label:nth-child(6),#wc-7:checked~.wc-tabs label:nth-child(7),#wc-8:checked~.wc-tabs label:nth-child(8){background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
+  #wc-1:checked~.wc-tabs label:nth-child(1) small,#wc-2:checked~.wc-tabs label:nth-child(2) small,#wc-3:checked~.wc-tabs label:nth-child(3) small,#wc-4:checked~.wc-tabs label:nth-child(4) small,#wc-5:checked~.wc-tabs label:nth-child(5) small,#wc-6:checked~.wc-tabs label:nth-child(6) small,#wc-7:checked~.wc-tabs label:nth-child(7) small,#wc-8:checked~.wc-tabs label:nth-child(8) small{color:#fff}
+  #wc-1:focus-visible~.wc-tabs label:nth-child(1),#wc-2:focus-visible~.wc-tabs label:nth-child(2),#wc-3:focus-visible~.wc-tabs label:nth-child(3),#wc-4:focus-visible~.wc-tabs label:nth-child(4),#wc-5:focus-visible~.wc-tabs label:nth-child(5),#wc-6:focus-visible~.wc-tabs label:nth-child(6),#wc-7:focus-visible~.wc-tabs label:nth-child(7),#wc-8:focus-visible~.wc-tabs label:nth-child(8){outline:2px solid var(--pink);outline-offset:2px}
+  .wc-col{padding:6px 12px 2px}
+  .wc-col ul,.wc-cols.one .wc-col ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}
+  .wc-col li{grid-template-columns:46px minmax(0,1fr);gap:4px;font-size:14px}
+  .wc-col li:nth-child(-n+2){border-top:0}
+  .wc-w{font-size:15.5px}
+  .wc-n small{display:block;margin-left:0;line-height:1.35}
+}
 """
 
 
