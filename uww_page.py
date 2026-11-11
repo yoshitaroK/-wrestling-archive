@@ -3,6 +3,8 @@
 
 - /uww/            入り口(年代のカードと新着)
 - /uww/<年代>/      年代ごとのページ。大会×年ごとに見出しを付けて折りたたむ
+- /uww/senior/<年>/ シニアは本数が多いので年ごとのページに分ける(Issue #294)。/uww/senior/ には
+                   すべての年へのリンクと、新しい年(合計 HERE_MAX 本まで)の動画を載せる
 - uww_videos.csv は _work/uww/uww_videos.py が作る(週1回のワークフロー uww-weekly.yml で新しい動画を足す)
 - 出すのは確かさ「高」「中」の動画だけ
 - シニア・U23 は全部出す。U20・U17・U15 は、タイトルに出てくる日本人選手が全員
@@ -92,7 +94,7 @@ def intro():
              "organized by age category. Videos play right on this site in the YouTube player. Titles are shown as published by UWW.")
 
 
-def cat_desc(cat, lst):
+def cat_desc(cat, lst, year=None):
     """年代ページの説明文(meta description)。年代名・本数と、そのページに載っている大会名(動画の多い順に最大2つ)をデータから入れる(Issue #224)"""
     cnt = defaultdict(int)
     for v in lst:
@@ -102,6 +104,11 @@ def cat_desc(cat, lst):
     n = len(lst)
     ja_ev = f"({'・'.join(top)}{'など' if len(cnt) > len(top) else ''})" if top else ""
     en_ev = f" ({', '.join(EV_EN.get(ev, ev) for ev in top)}{' and more' if len(cnt) > len(top) else ''})" if top else ""
+    if year:
+        return L(f"{year}年の国際大会{ja_ev}で日本人選手が出ている{cat_name(cat)}のレスリング動画{n:,}本を、大会ごとにまとめました。"
+                 "世界レスリング連合(UWW)公式 YouTube の動画をこのサイトで再生できます。",
+                 f"{year}: {n:,} {cat_name(cat)} international wrestling videos{en_ev} featuring Japanese wrestlers, organized by event. "
+                 "Watch videos from the official United World Wrestling (UWW) YouTube channel on this site.")
     return L(f"{cat_name(cat)}の国際大会{ja_ev}で日本人選手が出ているレスリングの動画{n:,}本を、大会・年ごとにまとめました。"
              "世界レスリング連合(UWW)公式 YouTube の動画をこのサイトで再生できます。",
              f"{n:,} {cat_name(cat)} international wrestling videos{en_ev} featuring Japanese wrestlers, organized by event and year. "
@@ -122,6 +129,63 @@ def page(bp, ctx, path, title, desc, crumbs, body):
               {"@type": "CollectionPage", "name": title, "url": bp.SITE + U(path)}]}
     h = bp.head(f"{title}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
     return h + '<main id="content" class="wrap page uww">' + bp.breadcrumb_html(crumbs) + body + "</main>" + bp.footer(ctx["as_of"])
+
+
+SPLIT_CATS = {"senior"}   # 年ごとのページに分ける年代(Issue #294)
+HERE_MAX = 100            # 年代のまとめページに残す「新しい年」の本数の上限(薄い年ページを増やさない)
+
+
+def here_years(years, by_year):
+    """まとめページにそのまま載せる新しい年。新しい年から足していき、合計が HERE_MAX 本を超える手前まで(いちばん新しい年は必ず)"""
+    kept, n = [], 0
+    for y in years:
+        if kept and n + len(by_year[y]) > HERE_MAX:
+            break
+        kept.append(y)
+        n += len(by_year[y])
+    return kept
+
+
+def year_href(cat, y, kept):
+    return U(f"/uww/{cat}/") + f"#y{y}" if y in kept else U(f"/uww/{cat}/{y}/")
+
+
+def years_html(cat, years, by_year, kept, cur, bp, compact=False):
+    """年の一覧。compact=False はまとめページのカード(年・本数・大会の数)、True は年ページの上の小さな並び"""
+    e = bp.e
+    if compact:
+        items = "".join(f'<a href="{e(year_href(cat, y, kept))}"{" aria-current=" + chr(34) + "page" + chr(34) if y == cur else ""}>'
+                        f'<span class="num">{e(y)}</span></a>' for y in years)
+        return f'<nav class="uww-tabs uww-ytabs" aria-label="{L("年", "Year")}">{items}</nav>'
+    items = ""
+    for y in years:
+        vids = by_year[y]
+        n_ev = len({v["ev"] for v in vids})
+        items += (f'<li><a href="{e(year_href(cat, y, kept))}"><span class="uy-y num">{e(y)}</span>'
+                  f'<span class="uy-c">{L(f"{len(vids)}本", f"{len(vids)} videos")}</span>'
+                  f'<span class="uy-s">{L(f"{n_ev}大会", i18n.plural(n_ev, "event"))}</span></a></li>')
+    return f'<ul class="uww-years">{items}</ul>'
+
+
+def groups_html(lst, bp, open_n=2):
+    """大会×年ごとに折りたたんだ動画の一覧(新しい年・大会の順)。最初の open_n 個だけ開いておく"""
+    e = bp.e
+    groups = defaultdict(list)
+    for v in lst:
+        groups[(v["y"], v["ev"])].append(v)
+    keys = sorted(groups, key=lambda k: (-int(k[0] or 0), EV_ORDER.get(k[1], 99)))
+    h = ""
+    for i, k in enumerate(keys):
+        vids = sorted(groups[k], key=lambda v: (v["p"], v["t"]))
+        head = f'{ev_name(k[1])} {k[0]}'.strip()
+        h += (f'<details class="uww-g"{" open" if i < open_n else ""}><summary>{e(head)}<small>{L(f"{len(vids)}本", f"{len(vids)} videos")}</small></summary>'
+              f'<ul class="vlist">{"".join(row(v, bp) for v in vids)}</ul></details>')
+    return h
+
+
+def eyebrow(cat=None):
+    """見出しの上の細い英字(トップ・大会ページと同じ調子)"""
+    return f'<p class="uww-eyebrow" aria-hidden="true">INTERNATIONAL{" / " + cat.upper() if cat else ""}</p>'
 
 
 def build(root, ctx, bp):
@@ -149,35 +213,62 @@ def build(root, ctx, bp):
                   f'<span class="uc-c">{L(f"{len(lst):,}本", f"{len(lst):,} videos")}</span>'
                   f'<span class="uc-s">{L(f"{evs}大会・年", f"{evs} events")}</span></a></li>')
     new = sorted((v for lst in data.values() for v in lst), key=lambda v: (v["p"], v["id"]), reverse=True)[:20]
-    body = (f'<h1>{top_t}</h1><p class="lead">{e(intro())}</p>'
+    body = (f'{eyebrow()}<h1>{top_t}</h1><p class="lead">{e(intro())}</p>'
             f'<h2>{L("年代から選ぶ", "Choose an age category")}</h2><ul class="uww-cards">{cards}</ul>'
             f'<h2>{L("新着の動画", "Latest videos")}</h2><ul class="vlist">{"".join(row(v, bp) for v in new)}</ul>')
     out.append(("/uww/", page(bp, ctx, "/uww/", top_t, intro(), [home, (top_t, None)], body), latest))
-    # 年代ごと
+    # 年代ごと。シニアは本数が多い(1ページ 1.5MB)ので年ごとのページに分ける(Issue #294)
     for cat, _, _, _ in CATS:
         lst = data.get(cat, [])
         if not lst:
             continue
-        groups = defaultdict(list)
-        for v in lst:
-            groups[(v["y"], v["ev"])].append(v)
-        keys = sorted(groups, key=lambda k: (-int(k[0] or 0), EV_ORDER.get(k[1], 99)))
         title = L(f"国際大会の動画({cat_name(cat)})", f"International videos ({cat_name(cat)})")
+        cpath = f"/uww/{cat}/"
+        cat_crumbs = [home, (top_t, "/uww/"), (cat_name(cat), None)]
         nav = "".join(f'<a href="{U("/uww/" + c + "/")}"{" aria-current=" + chr(34) + "page" + chr(34) if c == cat else ""}>{e(cat_name(c))}</a>'
                       for c, _, _, _ in CATS if data.get(c))
-        body = f'<h1>{e(title)}</h1><p class="lead">{e(intro())}</p>'
+        body = f'{eyebrow(cat)}<h1>{e(title)}</h1><p class="lead">{e(intro())}</p>'
         if note(cat):
             body += f'<p class="hint">{e(note(cat))}</p>'
         body += f'<nav class="uww-tabs" aria-label="{L("年代", "Age category")}">{nav}</nav>'
         body += f'<p class="uww-count">{L(f"{len(lst):,}本", f"{len(lst):,} videos")}</p>'
-        for i, k in enumerate(keys):
-            vids = sorted(groups[k], key=lambda v: (v["p"], v["t"]))
-            head = f'{ev_name(k[1])} {k[0]}'
-            body += (f'<details class="uww-g"{" open" if i < 2 else ""}><summary>{e(head)}<small>{L(f"{len(vids)}本", f"{len(vids)} videos")}</small></summary>'
-                     f'<ul class="vlist">{"".join(row(v, bp) for v in vids)}</ul></details>')
-        path = f"/uww/{cat}/"
-        out.append((path, page(bp, ctx, path, title, cat_desc(cat, lst), [home, (top_t, "/uww/"), (cat_name(cat), None)], body),
-                    max(v["p"] for v in lst)))
+        if cat not in SPLIT_CATS:
+            body += groups_html(lst, bp)
+            out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body), max(v["p"] for v in lst)))
+            continue
+        by_year = defaultdict(list)
+        for v in lst:
+            by_year[v["y"]].append(v)
+        years = sorted((y for y in by_year if y), key=int, reverse=True)
+        kept = here_years(years, by_year)
+        # 年の一覧(ふつうのリンク。このページに載せている新しい年は、ページの中の見出しへ)
+        body += f'<h2>{L("年から選ぶ", "Choose a year")}</h2>' + years_html(cat, years, by_year, kept, None, bp)
+        if kept:
+            body += f'<h2>{L("新しい年の動画", "Latest years")}</h2>'
+            for y in kept:
+                body += (f'<section class="uww-ys" id="y{e(y)}"><h3 class="uww-yh"><span class="num">{e(y)}</span>'
+                         f'<small>{L(f"{len(by_year[y])}本", f"{len(by_year[y])} videos")}</small></h3>{groups_html(by_year[y], bp)}</section>')
+        if by_year.get(""):
+            body += f'<h2>{L("年が分からない動画", "Videos with no year")}</h2>' + groups_html(by_year[""], bp, open_n=0)
+        out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body), max(v["p"] for v in lst)))
+        # 年ごとのページ(まとめページに載せている新しい年は作らない)
+        for y in years:
+            if y in kept:
+                continue
+            vids = by_year[y]
+            n_ev = len({v["ev"] for v in vids})
+            ytitle = L(f"{y}年 国際大会の動画({cat_name(cat)})", f"International videos {y} ({cat_name(cat)})")
+            fact = L(f"{y}年の世界レスリング連合(UWW){cat_name(cat)}の大会動画 {len(vids):,}本({n_ev}大会)。",
+                     f"{len(vids):,} {cat_name(cat)} videos from {i18n.plural(n_ev, 'United World Wrestling (UWW) event')} in {y}.")
+            lead = fact + L("日本人選手が出ている試合・ハイライトなどを大会ごとにまとめました。動画はこのサイトの中で再生できます。動画のタイトルは UWW が公開しているもの(英語)です。",
+                            " Matches and highlights featuring Japanese wrestlers, organized by event. Videos play right on this site. Titles are shown as published by UWW.")
+            ypath = f"/uww/{cat}/{y}/"
+            ybody = (f'{eyebrow(cat)}<h1>{e(ytitle)}</h1><p class="lead">{e(lead)}</p>'
+                     + years_html(cat, years, by_year, kept, y, bp, compact=True)
+                     + groups_html(vids, bp)
+                     + f'<p class="uww-back"><a href="{U(cpath)}">{L(f"{cat_name(cat)}のすべての年を見る", f"See all years ({cat_name(cat)})")}</a></p>')
+            crumbs = [home, (top_t, "/uww/"), (cat_name(cat), cpath), (L(f"{y}年", y), None)]
+            out.append((ypath, page(bp, ctx, ypath, ytitle, cat_desc(cat, vids, y), crumbs, ybody), max(v["p"] for v in vids)))
     return out
 
 
@@ -213,4 +304,20 @@ UWW_CSS = """
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
 .uww-who a{margin-right:10px;font-weight:700;padding:6px 0}
 .vm .uww-ev{font-weight:700;color:var(--ink2)}
+.uww-eyebrow{margin:0 0 4px;font-family:var(--num);font-weight:600;font-size:15px;letter-spacing:.16em;color:var(--pink)}
+.uww-years{list-style:none;margin:0 0 6px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.uww-years a{display:flex;flex-direction:column;padding:10px 14px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:var(--card-r);text-decoration:none;color:var(--ink)}
+.uww-years a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.uww-years .uy-y{font-size:32px;line-height:1;padding-top:4px}
+.uww-years .uy-c{font-size:14px;font-weight:700;color:var(--pink)}
+.uww-years .uy-s{font-size:12px;color:var(--ink3)}
+.uww-ytabs a{padding:4px 12px}
+.uww-ytabs .num{font-size:18px;line-height:1}
+.uww-yh{display:flex;align-items:baseline;gap:8px;margin:22px 0 4px;font-size:16px}
+.uww-yh .num{font-size:30px;line-height:1}
+.uww-yh small{font-size:12px;font-weight:400;color:var(--ink3)}
+.uww-ys{scroll-margin-top:80px}
+.uww-back{margin:18px 0 0}
+.uww-back a{display:inline-block;padding:10px 0;font-weight:700}
+@media (max-width:640px){.uww-years{grid-template-columns:repeat(3,1fr)}.uww-years a{padding:8px 10px}.uww-years .uy-y{font-size:26px}}
 """
