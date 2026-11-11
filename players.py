@@ -539,7 +539,7 @@ def champions_html(ev, ctx, bp):
             f'<a href="{e(u)}" target="_blank" rel="noopener">{i} ↗</a>' for i, u in enumerate(urls, start=1))
     note = winners_source(uww) + L("掲載していない階級・選手もあります。", " Some weight classes and players are not listed.")
     title = L("掲載している優勝者", "Champions listed here") if not uww else L("掲載している優勝者(日本代表)", "Team Japan champions listed here")
-    tabs = len(groups) > 1
+    tabs = 1 < len(groups) <= 8  # CSS の切り替えは8つまで用意している。それより多い回は全部を縦に並べる
     h = (f'<section class="ev-champs" id="champions" aria-labelledby="champions-h"><div class="wc-head">'
          f'<h2 id="champions-h">{title} <small>{L(f"{m}人", i18n.plural(m, "player"))}</small></h2>'
          f'<p class="hint">{note}{src}</p></div>')
@@ -549,7 +549,7 @@ def champions_html(ev, ctx, bp):
                      for i in range(1, len(groups) + 1))
         h += '<div class="wc-tabs">' + "".join(
             f'<label for="wc-{i}">{e(N(st))}<small>{len(ws)}</small></label>' for i, (st, ws) in enumerate(groups, start=1)) + "</div>"
-    h += '<div class="wc-cols">'
+    h += f'<div class="wc-cols{" one" if len(groups) == 1 else ""}">'
     for st, ws in groups:
         rows = ""
         for w, ps in ws:
