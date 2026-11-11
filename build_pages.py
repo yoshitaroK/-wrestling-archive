@@ -1077,7 +1077,7 @@ def series_page(s, ctx):
             desc += f" Japanese name: {s['name']}."
     else:
         words = [w for w, ok in (("動画", total), ("歴代優勝者", has_champ), ("日程", s.get("master")), ("写真", not total)) if ok]
-        title = f"{s['name']}{'' if 'レスリング' in s['name'] else '(レスリング)'}{'・'.join(words)}|{SITE_NAME}"
+        title = f"{s['name']}{' ' if 'レスリング' in s['name'] else '(レスリング)'}{'・'.join(words)}|{SITE_NAME}"
         if total and s.get("master"):
             desc = summary or f"{s['name']}{'' if 'レスリング' in s['name'] else '(レスリング)'}の開催日・会場と配信動画。"
             desc += f"{span_all}の{len(evs)}開催回と、配信動画{total}本を年ごとに掲載。"
