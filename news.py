@@ -19,6 +19,8 @@
       [[photo:file.jpg|写真の説明|撮影:…]]     … 本文の途中の写真(1行だけで書く。写真は assets/news/。撮影者は省略可)
 
 見た目は白地のニュース記事(ヘッダー・フッターはほかのページと同じ黒)。右の欄に、大会ページ・記事に出てくる選手・新着ニュースを出す。
+本文の下に、同じ大会の記事・前後の記事・一覧へのリンクを出す(#321)。
+一覧(/news/)はサイトのテーマのまま(黒が標準)。最新の1本を大きく、残りは月ごとの列。区分のチップで絞り込める(CSS だけ)。
 """
 import html
 import json
@@ -403,14 +405,13 @@ def list_html(arts, ctx, bp, crumbs, desc):
     img = a.get("image")
     wh = f' width="{img["w"]}" height="{img["h"]}"' if img and img.get("w") else ""
     h += (f'<article class="{cls(a, " nl-top" + ("" if img else " noimg"))}"><a href="{href(a)}">'
-          + (f'<span class="nl-img"><img src="/{IMAGE_DIR}/{e(img["file"])}" alt="{e(img.get("alt") or "")}"{wh} decoding="async" fetchpriority="high"></span>' if img else "")
+          + (f'<span class="nl-img"><img src="/{IMAGE_DIR}/{e(img["file"])}" alt="{e(img.get("alt") or "")}"{wh} decoding="async" fetchpriority="high">'
+             + (f'<small class="nl-cr">{e(img["credit"])}</small>' if img.get("credit") else "") + "</span>" if img else "")
           + '<span class="nl-tx"><span class="nl-k"><span class="nl-new">LATEST</span>' + when(a)
           + (f'<span class="nc">{e(a["category"])}</span>' if a.get("category") else "")
           + f'</span><span class="nt">{e(a["title"])}</span>'
           + (f'<span class="nl-l">{e(a["lead"])}</span>' if a.get("lead") else "")
-          + "</span></a>"
-          + (f'<small class="nl-cr">{e(img["credit"])}</small>' if img and img.get("credit") else "")
-          + "</article>")
+          + "</span></a></article>")
     # 残りは月ごとの列
     months = []
     for a in arts[1:]:
@@ -541,7 +542,7 @@ NEWS_CSS = """
 .nl-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px 48px;align-items:start}
 /* 最新の1本 */
 .nl-top{margin:0 0 36px}
-.nl-top>a{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px 28px;align-items:center;color:var(--ink);text-decoration:none}
+.nl-top>a{display:flex;flex-direction:column;gap:14px;color:var(--ink);text-decoration:none}
 .nl-top.noimg>a{display:block;padding:28px 32px 30px;border:1px solid var(--line);border-top:3px solid var(--pink-fill);border-radius:10px;background:var(--surface)}
 .nl-img img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px;background:var(--surface-2)}
 .nl-tx{display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -549,12 +550,13 @@ NEWS_CSS = """
 .nl-new{padding:3px 8px 1px;border-radius:3px;background:var(--pink-fill);color:var(--on-navy);font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.16em;line-height:1.2}
 .nl-top .nd{font-family:var(--num);font-weight:600;font-size:30px;line-height:1;letter-spacing:.02em;color:var(--pink)}
 .nl-top .nc{font-size:12.5px;font-weight:700;color:var(--ink2)}
-.nl-top .nt{font-size:28px;font-weight:900;line-height:1.4;text-wrap:balance}
+.nl-top .nt{font-size:28px;font-weight:900;line-height:1.4;word-break:auto-phrase;text-wrap:balance}
 .nl-top.noimg .nt{font-size:32px}
 .nl-l{font-size:14px;line-height:1.8;color:var(--ink2)}
 .nl-top .nl-l{font-size:15px}
 .nl-top a:hover .nt,.nl-rows a:hover .nt{text-decoration:underline}
-.nl-cr{display:block;margin-top:6px;font-size:12px;color:var(--ink3)}
+.nl-img{display:block}
+.nl-cr{display:block;margin-top:6px;font-size:12px;color:var(--ink3);text-align:right}
 /* 月ごとの列 */
 .nl-month{margin:0 0 32px}
 .nl-month h2{display:flex;align-items:baseline;margin:0;padding:0 0 8px;border-bottom:2px solid var(--pink-fill);font-size:15px;font-weight:700;color:var(--ink2)}
@@ -566,7 +568,7 @@ NEWS_CSS = """
 .nl-rows .nd{font-family:var(--num);font-weight:600;font-size:30px;line-height:1.05;letter-spacing:.02em;color:var(--pink)}
 .nwd{font-size:12px;font-weight:700;color:var(--ink3)}
 .nl-rows .nc{font-size:12px;font-weight:700;color:var(--ink3)}
-.nl-rows .nt{font-size:17px;font-weight:700;line-height:1.55}
+.nl-rows .nt{font-size:17px;font-weight:700;line-height:1.55;word-break:auto-phrase}
 .nl-rows .nl-l{margin-top:2px;font-size:13.5px;line-height:1.75;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 /* 横の欄 */
 .nl-side{display:grid;gap:28px;min-width:0}
@@ -584,12 +586,11 @@ NEWS_CSS = """
   .nl-fs{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
   .nl-fs::-webkit-scrollbar{display:none}
   .nl-f label{flex:0 0 auto}
-  .nl-top>a{grid-template-columns:minmax(0,1fr)}
   .nl-top.noimg>a{padding:20px 18px 22px}
   .nl-top .nt,.nl-top.noimg .nt{font-size:22px}
   .nl-top .nd{font-size:26px}
   .nl-month h2 .num{font-size:26px}
-  .nl-rows a{grid-template-columns:52px minmax(0,1fr);column-gap:12px;padding:14px 0}
+  .nl-rows a{grid-template-columns:60px minmax(0,1fr);column-gap:12px;padding:14px 0}
   .nl-rows .nd{font-size:24px}
   .nl-rows .nt{font-size:15.5px}
   .nl-rows .nl-l{font-size:13px}
