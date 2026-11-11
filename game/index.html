@@ -333,7 +333,7 @@ body { background:
 .bannerx { top: 58px; }
 .vs .side { background: linear-gradient(180deg, #33241f, #221816); border: 1px solid #4a352d; }
 .vs .side.me { border-color: var(--red); }
-.result { font-size: 24px; }
+.result { font-size: 20px; }
 .period { border-radius: 10px; border: 1px solid #2a1f1c; }
 .endfig { width: 120px; margin: 0 auto 4px; position: relative; z-index: 1; }
 .endfig svg { width: 100%; display: block; overflow: visible; }
@@ -408,13 +408,21 @@ var WL = (function () {
   };
 
   // 技術値で解放される得意技
+  // 得点の入り方(レスリングのルールに合わせた点数)。tec = その技が使えるようになる技術値
   var MOVES = [
+    { tec: 0, name: '場外押し出し', pts: 1 },
+    { tec: 0, name: 'バックポイント', pts: 2 },
     { tec: 15, name: '片足タックル', pts: 2 },
-    { tec: 35, name: 'ダブルレッグタックル', pts: 2 },
+    { tec: 20, name: 'がぶり返し', pts: 2 },
+    { tec: 25, name: 'アンクルホールド', pts: 2 },
+    { tec: 35, name: '両足タックル', pts: 2 },
+    { tec: 45, name: '首投げ', pts: 4 },
     { tec: 55, name: 'ローリング', pts: 2 },
-    { tec: 75, name: 'ガットレンチ', pts: 2 },
-    { tec: 90, name: 'スープレックス', pts: 4 }
+    { tec: 65, name: '持ち上げタックル', pts: 4 },
+    { tec: 75, name: '一本背負い', pts: 4 },
+    { tec: 90, name: 'スープレックス', pts: 5 }
   ];
+  var TECH_GAP = 10;   // 10点差がつくとテクニカルスペリオリティで試合終了
 
   var PREFS = ['北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県',
     '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県',
@@ -703,37 +711,31 @@ var WL = (function () {
     return { name: japaneseName(), from: pick(PREFS), power: pw };
   }
 
-  function myMoves(g) {
-    var list = MOVES.filter(function (m) { return g.stats.tec >= m.tec; });
-    return list.length ? list : [{ name: '押し込み', pts: 2 }];
-  }
-  function oppMoves(p) {
-    var list = MOVES.filter(function (m) { return p >= m.tec * 0.9; });
-    return list.length ? list : [{ name: '押し込み', pts: 2 }];
-  }
-  // 得点を技の場面に分ける
+  function myMoves(g) { return MOVES.filter(function (m) { return g.stats.tec >= m.tec; }); }
+  function oppMoves(p) { return MOVES.filter(function (m) { return p >= m.tec * 0.9; }); }
+  // 得点を技の場面に分ける(5点の大技、4点の投げ・持ち上げ、2点のテイクダウンや返し技、1点の押し出し)
   function narrate(pts, moves, who) {
     var lines = [];
-    var big = moves.filter(function (m) { return m.pts === 4; })[0];
-    var small = moves.filter(function (m) { return m.pts === 2; });
-    if (!small.length) small = [{ name: '押し込み', pts: 2 }];
+    function of(n) { return moves.filter(function (m) { return m.pts === n; }); }
+    var m5 = of(5), m4 = of(4), m2 = of(2);
     while (pts > 0) {
-      if (pts >= 4 && big && rand() < 0.4) { lines.push({ who: who, move: big.name, pts: 4 }); pts -= 4; }
-      else if (pts >= 2) {
-        // 強い技ほど出やすい
-        var mv = rand() < 0.5 ? small[small.length - 1] : pick(small);
-        lines.push({ who: who, move: mv.name, pts: 2 }); pts -= 2;
-      } else { lines.push({ who: who, move: '場外押し出し', pts: 1 }); pts -= 1; }
+      var mv;
+      if (pts >= 5 && m5.length && rand() < 0.3) mv = pick(m5);
+      else if (pts >= 4 && m4.length && rand() < 0.4) mv = pick(m4);
+      else if (pts >= 2) mv = rand() < 0.4 ? m2[m2.length - 1] : pick(m2);   // 覚えたての技は出やすい
+      else mv = rand() < 0.3 ? { name: 'アクティビティタイム', pts: 1 } : { name: '場外押し出し', pts: 1 };
+      lines.push({ who: who, move: mv.name, pts: mv.pts });
+      pts -= mv.pts;
     }
     return lines;
   }
 
   // ---- 試合(1ピリオドずつ、作戦を選んで進める) ----
-  // 作戦は3すくみ: 攻め(atk)は 守り型(def)に強い / カウンター(ctr)は 攻め型(atk)に強い / じっくり(def)は カウンター型(ctr)に強い
+  // 作戦は3すくみ: 攻め(atk)は 守り型(def)に強い / カウンター(ctr)は 攻め型(atk)に強い / 守り(def)は カウンター型(ctr)に強い
   var TACTICS = [
     { id: 'atk', name: 'ガンガン攻める', short: '攻め', beats: 'def', desc: '守りを固める相手を崩す' },
     { id: 'ctr', name: 'カウンター狙い', short: 'カウンター', beats: 'atk', desc: '攻めてくる相手の力を利用する' },
-    { id: 'def', name: 'じっくり組み手', short: 'じっくり', beats: 'ctr', desc: 'カウンター狙いの相手にスキを与えない' }
+    { id: 'def', name: '守りを固める', short: '守り', beats: 'ctr', desc: 'カウンター狙いの相手にスキを与えない' }
   ];
   var TACTIC_BY_ID = {};
   TACTICS.forEach(function (t) { TACTIC_BY_ID[t.id] = t; });
@@ -785,6 +787,12 @@ var WL = (function () {
     var t = g.tour, m = t && t.cur;
     if (!m || m.done || m.tie || m.periods.length >= 2 || !TACTIC_BY_ID[tactic]) return null;
     var pn = m.periods.length + 1;
+    // 古いセーブデータで、すでに10点差がついている試合はその場で終了
+    if (Math.abs(m.me - m.op) >= TECH_GAP) {
+      m.tech = true; m.fall = null;
+      finishMatch(g, m.me > m.op, m.me > m.op ? 'テクニカルスペリオリティ勝ち' : 'テクニカルスペリオリティ負け');
+      return { me: 0, opp: 0, lines: [], tactic: tactic, style: m.opp.style, edge: 0, switched: false };
+    }
     // 第2ピリオドは相手が作戦を変えてくることがある
     var switched = false;
     if (pn === 2 && rand() < BAL.styleSwitch) {
@@ -798,11 +806,20 @@ var WL = (function () {
     var b = Math.max(0, Math.round(2 - d / 7 + rnd(-2.5, 2.5)));
     var lines = narrate(a, myMoves(g), 'me').concat(narrate(b, oppMoves(m.oppPower), 'opp'));
     for (var i = lines.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var tmp = lines[i]; lines[i] = lines[j]; lines[j] = tmp; }
+    // 10点差がついた瞬間に試合終了(テクニカルスペリオリティ)
+    var tech = false, sa = 0, sb = 0;
+    for (var k = 0; k < lines.length; k++) {
+      if (lines[k].who === 'me') sa += lines[k].pts; else sb += lines[k].pts;
+      if (Math.abs((m.me + sa) - (m.op + sb)) >= TECH_GAP) { tech = true; lines = lines.slice(0, k + 1); a = sa; b = sb; break; }
+    }
     m.me += a; m.op += b;
     var per = { me: a, opp: b, lines: lines, tactic: tactic, style: m.opp.style, edge: edge, switched: switched };
     m.periods.push(per);
     m.opp.hidden = false;
-    if (m.fall && m.fall.period === pn) {
+    if (tech) {
+      m.tech = true; m.fall = null;
+      finishMatch(g, m.me > m.op, m.me > m.op ? 'テクニカルスペリオリティ勝ち' : 'テクニカルスペリオリティ負け');
+    } else if (m.fall && m.fall.period === pn) {
       finishMatch(g, m.fall.by === 'me', m.fall.by === 'me' ? 'フォール勝ち' : 'フォール負け');
     } else if (pn === 2) {
       if (m.me !== m.op) finishMatch(g, m.me > m.op, m.me > m.op ? '判定勝ち' : '判定負け');
@@ -832,6 +849,7 @@ var WL = (function () {
     rec.matches++;
     if (win) rec.wins++;
     if (m.fall && win) rec.falls++;
+    if (m.tech && win) rec.techs = (rec.techs || 0) + 1;
     if (m.opp.rival && g.rival) { if (win) g.rival.w++; else g.rival.l++; }
     t.matches.push(m);
     var R = t.rounds, oly = t.kind === 'olympics';
@@ -1264,9 +1282,11 @@ if (typeof module !== 'undefined') module.exports = WL;
   function helpOverlay() {
     return '<div class="overlay" data-act="closeHelp"><div class="card gold"><h2>遊び方</h2>' +
       '<h3 style="margin-top:10px">① 育てる</h3><p class="small">毎年「春・夏・秋」の3回、練習を選ぶ。疲労がたまると伸びが悪くなり、80を超えるとケガをしやすい。大会の前は休養して疲れを抜こう。</p>' +
-      '<h3>② 試合で作戦を選ぶ</h3><p class="small">試合は2ピリオド。ピリオドごとに作戦を1つ選ぶ。作戦は3すくみ:</p>' +
-      '<p class="small">⚔️ <b>攻め</b> は 🛡 守り型 に強い<br>🌀 <b>カウンター</b> は ⚔️ 攻め型 に強い<br>🤝 <b>じっくり</b> は 🌀 カウンター型 に強い</p>' +
+      '<h3>② 試合で作戦を選ぶ</h3><p class="small">試合は2ピリオド(10点差がつくとその場で終了)。ピリオドごとに作戦を1つ選ぶ。作戦は3すくみ:</p>' +
+      '<p class="small">⚔️ <b>攻め</b> は 🛡 守り型 に勝つ<br>🌀 <b>カウンター</b> は ⚔️ 攻め型 に勝つ<br>🛡 <b>守り</b> は 🌀 カウンター型 に勝つ</p>' +
+      '<p class="small">つまり <b>攻め ▶ 守り ▶ カウンター ▶ 攻め</b> のじゃんけん。相手の型に勝つ作戦を選ぼう。</p>' +
       '<p class="small">相手の型は表示されるが、ライバルや王者は第1ピリオドが終わるまで分からない。第2ピリオドで作戦を変えてくる相手もいる。</p>' +
+      '<h3>得点とテクニカルスペリオリティ</h3><p class="small">押し出し1点、タックル・バックポイント・返し技2点、投げ技・持ち上げタックル4点、スープレックス5点。技術を上げると使える技が増える。<b>10点差</b>がつくと、その場で試合終了(テクニカルスペリオリティ)。</p>' +
       '<h3>③ 同点なら一発勝負</h3><p class="small">ゲージが金色の真ん中に来た瞬間に「今だ!」を押すと、ラストポイントを取りやすい。</p>' +
       '<h3>④ ゴール</h3><p class="small">24・28・32・36歳のオリンピックで金メダル。取ったあとも現役を続けて連覇をねらえる。結果は「殿堂」に残る。</p>' +
       '<button class="btn" data-act="closeHelp">とじる</button></div></div>';
@@ -1404,10 +1424,11 @@ if (typeof module !== 'undefined') module.exports = WL;
   }
 
   // ---- 6. 大会 ----
-  var TACTIC_ICON = { atk: '⚔️', ctr: '🌀', def: '🤝' };
+  var TACTIC_ICON = { atk: '⚔️', ctr: '🌀', def: '🛡' };
   var STYLE_ICON = { atk: '⚔️', ctr: '🌀', def: '🛡' };
   function lineText(l, oppName) {
     var who = l.who === 'me' ? esc(g.name) : esc(oppName);
+    if (l.move === 'アクティビティタイム') return '<div class="' + (l.who === 'me' ? 'gold-t' : 'muted') + '">' + who + 'に1点! 相手が消極的(アクティビティタイム)</div>';
     return '<div class="' + (l.who === 'me' ? 'gold-t' : 'muted') + '">' + who + 'の' + esc(l.move) + '! +' + l.pts + '</div>';
   }
   function tourHead(t) {
@@ -1438,13 +1459,13 @@ if (typeof module !== 'undefined') module.exports = WL;
     var read;
     if (o.hidden) read = '<span class="q">❓</span><div><b>相手の型が読めない…</b><br><span class="muted">' + (o.rival ? 'ライバル' : '王者') + 'は手の内を見せない。第1ピリオドで見きわめよう。</span></div>';
     else read = '<span class="q">' + STYLE_ICON[o.style] + '</span><div>相手は <b class="gold-t">' + WL.STYLE_NAMES[o.style] + '</b>' +
-      (pn === 2 ? '<br><span class="muted">ただし、作戦を変えてくるかもしれない。</span>' : '') + '</div>';
+      (pn === 2 ? '<br><span class="muted">ただし作戦を変えてくるかも。</span>' : '') + '</div>';
     var btns = WL.TACTICS.map(function (tc) {
-      return '<button class="btn" data-act="tactic" data-id="' + tc.id + '"><b>' + TACTIC_ICON[tc.id] + '</b>' + esc(tc.short) + '<span>' + STYLE_ICON[tc.beats] + WL.STYLE_NAMES[tc.beats] + 'に強い</span></button>';
+      return '<button class="btn" data-act="tactic" data-id="' + tc.id + '"><b>' + TACTIC_ICON[tc.id] + '</b>' + esc(tc.short) + '<span>' + STYLE_ICON[tc.beats] + WL.STYLE_NAMES[tc.beats] + '<br>に勝つ</span></button>';
     }).join('');
     return '<div class="card"><div class="label">第' + pn + 'ピリオドの作戦を選ぶ' + (pn === 2 ? '(いま ' + m.me + '-' + m.op + ')' : '') + '</div>' +
       '<div class="readrow">' + read + '</div><div class="tactics">' + btns + '</div>' +
-      '<div class="rps">⚔️攻め ▶ 🛡守り型 / 🌀カウンター ▶ ⚔️攻め型 / 🤝じっくり ▶ 🌀カウンター型</div></div>';
+      '<div class="rps">▶=勝つ: ⚔️攻め ▶ 🛡守り ▶ 🌀カウンター ▶ ⚔️攻め</div></div>';
   }
   function tiePanel(m) {
     return '<div class="card gold center"><h2>同点! ラストポイント勝負</h2><p class="small">' + m.me + '-' + m.op + '。白い線が<b class="gold-t">金色</b>の真ん中に来た瞬間に押せ!</p>' +
@@ -1457,7 +1478,8 @@ if (typeof module !== 'undefined') module.exports = WL;
       var edge = p.edge === undefined ? '' : p.edge > 0 ? ' <span class="tag gold">作戦的中</span>' : p.edge < 0 ? ' <span class="tag">読まれた</span>' : '';
       html += '<div class="period"><span class="ph">第' + (i + 1) + 'ピリオド ' + p.me + '-' + p.opp + '</span>' + edge +
         (p.lines.length ? p.lines.map(function (l) { return lineText(l, m.opp.name); }).join('') : '<div class="muted">お互い得点なし</div>') +
-        (m.fall && m.fall.period === i + 1 ? '<div class="' + (m.win ? 'gold-t' : 'red-t') + '"><b>' + (m.win ? esc(g.name) : esc(m.opp.name)) + 'がフォール!</b></div>' : '') + '</div>';
+        (m.fall && m.fall.period === i + 1 ? '<div class="' + (m.win ? 'gold-t' : 'red-t') + '"><b>' + (m.win ? esc(g.name) : esc(m.opp.name)) + 'がフォール!</b></div>' : '') +
+        (m.tech && i === m.periods.length - 1 ? '<div class="' + (m.win ? 'gold-t' : 'red-t') + '"><b>10点差! テクニカルスペリオリティ</b></div>' : '') + '</div>';
     });
     return html;
   }
@@ -1538,13 +1560,14 @@ if (typeof module !== 'undefined') module.exports = WL;
         var me = l.who === 'me';
         var A = me ? '.fw.a' : '.fw.b', D = me ? '.fw.b' : '.fw.a';
         if (l.pts >= 4) { setCls(A, 'throw'); setCls(D, 'fly'); }
+        else if (l.move === 'アクティビティタイム') { setCls(D, 'sad'); }
         else if (l.pts === 1) { setCls(A, 'push'); setCls(D, 'hit'); }
         else { setCls(A, 'atk'); setCls(D, 'hit'); }
         await sleep(260);
         SFX.thud(); if (l.pts >= 4) fx('shake');
         if (me) { sm += l.pts; setScore('sm', sm); if (l.pts >= 4) SFX.big(); else SFX.point(); buzz(l.pts >= 4 ? 60 : 25); }
         else { so += l.pts; setScore('so', so); SFX.pointOpp(); }
-        callout(me ? 'me' : 'op', '+' + l.pts, esc(l.move) + '!');
+        callout(me ? 'me' : 'op', '+' + l.pts, l.move === 'アクティビティタイム' ? '相手が消極的!' : esc(l.move) + '!');
         liveAdd(lineText(l, m.opp.name));
         await sleep(l.pts >= 4 ? 1000 : 780);
         setCls(A, 'bob'); setCls(D, 'bob');
@@ -1554,6 +1577,10 @@ if (typeof module !== 'undefined') module.exports = WL;
         setCls(meF ? '.fw.a' : '.fw.b', 'pin'); setCls(meF ? '.fw.b' : '.fw.a', 'down');
         await sleep(420); SFX.thud(); fx('flash'); banner(meF ? 'win' : 'lose', 'フォール!'); if (meF) SFX.big();
         liveAdd('<b class="' + (meF ? 'gold-t' : 'red-t') + '">' + (meF ? esc(g.name) : esc(m.opp.name)) + 'がフォール!</b>');
+        await sleep(1300);
+      } else if (m.tech) {
+        SFX.whistle(); fx('flash'); banner(m.win ? 'win' : 'lose', '10点差!');
+        liveAdd('<b class="' + (m.win ? 'gold-t' : 'red-t') + '">10点差がついた! テクニカルスペリオリティで試合終了</b>');
         await sleep(1300);
       } else { SFX.buzzer(); await sleep(450); }
       if (m.done) await finishAnim(m);
@@ -1624,9 +1651,10 @@ if (typeof module !== 'undefined') module.exports = WL;
     var finText = fin
       ? 'オリンピック決勝。相手は' + esc(fin.opp.from) + 'の世界王者、' + esc(fin.opp.name) + '。\n\n' +
         (fin.fall ? '第' + fin.fall.period + 'ピリオド、' + name + 'が相手の両肩をマットに押さえつけた——\nレフェリーの手がマットを叩く!' :
+          fin.tech ? name + 'の攻撃が止まらない。スコアは ' + fin.me + '-' + fin.op + '——' + (fin.me - fin.op) + '点差!\nテクニカルスペリオリティ。世界王者を圧倒した。' :
           fin.me === fin.op ? fin.me + '-' + fin.op + 'の同点のまま、最後のポイントを奪った!' :
           '残り10秒。スコアは ' + fin.me + '-' + fin.op + '。\n' + name + 'は最後まで攻めの姿勢をくずさなかった。') +
-        '\n\nブザーが鳴った。'
+        (fin.tech ? '\n\nホイッスルが鳴った。' : '\n\nブザーが鳴った。')
       : 'オリンピック決勝。ブザーが鳴った。';
     var n = golds().length;
     scenes.push('<div class="kicker">' + a + '歳・オリンピック決勝' + (n >= 2 ? '(' + n + '個目の金メダル)' : '') + '</div><p>' + finText + '</p><h1>金メダル!!</h1>');
