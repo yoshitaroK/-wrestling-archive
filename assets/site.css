@@ -1205,7 +1205,7 @@ table.champs td.none{color:var(--ink3)}
 .nw .crumbs a{color:var(--ink2)}
 .nw h1{font-size:26px;line-height:1.5;margin:4px 0 10px;font-weight:700;letter-spacing:.01em;text-wrap:balance}
 @media (max-width:520px){.nw h1{font-size:21px}}
-.nw-cat{display:inline-block;margin:0;font-size:12px;font-weight:700;color:var(--pink)}
+.nw-cat{font-size:12px;font-weight:700;color:var(--pink)}
 .nw-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--ink3);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .nw-meta b{color:var(--ink)}
 .nw-body{font-size:16px;line-height:1.95;max-width:680px}
@@ -1237,12 +1237,104 @@ table.champs td.none{color:var(--ink3)}
 .nw-side a{display:block;padding:9px 0;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.55}
 .nw-side a:hover{color:var(--link)}
 .nw-side small{display:block;color:var(--ink3);font-size:12px}
-.nw-lead{color:var(--ink2);margin:0 0 10px}
-.nw-list{list-style:none;margin:0;padding:0}
-.nw-list li{border-top:1px solid var(--line)}
-.nw-list a{display:grid;gap:3px;padding:14px 0;color:var(--ink);text-decoration:none}
-.nw-list a:hover .nw-t{color:var(--link);text-decoration:underline}
-.nw-list .nw-t{font-size:17px;font-weight:700;line-height:1.5}
-.nw-list .nw-l{font-size:14px;color:var(--ink2);line-height:1.7}
-.nw-list time{font-size:12.5px;color:var(--ink3)}
 .nw :focus-visible{outline-color:var(--pink)}
+/* 記事の上の細い英字(トップの「最新ニュース」・選手ページ・大会ページと同じ調子) */
+.nw-eye{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:2px 0 0}
+.nw-en{font-family:var(--num);font-weight:600;font-size:15px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+/* 記事の本文の下:同じ大会の記事・前後の記事・一覧へ(#321) */
+.nw-more{margin:36px 0 0;max-width:680px}
+.nw-more h2{font-size:19px;font-weight:900;line-height:1.4;margin:0;padding-bottom:8px;border-bottom:2px solid var(--pink)}
+.nw-more h2::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.nw-rows{list-style:none;margin:0 0 26px;padding:0}
+.nw-rows a{display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:12px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.nw-rows .nd{font-family:var(--num);font-weight:600;font-size:25px;line-height:1.1;letter-spacing:.02em;color:var(--pink)}
+.nw-rows .nt{font-size:15px;font-weight:700;line-height:1.6}
+.nw-rows a:hover .nt{color:var(--link);text-decoration:underline}
+.nw-pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 22px}
+.nw-pn a{display:flex;flex-direction:column;gap:4px;min-width:0;padding:14px 16px;border:1px solid var(--line-hi);border-radius:8px;color:var(--ink);text-decoration:none}
+.nw-pn .next{grid-column:2;text-align:right}
+.nw-pn .k{font-size:12.5px;font-weight:700;color:var(--pink)}
+.nw-pn .nt{font-size:14.5px;font-weight:700;line-height:1.6}
+.nw-pn small{font-size:12px;color:var(--ink3)}
+.nw-pn a:hover{border-color:var(--pink)}
+.nw-pn a:hover .nt{color:var(--link)}
+@media (max-width:520px){.nw-pn{grid-template-columns:1fr}.nw-pn .next{grid-column:auto}}
+.nw-back{margin:0;text-align:center}
+.nw-back a{display:inline-block;padding:12px 30px;border-radius:999px;background:var(--pink);color:var(--surface);font-size:15px;font-weight:700;text-decoration:none}
+.nw-back a:hover{background:var(--pink-deep)}
+
+/* ニュース一覧(#321)。サイトのテーマのまま(黒が標準・白テーマなら白) */
+.nl{padding:6px 0 56px}
+.nl-h{margin:10px 0 20px}
+.nl-h h1{margin:0;font-size:34px;font-weight:900;line-height:1.3;letter-spacing:.01em}
+.nl-h h1::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:17px;letter-spacing:.2em;line-height:1.3;color:var(--pink)}
+.nl-h p{margin:6px 0 0;font-size:14px;line-height:1.7;color:var(--ink2)}
+.nl-n{margin-left:12px;color:var(--ink3);white-space:nowrap}
+.nl-n .num{margin:0 3px;font-size:21px;line-height:1;color:var(--ink)}
+/* 区分のチップ。CSS の :has() で絞り込む。使えないブラウザでは出さない(全部の記事が見える) */
+.nl-f{display:none;min-width:0;margin:0 0 26px;padding:0;border:0}
+@supports selector(:has(*)){.nl-f{display:block}}
+.nl-fs{display:flex;flex-wrap:wrap;gap:8px}
+.nl-f input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.nl-f label{display:inline-flex;align-items:baseline;gap:7px;padding:8px 15px 7px;border:1px solid var(--line-hi);border-radius:999px;font-size:13px;font-weight:700;line-height:1.4;color:var(--ink);white-space:nowrap;cursor:pointer;user-select:none}
+.nl-f label .num{font-size:17px;line-height:1;color:var(--ink3)}
+.nl-f label:hover{border-color:var(--pink);color:var(--pink)}
+.nl-f input:checked+label{background:var(--pink-fill);border-color:var(--pink-fill);color:var(--on-navy)}
+.nl-f input:checked+label .num{color:inherit}
+.nl-f input:focus-visible+label{outline:2px solid var(--pink);outline-offset:2px}
+.nl-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px 48px;align-items:start}
+/* 最新の1本 */
+.nl-top{margin:0 0 36px}
+.nl-top>a{display:flex;flex-direction:column;gap:14px;color:var(--ink);text-decoration:none}
+.nl-top.noimg>a{display:block;padding:28px 32px 30px;border:1px solid var(--line);border-top:3px solid var(--pink-fill);border-radius:10px;background:var(--surface)}
+.nl-img img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px;background:var(--surface-2)}
+.nl-tx{display:flex;flex-direction:column;gap:6px;min-width:0}
+.nl-k{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+.nl-new{padding:3px 8px 1px;border-radius:3px;background:var(--pink-fill);color:var(--on-navy);font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.16em;line-height:1.2}
+.nl-top .nd{font-family:var(--num);font-weight:600;font-size:30px;line-height:1;letter-spacing:.02em;color:var(--pink)}
+.nl-top .nc{font-size:12.5px;font-weight:700;color:var(--ink2)}
+.nl-top .nt{font-size:28px;font-weight:900;line-height:1.4;word-break:auto-phrase;text-wrap:balance}
+.nl-top.noimg .nt{font-size:32px}
+.nl-l{font-size:14px;line-height:1.8;color:var(--ink2)}
+.nl-top .nl-l{font-size:15px}
+.nl-top a:hover .nt,.nl-rows a:hover .nt{text-decoration:underline}
+.nl-img{display:block}
+.nl-cr{display:block;margin-top:6px;font-size:12px;color:var(--ink3);text-align:right}
+/* 月ごとの列 */
+.nl-month{margin:0 0 32px}
+.nl-month h2{display:flex;align-items:baseline;margin:0;padding:0 0 8px;border-bottom:2px solid var(--pink-fill);font-size:15px;font-weight:700;color:var(--ink2)}
+.nl-month h2 .num{margin:0 3px;font-size:30px;line-height:1;color:var(--ink)}
+.nl-month h2 .num:first-child{margin-left:0}
+.nl-rows{list-style:none;margin:0;padding:0}
+.nl-rows a{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;padding:16px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.nl-rows time{display:flex;flex-direction:column}
+.nl-rows .nd{font-family:var(--num);font-weight:600;font-size:30px;line-height:1.05;letter-spacing:.02em;color:var(--pink)}
+.nwd{font-size:12px;font-weight:700;color:var(--ink3)}
+.nl-rows .nc{font-size:12px;font-weight:700;color:var(--ink3)}
+.nl-rows .nt{font-size:17px;font-weight:700;line-height:1.55;word-break:auto-phrase}
+.nl-rows .nl-l{margin-top:2px;font-size:13.5px;line-height:1.75;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* 横の欄 */
+.nl-side{display:grid;gap:28px;min-width:0}
+.nl-side h2{margin:0;padding-bottom:8px;border-bottom:2px solid var(--pink-fill);font-size:17px;font-weight:900;line-height:1.4}
+.nl-side h2::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:13px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.nl-side ul{list-style:none;margin:0;padding:0}
+.nl-side li{border-bottom:1px solid var(--line)}
+.nl-side a{display:block;padding:11px 0;color:var(--ink);font-size:14px;font-weight:700;line-height:1.55;text-decoration:none}
+.nl-side a:hover{color:var(--pink)}
+.nl-side small{display:block;font-size:12px;font-weight:400;color:var(--ink3)}
+@media (max-width:900px){.nl-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){
+  .nl-h h1{font-size:26px}
+  .nl-h h1::before{font-size:15px}
+  .nl-fs{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+  .nl-fs::-webkit-scrollbar{display:none}
+  .nl-f label{flex:0 0 auto}
+  .nl-top.noimg>a{padding:20px 18px 22px}
+  .nl-top .nt,.nl-top.noimg .nt{font-size:22px}
+  .nl-top .nd{font-size:26px}
+  .nl-month h2 .num{font-size:26px}
+  .nl-rows a{grid-template-columns:60px minmax(0,1fr);column-gap:12px;padding:14px 0}
+  .nl-rows .nd{font-size:24px}
+  .nl-rows .nt{font-size:15.5px}
+  .nl-rows .nl-l{font-size:13px}
+}
