@@ -19,6 +19,8 @@
       [[photo:file.jpg|写真の説明|撮影:…]]     … 本文の途中の写真(1行だけで書く。写真は assets/news/。撮影者は省略可)
 
 見た目は白地のニュース記事(ヘッダー・フッターはほかのページと同じ黒)。右の欄に、大会ページ・記事に出てくる選手・新着ニュースを出す。
+本文の下に、同じ大会の記事・前後の記事・一覧へのリンクを出す(#321)。
+一覧(/news/)はサイトのテーマのまま(黒が標準)。最新の1本を大きく、残りは月ごとの列。区分のチップで絞り込める(CSS だけ)。
 """
 import html
 import json
@@ -247,6 +249,37 @@ def build(root, ctx, bp, report):
                 f'<li><a href="{U("/news/" + x["slug"] + "/")}">{e(x["title"])}<small>{e(fmt_day(x["date"]))}</small></a></li>' for x in others) + "</ul></section>"
         return h
 
+    idx = {a["slug"]: i for i, a in enumerate(arts)}
+
+    def more(a):
+        """記事の本文の下:同じ大会の記事(同じ開催回、無ければ同じ区分)・前後の記事・一覧へ(#321)。
+        リンクの文字は記事の見出しのまま。選手ページへのリンクは足さない"""
+        i = idx[a["slug"]]
+        newer = arts[i - 1] if i > 0 else None
+        older = arts[i + 1] if i + 1 < len(arts) else None
+        skip = {a["slug"]} | {x["slug"] for x in (newer, older) if x}
+        rel = [x for x in arts if a.get("event_id") and x.get("event_id") == a["event_id"] and x["slug"] not in skip]
+        title = "同じ大会の記事"
+        if not rel and a.get("category"):
+            rel = [x for x in arts if x.get("category") == a["category"] and x["slug"] not in skip]
+            title = f'{a["category"]}の記事'
+        h = '<nav class="nw-more" aria-label="次に読む記事">'
+        if rel:
+            h += f'<section><h2 data-en="MORE NEWS">{e(title)}</h2><ol class="nw-rows">' + "".join(
+                f'<li><a href="{U("/news/" + x["slug"] + "/")}"><time datetime="{e(x["date"])}">'
+                f'<span class="nd" aria-hidden="true">{x["date"][5:].replace("-", ".")}</span><span class="sr">{e(fmt_day(x["date"]))}</span></time>'
+                f'<span class="nt">{e(x["title"])}</span></a></li>' for x in rel[:4]) + "</ol></section>"
+        if newer or older:
+            h += '<div class="nw-pn">'
+            if older:
+                h += (f'<a class="prev" href="{U("/news/" + older["slug"] + "/")}" rel="prev"><span class="k">‹ 前の記事</span>'
+                      f'<span class="nt">{e(older["title"])}</span><small>{e(fmt_day(older["date"]))}</small></a>')
+            if newer:
+                h += (f'<a class="next" href="{U("/news/" + newer["slug"] + "/")}" rel="next"><span class="k">次の記事 ›</span>'
+                      f'<span class="nt">{e(newer["title"])}</span><small>{e(fmt_day(newer["date"]))}</small></a>')
+            h += "</div>"
+        return h + f'<p class="nw-back"><a href="{U("/news/")}">ニュース一覧へ ›</a></p></nav>'
+
     # 記事のページ
     for a in arts:
         body, players = rendered[a["slug"]]
@@ -301,12 +334,14 @@ def build(root, ctx, bp, report):
         h = bp.head(f"{a['title']}|{bp.SITE_NAME}", desc, path, og, jsonld, ctx["css"], alternates=False)
         tags = "".join(f'<span>#{e(t)}</span>' for t in a.get("tags") or [])
         h += ('<div class="nw"><div class="wrap nw-grid"><main id="content" class="nw-main">' + bp.breadcrumb_html(crumbs)
-              + (f'<p class="nw-cat">{e(a["category"])}</p>' if a.get("category") else "")
+              + '<p class="nw-eye"><span class="nw-en" aria-hidden="true">NEWS</span>'
+              + (f'<span class="nw-cat">{e(a["category"])}</span>' if a.get("category") else "") + "</p>"
               + f'<h1>{e(a["title"])}</h1>'
               + f'<p class="nw-meta"><b>{e(bp.SITE_NAME)}</b><time datetime="{e(a["date"])}">{e(fmt_day(a["date"]))}</time></p>'
               + (image_html(img, e, top=True) if img else "")
               + f'<div class="nw-body">{body}</div>'
               + (f'<p class="nw-tags">{tags}</p>' if tags else "")
+              + more(a)
               + f'</main><aside class="nw-side">{side(a, players)}</aside></div></div>')
         h += bp.footer(ctx["as_of"])
         pages.append((path, h, a["date"]))
@@ -319,18 +354,101 @@ def build(root, ctx, bp, report):
         "@type": "CollectionPage", "name": "ニュース", "url": bp.SITE + path,
         "hasPart": [{"@type": "NewsArticle", "headline": a["title"], "url": bp.SITE + f"/news/{a['slug']}/", "datePublished": a["date"]} for a in arts]}]}
     h = bp.head(f"ニュース|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
-    h += ('<div class="nw"><div class="wrap nw-grid"><main id="content" class="nw-main">' + bp.breadcrumb_html(crumbs)
-          + f'<h1>ニュース</h1><p class="nw-lead">{e(desc)}</p><ul class="nw-list">')
-    for a in arts:
-        h += (f'<li><a href="{U("/news/" + a["slug"] + "/")}">'
-              + (f'<span class="nw-cat">{e(a["category"])}</span>' if a.get("category") else "")
-              + f'<span class="nw-t">{e(a["title"])}</span>'
-              + (f'<span class="nw-l">{e(a["lead"])}</span>' if a.get("lead") else "")
-              + f'<time datetime="{e(a["date"])}">{e(fmt_day(a["date"]))}</time></a></li>')
-    h += '</ul></main><aside class="nw-side">' + side({"slug": ""}, []) + "</aside></div></div>"
+    h += list_html(arts, ctx, bp, crumbs, desc)
     h += bp.footer(ctx["as_of"])
     pages.append((path, h, arts[0]["date"]))
     return pages
+
+
+def list_html(arts, ctx, bp, crumbs, desc):
+    """ニュース一覧の本体(#321)。サイトのテーマ(黒が標準・白テーマなら白)に合わせる。
+    最新の1本を大きく、残りは月ごとの見出し(h2)で区切った「日付+区分+見出し+リード」の列。記事は全部 HTML のリンクで出す。
+    区分のチップは CSS だけで絞り込む(:has() が使えないブラウザではチップを出さず、全部の記事が見える)"""
+    import datetime
+    e = bp.e
+    cats = []
+    for a in arts:
+        if a.get("category") and a["category"] not in cats:
+            cats.append(a["category"])
+    cid = {c: f"c{i}" for i, c in enumerate(cats)}
+    chips = len(cats) > 1
+
+    def cls(a, extra=""):
+        return "nl-item" + (f' {cid[a["category"]]}' if a.get("category") else "") + extra
+
+    def when(a, wd=False):
+        """日付は Teko の数字(読み上げは「2026年11月7日(土)」)"""
+        y, m, d = map(int, a["date"].split("-"))
+        return (f'<time datetime="{e(a["date"])}"><span class="nd" aria-hidden="true">{m:02d}.{d:02d}</span>'
+                + (f'<span class="nwd" aria-hidden="true">{WEEK[datetime.date(y, m, d).weekday()]}</span>' if wd else "")
+                + f'<span class="sr">{e(fmt_day(a["date"]))}</span></time>')
+
+    def href(a):
+        return U("/news/" + a["slug"] + "/")
+
+    h = '<div class="nl">'
+    if chips:
+        # 絞り込みの決まりは区分の数だけあるので、このページの中に書く
+        h += "<style>" + "".join(
+            f".nl:has(#nf-{k}:checked) .nl-item:not(.{k}),.nl:has(#nf-{k}:checked) .nl-month:not(:has(.{k})){{display:none}}"
+            for k in cid.values()) + "</style>"
+    h += ('<div class="wrap"><main id="content">' + bp.breadcrumb_html(crumbs)
+          + f'<header class="nl-h"><h1 data-en="NEWS">ニュース</h1><p>{e(desc)}<span class="nl-n">全<b class="num">{len(arts)}</b>本</span></p></header>')
+    if chips:
+        h += ('<fieldset class="nl-f"><legend class="sr">区分で絞り込む</legend><div class="nl-fs">'
+              f'<input type="radio" name="nf" id="nf-all" checked><label for="nf-all">すべて<b class="num">{len(arts)}</b></label>'
+              + "".join(f'<input type="radio" name="nf" id="nf-{k}"><label for="nf-{k}">{e(c)}<b class="num">{sum(1 for a in arts if a.get("category") == c)}</b></label>'
+                        for c, k in cid.items()) + "</div></fieldset>")
+    h += '<div class="nl-grid"><div class="nl-main">'
+    # 最新の1本(写真がある記事は写真とクレジットつき)
+    a = arts[0]
+    img = a.get("image")
+    wh = f' width="{img["w"]}" height="{img["h"]}"' if img and img.get("w") else ""
+    h += (f'<article class="{cls(a, " nl-top" + ("" if img else " noimg"))}"><a href="{href(a)}">'
+          + (f'<span class="nl-img"><img src="/{IMAGE_DIR}/{e(img["file"])}" alt="{e(img.get("alt") or "")}"{wh} decoding="async" fetchpriority="high">'
+             + (f'<small class="nl-cr">{e(img["credit"])}</small>' if img.get("credit") else "") + "</span>" if img else "")
+          + '<span class="nl-tx"><span class="nl-k"><span class="nl-new">LATEST</span>' + when(a)
+          + (f'<span class="nc">{e(a["category"])}</span>' if a.get("category") else "")
+          + f'</span><span class="nt">{e(a["title"])}</span>'
+          + (f'<span class="nl-l">{e(a["lead"])}</span>' if a.get("lead") else "")
+          + "</span></a></article>")
+    # 残りは月ごとの列
+    months = []
+    for a in arts[1:]:
+        if not months or months[-1][0] != a["date"][:7]:
+            months.append((a["date"][:7], []))
+        months[-1][1].append(a)
+    for ym, items in months:
+        y, m = ym.split("-")
+        h += (f'<section class="nl-month" aria-labelledby="m{y}{m}"><h2 id="m{y}{m}"><span class="num">{y}</span>年<span class="num">{int(m)}</span>月</h2>'
+              '<ol class="nl-rows">')
+        for a in items:
+            h += (f'<li class="{cls(a)}"><a href="{href(a)}">' + when(a, True) + '<span class="nl-tx">'
+                  + (f'<span class="nc">{e(a["category"])}</span>' if a.get("category") else "")
+                  + f'<span class="nt">{e(a["title"])}</span>'
+                  + (f'<span class="nl-l">{e(a["lead"])}</span>' if a.get("lead") else "")
+                  + "</span></a></li>")
+        h += "</ol></section>"
+    h += '</div><aside class="nl-side">'
+    # 記事がある大会のページ(大会名へのリンクだけ。選手ページへのリンクは足さない)
+    evs = []
+    for a in arts:
+        eid = a.get("event_id")
+        if eid and eid in ctx["slugs"] and eid not in evs:
+            evs.append(eid)
+    if evs:
+        h += '<section aria-labelledby="nl-ev-h"><h2 id="nl-ev-h" data-en="TOURNAMENTS">記事がある大会</h2><ul>'
+        for eid in evs:
+            ev = ctx["events_by_id"][eid]
+            s = ctx["S"].get(ev["series"], {"id": ev["series"], "name": ev["name"]})
+            n = sum(1 for a in arts if a.get("event_id") == eid)
+            h += (f'<li><a href="{U("/events/" + ctx["slugs"][eid] + "/")}">{e(bp.event_name(ev, s))}'
+                  f'<small>{ev["year"]}年・記事{n}本</small></a></li>')
+        h += "</ul></section>"
+    h += (f'<section aria-labelledby="nl-go-h"><h2 id="nl-go-h" data-en="SEARCH">大会を探す</h2><ul>'
+          f'<li><a href="{U("/events/calendar/")}">大会カレンダー<small>これからの大会・最近の大会</small></a></li>'
+          f'<li><a href="{U("/events/")}">大会一覧<small>結果・動画のある大会</small></a></li></ul></section>')
+    return h + "</aside></div></main></div></div>"
 
 
 # 白地の記事。ヘッダー・フッターはほかのページと同じ黒のまま、間の帯だけ白テーマの色にする
@@ -344,7 +462,7 @@ NEWS_CSS = """
 .nw .crumbs a{color:var(--ink2)}
 .nw h1{font-size:26px;line-height:1.5;margin:4px 0 10px;font-weight:700;letter-spacing:.01em;text-wrap:balance}
 @media (max-width:520px){.nw h1{font-size:21px}}
-.nw-cat{display:inline-block;margin:0;font-size:12px;font-weight:700;color:var(--pink)}
+.nw-cat{font-size:12px;font-weight:700;color:var(--pink)}
 .nw-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--ink3);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .nw-meta b{color:var(--ink)}
 .nw-body{font-size:16px;line-height:1.95;max-width:680px}
@@ -376,13 +494,105 @@ NEWS_CSS = """
 .nw-side a{display:block;padding:9px 0;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.55}
 .nw-side a:hover{color:var(--link)}
 .nw-side small{display:block;color:var(--ink3);font-size:12px}
-.nw-lead{color:var(--ink2);margin:0 0 10px}
-.nw-list{list-style:none;margin:0;padding:0}
-.nw-list li{border-top:1px solid var(--line)}
-.nw-list a{display:grid;gap:3px;padding:14px 0;color:var(--ink);text-decoration:none}
-.nw-list a:hover .nw-t{color:var(--link);text-decoration:underline}
-.nw-list .nw-t{font-size:17px;font-weight:700;line-height:1.5}
-.nw-list .nw-l{font-size:14px;color:var(--ink2);line-height:1.7}
-.nw-list time{font-size:12.5px;color:var(--ink3)}
 .nw :focus-visible{outline-color:var(--pink)}
+/* 記事の上の細い英字(トップの「最新ニュース」・選手ページ・大会ページと同じ調子) */
+.nw-eye{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:2px 0 0}
+.nw-en{font-family:var(--num);font-weight:600;font-size:15px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+/* 記事の本文の下:同じ大会の記事・前後の記事・一覧へ(#321) */
+.nw-more{margin:36px 0 0;max-width:680px}
+.nw-more h2{font-size:19px;font-weight:900;line-height:1.4;margin:0;padding-bottom:8px;border-bottom:2px solid var(--pink)}
+.nw-more h2::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.nw-rows{list-style:none;margin:0 0 26px;padding:0}
+.nw-rows a{display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:12px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.nw-rows .nd{font-family:var(--num);font-weight:600;font-size:25px;line-height:1.1;letter-spacing:.02em;color:var(--pink)}
+.nw-rows .nt{font-size:15px;font-weight:700;line-height:1.6}
+.nw-rows a:hover .nt{color:var(--link);text-decoration:underline}
+.nw-pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 22px}
+.nw-pn a{display:flex;flex-direction:column;gap:4px;min-width:0;padding:14px 16px;border:1px solid var(--line-hi);border-radius:8px;color:var(--ink);text-decoration:none}
+.nw-pn .next{grid-column:2;text-align:right}
+.nw-pn .k{font-size:12.5px;font-weight:700;color:var(--pink)}
+.nw-pn .nt{font-size:14.5px;font-weight:700;line-height:1.6}
+.nw-pn small{font-size:12px;color:var(--ink3)}
+.nw-pn a:hover{border-color:var(--pink)}
+.nw-pn a:hover .nt{color:var(--link)}
+@media (max-width:520px){.nw-pn{grid-template-columns:1fr}.nw-pn .next{grid-column:auto}}
+.nw-back{margin:0;text-align:center}
+.nw-back a{display:inline-block;padding:12px 30px;border-radius:999px;background:var(--pink);color:var(--surface);font-size:15px;font-weight:700;text-decoration:none}
+.nw-back a:hover{background:var(--pink-deep)}
+
+/* ニュース一覧(#321)。サイトのテーマのまま(黒が標準・白テーマなら白) */
+.nl{padding:6px 0 56px}
+.nl-h{margin:10px 0 20px}
+.nl-h h1{margin:0;font-size:34px;font-weight:900;line-height:1.3;letter-spacing:.01em}
+.nl-h h1::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:17px;letter-spacing:.2em;line-height:1.3;color:var(--pink)}
+.nl-h p{margin:6px 0 0;font-size:14px;line-height:1.7;color:var(--ink2)}
+.nl-n{margin-left:12px;color:var(--ink3);white-space:nowrap}
+.nl-n .num{margin:0 3px;font-size:21px;line-height:1;color:var(--ink)}
+/* 区分のチップ。CSS の :has() で絞り込む。使えないブラウザでは出さない(全部の記事が見える) */
+.nl-f{display:none;min-width:0;margin:0 0 26px;padding:0;border:0}
+@supports selector(:has(*)){.nl-f{display:block}}
+.nl-fs{display:flex;flex-wrap:wrap;gap:8px}
+.nl-f input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.nl-f label{display:inline-flex;align-items:baseline;gap:7px;padding:8px 15px 7px;border:1px solid var(--line-hi);border-radius:999px;font-size:13px;font-weight:700;line-height:1.4;color:var(--ink);white-space:nowrap;cursor:pointer;user-select:none}
+.nl-f label .num{font-size:17px;line-height:1;color:var(--ink3)}
+.nl-f label:hover{border-color:var(--pink);color:var(--pink)}
+.nl-f input:checked+label{background:var(--pink-fill);border-color:var(--pink-fill);color:var(--on-navy)}
+.nl-f input:checked+label .num{color:inherit}
+.nl-f input:focus-visible+label{outline:2px solid var(--pink);outline-offset:2px}
+.nl-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px 48px;align-items:start}
+/* 最新の1本 */
+.nl-top{margin:0 0 36px}
+.nl-top>a{display:flex;flex-direction:column;gap:14px;color:var(--ink);text-decoration:none}
+.nl-top.noimg>a{display:block;padding:28px 32px 30px;border:1px solid var(--line);border-top:3px solid var(--pink-fill);border-radius:10px;background:var(--surface)}
+.nl-img img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px;background:var(--surface-2)}
+.nl-tx{display:flex;flex-direction:column;gap:6px;min-width:0}
+.nl-k{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+.nl-new{padding:3px 8px 1px;border-radius:3px;background:var(--pink-fill);color:var(--on-navy);font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.16em;line-height:1.2}
+.nl-top .nd{font-family:var(--num);font-weight:600;font-size:30px;line-height:1;letter-spacing:.02em;color:var(--pink)}
+.nl-top .nc{font-size:12.5px;font-weight:700;color:var(--ink2)}
+.nl-top .nt{font-size:28px;font-weight:900;line-height:1.4;word-break:auto-phrase;text-wrap:balance}
+.nl-top.noimg .nt{font-size:32px}
+.nl-l{font-size:14px;line-height:1.8;color:var(--ink2)}
+.nl-top .nl-l{font-size:15px}
+.nl-top a:hover .nt,.nl-rows a:hover .nt{text-decoration:underline}
+.nl-img{display:block}
+.nl-cr{display:block;margin-top:6px;font-size:12px;color:var(--ink3);text-align:right}
+/* 月ごとの列 */
+.nl-month{margin:0 0 32px}
+.nl-month h2{display:flex;align-items:baseline;margin:0;padding:0 0 8px;border-bottom:2px solid var(--pink-fill);font-size:15px;font-weight:700;color:var(--ink2)}
+.nl-month h2 .num{margin:0 3px;font-size:30px;line-height:1;color:var(--ink)}
+.nl-month h2 .num:first-child{margin-left:0}
+.nl-rows{list-style:none;margin:0;padding:0}
+.nl-rows a{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;padding:16px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.nl-rows time{display:flex;flex-direction:column}
+.nl-rows .nd{font-family:var(--num);font-weight:600;font-size:30px;line-height:1.05;letter-spacing:.02em;color:var(--pink)}
+.nwd{font-size:12px;font-weight:700;color:var(--ink3)}
+.nl-rows .nc{font-size:12px;font-weight:700;color:var(--ink3)}
+.nl-rows .nt{font-size:17px;font-weight:700;line-height:1.55;word-break:auto-phrase}
+.nl-rows .nl-l{margin-top:2px;font-size:13.5px;line-height:1.75;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* 横の欄 */
+.nl-side{display:grid;gap:28px;min-width:0}
+.nl-side h2{margin:0;padding-bottom:8px;border-bottom:2px solid var(--pink-fill);font-size:17px;font-weight:900;line-height:1.4}
+.nl-side h2::before{content:attr(data-en);display:block;font-family:var(--num);font-weight:600;font-size:13px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.nl-side ul{list-style:none;margin:0;padding:0}
+.nl-side li{border-bottom:1px solid var(--line)}
+.nl-side a{display:block;padding:11px 0;color:var(--ink);font-size:14px;font-weight:700;line-height:1.55;text-decoration:none}
+.nl-side a:hover{color:var(--pink)}
+.nl-side small{display:block;font-size:12px;font-weight:400;color:var(--ink3)}
+@media (max-width:900px){.nl-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){
+  .nl-h h1{font-size:26px}
+  .nl-h h1::before{font-size:15px}
+  .nl-fs{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+  .nl-fs::-webkit-scrollbar{display:none}
+  .nl-f label{flex:0 0 auto}
+  .nl-top.noimg>a{padding:20px 18px 22px}
+  .nl-top .nt,.nl-top.noimg .nt{font-size:22px}
+  .nl-top .nd{font-size:26px}
+  .nl-month h2 .num{font-size:26px}
+  .nl-rows a{grid-template-columns:60px minmax(0,1fr);column-gap:12px;padding:14px 0}
+  .nl-rows .nd{font-size:24px}
+  .nl-rows .nt{font-size:15.5px}
+  .nl-rows .nl-l{font-size:13px}
+}
 """
