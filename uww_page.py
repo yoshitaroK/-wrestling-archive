@@ -102,8 +102,10 @@ def cat_desc(cat, lst, year=None):
             cnt[v["ev"]] += 1
     top = sorted(cnt, key=lambda ev: (-cnt[ev], EV_ORDER.get(ev, 99)))[:2]
     n = len(lst)
-    ja_ev = f"({'・'.join(top)}{'など' if len(cnt) > len(top) else ''})" if top else ""
-    en_ev = f" ({', '.join(EV_EN.get(ev, ev) for ev in top)}{' and more' if len(cnt) > len(top) else ''})" if top else ""
+    # 大会名が「〜等」「… and other events」で終わるときは「など」「and more」を重ねない
+    more = len(cnt) > len(top) and not (top and top[-1].endswith("等"))
+    ja_ev = f"({'・'.join(top)}{'など' if more else ''})" if top else ""
+    en_ev = f" ({', '.join(EV_EN.get(ev, ev) for ev in top)}{' and more' if more else ''})" if top else ""
     if year:
         return L(f"{year}年の国際大会{ja_ev}で日本人選手が出ている{cat_name(cat)}のレスリング動画{n:,}本を、大会ごとにまとめました。"
                  "世界レスリング連合(UWW)公式 YouTube の動画をこのサイトで再生できます。",
