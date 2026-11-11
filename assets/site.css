@@ -1195,6 +1195,22 @@ table.champs td.none{color:var(--ink3)}
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
 .uww-who a{margin-right:10px;font-weight:700;padding:6px 0}
 .vm .uww-ev{font-weight:700;color:var(--ink2)}
+.uww-eyebrow{margin:0 0 4px;font-family:var(--num);font-weight:600;font-size:15px;letter-spacing:.16em;color:var(--pink)}
+.uww-years{list-style:none;margin:0 0 6px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.uww-years a{display:flex;flex-direction:column;padding:10px 14px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:var(--card-r);text-decoration:none;color:var(--ink)}
+.uww-years a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.uww-years .uy-y{font-size:32px;line-height:1;padding-top:4px}
+.uww-years .uy-c{font-size:14px;font-weight:700;color:var(--pink)}
+.uww-years .uy-s{font-size:12px;color:var(--ink3)}
+.uww-ytabs a{padding:4px 12px}
+.uww-ytabs .num{font-size:18px;line-height:1}
+.uww-yh{display:flex;align-items:baseline;gap:8px;margin:22px 0 4px;font-size:16px}
+.uww-yh .num{font-size:30px;line-height:1}
+.uww-yh small{font-size:12px;font-weight:400;color:var(--ink3)}
+.uww-ys{scroll-margin-top:80px}
+.uww-back{margin:18px 0 0}
+.uww-back a{display:inline-block;padding:10px 0;font-weight:700}
+@media (max-width:640px){.uww-years{grid-template-columns:repeat(3,1fr)}.uww-years a{padding:8px 10px}.uww-years .uy-y{font-size:26px}}
 
 .nw{--bg:#f2f3f5;--surface:#ffffff;--surface-2:#eef0f4;--ink:#1d1f23;--ink2:#4a4f58;--ink3:#626873;--line:#e2e4e8;--line-hi:#c4c8d0;
   --pink:#c8102e;--pink-deep:#a50d26;--pink-line:#f0bcc4;--link:#0b57c2;background:var(--bg);color:var(--ink);padding:18px 0 48px;color-scheme:light}

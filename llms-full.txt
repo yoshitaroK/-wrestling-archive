@@ -868,7 +868,7 @@
 - [塩谷 優(シオタニ ユウ)](https://japanwrestlingchannel.com/players/p-4a26a6/): 自衛隊体育学校・2022年世界選手権 3位・大会成績20件
 - [志賀 晃次郎(シガ コウジロウ)](https://japanwrestlingchannel.com/players/p-e46fa2/): 警視庁第六機動隊・2018年天皇杯全日本選手権 優勝・大会成績12件
 - [茂野 颯良(シゲノ ソラ)](https://japanwrestlingchannel.com/players/p-23cff5/): 大阪体育大学・2025年全日本大学選手権 7位・大会成績2件
-- [志土地 真優(シドチ マユ)](https://japanwrestlingchannel.com/players/p-332d9e/): 株式会社ジェイテクト・東京 2020 オリンピック 金メダル・大会成績8件
+- [志土地 真優(シドチ マユ)](https://japanwrestlingchannel.com/players/p-332d9e/): 株式会社ジェイテクト・東京 2020 オリンピック 金メダル・大会成績15件
 - [島崎 翔悟(シマサキ ショウゴ)](https://japanwrestlingchannel.com/players/p-ffa350/): 専修大学・2025年東日本学生選手権（春季大会） 優勝・大会成績5件
 - [島袋 希理瑠(シマブクロ キリル)](https://japanwrestlingchannel.com/players/p-6d2e89/): 株式会社C-Knacks・2025年全国社会人オープン選手権 優勝・大会成績6件
 - [清水 賢亮(シミズ ケンスケ)](https://japanwrestlingchannel.com/players/p-3791a5/): 自衛隊体育学校・2021年世界選手権 3位・大会成績17件
@@ -1123,6 +1123,7 @@
 - [上岡 七翠](https://japanwrestlingchannel.com/players/p-6768a6/): 天理大学・2024年全日本社会人選手権 3位・大会成績3件
 - [上村 武蔵](https://japanwrestlingchannel.com/players/p-ea3753/): 拓殖大学・2026年全日本学生選手権 5位・大会成績2件
 - [上武 春輝](https://japanwrestlingchannel.com/players/p-f2aad7/): 神奈川大学・2026年東日本学生選手権（春季大会） 優勝・大会成績4件
+- [上武 洋次郎](https://japanwrestlingchannel.com/players/p-5d3de6/): メキシコシティー 1968 オリンピック 金メダル・大会成績2件
 - [上野 裕次郎](https://japanwrestlingchannel.com/players/p-5ab2c3/): 栃木県スポーツ協会・2022年全日本社会人選手権 準優勝・大会成績5件
 - [下中 隆広](https://japanwrestlingchannel.com/players/p-5ed035/): 横浜刑務所・2015年明治杯全日本選抜選手権 4位・大会成績1件
 - [下山田 周](https://japanwrestlingchannel.com/players/p-e3bf28/): 日本体育大学・2020年全日本大学グレコローマン選手権 優勝・大会成績5件
@@ -1153,6 +1154,7 @@
 - [中村 駿文](https://japanwrestlingchannel.com/players/p-326575/): 山梨学院大学・2026年東日本学生選手権（春季大会） 3位・大会成績2件
 - [中橋 涼](https://japanwrestlingchannel.com/players/p-4af3a3/): 日本体育大学・2017年明治杯全日本選抜選手権 3位・大会成績3件
 - [中田 翔輝](https://japanwrestlingchannel.com/players/p-50caaa/): 日本体育大学・2022年天皇杯全日本選手権 準優勝・大会成績1件
+- [中田 茂男](https://japanwrestlingchannel.com/players/p-50dfcf/): メキシコシティー 1968 オリンピック 金メダル・大会成績1件
 - [中田 陽](https://japanwrestlingchannel.com/players/p-90594f/): 三重県立朝明高等学校教員・2019年明治杯全日本選抜選手権 優勝・大会成績4件
 - [中西 美結](https://japanwrestlingchannel.com/players/p-687a26/): 至学館大学・2023年全日本学生選手権 優勝・大会成績7件
 - [中里 優斗](https://japanwrestlingchannel.com/players/p-9cc76d/): 中央大学・2023年全日本学生選手権 5位・大会成績1件
@@ -1169,7 +1171,7 @@
 - [久米田 忠裕](https://japanwrestlingchannel.com/players/p-6d3990/): 天理大学・2024年全日本大学グレコローマン選手権 5位・大会成績1件
 - [乙名 未来](https://japanwrestlingchannel.com/players/p-b3cb2f/): 小田開発工業(株)・2024年全日本社会人選手権 3位・大会成績2件
 - [乙黒 圭祐](https://japanwrestlingchannel.com/players/p-292ba6/): 自衛隊体育学校・2019年天皇杯全日本選手権 優勝・大会成績7件
-- [乙黒 拓斗](https://japanwrestlingchannel.com/players/p-867dcb/): 自衛隊体育学校・2023年明治杯全日本選抜選手権 優勝・大会成績7件
+- [乙黒 拓斗](https://japanwrestlingchannel.com/players/p-867dcb/): 自衛隊体育学校・東京 2020 オリンピック 金メダル・大会成績8件
 - [亀井 竜昇](https://japanwrestlingchannel.com/players/p-4d44f7/): NTCコンサルタンツ・2017年天皇杯全日本選手権 3位・大会成績4件
 - [亀原 宏明](https://japanwrestlingchannel.com/players/p-04ecb3/): NSCC・2024年全国社会人オープン選手権 3位・大会成績1件
 - [二ノ宮 寛斗](https://japanwrestlingchannel.com/players/p-dea86f/): 不二精機(株)・2022年明治杯全日本選抜選手権 準優勝・大会成績13件
@@ -1185,6 +1187,7 @@
 - [井上 智裕](https://japanwrestlingchannel.com/players/p-484a87/): FUJIOH・2022年明治杯全日本選抜選手権 優勝・大会成績16件
 - [井上 樹](https://japanwrestlingchannel.com/players/p-abb440/): 徳山大学・2019年天皇杯全日本選手権 8位・大会成績1件
 - [井上 諒汰](https://japanwrestlingchannel.com/players/p-74866a/): 中央大学・2019年天皇杯全日本選手権 8位・大会成績1件
+- [井上 謙二](https://japanwrestlingchannel.com/players/p-96c727/): アテネ 2004 オリンピック 銅メダル・大会成績1件
 - [井上 貴尋](https://japanwrestlingchannel.com/players/p-e43d74/): 三恵海運・2015年明治杯全日本選抜選手権 準優勝・大会成績2件
 - [井出 光星](https://japanwrestlingchannel.com/players/p-291a16/): 自衛隊体育学校・2022年全日本社会人選手権 準優勝・大会成績3件
 - [井筒 勇人](https://japanwrestlingchannel.com/players/p-13e51b/): 拓殖大学・2018年天皇杯全日本選手権 準優勝・大会成績7件
@@ -1217,7 +1220,9 @@
 - [伊藤 隼](https://japanwrestlingchannel.com/players/p-9e2c7a/): 東洋大学・2023年全日本学生選手権 3位・大会成績3件
 - [伊藤 飛未來](https://japanwrestlingchannel.com/players/p-34510a/): 日本体育大学・2019年天皇杯全日本選手権 7位・大会成績1件
 - [伊藤 駿](https://japanwrestlingchannel.com/players/p-ebd3b3/): 早稲田大学・2016年天皇杯全日本選手権 準優勝・大会成績3件
-- [伊調 馨](https://japanwrestlingchannel.com/players/p-356561/): ALSOK・2018年天皇杯全日本選手権 優勝・大会成績6件
+- [伊調 千春](https://japanwrestlingchannel.com/players/p-09eff0/): 北京 2008 オリンピック 銀メダル・大会成績2件
+- [伊調 馨](https://japanwrestlingchannel.com/players/p-356561/): ALSOK・リオデジャネイロ 2016 オリンピック 金メダル・大会成績10件
+- [伊達 治一郎](https://japanwrestlingchannel.com/players/p-7b0707/): モントリオール 1976 オリンピック 金メダル・大会成績1件
 - [伏部内 まこ](https://japanwrestlingchannel.com/players/p-9ca750/): 育英大学・2022年全日本学生選手権 5位・大会成績1件
 - [伏部内 皓太](https://japanwrestlingchannel.com/players/p-765dd9/): 育英大学・2025年東日本学生選手権（春季大会） 準優勝・大会成績6件
 - [但野 航](https://japanwrestlingchannel.com/players/p-ae04e8/): ニトリ・2023年全日本社会人選手権 準優勝・大会成績5件
@@ -1234,6 +1239,7 @@
 - [佐藤 喜歌](https://japanwrestlingchannel.com/players/p-ca4945/): 自衛隊体育学校・2016年明治杯全日本選抜選手権 4位・大会成績3件
 - [佐藤 大斗](https://japanwrestlingchannel.com/players/p-b3ed88/): 専修大学・2022年全日本大学選手権 5位・大会成績2件
 - [佐藤 柊斗](https://japanwrestlingchannel.com/players/p-9b0b47/): 拓殖大学・2026年東日本学生選手権（春季大会） 3位・大会成績2件
+- [佐藤 満](https://japanwrestlingchannel.com/players/p-1d52e4/): ソウル 1988 オリンピック 金メダル・大会成績1件
 - [佐藤 秀磨](https://japanwrestlingchannel.com/players/p-d0f06f/): 青山学院大学・2025年東日本学生選手権（春季大会） 準優勝・大会成績5件
 - [佐藤 空](https://japanwrestlingchannel.com/players/p-417fa2/): CLINIC TEN SHIBUYA・2024年全日本社会人選手権 準優勝・大会成績2件
 - [佐藤 芙樹](https://japanwrestlingchannel.com/players/p-ed44dd/): 日本大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
@@ -1247,6 +1253,7 @@
 - [入江 くみ](https://japanwrestlingchannel.com/players/p-7d83c8/): ミキハウス・2018年天皇杯全日本選手権 準優勝・大会成績4件
 - [入江 ななみ](https://japanwrestlingchannel.com/players/p-d219c8/): ミキハウス・2021年明治杯全日本選抜選手権 準優勝・大会成績11件
 - [入江 ゆき](https://japanwrestlingchannel.com/players/p-fa83d9/): 自衛隊体育学校・2018年天皇杯全日本選手権 優勝・大会成績11件
+- [入江 隆](https://japanwrestlingchannel.com/players/p-358a15/): ロサンゼルス 1984 オリンピック 銀メダル・大会成績1件
 - [全 政忠](https://japanwrestlingchannel.com/players/p-175fd5/): 天理大学・2026年全日本大学グレコローマン選手権 5位・大会成績1件
 - [八木 千尋](https://japanwrestlingchannel.com/players/p-fb9f75/): 日本文理大学・2022年全日本学生選手権 5位・大会成績1件
 - [八木橋 万葉](https://japanwrestlingchannel.com/players/p-10579a/): 環太平洋大学・2019年天皇杯全日本選手権 6位・大会成績1件
@@ -1257,6 +1264,7 @@
 - [内山 椋太](https://japanwrestlingchannel.com/players/p-0b163e/): 国士舘大学・2023年全日本学生選手権 準優勝・大会成績5件
 - [内田 創太郎](https://japanwrestlingchannel.com/players/p-edcb13/): 明治大学・2022年全日本大学グレコローマン選手権 5位・大会成績2件
 - [内田 奈佑](https://japanwrestlingchannel.com/players/p-2cd2d8/): 至学館大学・2024年明治杯全日本選抜選手権 3位・大会成績5件
+- [内藤 克俊](https://japanwrestlingchannel.com/players/p-4b23fb/): パリ 1924 オリンピック 銅メダル・大会成績1件
 - [内藤 由良](https://japanwrestlingchannel.com/players/p-99621e/): 国士舘大学・2018年明治杯全日本選抜選手権 3位・大会成績1件
 - [内藤 莉久](https://japanwrestlingchannel.com/players/p-894b1e/): 自衛隊体育学校(集合訓練)・2025年全国社会人オープン選手権 3位・大会成績1件
 - [冨栄 雅秀](https://japanwrestlingchannel.com/players/p-e5e6f9/): 山梨学院大学・2019年明治杯全日本選抜選手権 5位・大会成績1件
@@ -1277,6 +1285,7 @@
 - [加藤 一人](https://japanwrestlingchannel.com/players/p-c31e2a/): 日本文理大学・2016年明治杯全日本選抜選手権 4位・大会成績2件
 - [加藤 万豊](https://japanwrestlingchannel.com/players/p-3fc54e/): 明治大学・2020年全日本大学グレコローマン選手権 準優勝・大会成績6件
 - [加藤 光貴](https://japanwrestlingchannel.com/players/p-b2a996/): 立教大学・2020年全日本大学グレコローマン選手権 5位・大会成績1件
+- [加藤 喜代美](https://japanwrestlingchannel.com/players/p-d5e92c/): ミュンヘン 1972 オリンピック 金メダル・大会成績1件
 - [加藤 大翔](https://japanwrestlingchannel.com/players/p-888b5e/): 国士舘クラブ・2025年全国社会人オープン選手権 準優勝・大会成績12件
 - [加藤 源大](https://japanwrestlingchannel.com/players/p-67d5d0/): 専修大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [加賀田 葵夏](https://japanwrestlingchannel.com/players/p-908746/): 青山学院大学・2018年天皇杯全日本選手権 準優勝・大会成績3件
@@ -1289,6 +1298,7 @@
 - [北岡 優佑](https://japanwrestlingchannel.com/players/p-179d29/): 九州共立大学・2019年天皇杯全日本選手権 5位・大会成績1件
 - [北島 魂](https://japanwrestlingchannel.com/players/p-37d404/): 中央大学・2026年東日本学生選手権（春季大会） 優勝・大会成績4件
 - [北 悠史朗](https://japanwrestlingchannel.com/players/p-af0a48/): 九州共立大学・2026年全日本学生選手権 5位・大会成績2件
+- [北野 祐秀](https://japanwrestlingchannel.com/players/p-1ce929/): ヘルシンキ 1952 オリンピック 銀メダル・大会成績1件
 - [千川 元暉](https://japanwrestlingchannel.com/players/p-d187ea/): 法政大学・2025年東日本学生選手権（秋季大会） 準優勝・大会成績7件
 - [千田 徠貴](https://japanwrestlingchannel.com/players/p-7f0707/): 日本体育大学・2026年全日本学生選手権 3位・大会成績3件
 - [千葉 大輝](https://japanwrestlingchannel.com/players/p-4b1f68/): 近畿大学・2023年全日本学生選手権 5位・大会成績1件
@@ -1327,15 +1337,16 @@
 - [吉田 奨健](https://japanwrestlingchannel.com/players/p-f01ed8/): 帝塚山大学・2024年全日本大学選手権 準優勝・大会成績5件
 - [吉田 拓真](https://japanwrestlingchannel.com/players/p-1fd595/): 東京農業大学・2025年東日本学生選手権（秋季大会） 準優勝・大会成績3件
 - [吉田 樹央](https://japanwrestlingchannel.com/players/p-ba71a3/): 東洋大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
-- [吉田 沙保里](https://japanwrestlingchannel.com/players/p-bd3d95/): ALSOK・2015年明治杯全日本選抜選手権 優勝・大会成績4件
+- [吉田 沙保里](https://japanwrestlingchannel.com/players/p-bd3d95/): ALSOK・ロンドン 2012 オリンピック 金メダル・大会成績8件
 - [吉田 海那](https://japanwrestlingchannel.com/players/p-2d997b/): 福岡大学・2023年全日本学生選手権 5位・大会成績1件
 - [吉田 真聖](https://japanwrestlingchannel.com/players/p-195039/): HAKOBEE SPORTS FUKUI・2024年全日本社会人選手権 準優勝・大会成績3件
+- [吉田 義勝](https://japanwrestlingchannel.com/players/p-e4c240/): 東京 1964 オリンピック 金メダル・大会成績1件
 - [吉田 隆起](https://japanwrestlingchannel.com/players/p-9c31c2/): 自衛隊体育学校・2020年天皇杯全日本選手権 優勝・大会成績12件
 - [吉里 颯大](https://japanwrestlingchannel.com/players/p-510b33/): 九州共立大学・2023年全日本学生選手権 5位・大会成績1件
 - [吉野 飛来](https://japanwrestlingchannel.com/players/p-468316/): 中央大学・2025年東日本学生選手権（春季大会） 3位・大会成績2件
 - [向井 識起](https://japanwrestlingchannel.com/players/p-dccee1/): 自衛隊体育学校・2021年明治杯全日本選抜選手権 優勝・大会成績6件
-- [向田 真優](https://japanwrestlingchannel.com/players/p-ef425f/): 至学館大学・2019年明治杯全日本選抜選手権 優勝・大会成績7件
 - [和地 美咲](https://japanwrestlingchannel.com/players/p-4af904/): 日本体育大学・2023年全日本社会人選手権 準優勝・大会成績6件
+- [和田 喜久夫](https://japanwrestlingchannel.com/players/p-599118/): ミュンヘン 1972 オリンピック 銀メダル・大会成績1件
 - [品田 陽平](https://japanwrestlingchannel.com/players/p-34b44d/): 法政大学・2024年天皇杯全日本選手権 準優勝・大会成績8件
 - [善積 築久](https://japanwrestlingchannel.com/players/p-817680/): 徳山大学・2018年天皇杯全日本選手権 5位・大会成績1件
 - [喜多 康介](https://japanwrestlingchannel.com/players/p-6a06f9/): 育英大学・2022年全日本学生選手権 5位・大会成績1件
@@ -1346,7 +1357,7 @@
 - [土井 璃音](https://japanwrestlingchannel.com/players/p-9a75d0/): 共立印刷株式会社・2024年全日本社会人選手権 3位・大会成績1件
 - [土居 愛実](https://japanwrestlingchannel.com/players/p-744220/): 防衛医科大学校・2025年全国社会人オープン選手権 3位・大会成績1件
 - [土屋 健](https://japanwrestlingchannel.com/players/p-0b7094/): 長泉ファイティングエンジェルス・2023年全日本社会人選手権 優勝・大会成績1件
-- [土性 沙羅](https://japanwrestlingchannel.com/players/p-3df1a5/): 東新住建・2019年明治杯全日本選抜選手権 優勝・大会成績9件
+- [土性 沙羅](https://japanwrestlingchannel.com/players/p-3df1a5/): 東新住建・リオデジャネイロ 2016 オリンピック 金メダル・大会成績10件
 - [土橋 奏珠](https://japanwrestlingchannel.com/players/p-b72519/): 至学館大学・2016年天皇杯全日本選手権 3位・大会成績2件
 - [坂上 嘉津季](https://japanwrestlingchannel.com/players/p-493043/): ALSOK・2018年明治杯全日本選抜選手権 優勝・大会成績8件
 - [坂上 翔琉](https://japanwrestlingchannel.com/players/p-3d76fd/): 育英大学・2026年東日本学生選手権（春季大会） 3位・大会成績3件
@@ -1365,6 +1376,7 @@
 - [執行 優大](https://japanwrestlingchannel.com/players/p-2e4d91/): 福岡大学・2019年明治杯全日本選抜選手権 5位・大会成績2件
 - [執行 大海](https://japanwrestlingchannel.com/players/p-652241/): 日本文理大学・2015年天皇杯全日本選手権 4位・大会成績2件
 - [基山 仁太郎](https://japanwrestlingchannel.com/players/p-0e0b30/): 株式会社イカイ・2020年天皇杯全日本選手権 優勝・大会成績7件
+- [堀内 岩雄](https://japanwrestlingchannel.com/players/p-b7b9a2/): 東京 1964 オリンピック 銅メダル・大会成績1件
 - [堀 千咲](https://japanwrestlingchannel.com/players/p-65541c/): 東洋大学・2019年天皇杯全日本選手権 5位・大会成績1件
 - [堀後 雄太](https://japanwrestlingchannel.com/players/p-fc61c2/): 拓殖大学・2015年明治杯全日本選抜選手権 5位・大会成績1件
 - [堀江 耐志](https://japanwrestlingchannel.com/players/p-ab9b57/): 自衛隊体育学校・2022年天皇杯全日本選手権 優勝・大会成績5件
@@ -1419,10 +1431,12 @@
 - [大関 寛穂](https://japanwrestlingchannel.com/players/p-cee050/): 国士舘大学・2022年全日本大学選手権 3位・大会成績3件
 - [大関 永優美](https://japanwrestlingchannel.com/players/p-5471a2/): 日本大学・2022年全日本社会人選手権 優勝・大会成績2件
 - [太田 匠海](https://japanwrestlingchannel.com/players/p-17f511/): 明治大学・2022年全日本大学選手権 8位・大会成績1件
-- [太田 忍](https://japanwrestlingchannel.com/players/p-b81498/): ALSOK・2018年明治杯全日本選抜選手権 優勝・大会成績10件
+- [太田 忍](https://japanwrestlingchannel.com/players/p-b81498/): ALSOK・リオデジャネイロ 2016 オリンピック 銀メダル・大会成績11件
+- [太田 拓弥](https://japanwrestlingchannel.com/players/p-6a2c55/): アトランタ 1996 オリンピック 銅メダル・大会成績1件
 - [太田 晃暉](https://japanwrestlingchannel.com/players/p-413d57/): 専修大学・2022年全日本大学選手権 3位・大会成績2件
 - [太田 楓輝](https://japanwrestlingchannel.com/players/p-9a16d2/): 育英大学・2023年全日本学生選手権 3位・大会成績4件
 - [太田 瑛人](https://japanwrestlingchannel.com/players/p-484258/): 法政大学・2026年全日本大学グレコローマン選手権 7位・大会成績1件
+- [太田 章](https://japanwrestlingchannel.com/players/p-a62121/): ソウル 1988 オリンピック 銀メダル・大会成績2件
 - [太田 若那](https://japanwrestlingchannel.com/players/p-273bdd/): 東洋大学・2022年全日本社会人選手権 準優勝・大会成績5件
 - [奈良部 嘉明](https://japanwrestlingchannel.com/players/p-c3a3c2/): 筑西広域消防本部・2016年明治杯全日本選抜選手権 3位・大会成績2件
 - [奈須川 良太](https://japanwrestlingchannel.com/players/p-8db7bf/): 神奈川大学・2021年全日本学生選手権 優勝・大会成績7件
@@ -1442,9 +1456,11 @@
 - [安田 拓斗](https://japanwrestlingchannel.com/players/p-e593cb/): 秋田刑務所・2023年全日本社会人選手権 優勝・大会成績6件
 - [安田 翔](https://japanwrestlingchannel.com/players/p-89d6c4/): 福井県立嶺南東特別支援学校・2016年明治杯全日本選抜選手権 4位・大会成績1件
 - [宍戸 拓海](https://japanwrestlingchannel.com/players/p-1a555a/): いわき市レスリング教室・2023年全日本社会人選手権 3位・大会成績2件
+- [宗村 宗二](https://japanwrestlingchannel.com/players/p-f9942e/): メキシコシティー 1968 オリンピック 金メダル・大会成績1件
 - [宮内 勇真](https://japanwrestlingchannel.com/players/p-514a24/): 神奈川大学・2021年明治杯全日本選抜選手権 3位・大会成績7件
 - [宮原 健史郎](https://japanwrestlingchannel.com/players/p-79c856/): 周南公立大学・2022年全日本大学選手権 5位・大会成績1件
 - [宮原 優](https://japanwrestlingchannel.com/players/p-0d1f43/): 博報堂DYスポーツ・2018年明治杯全日本選抜選手権 準優勝・大会成績10件
+- [宮原 厚次](https://japanwrestlingchannel.com/players/p-1e3c7f/): ロサンゼルス 1984 オリンピック 金メダル・大会成績2件
 - [宮原 将裕](https://japanwrestlingchannel.com/players/p-097329/): 大東文化大学・2015年明治杯全日本選抜選手権 5位・大会成績1件
 - [宮原 潤](https://japanwrestlingchannel.com/players/p-c41eb3/): 警視庁レスリングクラブ・2022年全日本社会人選手権 準優勝・大会成績1件
 - [宮城 海](https://japanwrestlingchannel.com/players/p-b6b54d/): 日本体育大学・2021年全日本学生選手権 準優勝・大会成績2件
@@ -1453,11 +1469,13 @@
 - [宮田 大地](https://japanwrestlingchannel.com/players/p-c38c14/): 育英大学・2020年全日本大学グレコローマン選手権 8位・大会成績1件
 - [宮腰 恒](https://japanwrestlingchannel.com/players/p-36b9ab/): 東洋大学・2015年明治杯全日本選抜選手権 5位・大会成績1件
 - [富塚 拓也](https://japanwrestlingchannel.com/players/p-0a3a1d/): 育英大学・2019年天皇杯全日本選手権 準優勝・大会成績3件
+- [富山 英明](https://japanwrestlingchannel.com/players/p-64e047/): ロサンゼルス 1984 オリンピック 金メダル・大会成績1件
 - [寺地 怜央](https://japanwrestlingchannel.com/players/p-4b9fc5/): 立命館大学・2021年全日本大学グレコローマン選手権 5位・大会成績2件
 - [寺本 鈴](https://japanwrestlingchannel.com/players/p-45b2f8/): 山梨学院大学・2023年明治杯全日本選抜選手権 準優勝・大会成績8件
 - [寺田 光輝](https://japanwrestlingchannel.com/players/p-81f45c/): 福岡大学助手・2018年天皇杯全日本選手権 8位・大会成績1件
 - [寺田 靖也](https://japanwrestlingchannel.com/players/p-9ed5b8/): 明治大学クラブ・2024年全日本社会人選手権 準優勝・大会成績4件
 - [對比地 旭陽](https://japanwrestlingchannel.com/players/p-e762ff/): 山梨学院大学・2021年全日本学生選手権 3位・大会成績2件
+- [小原 日登美](https://japanwrestlingchannel.com/players/p-c087e6/): ロンドン 2012 オリンピック 金メダル・大会成績1件
 - [小坂 歩未](https://japanwrestlingchannel.com/players/p-918641/): 法政大学・2022年全日本学生選手権 3位・大会成績4件
 - [小室 裕大](https://japanwrestlingchannel.com/players/p-25bd96/): 自衛隊体育学校・2020年天皇杯全日本選手権 4位・大会成績3件
 - [小山内 葵生](https://japanwrestlingchannel.com/players/p-94066d/): 明治大学・2025年東日本学生選手権（春季大会） 3位・大会成績1件
@@ -1474,6 +1492,7 @@
 - [小林 冴祐](https://japanwrestlingchannel.com/players/p-20b6ac/): 日本体育大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
 - [小林 大樹](https://japanwrestlingchannel.com/players/p-cbc933/): 日本体育大学・2018年明治杯全日本選抜選手権 3位・大会成績2件
 - [小林 奏音](https://japanwrestlingchannel.com/players/p-5c54ee/): 専修大学・2022年天皇杯全日本選手権 準優勝・大会成績9件
+- [小林 孝至](https://japanwrestlingchannel.com/players/p-15eca1/): ソウル 1988 オリンピック 金メダル・大会成績1件
 - [小林 幸太郎](https://japanwrestlingchannel.com/players/p-dd57be/): 福岡大学・2026年全日本学生選手権 5位・大会成績1件
 - [小林 康介](https://japanwrestlingchannel.com/players/p-5e454b/): 神奈川大学・2018年天皇杯全日本選手権 5位・大会成績1件
 - [小林 怜楓](https://japanwrestlingchannel.com/players/p-a02f59/): 慶應義塾大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
@@ -1563,7 +1582,6 @@
 - [嶋田 英莉](https://japanwrestlingchannel.com/players/p-3aceaa/): 育英大学・2021年全日本学生選手権 3位・大会成績3件
 - [川井 千晶](https://japanwrestlingchannel.com/players/p-bc4b42/): 日本体育大学・2023年天皇杯全日本選手権 3位・大会成績3件
 - [川井 友香子](https://japanwrestlingchannel.com/players/p-5620fd/): サントリ―・東京 2020 オリンピック 金メダル・大会成績10件
-- [川井 梨紗子](https://japanwrestlingchannel.com/players/p-e74ca1/): ジャパンビバレッジ・2019年明治杯全日本選抜選手権 優勝・大会成績10件
 - [川岡 司](https://japanwrestlingchannel.com/players/p-597f06/): 松阪クラブ・2023年全日本社会人選手権 3位・大会成績1件
 - [川嶋 洸翔](https://japanwrestlingchannel.com/players/p-1a18c4/): 中京学院大学・2025年全日本大学グレコローマン選手権 5位・大会成績3件
 - [川市 竜之介](https://japanwrestlingchannel.com/players/p-9e4770/): 徳山大学・2020年全日本大学グレコローマン選手権 8位・大会成績1件
@@ -1575,10 +1593,13 @@
 - [川野 陽介](https://japanwrestlingchannel.com/players/p-2f17d6/): 自衛隊体育学校・2015年天皇杯全日本選手権 準優勝・大会成績2件
 - [工藤 佳代子](https://japanwrestlingchannel.com/players/p-b6b6b9/): 自衛隊体育学校・2015年明治杯全日本選抜選手権 準優勝・大会成績4件
 - [工藤 大知](https://japanwrestlingchannel.com/players/p-51f722/): 国士舘大学・2025年東日本学生選手権（秋季大会） 3位・大会成績2件
+- [工藤 章](https://japanwrestlingchannel.com/players/p-9dd2f8/): モントリオール 1976 オリンピック 銅メダル・大会成績1件
+- [市口 政光](https://japanwrestlingchannel.com/players/p-6cea27/): 東京 1964 オリンピック 金メダル・大会成績1件
 - [市吉 輝星](https://japanwrestlingchannel.com/players/p-0be2e6/): 山梨学院大学・2025年東日本学生選手権（秋季大会） 準優勝・大会成績1件
 - [市川 アンディ](https://japanwrestlingchannel.com/players/p-63b723/): 神奈川大学・2023年全日本大学グレコローマン選手権 準優勝・大会成績5件
 - [市川 大貴](https://japanwrestlingchannel.com/players/p-4e2777/): 東京農業大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [平井 かえで](https://japanwrestlingchannel.com/players/p-d853c6/): 育英大学・2023年全日本社会人選手権 優勝・大会成績9件
+- [平山 紘一郎](https://japanwrestlingchannel.com/players/p-8458be/): ミュンヘン 1972 オリンピック 銀メダル・大会成績2件
 - [平岡 大宙](https://japanwrestlingchannel.com/players/p-b9dd74/): 慶應義塾大学・2022年全日本大学選手権 5位・大会成績1件
 - [平岡 虎之介](https://japanwrestlingchannel.com/players/p-c6307e/): 東京農業大学・2025年東日本学生選手権（春季大会） 3位・大会成績3件
 - [平田 彩夏](https://japanwrestlingchannel.com/players/p-83f978/): 日本大学・2021年全日本学生選手権 3位・大会成績1件
@@ -1603,6 +1624,7 @@
 - [押野 銀太](https://japanwrestlingchannel.com/players/p-4918ba/): 東海大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [持永 空弥](https://japanwrestlingchannel.com/players/p-06360d/): 国士舘大学・2023年明治杯全日本選抜選手権 3位・大会成績2件
 - [掛水 力](https://japanwrestlingchannel.com/players/p-d89497/): 日本文理大学・2023年全日本大学グレコローマン選手権 7位・大会成績1件
+- [斎藤 育造](https://japanwrestlingchannel.com/players/p-995853/): ロサンゼルス 1984 オリンピック 銅メダル・大会成績1件
 - [新井 裕太](https://japanwrestlingchannel.com/players/p-321c2b/): 国士舘大学・2023年全日本学生選手権 5位・大会成績4件
 - [新倉 すみれ](https://japanwrestlingchannel.com/players/p-2a763a/): 神奈川大学・2022年U23世界選手権 3位・大会成績13件
 - [新川 武弥](https://japanwrestlingchannel.com/players/p-3e3486/): 日本大学・2014年天皇杯全日本選手権 3位・大会成績1件
@@ -1664,6 +1686,7 @@
 - [松井 礼士](https://japanwrestlingchannel.com/players/p-369b3b/): 南九州大学・2026年全日本大学グレコローマン選手権 3位・大会成績1件
 - [松井 翔](https://japanwrestlingchannel.com/players/p-4aabf8/): ワセダクラブ・2024年全日本社会人選手権 3位・大会成績1件
 - [松井 謙](https://japanwrestlingchannel.com/players/p-f78a02/): 日本体育大学・2021年世界選手権 優勝・大会成績6件
+- [松原 正之](https://japanwrestlingchannel.com/players/p-06f48b/): ローマ 1960 オリンピック 銀メダル・大会成績1件
 - [松坂 誠應](https://japanwrestlingchannel.com/players/p-7c20df/): 自衛隊体育学校・2017年明治杯全日本選抜選手権 優勝・大会成績11件
 - [松宮 大樹](https://japanwrestlingchannel.com/players/p-b3374c/): 山梨学院大学・2016年明治杯全日本選抜選手権 4位・大会成績1件
 - [松實 海斗](https://japanwrestlingchannel.com/players/p-756ae3/): 国士舘大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
@@ -1683,8 +1706,9 @@
 - [松本 真也](https://japanwrestlingchannel.com/players/p-a6cda7/): 警視庁第六機動隊・2015年天皇杯全日本選手権 優勝・大会成績4件
 - [松本 篤史](https://japanwrestlingchannel.com/players/p-1403f0/): 警視庁第六機動隊・2018年明治杯全日本選抜選手権 優勝・大会成績11件
 - [松本 陸](https://japanwrestlingchannel.com/players/p-aa4e47/): 大東文化大学・2021年全日本大学グレコローマン選手権 5位・大会成績1件
-- [松本 隆太郎](https://japanwrestlingchannel.com/players/p-a33928/): 日本体育大学スポーツ局・2014年明治杯全日本選抜選手権 優勝・大会成績2件
+- [松本 隆太郎](https://japanwrestlingchannel.com/players/p-a33928/): 日本体育大学スポーツ局・ロンドン 2012 オリンピック 銅メダル・大会成績3件
 - [松村 朝矩](https://japanwrestlingchannel.com/players/p-57c3ad/): 慶應義塾大学・2026年東日本学生選手権（春季大会） 優勝・大会成績1件
+- [松永 共広](https://japanwrestlingchannel.com/players/p-e56603/): 北京 2008 オリンピック 銀メダル・大会成績1件
 - [松澤 大樹](https://japanwrestlingchannel.com/players/p-a1ae33/): 警視庁レスリングクラブ・2022年全日本社会人選手権 3位・大会成績1件
 - [松田 健悟](https://japanwrestlingchannel.com/players/p-20879f/): 青山学院大学職員・2019年明治杯全日本選抜選手権 3位・大会成績2件
 - [松雪 成葉](https://japanwrestlingchannel.com/players/p-b46171/): ジェイテクト・2021年天皇杯全日本選手権 優勝・大会成績8件
@@ -1695,6 +1719,7 @@
 - [柳瀬 陸](https://japanwrestlingchannel.com/players/p-f996c0/): 自衛隊体育学校・2024年全国社会人オープン選手権 準優勝・大会成績3件
 - [柳生 実咲](https://japanwrestlingchannel.com/players/p-093da2/): 至学館大学・2026年全日本学生選手権 5位・大会成績1件
 - [柳生 達哉](https://japanwrestlingchannel.com/players/p-2a1f08/): 徳島県立池田高校教諭・2024年全国社会人オープン選手権 3位・大会成績3件
+- [柳田 英明](https://japanwrestlingchannel.com/players/p-82d26d/): ミュンヘン 1972 オリンピック 金メダル・大会成績1件
 - [柴田 あおい](https://japanwrestlingchannel.com/players/p-9cb375/): 日本大学・2024年全国社会人オープン選手権 準優勝・大会成績1件
 - [柴田 一磨](https://japanwrestlingchannel.com/players/p-1b5b32/): 大東文化大学・2018年天皇杯全日本選手権 5位・大会成績1件
 - [栄 希和](https://japanwrestlingchannel.com/players/p-51da77/): ジェイテクト・2016年明治杯全日本選抜選手権 優勝・大会成績5件
@@ -1727,7 +1752,7 @@
 - [樋口 卓弥](https://japanwrestlingchannel.com/players/p-3b69f9/): ワールド・プランニング・2018年天皇杯全日本選手権 5位・大会成績1件
 - [樋口 美賀子](https://japanwrestlingchannel.com/players/p-8b00db/): 環太平洋大学・2015年明治杯全日本選抜選手権 準優勝・大会成績4件
 - [樋口 耀](https://japanwrestlingchannel.com/players/p-6fc413/): 日本体育大学・2019年明治杯全日本選抜選手権 3位・大会成績2件
-- [樋口 黎](https://japanwrestlingchannel.com/players/p-185e28/): ミキハウス・パリ 2024 オリンピック 金メダル・大会成績17件
+- [樋口 黎](https://japanwrestlingchannel.com/players/p-185e28/): ミキハウス・パリ 2024 オリンピック 金メダル・大会成績18件
 - [樋浦 雄大](https://japanwrestlingchannel.com/players/p-3d0d3d/): 国際武道大学・2025年東日本学生選手権（秋季大会） 準優勝・大会成績1件
 - [権田 龍](https://japanwrestlingchannel.com/players/p-b7d67b/): 周南公立大学・2024年全日本大学グレコローマン選手権 3位・大会成績2件
 - [横地 悠樹](https://japanwrestlingchannel.com/players/p-25d52c/): 中央大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
@@ -1756,10 +1781,12 @@
 - [水野 陽亮](https://japanwrestlingchannel.com/players/p-bbc9ae/): 立命館大学・2023年全日本学生選手権 5位・大会成績2件
 - [永山 鉄晴](https://japanwrestlingchannel.com/players/p-b70634/): 山梨学院大学・2026年東日本学生選手権（春季大会） 優勝・大会成績4件
 - [永田 丈治](https://japanwrestlingchannel.com/players/p-350c02/): 国士舘大学・2018年天皇杯全日本選手権 3位・大会成績1件
-- [永田 克彦](https://japanwrestlingchannel.com/players/p-cb3951/): レッスルウィン・2015年天皇杯全日本選手権 優勝・大会成績1件
+- [永田 克彦](https://japanwrestlingchannel.com/players/p-cb3951/): レッスルウィン・シドニー 2000 オリンピック 銀メダル・大会成績2件
 - [永田 裕城](https://japanwrestlingchannel.com/players/p-10a5e3/): 自衛隊体育学校・2014年天皇杯全日本選手権 4位・大会成績1件
+- [江藤 正基](https://japanwrestlingchannel.com/players/p-8c651e/): ロサンゼルス 1984 オリンピック 銀メダル・大会成績1件
 - [江藤 紀友](https://japanwrestlingchannel.com/players/p-d2174e/): 辻屋質店・2015年明治杯全日本選抜選手権 準優勝・大会成績4件
 - [池亀 優希](https://japanwrestlingchannel.com/players/p-41f236/): 自衛隊体育学校・2014年明治杯全日本選抜選手権 4位・大会成績1件
+- [池田 三男](https://japanwrestlingchannel.com/players/p-1efef5/): メルボルン 1956 オリンピック 金メダル・大会成績1件
 - [池田 倫](https://japanwrestlingchannel.com/players/p-24b08f/): 日本大学・2022年全日本学生選手権 5位・大会成績1件
 - [池田 龍斗](https://japanwrestlingchannel.com/players/p-8f33ae/): 山形市スポーツ協会・2022年U23世界選手権 3位・大会成績11件
 - [沖野 雷斗](https://japanwrestlingchannel.com/players/p-2b712d/): 帝塚山大学・2022年全日本大学選手権 8位・大会成績1件
@@ -1780,6 +1807,7 @@
 - [浅川 享助](https://japanwrestlingchannel.com/players/p-026c15/): 北杜レスリングクラブ・2023年全日本社会人選手権 準優勝・大会成績2件
 - [浅沼 竜](https://japanwrestlingchannel.com/players/p-f25aea/): 神奈川大学・2021年全日本大学グレコローマン選手権 8位・大会成績1件
 - [浅野 心](https://japanwrestlingchannel.com/players/p-511632/): 国士舘大学・2026年東日本学生選手権（春季大会） 準優勝・大会成績3件
+- [浜口 京子](https://japanwrestlingchannel.com/players/p-f031c7/): 北京 2008 オリンピック 銅メダル・大会成績2件
 - [浜本 歩](https://japanwrestlingchannel.com/players/p-5a41d1/): 関西大学・2023年全日本大学選手権 3位・大会成績1件
 - [浜田 千穂](https://japanwrestlingchannel.com/players/p-373f2c/): キッコーマン・2016年明治杯全日本選抜選手権 優勝・大会成績11件
 - [浦田 繁康](https://japanwrestlingchannel.com/players/p-438043/): 山梨学院大学・2026年全日本学生選手権 5位・大会成績1件
@@ -1796,11 +1824,13 @@
 - [清水 蛍汰](https://japanwrestlingchannel.com/players/p-c9b5a1/): 拓殖大学・2019年天皇杯全日本選手権 準優勝・大会成績4件
 - [渡利 璃穏](https://japanwrestlingchannel.com/players/p-d087c7/): アイシン・エィ・ダブリュ・2018年明治杯全日本選抜選手権 優勝・大会成績7件
 - [渡辺 慶二](https://japanwrestlingchannel.com/players/p-fd94ac/): Pitt bull wrestling club・2023年全日本学生選手権 優勝・大会成績8件
+- [渡辺 長武](https://japanwrestlingchannel.com/players/p-34351e/): 東京 1964 オリンピック 金メダル・大会成績1件
 - [渡邉 朝日](https://japanwrestlingchannel.com/players/p-08dc1b/): 日本大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [渡部 広章](https://japanwrestlingchannel.com/players/p-d4edf1/): 日本体育大学・2014年天皇杯全日本選手権 4位・大会成績1件
 - [渡部 泰世](https://japanwrestlingchannel.com/players/p-633bb0/): 専修大学・2023年全日本学生選手権 3位・大会成績4件
 - [湊 莉菜](https://japanwrestlingchannel.com/players/p-85dc00/): 日本大学・2025年全日本学生選手権 5位・大会成績1件
-- [湯元 進一](https://japanwrestlingchannel.com/players/p-8d9570/): 自衛隊体育学校・2015年明治杯全日本選抜選手権 5位・大会成績1件
+- [湯元 健一](https://japanwrestlingchannel.com/players/p-784544/): 北京 2008 オリンピック 銀メダル・大会成績1件
+- [湯元 進一](https://japanwrestlingchannel.com/players/p-8d9570/): 自衛隊体育学校・ロンドン 2012 オリンピック 銅メダル・大会成績2件
 - [湯淺 堅斗](https://japanwrestlingchannel.com/players/p-772036/): 専修大学・2025年東日本学生選手権（春季大会） 3位・大会成績1件
 - [満永 大翔](https://japanwrestlingchannel.com/players/p-fc5854/): 近畿大学・2025年全日本大学グレコローマン選手権 8位・大会成績1件
 - [源平 彩南](https://japanwrestlingchannel.com/players/p-11eff7/): 株式会社アイシン・2017年天皇杯全日本選手権 優勝・大会成績12件
@@ -1833,6 +1863,7 @@
 - [田中 陸](https://japanwrestlingchannel.com/players/p-627c38/): 早稲田大学・2026年東日本学生選手権（春季大会） 3位・大会成績2件
 - [田中 颯人](https://japanwrestlingchannel.com/players/p-bfdaac/): 関西大学・2019年明治杯全日本選抜選手権 7位・大会成績1件
 - [田代 拓海](https://japanwrestlingchannel.com/players/p-5df67f/): 佐賀県レスリング協会・2017年明治杯全日本選抜選手権 3位・大会成績3件
+- [田南部 力](https://japanwrestlingchannel.com/players/p-7fc8e0/): アテネ 2004 オリンピック 銅メダル・大会成績1件
 - [田南部 夢叶](https://japanwrestlingchannel.com/players/p-a125e1/): 株式会社レスターホールディングス・2019年明治杯全日本選抜選手権 優勝・大会成績11件
 - [田原 想羅](https://japanwrestlingchannel.com/players/p-95961f/): 育英大学・2026年東日本学生選手権（春季大会） 準優勝・大会成績4件
 - [田口 あい](https://japanwrestlingchannel.com/players/p-709df0/): 日本体育大学・2019年明治杯全日本選抜選手権 8位・大会成績1件
@@ -1845,7 +1876,7 @@
 - [畔上 浩輝](https://japanwrestlingchannel.com/players/p-5d00aa/): 近畿大学・2023年全日本大学選手権 8位・大会成績1件
 - [畠野 尊](https://japanwrestlingchannel.com/players/p-9a7483/): 神奈川大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
 - [番地 啓太](https://japanwrestlingchannel.com/players/p-09984c/): 国士館大学・2019年明治杯全日本選抜選手権 準優勝・大会成績5件
-- [登坂 絵莉](https://japanwrestlingchannel.com/players/p-7f390d/): 東新住建・2015年明治杯全日本選抜選手権 優勝・大会成績9件
+- [登坂 絵莉](https://japanwrestlingchannel.com/players/p-7f390d/): 東新住建・リオデジャネイロ 2016 オリンピック 金メダル・大会成績10件
 - [白井 勝太](https://japanwrestlingchannel.com/players/p-60734e/): (株)クインテット・2021年天皇杯全日本選手権 優勝・大会成績14件
 - [白川 大虎](https://japanwrestlingchannel.com/players/p-fcdf0a/): 育英大学・2026年東日本学生選手権（春季大会） 準優勝・大会成績1件
 - [白鳥 夏希](https://japanwrestlingchannel.com/players/p-22eedc/): 拓殖大学・2025年全日本学生選手権 5位・大会成績1件
@@ -1858,6 +1889,7 @@
 - [真貴 竜馬](https://japanwrestlingchannel.com/players/p-220b3e/): 大阪体育大学・2023年全日本大学グレコローマン選手権 7位・大会成績1件
 - [矢後 佑華](https://japanwrestlingchannel.com/players/p-3fd86b/): 警視庁第六機動隊・2016年明治杯全日本選抜選手権 準優勝・大会成績9件
 - [矢後 愛佳](https://japanwrestlingchannel.com/players/p-7c270d/): 日本大学・2017年天皇杯全日本選手権 3位・大会成績2件
+- [石井 庄八](https://japanwrestlingchannel.com/players/p-9f5ac2/): ヘルシンキ 1952 オリンピック 金メダル・大会成績1件
 - [石井 良祐](https://japanwrestlingchannel.com/players/p-af1574/): 専修大学・2018年天皇杯全日本選手権 5位・大会成績1件
 - [石原 大洋](https://japanwrestlingchannel.com/players/p-f9f983/): GOOD FELLOWS・2024年全国社会人オープン選手権 3位・大会成績1件
 - [石川 将樹](https://japanwrestlingchannel.com/players/p-58c965/): (株)常陽銀行・2019年天皇杯全日本選手権 準優勝・大会成績4件
@@ -1903,11 +1935,14 @@
 - [竹本 颯汰](https://japanwrestlingchannel.com/players/p-cc870c/): 日本体育大学・2026年東日本学生選手権（春季大会） 優勝・大会成績2件
 - [竹田 廉](https://japanwrestlingchannel.com/players/p-cad53c/): 東洋大学・2023年全日本学生選手権 3位・大会成績3件
 - [笠井 梨瑚](https://japanwrestlingchannel.com/players/p-c6156f/): 専修大学・2023年全日本学生選手権 準優勝・大会成績3件
+- [笠原 茂](https://japanwrestlingchannel.com/players/p-9b5cd5/): メルボルン 1956 オリンピック 銀メダル・大会成績1件
 - [笹俣 結睦](https://japanwrestlingchannel.com/players/p-8b0268/): 中京学院大学・2025年西日本学生新人選手権 3位・大会成績3件
+- [笹原 正三](https://japanwrestlingchannel.com/players/p-f646fd/): メルボルン 1956 オリンピック 金メダル・大会成績1件
 - [笹沼 拓己](https://japanwrestlingchannel.com/players/p-3824c0/): 慶應義塾大学・2026年東日本学生選手権（春季大会） 優勝・大会成績3件
 - [箱石 彪宇](https://japanwrestlingchannel.com/players/p-2bf264/): 国士舘大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
 - [米平 安寛](https://japanwrestlingchannel.com/players/p-87412b/): 三恵海運・2015年明治杯全日本選抜選手権 優勝・大会成績4件
 - [米満 丈翔](https://japanwrestlingchannel.com/players/p-2c35cc/): 帝塚山大学・2026年全日本大学グレコローマン選手権 7位・大会成績1件
+- [米満 達弘](https://japanwrestlingchannel.com/players/p-73625e/): ロンドン 2012 オリンピック 金メダル・大会成績1件
 - [米澤 凌](https://japanwrestlingchannel.com/players/p-fa3987/): 早稲田大学・2019年天皇杯全日本選手権 3位・大会成績6件
 - [米澤 圭](https://japanwrestlingchannel.com/players/p-1612ce/): 住友金属鉱山(株)・2021年明治杯全日本選抜選手権 準優勝・大会成績5件
 - [米澤 太朗](https://japanwrestlingchannel.com/players/p-9eebcc/): 中央大学・2026年全日本学生選手権 5位・大会成績1件
@@ -1921,6 +1956,7 @@
 - [與那嶺 優里](https://japanwrestlingchannel.com/players/p-edef3f/): 釘宮整形外科リハビリクリニック・2017年明治杯全日本選抜選手権 3位・大会成績3件
 - [船木 拓也](https://japanwrestlingchannel.com/players/p-77e93f/): 自衛隊体育学校・2018年明治杯全日本選抜選手権 3位・大会成績4件
 - [花井 瑛絵](https://japanwrestlingchannel.com/players/p-317fb2/): 朝明高等学校教員・2021年明治杯全日本選抜選手権 優勝・大会成績7件
+- [花原 勉](https://japanwrestlingchannel.com/players/p-28f185/): 東京 1964 オリンピック 金メダル・大会成績1件
 - [花原 大翔](https://japanwrestlingchannel.com/players/p-7f6ed4/): 日本体育大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [花山 和寛](https://japanwrestlingchannel.com/players/p-3e3a6b/): 自衛隊体育学校・2015年明治杯全日本選抜選手権 優勝・大会成績9件
 - [花山 尚生](https://japanwrestlingchannel.com/players/p-cd2dc3/): 福岡大学・2014年明治杯全日本選抜選手権 4位・大会成績2件
@@ -1929,6 +1965,7 @@
 - [茂中 仁](https://japanwrestlingchannel.com/players/p-f817e2/): 天理大学・2024年全日本大学選手権 7位・大会成績1件
 - [茂野 吏玖](https://japanwrestlingchannel.com/players/p-b0e744/): 国士館大学・2024年全日本大学グレコローマン選手権 5位・大会成績4件
 - [草間 正汰](https://japanwrestlingchannel.com/players/p-fd6388/): 中央大学・2023年全日本学生選手権 5位・大会成績2件
+- [荒井 政雄](https://japanwrestlingchannel.com/players/p-483e2f/): モントリオール 1976 オリンピック 銅メダル・大会成績1件
 - [荒川 寛満](https://japanwrestlingchannel.com/players/p-f35796/): 東洋大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
 - [荒木 大貴](https://japanwrestlingchannel.com/players/p-8067ea/): 自衛隊体育学校・2022年全日本社会人選手権 優勝・大会成績6件
 - [荒木 孝介](https://japanwrestlingchannel.com/players/p-218441/): 帝塚山大学・2021年全日本大学グレコローマン選手権 5位・大会成績1件
@@ -1937,6 +1974,7 @@
 - [菅原 ひかり](https://japanwrestlingchannel.com/players/p-1479b8/): 種市高等学校教員・2016年明治杯全日本選抜選手権 優勝・大会成績5件
 - [菅原 大志](https://japanwrestlingchannel.com/players/p-e7d237/): 慶應義塾大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [菅原 幹太](https://japanwrestlingchannel.com/players/p-370f9e/): 東洋大学・2019年天皇杯全日本選手権 7位・大会成績2件
+- [菅原 弥三郎](https://japanwrestlingchannel.com/players/p-90dcf6/): モントリオール 1976 オリンピック 銅メダル・大会成績1件
 - [菅原 翔太](https://japanwrestlingchannel.com/players/p-7ea505/): 福岡大学・2015年明治杯全日本選抜選手権 4位・大会成績1件
 - [菅原 魁一](https://japanwrestlingchannel.com/players/p-e2c120/): 日本文理大学・2020年全日本大学グレコローマン選手権 準優勝・大会成績2件
 - [菅野 煌大](https://japanwrestlingchannel.com/players/p-e690c4/): 育英大学・2024年全日本大学選手権 3位・大会成績1件
@@ -1951,6 +1989,7 @@
 - [藤原 颯人](https://japanwrestlingchannel.com/players/p-fa7232/): 大東文化大学・2022年全日本学生選手権 5位・大会成績1件
 - [藤 未來](https://japanwrestlingchannel.com/players/p-8d9143/): 立教大学・2025年東日本学生選手権（秋季大会） 準優勝・大会成績1件
 - [藤本 歩](https://japanwrestlingchannel.com/players/p-93352f/): 山梨学院大学・2019年明治杯全日本選抜選手権 7位・大会成績1件
+- [藤本 英男](https://japanwrestlingchannel.com/players/p-3c5572/): メキシコシティー 1968 オリンピック 銀メダル・大会成績1件
 - [藤本 蔵馬](https://japanwrestlingchannel.com/players/p-734e29/): 中京学院大学・2021年全日本大学グレコローマン選手権 8位・大会成績1件
 - [藤本 龍舞](https://japanwrestlingchannel.com/players/p-bead63/): 帝塚山大学・2020年全日本大学グレコローマン選手権 5位・大会成績1件
 - [藤村 義](https://japanwrestlingchannel.com/players/p-e1d8f1/): 自衛隊体育学校・2014年明治杯全日本選抜選手権 優勝・大会成績2件
@@ -1995,6 +2034,7 @@
 - [赤星 楓](https://japanwrestlingchannel.com/players/p-779e22/): 育英大学・2023年全日本学生選手権 5位・大会成績1件
 - [赤澤 岳](https://japanwrestlingchannel.com/players/p-517322/): 日大クラブ・2016年明治杯全日本選抜選手権 4位・大会成績3件
 - [赤熊 猶弥](https://japanwrestlingchannel.com/players/p-0b745d/): 自衛隊体育学校・2020年天皇杯全日本選手権 優勝・大会成績13件
+- [赤石 光生](https://japanwrestlingchannel.com/players/p-d33950/): ロサンゼルス 1984 オリンピック 銀メダル・大会成績2件
 - [赤荻 蘭丸](https://japanwrestlingchannel.com/players/p-93a301/): 自衛隊体育学校・2019年天皇杯全日本選手権 5位・大会成績2件
 - [辻川 耕平](https://japanwrestlingchannel.com/players/p-898570/): 東京農業大学・2026年東日本学生選手権（春季大会） 3位・大会成績3件
 - [近藤 千加良](https://japanwrestlingchannel.com/players/p-6cda6e/): 国士舘大学・2015年明治杯全日本選抜選手権 5位・大会成績1件
@@ -2019,7 +2059,8 @@
 - [金久保 武大](https://japanwrestlingchannel.com/players/p-e4967a/): ALSOK・2015年明治杯全日本選抜選手権 優勝・大会成績5件
 - [金井 慎之助](https://japanwrestlingchannel.com/players/p-b34bfa/): 近畿大学・2025年西日本学生新人選手権 準優勝・大会成績3件
 - [金城 希龍](https://japanwrestlingchannel.com/players/p-01a412/): 自衛隊体育学校・2017年明治杯全日本選抜選手権 3位・大会成績3件
-- [金城 梨紗子](https://japanwrestlingchannel.com/players/p-1d09f9/): サントリー・東京 2020 オリンピック 金メダル・大会成績4件
+- [金城 梨紗子](https://japanwrestlingchannel.com/players/p-1d09f9/): サントリー・東京 2020 オリンピック 金メダル・大会成績15件
+- [金子 正明](https://japanwrestlingchannel.com/players/p-72d586/): メキシコシティー 1968 オリンピック 金メダル・大会成績1件
 - [金子 泰士](https://japanwrestlingchannel.com/players/p-694731/): 明治大学クラブ・2025年全国社会人オープン選手権 準優勝・大会成績2件
 - [金澤 勝利](https://japanwrestlingchannel.com/players/p-550e58/): 自衛隊体育学校・2019年明治杯全日本選抜選手権 準優勝・大会成績13件
 - [鈴木 博恵](https://japanwrestlingchannel.com/players/p-b6e729/): クリナップ・2017年明治杯全日本選抜選手権 優勝・大会成績7件
@@ -2033,6 +2074,7 @@
 - [錦戸 祐也](https://japanwrestlingchannel.com/players/p-ec21dc/): 日本体育大学・2019年明治杯全日本選抜選手権 5位・大会成績2件
 - [鏡 隼翔](https://japanwrestlingchannel.com/players/p-cb96b7/): 法政クラブ・2024年全日本社会人選手権 3位・大会成績1件
 - [長友 大生](https://japanwrestlingchannel.com/players/p-cdc1a3/): 中京学院大学・2023年全日本大学選手権 5位・大会成績1件
+- [長島 偉之](https://japanwrestlingchannel.com/players/p-2ed282/): ロサンゼルス 1984 オリンピック 銀メダル・大会成績1件
 - [長谷川 丈一郎](https://japanwrestlingchannel.com/players/p-69f18a/): 日本大学・2024年全日本大学選手権 5位・大会成績1件
 - [長谷川 恒平](https://japanwrestlingchannel.com/players/p-575437/): 青山学院大学職員・2014年明治杯全日本選抜選手権 優勝・大会成績4件
 - [長谷川 翔](https://japanwrestlingchannel.com/players/p-19285f/): 育英大学・2026年東日本学生選手権（春季大会） 3位・大会成績2件
@@ -2080,6 +2122,7 @@
 - [高橋 黎](https://japanwrestlingchannel.com/players/p-0493ad/): 神奈川大学・2026年東日本学生選手権（春季大会） 3位・大会成績1件
 - [高田 京](https://japanwrestlingchannel.com/players/p-a76422/): 日本大学・2025年東日本学生選手権（秋季大会） 3位・大会成績1件
 - [高田 熙](https://japanwrestlingchannel.com/players/p-1245f7/): 自衛隊体育学校・2024年天皇杯全日本選手権 優勝・大会成績3件
+- [高田 裕司](https://japanwrestlingchannel.com/players/p-d9f2ec/): モントリオール 1976 オリンピック 金メダル・大会成績2件
 - [高畑 眞斗](https://japanwrestlingchannel.com/players/p-560dbc/): 拓殖大学・2025年東日本学生選手権（秋季大会） 準優勝・大会成績2件
 - [高谷 大地](https://japanwrestlingchannel.com/players/p-2acbba/): 自衛隊体育学校・パリ 2024 オリンピック 銀メダル・大会成績19件
 - [高野 航成](https://japanwrestlingchannel.com/players/p-d7390c/): 山梨学院大学・2026年東日本学生選手権（春季大会） 準優勝・大会成績3件

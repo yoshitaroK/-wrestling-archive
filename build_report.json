@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-12T08:28:31+09:00",
+ "built_at": "2026-11-12T08:30:49+09:00",
  "as_of": "2026-11-12",
  "video_count": 3366,
  "raw_count": 3366,
@@ -84,8 +84,8 @@
   ]
  },
  "players": {
-  "total": 1583,
-  "published": 1440,
+  "total": 1626,
+  "published": 1483,
   "hidden_minor": 20,
   "hidden_private": 123,
   "errors": [],
@@ -93,7 +93,7 @@
   "video_links": 1125,
   "event_results": 376,
   "event_results_linked": 185,
-  "uww_video_links": 1998,
+  "uww_video_links": 1896,
   "og_cards": {
    "events-ja": {
     "made": 0,
@@ -102,9 +102,9 @@
     "errors": []
    },
    "ja": {
-    "made": 0,
-    "kept": 1440,
-    "removed": 0,
+    "made": 57,
+    "kept": 1426,
+    "removed": 2,
     "errors": []
    },
    "events-en": {
@@ -114,9 +114,9 @@
     "errors": []
    },
    "en": {
-    "made": 0,
-    "kept": 1440,
-    "removed": 0,
+    "made": 58,
+    "kept": 1425,
+    "removed": 2,
     "errors": []
    }
   }
@@ -125,9 +125,9 @@
   "rows": 1159,
   "hidden_minor": 0,
   "no_link": 23,
-  "skipped_unknown_event": 88,
+  "skipped_unknown_event": 121,
   "history_rows": 5087,
-  "history_linked": 1120,
+  "history_linked": 1428,
   "history_hidden": 7,
   "history_site_preferred": 1022,
   "history_mismatch": [
@@ -145,9 +145,17 @@
    "meiji-cup 女子 2022 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2022 55kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
    "meiji-cup 女子 2019 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
+   "meiji-cup 女子 2019 53kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
+   "meiji-cup 女子 2019 57kg: サイト「金城 梨紗子」/ 歴代記録「川井梨紗子」",
    "meiji-cup 女子 2018 50kg: サイト「須﨑 優衣」/ 歴代記録「須崎 優衣」",
    "meiji-cup 女子 2018 53kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
+   "meiji-cup 女子 2018 55kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
+   "meiji-cup 女子 2018 59kg: サイト「金城 梨紗子」/ 歴代記録「川井梨紗子」",
+   "meiji-cup 女子 2017 53kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
    "meiji-cup 女子 2017 55kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
+   "meiji-cup 女子 2017 60kg: サイト「金城 梨紗子」/ 歴代記録「川井 梨紗子」",
+   "meiji-cup 女子 2016 53kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
+   "meiji-cup 女子 2015 63kg: サイト「金城 梨紗子」/ 歴代記録「川井 梨紗子」",
    "shakaijin 女子 2022 55kg: サイト「村山 春菜」/ 歴代記録「奥野春菜」",
    "tenno-cup フリースタイル 2024 74kg: サイト「高田 熙」/ 歴代記録「高田 煕」",
    "tenno-cup フリースタイル 2021 65kg: サイト「山口 海輝」/ 歴代記録「山口 輝海」",
@@ -160,8 +168,14 @@
    "tenno-cup グレコローマン 2015 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
    "tenno-cup グレコローマン 2014 98kg: サイト「齋川 哲克」/ 歴代記録「斎川 哲克」",
    "tenno-cup 女子 2019 53kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
+   "tenno-cup 女子 2018 53kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
    "tenno-cup 女子 2018 76kg: サイト「皆川 博恵」/ 歴代記録「鈴木 博恵」",
    "tenno-cup 女子 2017 53kg: サイト「村山 春菜」/ 歴代記録「奥野 春菜」",
+   "tenno-cup 女子 2017 55kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
+   "tenno-cup 女子 2017 62kg: サイト「金城 梨紗子」/ 歴代記録「川井 梨紗子」",
+   "tenno-cup 女子 2016 53kg: サイト「志土地 真優」/ 歴代記録「向田 真優」",
+   "tenno-cup 女子 2016 58kg: サイト「金城 梨紗子」/ 歴代記録「川井 梨紗子」",
+   "tenno-cup 女子 2015 60kg: サイト「金城 梨紗子」/ 歴代記録「川井 梨紗子」",
    "university-championship フリースタイル 2025 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-championship フリースタイル 2023 125kg: サイト「バトバヤル ナンバルダグワ」/ 歴代記録「バドバヤル・ナムバルダグワ」",
    "university-championship フリースタイル 2020 125kg: サイト「アルメンタイ バグダウレット」/ 歴代記録「バグダウレット・アルメンタイ」",
@@ -317,7 +331,7 @@
   "warnings": []
  },
  "en": {
-  "pages": 1795,
+  "pages": 1849,
   "names": 640,
   "machine_translations": 3491,
   "missing_names": [
