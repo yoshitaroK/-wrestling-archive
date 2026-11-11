@@ -32,9 +32,19 @@ _RE = re.compile(r"<!--pre:(\w+)-->(.*?)<!--/pre:\1-->", re.S)
 DEFAULT_EN = dict(DEFAULT, main='<div class="loading">Loading data…</div>')  # en_index.py の PAIRS と同じ英語
 
 
+# 中の文字だけを書き込む場所(収録本数・大会データの時点)。目印のコメントは使わず、id の付いた要素の中身を入れ替える
+# (en_index.py が同じ行を文字どおり探して英語にするので、行の形を変えないため)。空の形は「中身なし」
+_SPOTS = {
+    "stat": re.compile(r'(<b class="num" id="stat-v">)[^<]*(</b>)'),
+    "asof": re.compile(r'(<span id="master-asof">)[^<]*(</span>)'),
+}
+
+
 def strip(s, lang="ja"):
     """書き込まれた中身を、空の形(DEFAULT)に戻す"""
     base = DEFAULT_EN if lang == "en" else DEFAULT
+    for r in _SPOTS.values():
+        s = r.sub(r"\1\2", s)
     return _RE.sub(lambda m: f"<!--pre:{m.group(1)}-->{base.get(m.group(1), '')}<!--/pre:{m.group(1)}-->", s)
 
 
@@ -42,6 +52,9 @@ def _fill(s, parts):
     def rep(m):
         k = m.group(1)
         return f"<!--pre:{k}-->{parts[k] if k in parts else m.group(2)}<!--/pre:{k}-->"
+    for k, r in _SPOTS.items():
+        if parts.get(k):
+            s = r.sub(lambda m, v=parts[k]: m.group(1) + esc(v) + m.group(2), s)
     return _RE.sub(rep, s)
 
 
@@ -341,8 +354,32 @@ class _Top:
                             '<a class="all" href="' + self.U('/events/') + '">' + L('すべて見る ›', 'See all ›') + '</a>', 'RESULTS')
         return h or None
 
+    # ---- 最新ニュース(top.js の newsBlock と同じ HTML。日本語版だけ) ----
+    @staticmethod
+    def news_html(ns):
+        if not ns:
+            return ''
 
-def render(data, slugs, hero, rules, now=None):
+        def day(d):
+            p = d.split('-')
+            return f"{int(p[1])}/{int(p[2])}"
+        a = ns[0]
+        return ('<section class="tnews" aria-labelledby="tnews-h"><div class="shelf-h"><h2 id="tnews-h" data-en="NEWS">最新ニュース</h2><a class="all" href="/news/">すべて見る ›</a></div>' +
+                '<div class="tnews-in"><a class="tn-lead' + ('' if a.get("img") else ' noimg') + '" href="/news/' + esc(a["slug"]) + '/">' +
+                (('<img src="' + esc(a["img"]) + '" alt="" loading="lazy" decoding="async"' + (f' width="{a["w"]}" height="{a["h"]}"' if a.get("w") and a.get("h") else '') + '>') if a.get("img") else '') +
+                '<span class="tn-c">' + esc(a["category"]) + '・' + day(a["date"]) + '</span><span class="tn-t">' + esc(a["title"]) + '</span><span class="tn-l">' + esc(a["lead"]) + '</span></a>' +
+                '<ol class="tn-rank">' + ''.join(
+                    '<li><a href="/news/' + esc(x["slug"]) + '/"><span class="tn-d" aria-hidden="true">' + x["date"][5:].replace('-', '.', 1) + '</span><span class="tn-c">' + esc(x["category"]) +
+                    '<span class="sr">・' + day(x["date"]) + '</span></span><span class="tn-t">' + esc(x["title"]) + '</span></a></li>' for x in ns[1:6]) + '</ol></div></section>')
+
+
+def fmt_date(iso):
+    """top.js の fmtDate と同じ書き方(2026年9月24日 / Sep 24, 2026)"""
+    p = iso[:10].split('-')
+    return L(f"{int(p[0])}年{int(p[1])}月{int(p[2])}日", f"{MON[int(p[1]) - 1]} {int(p[2])}, {p[0]}")
+
+
+def render(data, slugs, hero, rules, now=None, news=None, uww_n=0):
     """いまの言語(i18n.LANG)のトップページに書き込む中身 {名前: HTML}"""
     names = {}
     if i18n.LANG == 'en':
@@ -362,11 +399,28 @@ def render(data, slugs, hero, rules, now=None):
             parts["credit"] = credit
     sh = t.shelves_html()
     if sh:
-        parts["main"] = sh
+        # 最新ニュースは、top.js の renderShelves と同じく「最近開催された大会」の列のすぐ後ろ(日本語版だけ)
+        parts["main"] = sh + (t.news_html(news or []) if i18n.LANG == 'ja' else '')
+    # 収録本数(top.js の afterRender と同じ:動画の本数+国際大会の動画の本数)と、照合用の大会データの時点
+    n = len(data.get("videos", [])) + (uww_n or 0)
+    if n:
+        parts["stat"] = str(n)
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", data.get("master_as_of") or ""):
+        parts["asof"] = fmt_date(data["master_as_of"])
     return parts
 
 
-def write(root, data, slugs, hero, report=None):
+def _uww_n(root):
+    """国際大会の動画の本数(assets/uww-count.js の window.UWW_N)。読めなければ 0(収録本数は書き込まない)"""
+    try:
+        with open(os.path.join(root, "assets", "uww-count.js"), encoding="utf-8") as f:
+            m = re.search(r"UWW_N\s*=\s*(\d+)", f.read())
+        return int(m.group(1)) if m else 0
+    except OSError:
+        return 0
+
+
+def write(root, data, slugs, hero, report=None, home=None):
     """index.html と en/index.html の <!--pre:…--> の間を書き換える。うまく作れないときは空の形のままにする"""
     try:
         rules = read_rules(root)
@@ -393,7 +447,10 @@ def write(root, data, slugs, hero, report=None):
                     report.append(msg)
                 continue
             try:
-                parts = render(data, slugs, hero.get(lang, []), rules)
+                uww_n = _uww_n(root)
+                parts = render(data, slugs, hero.get(lang, []), rules, news=((home or {}).get(lang) or {}).get("news"), uww_n=uww_n)
+                if not uww_n:
+                    parts.pop("stat", None)  # 国際大会の本数が読めないときは、足りない数を書かない
             except Exception as ex:
                 msg = f"トップページの書き込みをしませんでした({path}: {ex!r})"
                 print("[トップ] " + msg)
