@@ -62,7 +62,29 @@ NO = {"いいえ", "no", "n", "0", "false", "×"}
 OLYMPICS = {
     "オリンピック(パリ)": ("パリ 2024 オリンピック代表", "Paris 2024 Olympian", "Olympic Games Paris 2024"),
     "オリンピック(東京 2020)": ("東京 2020 オリンピック代表", "Tokyo 2020 Olympian", "Olympic Games Tokyo 2020"),
+    # 2016年までのメダリストは Olympedia(olympedia.org)の結果から足した(出典URL が https://www.olympedia.org/)
+    "オリンピック(リオデジャネイロ)": ("リオデジャネイロ 2016 オリンピック代表", "Rio 2016 Olympian", "Olympic Games Rio 2016"),
+    "オリンピック(ロンドン)": ("ロンドン 2012 オリンピック代表", "London 2012 Olympian", "Olympic Games London 2012"),
+    "オリンピック(北京)": ("北京 2008 オリンピック代表", "Beijing 2008 Olympian", "Olympic Games Beijing 2008"),
+    "オリンピック(アテネ)": ("アテネ 2004 オリンピック代表", "Athens 2004 Olympian", "Olympic Games Athens 2004"),
+    "オリンピック(シドニー)": ("シドニー 2000 オリンピック代表", "Sydney 2000 Olympian", "Olympic Games Sydney 2000"),
+    "オリンピック(アトランタ)": ("アトランタ 1996 オリンピック代表", "Atlanta 1996 Olympian", "Olympic Games Atlanta 1996"),
+    "オリンピック(バルセロナ)": ("バルセロナ 1992 オリンピック代表", "Barcelona 1992 Olympian", "Olympic Games Barcelona 1992"),
+    "オリンピック(ソウル)": ("ソウル 1988 オリンピック代表", "Seoul 1988 Olympian", "Olympic Games Seoul 1988"),
+    "オリンピック(ロサンゼルス)": ("ロサンゼルス 1984 オリンピック代表", "Los Angeles 1984 Olympian", "Olympic Games Los Angeles 1984"),
+    "オリンピック(モントリオール)": ("モントリオール 1976 オリンピック代表", "Montreal 1976 Olympian", "Olympic Games Montreal 1976"),
+    "オリンピック(ミュンヘン)": ("ミュンヘン 1972 オリンピック代表", "Munich 1972 Olympian", "Olympic Games Munich 1972"),
+    "オリンピック(メキシコシティー)": ("メキシコシティー 1968 オリンピック代表", "Mexico City 1968 Olympian", "Olympic Games Mexico City 1968"),
+    "オリンピック(東京 1964)": ("東京 1964 オリンピック代表", "Tokyo 1964 Olympian", "Olympic Games Tokyo 1964"),
+    "オリンピック(ローマ)": ("ローマ 1960 オリンピック代表", "Rome 1960 Olympian", "Olympic Games Rome 1960"),
+    "オリンピック(メルボルン)": ("メルボルン 1956 オリンピック代表", "Melbourne 1956 Olympian", "Olympic Games Melbourne 1956"),
+    "オリンピック(ヘルシンキ)": ("ヘルシンキ 1952 オリンピック代表", "Helsinki 1952 Olympian", "Olympic Games Helsinki 1952"),
+    "オリンピック(パリ 1924)": ("パリ 1924 オリンピック代表", "Paris 1924 Olympian", "Olympic Games Paris 1924"),
 }
+OLYMPEDIA = "https://www.olympedia.org/"
+# 1968年までの階級の呼び方(player_results.csv の階級)→ 英語
+WEIGHT_EN = {"フライ級": "Flyweight", "バンタム級": "Bantamweight", "フェザー級": "Featherweight",
+             "ライト級": "Lightweight", "ウェルター級": "Welterweight"}
 # 世界選手権などの大会名 → 印(日本語・英語。後ろに出場した年が付く。空なら印を出さない)と英語の大会名。印はこの順に出る
 WORLDS = {
     "世界選手権": ("世界選手権 代表", "World Championships", "World Championships"),
@@ -212,7 +234,7 @@ def result_rows(p, ctx, bp):
         place = RANK_RE.fullmatch(r.get("成績", ""))
         rcls = "px-rk1" if place and place.group(1) == "1" else "px-rk3" if place and place.group(1) in ("2", "3") else "px-rkn"
         out.append(f"<tr{' class=' + chr(34) + 'px-w' + chr(34) if rcls == 'px-rk1' else ''}><td class=\"{ycls}\">{e(year)}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
-                   f"<td>{e(r.get('階級', ''))}</td><td><b class=\"px-rk {rcls}\">{e(rank(r.get('成績', '')))}</b></td><td>{src_html}</td></tr>")
+                   f"<td>{e(weight(r))}</td><td><b class=\"px-rk {rcls}\">{e(rank(r.get('成績', '')))}</b></td><td>{src_html}</td></tr>")
     return out
 
 
@@ -274,13 +296,20 @@ def top_results(p, ctx, bp, limit=3):
             label = re.sub(r"[（(](インカレ)[）)]$", "", N(name))
             rk = ({"1位": "金メダル", "2位": "銀メダル", "3位": "銅メダル"} if name in OLYMPICS else {"1位": "優勝", "2位": "準優勝"}).get(r["成績"], r["成績"])
         eid = r.get("開催回ID", "")
-        cls = " ".join(x for x in (N(r.get("スタイル", "")), r.get("階級", "")) if x)
+        cls = " ".join(x for x in (N(r.get("スタイル", "")), weight(r)) if x)
         inner = (f'<span class="px-ty">{e(r.get("開催年", ""))}</span><span class="px-tb"><span class="px-tn">{e(label)}</span>'
                  f'<span class="px-tw">{e(cls)}</span></span>'
                  f'<span class="px-rk {"px-rk1" if r["成績"] == "1位" else "px-rk3"}">{e(rk)}</span>')
         out += (f'<li><a href="{U("/events/" + ctx["slugs"][eid] + "/")}">{inner}</a></li>' if eid and eid in ctx["slugs"]
                 else f'<li><div>{inner}</div></li>')
     return f'<ul class="px-top" aria-label="{L("主な成績", "Career highlights")}">{out}</ul>' if out else ""
+
+
+
+def weight(r):
+    """成績の行の階級(英語版では「フェザー級」などを英語に)"""
+    w = r.get("階級", "")
+    return L(w, WEIGHT_EN[w]) if w in WEIGHT_EN else w
 
 
 def is_uww(r):
@@ -368,11 +397,11 @@ def awards(p, ctx, bp, limit=10):
     for r in rows[:limit]:
         if i18n.en():
             rk = rank(r["成績"])
-            parts = [r.get("開催年", ""), tournament_name(r, ctx, bp), N(r.get("スタイル", "")), r.get("階級", ""), rk]
+            parts = [r.get("開催年", ""), tournament_name(r, ctx, bp), N(r.get("スタイル", "")), weight(r), rk]
             out.append(" ".join(x for x in parts if x))
         else:
             rk = {"1位": "優勝", "2位": "準優勝"}.get(r["成績"], r["成績"])
-            parts = [(r.get("開催年", "") + "年") if r.get("開催年") else "", tournament_name(r, ctx, bp), N(r.get("スタイル", "")), r.get("階級", ""), rk]
+            parts = [(r.get("開催年", "") + "年") if r.get("開催年") else "", tournament_name(r, ctx, bp), N(r.get("スタイル", "")), weight(r), rk]
             out.append(" ".join(x for x in parts if x))
     return out
 
@@ -434,7 +463,7 @@ def player_page(p, ctx, bp, card=""):
     last = latest_result(p, ctx)
     if last and last.get("階級"):
         # 階級はいちばん新しい成績のもの。いつの成績かを添える(今の階級とは限らないため)
-        wcls = " ".join(x for x in (N(last.get("スタイル", "").replace("新人戦", "").strip()), last["階級"]) if x)
+        wcls = " ".join(x for x in (N(last.get("スタイル", "").replace("新人戦", "").strip()), weight(last)) if x)
         when = L(f"{last.get('開催年', '')}年の成績", f"as of {last.get('開催年', '')}") if last.get("開催年") else ""
         facts += f'<div><dt>{L("階級", "Class")}</dt><dd>{e(wcls)}{(" <small>" + e(when) + "</small>") if when else ""}</dd></div>'
     if facts:
@@ -461,12 +490,17 @@ def player_page(p, ctx, bp, card=""):
     if rows:
         h += (f'<h2 id="p-results">{L("大会成績", "Tournament results")}</h2>' + top_results(p, ctx, bp) + f'<div class="rtable"><table class="results"><thead><tr><th>{L("年", "Year")}</th><th>{L("大会", "Tournament")}</th>'
               f'<th>{L("スタイル", "Style")}</th><th>{L("階級", "Weight")}</th><th>{L("成績", "Result")}</th><th></th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
-        h += '<p class="hint">' + L("成績は日本レスリング協会が公開している入賞者一覧から作っています。所属は大会のときのものです。",
-                                    "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.")
-        if any(is_uww(r) for r in p["results"]):
+        h += '<p class="hint">'
+        if not all(is_uww(r) for r in p["results"]):  # 国際大会の成績だけの人(昔のオリンピックのメダリストなど)には出さない
+            h += L("成績は日本レスリング協会が公開している入賞者一覧から作っています。所属は大会のときのものです。",
+                   "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.")
+        if any(is_uww(r) and not r.get("出典URL", "").startswith(OLYMPEDIA) for r in p["results"]):
             h += L("オリンピック・世界選手権・U23世界選手権・アジア大会・アジア選手権の成績は世界レスリング連合(UWW)の公式結果によります。",
                    " Olympic Games, World Championships, U23 World Championships, Asian Games and Asian Championships results"
                    " are from the official results of United World Wrestling (UWW).")
+        if any(r.get("出典URL", "").startswith(OLYMPEDIA) for r in p["results"]):
+            h += L("2016年までのオリンピックの成績は Olympedia(オリンピックの記録のデータベース)によります。",
+                   " Olympic results up to 2016 are from Olympedia, the database of Olympic history.")
         h += "</p>"
     if p["videos"]:
         h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"], gid="p-videos")
@@ -552,10 +586,13 @@ def featured_html(players, e):
     games = [k for k in reversed(names) if any(r.get("大会名") == k for p in players for r in p["results"])]
     games_ja = "・".join(OLYMPICS[k][0].replace(" オリンピック代表", "") for k in games)
     games_en = ", ".join(OLYMPICS[k][1].replace(" Olympian", "") for k in games)
+    if len(games) > 3:  # 大会が多いときは最初と最後の年だけ(2016年までは Olympedia のメダリストだけ)
+        first, last = (re.search(r"\d{4}", OLYMPICS[games[i]][1]).group() for i in (0, -1))
+        games_ja, games_en = f"{first}〜{last}年。2016年まではメダリストだけ", f"{first}–{last}; medalists only up to 2016"
     h = (f'<section class="px-feat" aria-labelledby="px-feat-h"><h2 id="px-feat-h">{L("オリンピック・世界選手権に出た選手", "Olympic and World Championships wrestlers")}</h2>'
          '<p class="hint">' + L(
-             f"世界レスリング連合(UWW)の公式結果から、このサイトに成績を載せている大会(オリンピック:{games_ja}、世界選手権:{span}年)に出た選手です。掲載していない選手もいます。",
-             f"From the official results of United World Wrestling (UWW) for the events listed on this site (Olympic Games: {games_en}; World Championships: {span}). Some wrestlers are not listed.") + "</p>")
+             f"このサイトに成績を載せている大会(オリンピック:{games_ja}、世界選手権:{span}年)に出た選手です。世界レスリング連合(UWW)の公式結果と、2016年までのオリンピックのメダリストは Olympedia によります。掲載していない選手もいます。",
+             f"Wrestlers who competed at the events listed on this site (Olympic Games: {games_en}; World Championships: {span}), from the official results of United World Wrestling (UWW) and, for Olympic medalists up to 2016, Olympedia. Some wrestlers are not listed.") + "</p>")
     if oly:
         h += (f'<h3>{L("オリンピック", "Olympic Games")}<small>{L(f"{len(oly)}人", i18n.plural(len(oly), "wrestler"))}</small></h3>'
               f'<ul class="px-fl">{"".join(x[1] for x in oly)}</ul>')
