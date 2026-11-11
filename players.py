@@ -211,7 +211,7 @@ def result_rows(p, ctx, bp):
         # 順位の印:1位は赤の塗り、2・3位は枠、ほかは文字だけ
         place = RANK_RE.fullmatch(r.get("成績", ""))
         rcls = "px-rk1" if place and place.group(1) == "1" else "px-rk3" if place and place.group(1) in ("2", "3") else "px-rkn"
-        out.append(f"<tr><td class=\"{ycls}\">{e(year)}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
+        out.append(f"<tr{' class=' + chr(34) + 'px-w' + chr(34) if rcls == 'px-rk1' else ''}><td class=\"{ycls}\">{e(year)}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
                    f"<td>{e(r.get('階級', ''))}</td><td><b class=\"px-rk {rcls}\">{e(rank(r.get('成績', '')))}</b></td><td>{src_html}</td></tr>")
     return out
 
@@ -504,6 +504,69 @@ def uww_videos_html(p, vids, bp):
             f'</section>')
 
 
+# 選手一覧の「所属から探す」に出すチップの数(人数の多い所属から)
+CLUB_CHIPS = 12
+MEDAL = {"1位": ("金メダル", "Gold"), "2位": ("銀メダル", "Silver"), "3位": ("銅メダル", "Bronze")}
+
+
+def featured_html(players, e):
+    """選手一覧の「オリンピック・世界選手権に出た選手」。成績データ(世界レスリング連合 UWW の公式結果から足したもの)に
+    その大会の成績がある人だけを出す。players は公開している大人の選手だけ(load で is_adult() を通った人)なので、
+    高校生以下の選手はここにも出ない"""
+    def place(r):
+        m = RANK_RE.fullmatch(r.get("成績", ""))
+        return int(m.group(1)) if m else 99
+
+    def item(p, label):
+        club = N(p["club"])
+        return (f'<li><a href="{U("/players/" + p["id"] + "/")}"><span class="px-fn">{e(pname(p))}</span>'
+                f'<span class="px-fc">{e(club)}</span><span class="px-fe">{label}</span></a></li>')
+
+    def result(r, word):
+        """「パリ 2024 金メダル」「2023 5位」のような1つ分。3位以内は太字"""
+        if r.get("大会名") in OLYMPICS and r.get("成績") in MEDAL:
+            rk = L(*MEDAL[r["成績"]])
+        else:
+            rk = rank(r.get("成績", ""))
+        rk = f"<b>{e(rk)}</b>" if place(r) <= 3 else e(rk)
+        return f"{e(word)} {rk}".strip()
+
+    oly, wc = [], []
+    names = list(OLYMPICS)
+    for p in players:
+        o = sorted((r for r in p["results"] if r.get("大会名") in OLYMPICS), key=lambda r: (names.index(r["大会名"]), place(r)))
+        w = sorted((r for r in p["results"] if r.get("大会名") == "世界選手権"), key=lambda r: (r.get("開催年", ""), -place(r)), reverse=True)
+        if o:
+            label = L("・", ", ").join(result(r, L(OLYMPICS[r["大会名"]][0].replace(" オリンピック代表", ""),
+                                                    OLYMPICS[r["大会名"]][1].replace(" Olympian", ""))) for r in o)
+            oly.append(((names.index(o[0]["大会名"]), place(o[0]), norm(p["roman"] or p["name"])), item(p, label)))
+        elif w:
+            label = L("・", ", ").join(result(r, r.get("開催年", "")) for r in w)
+            wc.append(((-int(w[0].get("開催年") or 0), place(w[0]), norm(p["roman"] or p["name"])), item(p, label)))
+    if not oly and not wc:
+        return ""
+    oly.sort(key=lambda x: x[0])
+    wc.sort(key=lambda x: x[0])
+    years = sorted({r.get("開催年", "") for p in players for r in p["results"] if r.get("大会名") == "世界選手権" and r.get("開催年")})
+    span = (years[0] + L("〜", "–") + years[-1]) if len(years) > 1 else "".join(years)
+    games = [k for k in reversed(names) if any(r.get("大会名") == k for p in players for r in p["results"])]
+    games_ja = "・".join(OLYMPICS[k][0].replace(" オリンピック代表", "") for k in games)
+    games_en = ", ".join(OLYMPICS[k][1].replace(" Olympian", "") for k in games)
+    h = (f'<section class="px-feat" aria-labelledby="px-feat-h"><h2 id="px-feat-h">{L("オリンピック・世界選手権に出た選手", "Olympic and World Championships wrestlers")}</h2>'
+         '<p class="hint">' + L(
+             f"世界レスリング連合(UWW)の公式結果から、このサイトに成績を載せている大会(オリンピック:{games_ja}、世界選手権:{span}年)に出た選手です。掲載していない選手もいます。",
+             f"From the official results of United World Wrestling (UWW) for the events listed on this site (Olympic Games: {games_en}; World Championships: {span}). Some wrestlers are not listed.") + "</p>")
+    if oly:
+        h += (f'<h3>{L("オリンピック", "Olympic Games")}<small>{L(f"{len(oly)}人", i18n.plural(len(oly), "wrestler"))}</small></h3>'
+              f'<ul class="px-fl">{"".join(x[1] for x in oly)}</ul>')
+    if wc:
+        more = L(f"世界選手権に出た選手({len(wc)}人)", f"World Championships ({i18n.plural(len(wc), 'wrestler')})")
+        note = L("上のオリンピックに出た選手は除いています。", "Excluding the Olympians above.") if oly else ""
+        h += (f'<details class="px-more"><summary>{more}</summary>'
+              + (f'<p class="hint">{note}</p>' if note else "") + f'<ul class="px-fl">{"".join(x[1] for x in wc)}</ul></details>')
+    return h + "</section>"
+
+
 def index_page(players, ctx, bp):
     e, SITE = bp.e, bp.SITE
     path = "/players/"
@@ -518,17 +581,32 @@ def index_page(players, ctx, bp):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": L("選手一覧", "Players"), "url": SITE + U(path)}]}
     h = bp.head(L(f"選手検索・選手一覧({len(players)}人)|{bp.SITE_NAME}", f"Player search ({len(players)} players) | {bp.site_name()}"), desc, path, "", jsonld, ctx["css"])
-    h += '<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs) + f"<h1>{L('選手検索', 'Player search')}</h1>"
-    h += f'<p class="lead">{e(desc)}</p>'
+    # 頭:細い英字+大きな見出し+数字の帯(#320)。数字は players.csv・player_results.csv から数えたものだけ
+    nclubs = sum(1 for c in groups if c)
+    h += ('<main id="content" class="wrap page">' + bp.breadcrumb_html(crumbs)
+          + f'<header class="px-hero"><p class="px-k" aria-hidden="true">ATHLETES</p><h1>{L("選手検索", "Player search")}</h1>'
+          + f'<p class="lead">{e(desc)}</p>'
+          + stats_html([("px-s1", L("掲載選手", "Players"), len(players), L("人", "")),
+                        ("", L("所属", "Clubs / schools"), nclubs, ""),
+                        ("", L("大会成績", "Results"), sum(len(p["results"]) for p in players), L("件", ""))], e)
+          + "</header>")
     h += (f'<div class="psearch"><input type="search" id="pq" placeholder="{L("選手名・所属で検索", "Search by name or club")}" '
           f'aria-label="{L("選手名・所属で検索", "Search by name or club")}" autocomplete="off"><p class="pcount" id="pcount" aria-live="polite" '
           f'data-all="{L("全{n}人", "{n} players")}" data-hit="{L("{n}人が見つかりました", "{n} found")}" data-none="{L("見つかりませんでした", "No players found")}"></p></div>')
+    h += featured_html(players, e)
+    # 人数の多い所属へ跳ぶチップ(押すと、下の所属の欄が開く。開くのは assets/site.js の「# で開く」しくみ)
+    top = [c for c in order if c][:CLUB_CHIPS]
+    h += f'<section class="px-clubs"><h2>{L("所属から探す", "Browse by club / school")}</h2>'
+    if len(top) > 1:
+        h += (f'<nav class="px-chips" aria-label="{L("人数の多い所属", "Largest clubs")}">' + "".join(
+            f'<a href="#pg-{order.index(c) + 1}">{e(N(c))}<span>{len(groups[c])}</span></a>' for c in top) + "</nav>")
+    h += "</section>"
     h += '<div id="plist">'
-    for c in order:
+    for gi, c in enumerate(order, 1):
         ps = sorted(groups[c], key=lambda p: (-len(p["results"]), norm(p["roman"] or p["name"])))
         cname = N(c) or L("所属なし", "No club listed")
         # 所属ごとに1行にたたむ。押すと開き、検索したときは当てはまる選手がいる所属だけ開く
-        h += (f'<details class="pgroup"><summary><span class="pg-n">{e(cname)}</span>'
+        h += (f'<details class="pgroup" id="pg-{gi}"><summary><span class="pg-n">{e(cname)}</span>'
               f'<span class="pg-c">{L(f"{len(ps)}人", i18n.plural(len(ps), "player"))}</span></summary><ol class="occ slist-static">')
         for p in ps:
             key = " ".join(norm(x).lower() for x in [p["name"], p["roman"], p["kana"], p["club"], N(p["club"]) if i18n.en() else ""] if x)
@@ -774,6 +852,94 @@ table.results td a{padding:5px 0}
 .pager .pg-n{font-size:12px;color:var(--ink3);margin-left:4px}
 .uww-pl{scroll-margin-top:84px}
 .uww-pl .v[hidden]{display:none}
+/* ── ここから下は #320(選手ページ・選手一覧の作り替え)で足した分 ── */
+/* 頭:細い英字+大きな名前+数字の帯 */
+.px-hero{position:relative;margin:4px 0 18px;padding:26px 30px 22px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,var(--surface),var(--bg2));overflow:hidden}
+.px-hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pink-fill)}
+.px-k{margin:0 0 2px;font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.page .px-hero h1{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.25;letter-spacing:.02em;margin:0 0 10px}
+.page .px-hero h1 .kana{display:block;margin:6px 0 0;font-size:13px;font-weight:500;letter-spacing:.14em;color:var(--ink3)}
+.px-hero .lead{margin:0}
+.px-facts{display:flex;flex-wrap:wrap;gap:4px 28px;margin:0 0 12px;font-size:15px}
+.px-facts div{display:flex;align-items:baseline;gap:10px;min-width:0}
+.px-facts dt{flex:0 0 auto;font-size:12px;color:var(--ink3)}
+.px-facts dd{margin:0;font-weight:700}
+.px-facts small{margin-left:4px;font-weight:400;font-size:12px;color:var(--ink3)}
+.px-hero .olys{margin:0}
+.px-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));max-width:620px;margin:18px 0 0;padding:16px 0 0;border-top:1px solid var(--line)}
+.px-stats div{display:flex;flex-direction:column-reverse;gap:6px;min-width:0;padding:0 18px;border-left:1px solid var(--line)}
+.px-stats div:first-child{padding-left:0;border-left:0}
+.px-stats dt{font-size:12px;line-height:1.4;color:var(--ink3)}
+.px-stats dd{margin:0;font-size:13px;line-height:1;color:var(--ink2);white-space:nowrap}
+.px-stats b{margin-right:2px;font-family:var(--num);font-weight:600;font-size:46px;line-height:.9;letter-spacing:.01em;color:var(--ink)}
+.px-stats .px-s1 b{color:var(--pink)}
+.px-note{margin:12px 0 0;font-size:12px;line-height:1.6;color:var(--ink3)}
+/* ページ内の移動 */
+.px-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.px-jump a{display:inline-flex;align-items:center;min-height:40px;padding:6px 16px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:700}
+.px-jump a::after{content:"↓";margin-left:6px;font-weight:400;color:var(--pink)}
+.px-jump a:hover{border-color:var(--pink);color:var(--pink)}
+#p-results,#p-videos,#p-news{scroll-margin-top:84px}
+/* 順位の印:1位は赤の塗り、2・3位は枠、ほかは文字だけ */
+.px-rk{display:inline-block;min-width:46px;padding:0 10px;border:1px solid transparent;border-radius:999px;font-size:13px;font-weight:700;line-height:22px;text-align:center;white-space:nowrap}
+.px-rk.px-rk1,table.results td b.px-rk1{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
+.px-rk.px-rk3,table.results td b.px-rk3{border-color:var(--pink-line);color:var(--pink)}
+table.results td b.px-rkn{font-weight:500;color:var(--ink2)}
+table.results td.px-y{font-family:var(--num);font-weight:600;font-size:21px;line-height:1;color:var(--ink)}
+table.results td.px-same{color:var(--ink3)}
+table.results tr.px-w td:nth-child(2){font-weight:700}
+/* 主な成績(3位以内から最大3件) */
+.px-top{list-style:none;margin:10px 0 4px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.px-top a,.px-top div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;height:100%;padding:14px 16px;border:1px solid var(--line);border-radius:var(--card-r);background:var(--surface);color:var(--ink);text-decoration:none;transition:background .15s,border-color .15s}
+.px-top a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.px-ty{font-family:var(--num);font-weight:600;font-size:28px;line-height:1;color:var(--pink)}
+.px-tb{display:flex;flex-direction:column;min-width:0}
+.px-tn{font-size:14.5px;font-weight:700;line-height:1.45}
+.px-tw{font-size:12px;color:var(--ink3)}
+/* 選手一覧:オリンピック・世界選手権に出た選手、所属のチップ */
+.psearch input{padding:15px 18px;border-color:var(--line-hi);border-radius:12px}
+.px-feat{margin:22px 0 0}
+.px-feat h2,.px-clubs h2{margin:0 0 4px}
+.px-feat .hint{margin:0 0 4px}
+.px-feat h3{display:flex;align-items:baseline;gap:8px;margin:14px 0 8px;font-size:15px}
+.px-feat h3 small{font-weight:400;font-size:12px;color:var(--ink3)}
+.px-fl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.px-fl a{display:flex;flex-direction:column;height:100%;padding:11px 14px;border:1px solid var(--line);border-radius:var(--card-r);background:var(--surface);color:var(--ink);text-decoration:none;transition:background .15s,border-color .15s}
+.px-fl a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.px-fn{font-size:16px;font-weight:700;line-height:1.45}
+.px-fc{font-size:12px;line-height:1.5;color:var(--ink3)}
+.px-fe{margin-top:6px;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+.px-fe b{font-weight:700;color:var(--pink)}
+.px-more{margin:12px 0 0;border:1px solid var(--line);border-radius:var(--card-r)}
+.px-more summary{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 14px;cursor:pointer;list-style:none;font-size:14.5px;font-weight:700}
+.px-more summary::-webkit-details-marker{display:none}
+.px-more summary::after{content:"+";margin-left:auto;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink2);font-size:20px;font-weight:400;line-height:1}
+.px-more[open] summary::after{content:"−";color:var(--pink);border-color:var(--pink)}
+.px-more .hint{margin:0 14px 8px}
+.px-more .px-fl{padding:0 12px 12px}
+.px-clubs{margin:30px 0 0}
+.px-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.px-chips a{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:5px 14px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:700}
+.px-chips a span{padding-top:2px;font-family:var(--num);font-weight:600;font-size:17px;line-height:1;color:var(--pink)}
+.px-chips a:hover{border-color:var(--pink)}
+.pgroup{scroll-margin-top:84px}
+/* 検索欄に文字があるあいだは、上の列とチップを隠して、結果がすぐ下に来るようにする(:has() が使えないブラウザでは出たまま) */
+.psearch:has(input:not(:placeholder-shown))~.px-feat,.psearch:has(input:not(:placeholder-shown))~.px-clubs .px-chips{display:none}
+@media(max-width:600px){
+  .px-hero{padding:20px 18px 18px 20px;border-radius:12px}
+  .px-facts{font-size:14.5px}
+  .px-stats{grid-template-columns:repeat(auto-fit,minmax(62px,1fr));margin-top:16px;padding-top:14px}
+  .px-stats div{padding:0 10px}
+  .px-stats b{font-size:36px}
+  .px-stats dd{font-size:12px}
+  .px-top{grid-template-columns:1fr;gap:8px}
+  .px-top a,.px-top div{padding:12px 14px;gap:12px}
+  .px-fl{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .px-fl a{padding:10px 12px}
+  .px-fn{font-size:15px}
+  table.results td.px-y{font-size:19px}
+  table.results td.px-same{color:var(--ink)}
+}
 """
 
 
