@@ -785,6 +785,94 @@ table.results td a{padding:5px 0}
 .pager .pg-n{font-size:12px;color:var(--ink3);margin-left:4px}
 .uww-pl{scroll-margin-top:84px}
 .uww-pl .v[hidden]{display:none}
+/* ── ここから下は #320(選手ページ・選手一覧の作り替え)で足した分 ── */
+/* 頭:細い英字+大きな名前+数字の帯 */
+.px-hero{position:relative;margin:4px 0 18px;padding:26px 30px 22px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,var(--surface),var(--bg2));overflow:hidden}
+.px-hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pink-fill)}
+.px-k{margin:0 0 2px;font-family:var(--num);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1.3;color:var(--pink)}
+.page .px-hero h1{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.25;letter-spacing:.02em;margin:0 0 10px}
+.page .px-hero h1 .kana{display:block;margin:6px 0 0;font-size:13px;font-weight:500;letter-spacing:.14em;color:var(--ink3)}
+.px-hero .lead{margin:0}
+.px-facts{display:flex;flex-wrap:wrap;gap:4px 28px;margin:0 0 12px;font-size:15px}
+.px-facts div{display:flex;align-items:baseline;gap:10px;min-width:0}
+.px-facts dt{flex:0 0 auto;font-size:12px;color:var(--ink3)}
+.px-facts dd{margin:0;font-weight:700}
+.px-facts small{margin-left:4px;font-weight:400;font-size:12px;color:var(--ink3)}
+.px-hero .olys{margin:0}
+.px-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));max-width:620px;margin:18px 0 0;padding:16px 0 0;border-top:1px solid var(--line)}
+.px-stats div{display:flex;flex-direction:column-reverse;gap:6px;min-width:0;padding:0 18px;border-left:1px solid var(--line)}
+.px-stats div:first-child{padding-left:0;border-left:0}
+.px-stats dt{font-size:12px;line-height:1.4;color:var(--ink3)}
+.px-stats dd{margin:0;font-size:13px;line-height:1;color:var(--ink2);white-space:nowrap}
+.px-stats b{margin-right:2px;font-family:var(--num);font-weight:600;font-size:46px;line-height:.9;letter-spacing:.01em;color:var(--ink)}
+.px-stats .px-s1 b{color:var(--pink)}
+.px-note{margin:12px 0 0;font-size:12px;line-height:1.6;color:var(--ink3)}
+/* ページ内の移動 */
+.px-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.px-jump a{display:inline-flex;align-items:center;min-height:40px;padding:6px 16px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:700}
+.px-jump a::after{content:"↓";margin-left:6px;font-weight:400;color:var(--pink)}
+.px-jump a:hover{border-color:var(--pink);color:var(--pink)}
+#p-results,#p-videos,#p-news{scroll-margin-top:84px}
+/* 順位の印:1位は赤の塗り、2・3位は枠、ほかは文字だけ */
+.px-rk{display:inline-block;min-width:46px;padding:0 10px;border:1px solid transparent;border-radius:999px;font-size:13px;font-weight:700;line-height:22px;text-align:center;white-space:nowrap}
+.px-rk.px-rk1,table.results td b.px-rk1{background:var(--pink-fill);border-color:var(--pink-fill);color:#fff}
+.px-rk.px-rk3,table.results td b.px-rk3{border-color:var(--pink-line);color:var(--pink)}
+table.results td b.px-rkn{font-weight:500;color:var(--ink2)}
+table.results td.px-y{font-family:var(--num);font-weight:600;font-size:21px;line-height:1;color:var(--ink)}
+table.results td.px-same{color:var(--ink3)}
+table.results tr.px-w td:nth-child(2){font-weight:700}
+/* 主な成績(3位以内から最大3件) */
+.px-top{list-style:none;margin:10px 0 4px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.px-top a,.px-top div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;height:100%;padding:14px 16px;border:1px solid var(--line);border-radius:var(--card-r);background:var(--surface);color:var(--ink);text-decoration:none;transition:background .15s,border-color .15s}
+.px-top a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.px-ty{font-family:var(--num);font-weight:600;font-size:28px;line-height:1;color:var(--pink)}
+.px-tb{display:flex;flex-direction:column;min-width:0}
+.px-tn{font-size:14.5px;font-weight:700;line-height:1.45}
+.px-tw{font-size:12px;color:var(--ink3)}
+/* 選手一覧:オリンピック・世界選手権に出た選手、所属のチップ */
+.psearch input{padding:15px 18px;border-color:var(--line-hi);border-radius:12px}
+.px-feat{margin:22px 0 0}
+.px-feat h2,.px-clubs h2{margin:0 0 4px}
+.px-feat .hint{margin:0 0 4px}
+.px-feat h3{display:flex;align-items:baseline;gap:8px;margin:14px 0 8px;font-size:15px}
+.px-feat h3 small{font-weight:400;font-size:12px;color:var(--ink3)}
+.px-fl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.px-fl a{display:flex;flex-direction:column;height:100%;padding:11px 14px;border:1px solid var(--line);border-radius:var(--card-r);background:var(--surface);color:var(--ink);text-decoration:none;transition:background .15s,border-color .15s}
+.px-fl a:hover{border-color:var(--line-hi);background:var(--surface-2)}
+.px-fn{font-size:16px;font-weight:700;line-height:1.45}
+.px-fc{font-size:12px;line-height:1.5;color:var(--ink3)}
+.px-fe{margin-top:6px;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+.px-fe b{font-weight:700;color:var(--pink)}
+.px-more{margin:12px 0 0;border:1px solid var(--line);border-radius:var(--card-r)}
+.px-more summary{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 14px;cursor:pointer;list-style:none;font-size:14.5px;font-weight:700}
+.px-more summary::-webkit-details-marker{display:none}
+.px-more summary::after{content:"+";margin-left:auto;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink2);font-size:20px;font-weight:400;line-height:1}
+.px-more[open] summary::after{content:"−";color:var(--pink);border-color:var(--pink)}
+.px-more .hint{margin:0 14px 8px}
+.px-more .px-fl{padding:0 12px 12px}
+.px-clubs{margin:30px 0 0}
+.px-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.px-chips a{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:5px 14px;border:1px solid var(--line-hi);border-radius:999px;color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:700}
+.px-chips a span{padding-top:2px;font-family:var(--num);font-weight:600;font-size:17px;line-height:1;color:var(--pink)}
+.px-chips a:hover{border-color:var(--pink)}
+.pgroup{scroll-margin-top:84px}
+/* 検索欄に文字があるあいだは、上の列とチップを隠して、結果がすぐ下に来るようにする(:has() が使えないブラウザでは出たまま) */
+.psearch:has(input:not(:placeholder-shown))~.px-feat,.psearch:has(input:not(:placeholder-shown))~.px-clubs .px-chips{display:none}
+@media(max-width:600px){
+  .px-hero{padding:20px 18px 18px 20px;border-radius:12px}
+  .px-facts{font-size:14.5px}
+  .px-stats{grid-template-columns:repeat(auto-fit,minmax(62px,1fr));margin-top:16px;padding-top:14px}
+  .px-stats div{padding:0 10px}
+  .px-stats b{font-size:36px}
+  .px-stats dd{font-size:12px}
+  .px-top{grid-template-columns:1fr;gap:8px}
+  .px-top a,.px-top div{padding:12px 14px;gap:12px}
+  .px-fl{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .px-fl a{padding:10px 12px}
+  .px-fn{font-size:15px}
+  table.results td.px-y{font-size:19px}
+  table.results td.px-same{color:var(--ink)}
+}
 
 .cal{padding-bottom:40px}
 .cal-bar{display:flex;align-items:center;gap:10px;margin:14px 0 8px;flex-wrap:wrap}
