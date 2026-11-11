@@ -194,6 +194,7 @@ def result_rows(p, ctx, bp):
     slugs = ctx["slugs"]
     rows = sorted(p["results"], key=lambda r: (r.get("開催年", ""), (ctx["events_by_id"].get(r.get("開催回ID", "")) or {}).get("start") or ""), reverse=True)
     out = []
+    prev_year = None
     for r in rows:
         name = tournament_name(r, ctx, bp)
         eid = r.get("開催回ID", "")
@@ -203,9 +204,83 @@ def result_rows(p, ctx, bp):
             name_html = e(name)
         src = r.get("出典URL", "")
         src_html = f'<a href="{e(src)}" target="_blank" rel="noopener">{L("出典", "Source")}</a>' if src.startswith("http") else ""
-        out.append(f"<tr><td>{e(r.get('開催年', ''))}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
-                   f"<td>{e(r.get('階級', ''))}</td><td><b>{e(rank(r.get('成績', '')))}</b></td><td>{src_html}</td></tr>")
+        # 年は Teko の数字。同じ年が続く行は2行目から薄くする(年のまとまりが見えるように。文字は残す)
+        year = r.get("開催年", "")
+        ycls = "px-y px-same" if year and year == prev_year else "px-y"
+        prev_year = year
+        # 順位の印:1位は赤の塗り、2・3位は枠、ほかは文字だけ
+        place = RANK_RE.fullmatch(r.get("成績", ""))
+        rcls = "px-rk1" if place and place.group(1) == "1" else "px-rk3" if place and place.group(1) in ("2", "3") else "px-rkn"
+        out.append(f"<tr><td class=\"{ycls}\">{e(year)}</td><td>{name_html}</td><td>{e(N(r.get('スタイル', '')))}</td>"
+                   f"<td>{e(r.get('階級', ''))}</td><td><b class=\"px-rk {rcls}\">{e(rank(r.get('成績', '')))}</b></td><td>{src_html}</td></tr>")
     return out
+
+
+RANK_RE = re.compile(r"(\d+)位")
+PODIUM_RE = re.compile(r"[123]位")
+# 「主な成績」を出すのは、成績がこの件数以上の選手だけ(少ない人は表そのものが短い)
+TOP_RESULTS_MIN = 5
+
+
+def latest_result(p, ctx):
+    """いちばん新しい成績の行(選手ページの頭の「階級」に使う)。成績が無ければ None"""
+    if not p["results"]:
+        return None
+    return max(p["results"], key=lambda r: (r.get("開催年", ""), (ctx["events_by_id"].get(r.get("開催回ID", "")) or {}).get("start") or ""))
+
+
+def player_stats(p, nu):
+    """選手ページの頭の数字 [(クラス名, 見出し, 数, 単位)]。player_results.csv に載っている成績と、
+    結びついている動画(nu は国際大会の動画の本数)から数えるだけ。0 の項目は出さない"""
+    wins = sum(1 for r in p["results"] if r.get("成績") == "1位")
+    podium = sum(1 for r in p["results"] if PODIUM_RE.fullmatch(r.get("成績", "")))
+    rows = [("px-s1", L("優勝", "Titles"), wins, L("回", "")),
+            ("", L("3位以内", "Top 3"), podium, L("回", "")),
+            ("", L("大会成績", "Results"), len(p["results"]), L("件", "")),
+            ("", L("動画", "Videos"), len(p["videos"]) + nu, L("本", ""))]
+    return [x for x in rows if x[2]]
+
+
+def stats_html(rows, e):
+    """数字の帯(選手ページ・選手一覧の頭)"""
+    if not rows:
+        return ""
+    return '<dl class="px-stats">' + "".join(
+        f'<div class="{c}"><dt>{e(k)}</dt><dd><b>{n}</b>{e(u)}</dd></div>' for c, k, n, u in rows) + "</dl>"
+
+
+def top_results(p, ctx, bp, limit=3):
+    """選手ページの「主な成績」(3位以内の成績から最大 limit 件)。選び方は best_result と同じ:
+    オリンピック → 世界選手権・U23世界選手権・アジア大会・アジア選手権 → 順位 → 天皇杯・明治杯 → 新しい年"""
+    if len(p["results"]) < TOP_RESULTS_MIN:
+        return ""
+    e = bp.e
+
+    def key(r):
+        name = r.get("大会名", "")
+        group = 0 if name in OLYMPICS else 1 + list(WORLDS).index(name) if name in WORLDS else 9
+        return (group, int(r["成績"][0]), 0 if name.startswith(TOP_NATIONAL) else 1, -int(r.get("開催年") or 0))
+    rows = sorted((r for r in p["results"] if PODIUM_RE.fullmatch(r.get("成績", ""))), key=key)[:limit]
+    out = ""
+    for r in rows:
+        name = r.get("大会名", "")
+        intl = name in OLYMPICS or name in WORLDS
+        ev = ctx["events_by_id"].get(r.get("開催回ID", ""))
+        if i18n.en():
+            label, rk = tournament_name(r, ctx, bp), rank(r["成績"])
+        else:
+            if not intl and ev and ev["series"] in ctx["S"]:
+                name = bp.series_name(ctx["S"][ev["series"]])
+            label = re.sub(r"[（(](インカレ)[）)]$", "", N(name))
+            rk = ({"1位": "金メダル", "2位": "銀メダル", "3位": "銅メダル"} if name in OLYMPICS else {"1位": "優勝", "2位": "準優勝"}).get(r["成績"], r["成績"])
+        eid = r.get("開催回ID", "")
+        cls = " ".join(x for x in (N(r.get("スタイル", "")), r.get("階級", "")) if x)
+        inner = (f'<span class="px-ty">{e(r.get("開催年", ""))}</span><span class="px-tb"><span class="px-tn">{e(label)}</span>'
+                 f'<span class="px-tw">{e(cls)}</span></span>'
+                 f'<span class="px-rk {"px-rk1" if r["成績"] == "1位" else "px-rk3"}">{e(rk)}</span>')
+        out += (f'<li><a href="{U("/events/" + ctx["slugs"][eid] + "/")}">{inner}</a></li>' if eid and eid in ctx["slugs"]
+                else f'<li><div>{inner}</div></li>')
+    return f'<ul class="px-top" aria-label="{L("主な成績", "Career highlights")}">{out}</ul>' if out else ""
 
 
 def is_uww(r):
@@ -353,16 +428,38 @@ def player_page(p, ctx, bp, card=""):
     else:
         jsub = p["kana"] or (p["roman"] if p["roman_ok"] else "")
         sub = f' <small class="kana">{e(jsub)}</small>' if jsub else ""
-    h += f'<h1>{e(name)}{sub}</h1>'
+    # 頭:細い英字+大きな名前+所属・階級+代表の印+数字の帯(#320)
+    h += f'<header class="px-hero"><p class="px-k" aria-hidden="true">ATHLETE</p><h1>{e(name)}{sub}</h1>'
+    facts = f'<div><dt>{L("所属", "Club / school")}</dt><dd>{e(club)}</dd></div>' if club else ""
+    last = latest_result(p, ctx)
+    if last and last.get("階級"):
+        # 階級はいちばん新しい成績のもの。いつの成績かを添える(今の階級とは限らないため)
+        wcls = " ".join(x for x in (N(last.get("スタイル", "").replace("新人戦", "").strip()), last["階級"]) if x)
+        when = L(f"{last.get('開催年', '')}年の成績", f"as of {last.get('開催年', '')}") if last.get("開催年") else ""
+        facts += f'<div><dt>{L("階級", "Class")}</dt><dd>{e(wcls)}{(" <small>" + e(when) + "</small>") if when else ""}</dd></div>'
+    if facts:
+        h += f'<dl class="px-facts">{facts}</dl>'
     badges = badges_html(p)
     if badges:
         h += f'<p class="olys">{badges}</p>'
+    st = player_stats(p, nu)
+    if st:
+        # 数字は載せている成績・動画から数えたものだけ。生涯の成績と読まれないように注を付ける
+        h += stats_html(st, e) + '<p class="px-note">' + L(
+            "数字は、このサイトに掲載している大会成績・動画から数えたものです(すべての大会の成績ではありません)。",
+            "Counted from the results and videos listed on this site, not a complete career record.") + "</p>"
+    h += "</header>"
     h += f'<p class="lead">{e(desc)}</p>'
-    if club:
-        h += f'<dl class="facts"><dt>{L("所属", "Club / school")}</dt><dd>{e(club)}</dd></dl>'
+    arts = ctx.get("news_by_player", {}).get(p["id"], []) if not i18n.en() else []
     rows = result_rows(p, ctx, bp)
+    # ページ内の移動(欄が2つ以上あるときだけ)
+    jump = ([(L("大会成績", "Results"), "p-results")] if rows else []) + ([(L("試合動画", "Match videos"), "p-videos")] if p["videos"] else []) \
+        + ([(L("国際大会の動画", "International videos"), "uww")] if uww else []) + ([("ニュース", "p-news")] if arts else [])
+    if len(jump) > 1:
+        h += (f'<nav class="px-jump" aria-label="{L("ページ内の移動", "On this page")}">'
+              + "".join(f'<a href="#{i}">{e(t)}</a>' for t, i in jump) + "</nav>")
     if rows:
-        h += (f'<h2>{L("大会成績", "Tournament results")}</h2><div class="rtable"><table class="results"><thead><tr><th>{L("年", "Year")}</th><th>{L("大会", "Tournament")}</th>'
+        h += (f'<h2 id="p-results">{L("大会成績", "Tournament results")}</h2>' + top_results(p, ctx, bp) + f'<div class="rtable"><table class="results"><thead><tr><th>{L("年", "Year")}</th><th>{L("大会", "Tournament")}</th>'
               f'<th>{L("スタイル", "Style")}</th><th>{L("階級", "Weight")}</th><th>{L("成績", "Result")}</th><th></th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
         h += '<p class="hint">' + L("成績は日本レスリング協会が公開している入賞者一覧から作っています。所属は大会のときのものです。",
                                     "Results are compiled from the medalist lists published by the Japan Wrestling Federation. Clubs are as of each tournament.")
@@ -372,13 +469,12 @@ def player_page(p, ctx, bp, card=""):
                    " are from the official results of United World Wrestling (UWW).")
         h += "</p>"
     if p["videos"]:
-        h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"])
+        h += bp.vgroup(L("試合動画", "Match videos"), L(f"{nv}本・タイトルに選手名を含む動画", f"{i18n.plural(nv, 'video')} whose title contains the player's name"), p["videos"], gid="p-videos")
     if uww:
         h += uww_videos_html(p, uww, bp)
-    arts = ctx.get("news_by_player", {}).get(p["id"], []) if not i18n.en() else []
     if arts:
         import news
-        h += ('<h2>この選手が出てくるニュース</h2><ul class="pl-news">' + "".join(
+        h += ('<h2 id="p-news">この選手が出てくるニュース</h2><ul class="pl-news">' + "".join(
             f'<li><a href="{U("/news/" + a["slug"] + "/")}">{e(a["title"])}</a><small>{e(news.fmt_day(a["date"]))}</small></li>' for a in arts) + "</ul>")
     import books
     h += books.player_section(p, ctx, bp)
