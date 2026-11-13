@@ -2175,6 +2175,10 @@ a.yr{text-decoration:none}
 .yr[aria-current] .y{color:var(--pink)}
 .yr.off{cursor:default;opacity:.55}
 .rail{margin:14px 0 4px;scrollbar-width:thin}
+/* 横に動く帯の端のぼかし(続きがある側だけ。site_js.py の window.__edge が fade-l・fade-r を付ける。#330) */
+.rail.fade-l,.rail.fade-r,.brand .topnav.fade-l,.brand .topnav.fade-r{-webkit-mask-image:linear-gradient(90deg,var(--fl,#000),#000 24px,#000 calc(100% - 24px),var(--fr,#000));mask-image:linear-gradient(90deg,var(--fl,#000),#000 24px,#000 calc(100% - 24px),var(--fr,#000))}
+.rail.fade-l,.brand .topnav.fade-l{--fl:transparent}
+.rail.fade-r,.brand .topnav.fade-r{--fr:transparent}
 .more-box{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
 .more-box summary{cursor:pointer;font-weight:700}
 .more-box .facts{margin-top:12px}

@@ -16,7 +16,8 @@
 - ヘッダーの言語切り替え(<a class="lang" data-lang>)で、選んだ言語を覚える
 - ヘッダーの検索欄(<form class="hsearch">)で、トップページの検索に移る
 - スマートフォンで、虫めがねのボタン(<button class="hs-btn">)を押すと検索欄を開く。html に hs を付けて、描く前から検索欄をたたんでおく
-- スマートフォンのメニュー(横に動く1段)を、今いるページの項目が見える位置まで動かす
+- スマートフォンのメニュー(横に動く1段)を、今いるページの項目が見える位置まで動かす。
+  左端が項目の途中で切れないよう項目の頭にそろえ、続きがある側の端をぼかす(window.__edge。#330)
 - パンくずの右の「共有」ボタン(<button data-share>)。スマートフォンでは共有の画面を開き、パソコンではページのリンクをコピーする
 - 長いページで「ページの先頭へ戻る」ボタン(<button class="totop">)を出す
 - 画像が読み込めないときに消す(<img data-gone>。書籍の表紙など)
@@ -27,7 +28,7 @@
 
 assets/site.js(defer で読み込む)には、ページを読み終えてから動けばよい処理をまとめる。
 
-- 開催年の帯(<nav class="rail">)を、表示中の年が見える位置まで動かす
+- 開催年の帯(<nav class="rail">)を、表示中の年が見える位置まで動かす(端のそろえ・ぼかしは window.__edge。#330)
 - メールアドレスのリンクを組み立てる(<a class="eml" data-u data-d>)
 - 選手ページの国際大会の動画を、何本かずつのページに分ける(<section data-per>)
 - 写真の拡大表示(<dialog class="plb">)と「写真をもっと見る」ボタン
@@ -43,8 +44,8 @@ assets/site.js(defer で読み込む)には、ページを読み終えてから�
 """
 import os
 
-HEAD_VER = "7"
-SITE_VER = "3"
+HEAD_VER = "8"
+SITE_VER = "4"
 CONTACT_VER = "1"
 
 
@@ -125,9 +126,24 @@ document.addEventListener('click',function(ev){
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(function(){say(en?'Link copied':'リンクをコピーしました');},function(){window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);});
   else window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);
 });
+// 横に動く帯(メニュー・開催年の帯)。左端が項目の途中で切れるときは、その項目の頭が見える位置まで戻す
+// (今の項目が右端からはみ出すときは戻さない)。続きがある側に fade-l・fade-r を付け、CSS で端をぼかす。#330
+window.__edge=function(n,c){
+  if(!n||n.scrollWidth<=n.clientWidth+1)return;
+  var F=24,nr=n.getBoundingClientRect(),k=n.children;
+  if(n.scrollLeft>1)for(var i=0;i<k.length;i++){
+    var r=k[i].getBoundingClientRect(),x=r.left-nr.left;
+    if(r.right-nr.left<=F)continue;
+    if(x<F){var dx=F-x,cr=c&&c.getBoundingClientRect();if(!cr||cr.right+dx<=nr.right-F)n.scrollLeft=Math.max(0,n.scrollLeft-dx);}
+    break;
+  }
+  var f=function(){n.classList.toggle('fade-l',n.scrollLeft>2);n.classList.toggle('fade-r',n.scrollLeft+n.clientWidth<n.scrollWidth-2);};
+  f();n.addEventListener('scroll',f,{passive:true});window.addEventListener('resize',f);
+};
 document.addEventListener('DOMContentLoaded',function(){
   var n=document.querySelector('.topnav'),c=n&&n.querySelector('[aria-current]');
   if(c&&n.scrollWidth>n.clientWidth){var nr=n.getBoundingClientRect(),cr=c.getBoundingClientRect();if(cr.right>nr.right-40)n.scrollLeft=cr.left-nr.left-(nr.width-cr.width)/2;}
+  if(n&&c)window.__edge(n,c);
   var b=document.createElement('button'),on=false;
   b.type='button';b.className='totop';b.setAttribute('aria-label',d.lang==='en'?'Back to top':'ページの先頭へ戻る');
   b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14.5l6-6 6 6"/></svg>';
@@ -163,6 +179,7 @@ var each=function(sel,f){[].forEach.call(document.querySelectorAll(sel),f);};
 each('nav.rail',function(r){
   var c=r.querySelector('[aria-current]');
   if(c)r.scrollLeft=Math.max(0,c.offsetLeft-r.clientWidth/2+c.offsetWidth/2);
+  if(window.__edge)window.__edge(r,c);
 });
 each('a.eml[data-u][data-d]',function(a){
   a.href='mailto:'+a.dataset.u+'@'+a.dataset.d;a.textContent=a.dataset.u+'@'+a.dataset.d;
