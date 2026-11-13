@@ -744,6 +744,7 @@ a.yr{text-decoration:none}
 .sx-next{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;min-height:48px;box-sizing:border-box;margin:20px 0 0;padding:11px 16px;border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px;text-decoration:none}
 a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);background:var(--surface-2)}
 .sx-next .badge{margin-left:0;vertical-align:0}
+.sx-newer{margin:0 0 14px;font-size:14px;line-height:1.7;color:var(--ink2)}
 .sx-next .sx-go{margin-left:auto;font-size:13px;font-weight:700;color:var(--pink);white-space:nowrap}
 .sx-doors{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0}
 .sx-doors a{display:inline-flex;align-items:center;gap:7px;min-height:44px;box-sizing:border-box;padding:8px 18px;border:1px solid var(--line-hi);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:700;line-height:1.4;text-decoration:none}
