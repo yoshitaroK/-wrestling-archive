@@ -1118,7 +1118,13 @@ def series_page(s, ctx):
     done = [x for x in paged if view_status(x) not in ("scheduled", "cancelled", "postponed")]
     feat = done[-1] if done else None
     nxt = next((x for x in order if view_status(x) == "scheduled"), None)
-    feat_dated = bool(feat and feat.get("start") and not feat.get("derived"))
+    # 動画(ページ)の無い回が、ページのある最新の回より新しく開かれているとき(少年少女・西日本学生リーグなど)。
+    # その回を「最新の開催回」と言わず、実際の最新の開催を1行で添える。説明文の「最新は」も実際の最新に合わせる
+    newest = next((x for x in reversed(order) if view_status(x) in ("held", "live")), None)
+    newer = newest if (feat and newest and newest["id"] not in slugs
+                       and (newest.get("start") or str(newest["year"])) > (feat.get("start") or str(feat["year"]))) else None
+    last = newer or feat
+    feat_dated = bool(last and last.get("start") and not last.get("derived"))
 
     alias = [a for a in (s.get("aliases") or []) if a != s["name"]]
     summary = series_summary(s, evs, name)
@@ -1132,7 +1138,7 @@ def series_page(s, ctx):
             desc = (summary + " " if summary else "") + (
                 f"Dates, venues and {i18n.plural(total, 'video')} for {i18n.plural(len(evs), 'edition')} of the {name} ({span_all}), organized by year.")
             if feat_dated:
-                desc += f" Latest: {fmt_range(feat.get('start'), feat.get('end'))}" + (f", {N(feat.get('venue'))}." if feat.get("venue") else ".")
+                desc += f" Latest: {fmt_range(last.get('start'), last.get('end'))}" + (f", {N(last.get('venue'))}." if last.get("venue") else ".")
         elif total:
             desc = f"{i18n.plural(total, 'stream/video', 'streams/videos')} from the {name}, organized by year. {span + ', ' if span else ''}{i18n.plural(len(with_v), 'edition')}."
         else:
@@ -1146,7 +1152,7 @@ def series_page(s, ctx):
             desc = summary or f"{s['name']}{'' if 'レスリング' in s['name'] else '(レスリング)'}の開催日・会場と配信動画。"
             desc += f"{span_all}の{len(evs)}開催回と、配信動画{total}本を年ごとに掲載。"
             if feat_dated:
-                desc += f"最新は{fmt_range(feat.get('start'), feat.get('end'))}" + (f"、{feat['venue']}。" if feat.get("venue") else "。")
+                desc += f"最新は{fmt_range(last.get('start'), last.get('end'))}" + (f"、{last['venue']}。" if last.get("venue") else "。")
         elif total:
             desc = f"{s['name']}の配信動画{total}本を開催年ごとに掲載。{span + '、' if span else ''}{len(with_v)}開催回。"
         else:
@@ -1214,7 +1220,15 @@ def series_page(s, ctx):
         return fmt_range(x.get("start"), x.get("end")) if x.get("start") else L("日付未確認", "Date TBC")
 
     if feat or nxt:
-        h += f'<section class="section sx-sec sx-latest">{sx_h2("最新の開催回", "Latest edition", "LATEST")}'
+        h += ('<section class="section sx-sec sx-latest">'
+              + (sx_h2("動画のある最新の開催回", "Latest edition with videos", "LATEST") if newer else sx_h2("最新の開催回", "Latest edition", "LATEST")))
+    if newer:
+        # 日付が推定の回は日付を書かず年だけ。会場は大会データにあるときだけ
+        nd = None if newer.get("derived") or not newer.get("start") else when_of(newer)
+        nv = N(newer["venue"]) if newer.get("venue") else ""
+        h += ('<p class="sx-newer">' + e(L(f"最新の開催は{nd or str(newer['year']) + '年'}{'(' + nv + ')' if nv else ''}です。この回の配信動画はありません。",
+                                          f"The most recent edition was held {'on ' + nd if nd else 'in ' + str(newer['year'])}{' (' + nv + ')' if nv else ''}. "
+                                          "There are no streamed videos of it.")) + '</p>')
     if feat:
         fs = view_status(feat)
         badge = f'<span class="badge {e(fs)}">{e(sl[fs])}</span>' if fs in ("live", "postponed", "cancelled") else ""
@@ -2275,6 +2289,7 @@ a.yr{text-decoration:none}
 .sx-next{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;min-height:48px;box-sizing:border-box;margin:20px 0 0;padding:11px 16px;border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px;text-decoration:none}
 a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);background:var(--surface-2)}
 .sx-next .badge{margin-left:0;vertical-align:0}
+.sx-newer{margin:0 0 14px;font-size:14px;line-height:1.7;color:var(--ink2)}
 .sx-next .sx-go{margin-left:auto;font-size:13px;font-weight:700;color:var(--pink);white-space:nowrap}
 .sx-doors{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0}
 .sx-doors a{display:inline-flex;align-items:center;gap:7px;min-height:44px;box-sizing:border-box;padding:8px 18px;border:1px solid var(--line-hi);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:700;line-height:1.4;text-decoration:none}
