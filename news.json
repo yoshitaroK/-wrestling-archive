@@ -2,6 +2,24 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-univ-free-day1",
+   "date": "2026-11-14",
+   "title": "全日本大学選手権、ナムバルダグワが決勝へ 前回王者4人も勝ち上がる",
+   "category": "全日本大学選手権",
+   "event_id": "wre-2026-university-championship-1114",
+   "lead": "全日本大学選手権(フリースタイル)の第1日は10階級の準決勝まで。125kg級のナムバルダグワが連覇に向けて決勝へ進み、前回王者の勝目大翔・西内悠人・吉田アリヤ・須田宝も決勝に進んだ。",
+   "tags": [
+    "全日本大学選手権2026",
+    "バドバヤル・ナムバルダグワ",
+    "西内悠人",
+    "須田宝",
+    "吉田アリヤ"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/11/14/298246/"
+   ]
+  },
+  {
    "slug": "2026-worlds-freestyle-day9-finals",
    "date": "2026-11-01",
    "title": "世界選手権フリー 青柳善の輔が74kg級3位 団体はアメリカが優勝",
