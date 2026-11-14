@@ -244,7 +244,7 @@ def official_bar(lang_link=""):
             f'<span class="official-r">{TOP_SNS}{lang_link}</span></div></div>')
 
 
-NAV = [("/", "大会を検索", "Search"), ("/news/", "ニュース", None), ("/players/", "選手", "Players"), ("/books/", "書籍", None), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/photos/", "写真", "Photos"), ("/uww/", "国際大会", "International")]
+NAV = [("/", "大会を検索", "Search"), ("/news/", "ニュース", None), ("/players/", "選手", "Players"), ("/photos/", "写真", "Photos"), ("/events/calendar/", "カレンダー", "Calendar"), ("/technique/", "技術動画", "Technique"), ("/books/", "書籍", None), ("/uww/", "国際大会", "International")]
 
 
 def nav_links(path):
