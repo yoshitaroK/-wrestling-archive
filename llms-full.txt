@@ -3,7 +3,7 @@
 > YouTubeで公開されている日本のレスリング大会の配信・動画3,366本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
-- データ更新日: 2026年11月13日
+- データ更新日: 2026年11月15日
 - お問い合わせ: https://japanwrestlingchannel.com/contact.html
 
 ## 主なページ
@@ -98,6 +98,7 @@
 ### 全日本大学選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/university-championship/
 - [第52回内閣総理大臣杯 令和8年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2026/): 2026年11月14日〜15日(予定)・大阪・動画6本
+  - ニュース: [全日本大学選手権、ナムバルダグワが決勝へ 前回王者4人も勝ち上がる](https://japanwrestlingchannel.com/news/2026-univ-free-day1/)
 - [第51回内閣総理大臣杯 令和7年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2025/): 2025年11月8日〜9日・大阪・堺市金岡公園体育館・動画6本・写真あり
   - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2911
 - [第50回内閣総理大臣杯 令和6年度全日本大学レスリング選手権大会](https://japanwrestlingchannel.com/events/university-championship/2024/): 2024年11月9日〜10日・大阪・堺市金岡公園体育館・動画6本
@@ -636,6 +637,7 @@
 
 ## ニュース(新しい順)
 
+- 2026-11-14 [全日本大学選手権、ナムバルダグワが決勝へ 前回王者4人も勝ち上がる](https://japanwrestlingchannel.com/news/2026-univ-free-day1/): 全日本大学選手権(フリースタイル)の第1日は10階級の準決勝まで。125kg級のナムバルダグワが連覇に向けて決勝へ進み、前回王者の勝目大翔・西内悠人・吉田アリヤ・須田宝も決勝に進んだ。
 - 2026-11-10 [ユース五輪ビーチレスリング2日目 アゼルバイジャンが金2つ、セネガルは計3つ](https://japanwrestlingchannel.com/news/2026-yog-beach-day2/): ユース五輪のビーチレスリングは2日目に残る4階級の決勝があり、アゼルバイジャンが男子70kg級と90kg級で優勝した。開催国セネガルは女子45kg級も制し、金メダルは2日間で3つと国別で最も多かった。
 - 2026-11-09 [ユース五輪ビーチレスリング初日 地元セネガルが金2つ、日本は55kg級2位](https://japanwrestlingchannel.com/news/2026-yog-beach-day1/): ユース五輪で初めて行われたビーチレスリングの初日、4階級の決勝があり、開催国セネガルが女子55kg級と男子80kg級で優勝した。セネガルが五輪で金メダルを取ったのは初めて。女子55kg級では日本の選手が2位に入った。
 - 2026-11-07 [UWW副会長にバウムガートナーら2人 委員会の長も入れ替え](https://japanwrestlingchannel.com/news/2026-uww-vice-presidents/): 世界レスリング連合(UWW)は、ブルース・バウムガートナーら2人を2028年までの副会長にしたと発表した。総会の選挙で空いた席を埋めたもので、技術委員会など4つの委員会の長も替わった。

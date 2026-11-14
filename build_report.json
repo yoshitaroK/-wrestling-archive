@@ -1,6 +1,6 @@
 {
- "built_at": "2026-11-13T15:28:48+09:00",
- "as_of": "2026-11-13",
+ "built_at": "2026-11-15T07:14:16+09:00",
+ "as_of": "2026-11-15",
  "video_count": 3366,
  "raw_count": 3366,
  "duplicate_ids_removed": 0,
@@ -34,9 +34,9 @@
  "translation": {
   "total": 3491,
   "translated": 3491,
-  "new": 0,
+  "new": 6,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 288,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
@@ -233,7 +233,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 28
+  "articles": 29
  },
  "books": {
   "errors": [],
@@ -242,7 +242,7 @@
  },
  "search": {
   "ja": {
-   "news": 28,
+   "news": 29,
    "results": 200,
    "results_excluded": 176,
    "results_linked": 184,

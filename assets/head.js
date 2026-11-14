@@ -64,9 +64,24 @@ document.addEventListener('click',function(ev){
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(function(){say(en?'Link copied':'リンクをコピーしました');},function(){window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);});
   else window.prompt(en?'Copy this link':'このリンクをコピーしてください',u);
 });
+// 横に動く帯(メニュー・開催年の帯)。左端が項目の途中で切れるときは、その項目の頭が見える位置まで戻す
+// (今の項目が右端からはみ出すときは戻さない)。続きがある側に fade-l・fade-r を付け、CSS で端をぼかす。#330
+window.__edge=function(n,c){
+  if(!n||n.scrollWidth<=n.clientWidth+1)return;
+  var F=24,nr=n.getBoundingClientRect(),k=n.children;
+  if(n.scrollLeft>1)for(var i=0;i<k.length;i++){
+    var r=k[i].getBoundingClientRect(),x=r.left-nr.left;
+    if(r.right-nr.left<=F)continue;
+    if(x<F){var dx=F-x,cr=c&&c.getBoundingClientRect();if(!cr||cr.right+dx<=nr.right-F)n.scrollLeft=Math.max(0,n.scrollLeft-dx);}
+    break;
+  }
+  var f=function(){n.classList.toggle('fade-l',n.scrollLeft>2);n.classList.toggle('fade-r',n.scrollLeft+n.clientWidth<n.scrollWidth-2);};
+  f();n.addEventListener('scroll',f,{passive:true});window.addEventListener('resize',f);
+};
 document.addEventListener('DOMContentLoaded',function(){
   var n=document.querySelector('.topnav'),c=n&&n.querySelector('[aria-current]');
   if(c&&n.scrollWidth>n.clientWidth){var nr=n.getBoundingClientRect(),cr=c.getBoundingClientRect();if(cr.right>nr.right-40)n.scrollLeft=cr.left-nr.left-(nr.width-cr.width)/2;}
+  if(n&&c)window.__edge(n,c);
   var b=document.createElement('button'),on=false;
   b.type='button';b.className='totop';b.setAttribute('aria-label',d.lang==='en'?'Back to top':'ページの先頭へ戻る');
   b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14.5l6-6 6 6"/></svg>';

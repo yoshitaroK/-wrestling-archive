@@ -4,6 +4,7 @@ var each=function(sel,f){[].forEach.call(document.querySelectorAll(sel),f);};
 each('nav.rail',function(r){
   var c=r.querySelector('[aria-current]');
   if(c)r.scrollLeft=Math.max(0,c.offsetLeft-r.clientWidth/2+c.offsetWidth/2);
+  if(window.__edge)window.__edge(r,c);
 });
 each('a.eml[data-u][data-d]',function(a){
   a.href='mailto:'+a.dataset.u+'@'+a.dataset.d;a.textContent=a.dataset.u+'@'+a.dataset.d;
