@@ -1,7 +1,7 @@
 ## UWW の日本人選手の動画の一覧(チャンネル: United World Wrestling・UCi8PYovluicFUUD_YxJIcMA)
 
 - **完了**:読める動画は全部読みました
-- 調べた動画: 67408本(チャンネルの動画は 70254本)・まだ調べていない動画: 0本・読んだ再生リスト: 1041/1041個
+- 調べた動画: 67410本(チャンネルの動画は 70256本)・まだ調べていない動画: 0本・読んだ再生リスト: 1041/1041個
 - **日本人選手が出ている動画: 3687本**(長時間の配信 3本は外した)
 - 一覧: `uww_videos.csv`(サイトの /uww/ のページの元)
 - YouTube API はアップロードの一覧を新しい順に 20,000本までしか返さない(いちばん古いもの 2021-04-02)。それより前で、どの再生リストにも入っていない動画は取れない
@@ -35,8 +35,8 @@
 
 ### 確かさごと
 - 高: 3596本
-- 低(要確認): 59本
-- 中: 32本
+- 低(要確認): 58本
+- 中: 33本
 
 ### 年ごと
 - 2019: 694本
@@ -55,7 +55,7 @@
 - 2012: 1本
 - 2013: 1本
 
-### 見分けに自信がない動画(59本。最初の30本)
+### 見分けに自信がない動画(58本。最初の30本)
 - [Back on her THRONE! 👑 SUSAKI pins NEELAM to reclaim world gold! | 2026 World Championships](https://www.youtube.com/watch?v=Bhrri5-HqT8) … 説明にJPN/Japan・低(要確認)
 - [PETLIAKOVA blows the bracket WIDE OPEN! 🤯 A stunning pin over ISHII! | 2026 World Championships](https://www.youtube.com/watch?v=UM7QFDGtsxo) … 説明にJPN/Japan・低(要確認)
 - [NAGAMOTO shocks Olympic gold medalist and defending world champ MAROULIS! 🤯](https://www.youtube.com/watch?v=eL4ZDygQQdk) … 説明にJPN/Japan・低(要確認)
