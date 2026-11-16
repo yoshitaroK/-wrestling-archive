@@ -26,6 +26,7 @@ import html
 import json
 import os
 import re
+from collections import Counter
 
 import i18n
 import players
@@ -353,7 +354,11 @@ def build(root, ctx, bp, report):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": "ニュース", "url": bp.SITE + path,
         "hasPart": [{"@type": "NewsArticle", "headline": a["title"], "url": bp.SITE + f"/news/{a['slug']}/", "datePublished": a["date"]} for a in arts]}]}
-    h = bp.head(f"ニュース|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
+    # 検索結果に出る説明文(画面の文 desc とは別)。大会の名前は、記事が多い順に、今ある記事の区分から取る
+    cats = [c for c, _ in Counter(a.get("category") or "" for a in arts).most_common() if c and "(" not in c][:3]
+    meta_desc = ("レスリングのニュースと大会結果。" + ("・".join(cats) + "などの" if cats else "大会の")
+                 + f"結果と話題を、出典を付けて Japan Wrestling Channel がまとめています。記事{len(arts)}本を新しい順に掲載。")
+    h = bp.head(f"レスリングニュース・大会結果|{bp.SITE_NAME}", meta_desc, path, "", jsonld, ctx["css"], alternates=False)
     h += list_html(arts, ctx, bp, crumbs, desc)
     h += bp.footer(ctx["as_of"])
     pages.append((path, h, arts[0]["date"]))

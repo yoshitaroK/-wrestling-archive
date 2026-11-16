@@ -434,7 +434,9 @@ def build(root, ctx, bp, report):
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": "書籍", "url": bp.SITE + path,
         "hasPart": [{"@type": "Book", "name": b["title"], "url": bp.SITE + f"/books/{b['isbn']}/"} for b in books]}]}
-    h = bp.head(f"書籍({len(books)}冊)|{bp.SITE_NAME}", desc, path, "", jsonld, ctx["css"], alternates=False)
+    # 検索結果に出る説明文(画面の文 desc より少し長くする)
+    meta_desc = desc + "1冊ごとのページに、表紙とブクログ・Amazon などへのリンクを載せています。"
+    h = bp.head(f"レスリングの本・書籍({len(books)}冊)|{bp.SITE_NAME}", meta_desc, path, "", jsonld, ctx["css"], alternates=False)
     h += '<main id="content" class="wrap page bk-page">' + bp.breadcrumb_html(crumbs) + f'<h1>書籍 <small class="bk-n"><b class="num">{len(books)}</b>冊</small></h1>'
     if books:
         h += f'<p class="lead">{e(desc)}表紙を押すと、内容紹介や関係する選手が見られます。</p>'
