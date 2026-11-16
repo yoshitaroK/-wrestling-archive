@@ -534,8 +534,8 @@ def photo_pages(ctx, photos_by_page, bp):
     # 写真トップ
     path = "/photos/"
     crumbs = [(home, "/"), (photos_t, None)]
-    title = f"{photos_t}{L('|', ' | ')}{bp.site_name()}"
-    desc = L(f"レスリング大会で撮影された写真を大会ごとに見られます。{len(paths)}大会・{total}枚を掲載。",
+    title = L(f"レスリング大会の写真({len(paths)}大会・{total}枚)|{bp.SITE_NAME}", f"{photos_t} | {bp.site_name()}")
+    desc = L(f"レスリング大会で撮影された写真{total}枚を、{len(paths)}大会の大会ごとにまとめて見られます。大会を選ぶと、その大会の写真の一覧が開きます。写真は撮影者の許可を得て掲載しています。",
              f"Photos taken at Japanese wrestling tournaments, organized by tournament. {i18n.plural(len(paths), 'tournament')}, {i18n_plural(total)}.")
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
         "@type": "CollectionPage", "name": photos_t, "url": bp.SITE + U(path),

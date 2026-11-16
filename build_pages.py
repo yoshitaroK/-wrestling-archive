@@ -1422,7 +1422,7 @@ def tech_pages(tech, cats, shown, ctx):
     # 技術動画トップ
     path = "/technique/"
     crumbs = [(home, "/"), (tech_t, None)]
-    title = f"{tech_t}{L('|', ' | ')}{site_name()}"
+    title = L(f"レスリングの技術動画({len(shown)}本)|{SITE_NAME}", f"{tech_t} | {site_name()}")
     cat_list = [N(c["name"]) for c in cats if counts.get(c["slug"])]
     desc = L("レスリングクラブが公開している技術・トレーニング動画を、" + "・".join(cat_list) + f"などの区分で探せます。{len(shown)}本掲載。",
              f"Wrestling technique and training videos published by clubs, organized by category ({', '.join(cat_list)}). {i18n.plural(len(shown), 'video')}.")
