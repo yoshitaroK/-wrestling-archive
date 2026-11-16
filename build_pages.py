@@ -2104,16 +2104,57 @@ def llms_full_txt(data, series_list, ctx):
     return "\n".join(lines).rstrip("\n") + "\n"
 
 
+# 404 ページだけで動く小さなスクリプト(#331)。開いた URL の親(/events/kids/2025/ → /events/kids/ → /events/)を
+# 下から順に確かめ、本当にあるページ(res.ok)が見つかったら「近いページ」としてリンクを出す。
+# 確かめるのは親だけ(開いた URL そのものは出さない)・最大4回まで・自動では移動しない。
+NOT_FOUND_JS = """<script>
+(function(){
+var path=location.pathname,en=/^\\/en(\\/|$)/.test(path),ja=document.getElementById('nf-ja'),eb=document.getElementById('nf-en');
+if(en&&ja&&eb)ja.parentNode.insertBefore(eb,ja);
+var KNOWN={'/events/':'大会一覧','/players/':'選手一覧','/news/':'ニュース','/photos/':'写真','/technique/':'技術動画','/books/':'書籍','/uww/':'国際大会','/champions/':'歴代優勝者',
+'/en/events/':'Tournaments','/en/players/':'Players','/en/photos/':'Photos','/en/technique/':'Technique videos','/en/uww/':'International','/en/champions/':'Champions'};
+var seg=path.split('/').filter(Boolean),c=[],i;
+for(i=seg.length-1;i>=(en?2:1);i--)c.push('/'+seg.slice(0,i).join('/')+'/');
+c=c.slice(0,4);
+if(!c.length||!window.fetch)return;
+function show(u,t){var n=document.querySelectorAll('.nf-near'),k,a;for(k=0;k<n.length;k++){a=n[k].querySelector('a');a.href=u;a.textContent=t;n[k].hidden=false;}}
+function title(html){var d=new DOMParser().parseFromString(html,'text/html'),h=d.querySelector('main h1')||d.querySelector('h1'),t=h?h.textContent:(d.title||'').split('|')[0];
+t=(t||'').replace(/\\s+/g,' ').trim();return t.length>60?t.slice(0,60)+'…':t;}
+(function next(j){
+if(j>=c.length)return;var u=c[j],k=KNOWN[u];
+fetch(u,{method:k?'HEAD':'GET',credentials:'same-origin'}).then(function(r){
+if(!r.ok)return next(j+1);
+if(k)return show(u,k);
+return r.text().then(function(x){show(u,title(x)||u);});
+}).catch(function(){next(j+1);});
+})(0);
+})();
+</script>"""
+
+
 def not_found_page(ctx):
     h = head(f"ページが見つかりません / Page not found|{SITE_NAME}", "お探しのページは見つかりませんでした。 The page you are looking for was not found.", "/404.html", "",
              {"@context": "https://schema.org", "@type": "WebPage", "name": "ページが見つかりません"}, ctx["css"], alternates=False)
     h = h.replace('<link rel="canonical" href="https://japanwrestlingchannel.com/404.html">', '<meta name="robots" content="noindex">')
-    h += ('<main id="content" class="wrap page"><h1>ページが見つかりません</h1>'
-          '<p class="lead">URLが変わったか、削除された可能性があります。大会一覧か検索ページから探してください。</p>'
-          '<p><a href="/events/">大会一覧を見る</a> / <a href="/">検索ページへ</a></p>'
-          '<h2 lang="en">Page not found</h2>'
-          '<p class="lead" lang="en">The URL may have changed or the page may have been removed. Try the tournament list or the search page.</p>'
-          '<p lang="en"><a href="/en/events/">Tournaments</a> / <a href="/en/">Search</a></p></main>' + footer(ctx["as_of"]))
+    # 検索欄と、主なページへのリンク(#331)。ステータス 404 と noindex はそのまま。別のページへ自動で移すことはしない
+    def block(en):
+        x = "e" if en else "j"
+        links = ([("/en/events/", "Tournaments"), ("/en/players/", "Players"), ("/en/events/calendar/", "Calendar"), ("/en/", "Home")] if en else
+                 [("/events/", "大会一覧"), ("/players/", "選手"), ("/news/", "ニュース"), ("/events/calendar/", "カレンダー"), ("/", "トップ")])
+        label = "Search tournaments and wrestlers" if en else "大会名・選手名で検索"
+        return (f'<p class="nf-near" hidden><span>{"Nearby page" if en else "近いページ"}</span><a class="elink primary" href="/"></a></p>'
+                f'<form class="nf-search" role="search" action="{"/en/" if en else "/"}" method="get">'
+                f'<label class="sr" for="nfq-{x}">{label}</label>'
+                f'<input id="nfq-{x}" name="q" type="search" autocomplete="off" placeholder="{label}">'
+                f'<button type="submit">{"Search" if en else "検索"}</button></form>'
+                f'<ul class="nf-links" aria-label="{"Main pages" if en else "主なページ"}">'
+                + "".join(f'<li><a class="elink" href="{u}">{t}</a></li>' for u, t in links) + '</ul>')
+    h += ('<main id="content" class="wrap page nf"><div id="nf-ja"><h1>ページが見つかりません</h1>'
+          '<p class="lead">URLが変わったか、削除された可能性があります。下の検索欄かリンクから探してください。</p>'
+          + block(False) + '</div>'
+          '<div id="nf-en" lang="en"><h2>Page not found</h2>'
+          '<p class="lead">The URL may have changed or the page may have been removed. Try the search box or the links below.</p>'
+          + block(True) + '</div></main>' + NOT_FOUND_JS + footer(ctx["as_of"]))
     return h
 
 
@@ -2141,6 +2182,21 @@ PAGE_CSS = """
 :root[data-theme="light"] .cresult.ok{background:#e6f4ea;border-color:#9ccfab}
 .cresult.ng{display:block;background:var(--st-cancel-bg);border:1px solid var(--st-cancel)}
 @media (max-width:520px){.cform{padding:18px 14px 20px}}
+.nf{padding-bottom:44px}
+.nf #nf-en{margin-top:36px;padding-top:8px;border-top:1px solid var(--line)}
+.nf #nf-en:first-child{margin-top:0;padding-top:0;border-top:0}
+.nf #nf-en:first-child+#nf-ja{margin-top:36px;padding-top:8px;border-top:1px solid var(--line)}
+.nf-near{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;max-width:640px;margin:16px 0 0;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:8px}
+.nf-near[hidden]{display:none}
+.nf-near span{font-size:13px;font-weight:700;color:var(--ink2)}
+.nf-near .elink{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;overflow-wrap:anywhere}
+.nf-search{display:flex;gap:8px;max-width:640px;margin:16px 0 0}
+.nf-search input{flex:1;min-width:0;box-sizing:border-box;font:inherit;font-size:16px;padding:11px 13px;border:1px solid var(--surface-2);border-radius:10px;background:var(--bg2);color:var(--ink)}
+.nf-search input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-tint)}
+.nf-search button{flex:0 0 auto;min-height:44px;padding:0 22px;border:0;border-radius:999px;background:var(--pink-fill);color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.nf-search button:hover{filter:brightness(1.12)}
+.nf-links{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:16px 0 0;padding:0}
+.nf-links .elink{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box}
 .page{padding-top:18px}
 .policy{padding-bottom:44px}
 .policy .upd{font-size:13px;color:var(--ink3);margin:0 0 8px}
