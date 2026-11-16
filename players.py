@@ -373,6 +373,36 @@ def best_result(p, ctx, bp):
     return f"{r.get('開催年', '')}年{name} {rk}"
 
 
+def result_span(p):
+    """成績の年の幅(例: 2024〜2026年)。成績が1年分だけのときは空(説明文で年を2度言わないため)"""
+    yrs = sorted({int(r["開催年"]) for r in p["results"] if str(r.get("開催年", "")).isdigit()})
+    if len(yrs) < 2:
+        return ""
+    return L(f"{yrs[0]}〜{yrs[-1]}年", f"{yrs[0]}–{yrs[-1]}")
+
+
+def latest_class(p):
+    """いちばん新しい年の成績の (年, スタイル, 階級)。説明文に「2026年はフリースタイル74kg級に出場」と書くため。
+    成績の表(player_results.csv)にある値だけを使い、推測で埋めない:
+    - その年の成績の行すべてに、スタイルと「〇kg」の階級が入っているときだけ
+    - その年のスタイル・階級が1通りのときだけ(70kg級と74kg級の両方に出た年は、1つに決めつけず書かない)"""
+    yrs = [int(r["開催年"]) for r in p["results"] if str(r.get("開催年", "")).isdigit()]
+    if not yrs:
+        return None
+    rows = [r for r in p["results"] if str(r.get("開催年", "")) == str(max(yrs))]
+    pairs = set()
+    for r in rows:
+        style = re.sub(r"^新人戦\s*", "", r.get("スタイル", "") or "")
+        w = r.get("階級", "") or ""
+        if not style or not re.fullmatch(r"\d+kg", w):
+            return None
+        pairs.add((style, w))
+    if len(pairs) != 1:
+        return None
+    style, w = next(iter(pairs))
+    return (str(max(yrs)), N(style), L(w, w[:-2] + " kg"))
+
+
 def last_updated(p, ctx, as_of=""):
     """選手のデータのいちばん新しい日(成績の開催回の最終日・試合動画・国際大会の動画の公開日)。
     構造化データの dateModified と sitemap の lastmod に使う。毎日の更新日にしないのは、
@@ -417,19 +447,30 @@ def player_page(p, ctx, bp, card=""):
     nv, nr = len(p["videos"]), len(p["results"])
     uww = ctx.get("uww_by_player", {}).get(p["id"], [])
     nu = len(uww)
+    span, latest = result_span(p), latest_class(p)
     if i18n.en():
         desc = f"{name}{(' (' + club + ')') if club else ''}: " + (
-            f"{i18n.plural(nr, 'tournament result')} and {i18n.plural(nv, 'match video')}" if nr else f"{i18n.plural(nv, 'match video')}")
+            f"{i18n.plural(nr, 'tournament result')}{f' ({span})' if span else ''} and {i18n.plural(nv, 'match video')}" if nr else f"{i18n.plural(nv, 'match video')}")
         desc += f", plus {i18n.plural(nu, 'video')} from international events." if nu else "."
+        if latest:
+            tail = f" Competed in {latest[1]} {latest[2]} in {latest[0]}."
+            if len(desc + tail) > 160 and span:   # 長くなりすぎるときは年の幅を省く
+                desc = desc.replace(f" ({span})", "", 1)
+            if len(desc + tail) <= 160:           # それでも長いときは、この一文を足さない
+                desc += tail
     else:
         parts = [f"{name}選手"]
         if club:
             parts.append(f"({club})")
         best = best_result(p, ctx, bp)
         parts.append(f"のレスリングの成績。{best}など" if best else "の")
-        parts.append((f"大会成績{nr}件" + (f"と試合動画{nv}本" if nv else "")) if nr else f"試合動画{nv}本")
+        parts.append((f"大会成績{nr}件{f'({span})' if span else ''}" + (f"と試合動画{nv}本" if nv else "")) if nr else f"試合動画{nv}本")
         parts.append(f"、国際大会の動画{nu}本。" if nu else "。")
+        if latest:
+            parts.append(f"{latest[0]}年は{latest[1]}{latest[2]}級に出場。")
         desc = "".join(parts)
+        if len(desc) > 120 and span:   # 長くなりすぎるときは年の幅を省く
+            desc = desc.replace(f"({span})", "", 1)
     person = {"@type": "Person", "name": name, "url": SITE + U(path)}
     # 別名:ふりがな(日本語版)と players.csv の別表記(旧姓・異体字など)。英語版は日本語の氏名も別名にする。
     # 別表記には動画タイトルの誤字を拾うためのものも混ざるので、ページの文には出さず構造化データだけに入れる
