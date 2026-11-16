@@ -368,6 +368,22 @@ def cover_html(b, e, cls="bk-cover"):
             f'referrerpolicy="no-referrer" data-gone></span>')
 
 
+def llms_lines(ctx, site):
+    """llms-full.txt の「書籍」の節。本ごとに、書名・著者・出版社・発売年月(データにあるものだけ)とページの URL"""
+    books = ctx.get("books") or []
+    if not books:
+        return []
+    lines = [f"## 書籍(レスリングの本 {len(books)}冊)",
+             "書名・著者・出版社・発売年月は openBD とブクログのデータによります。各ページに表紙と、書店・図書館へのリンクがあります。", "",
+             f"- 一覧のページ: {site}/books/"]
+    for b in books:
+        facts = [x for x in (b.get("authors") or "", b.get("publisher") or "",
+                             f"{fmt_pubdate(b['pubdate'])}発売" if b.get("pubdate") else "") if x]
+        lines.append(f"- [{b['title']}]({site}/books/{b['isbn']}/)" + (": " + "・".join(facts) if facts else ""))
+    lines.append("")
+    return lines
+
+
 def books_for_player(ctx, pid):
     return [b for b in ctx.get("books", []) if any(p["id"] == pid for p in b["players"])]
 
