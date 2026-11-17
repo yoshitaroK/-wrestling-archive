@@ -89,6 +89,12 @@
     "n": 30
    },
    {
+    "href": "/photos/university-championship/2026/",
+    "label": "全日本大学選手権 2026年",
+    "src": "/assets/photos/8f85c963d6e3-t.jpg",
+    "n": 30
+   },
+   {
     "href": "/photos/shakaijin-open/2026/",
     "label": "全国社会人オープン選手権 2026年",
     "src": "/assets/photos/ad6d0b423ca4-t.jpg",
@@ -249,12 +255,6 @@
     "label": "U23日本代表選考会・U23全日本選手権 2025年",
     "src": "/assets/photos/d5ae0873f355-t.jpg",
     "n": 30
-   },
-   {
-    "href": "/photos/u15-selection/2025/",
-    "label": "U15日本代表選考会・U15全日本選手権 2025年",
-    "src": "/assets/photos/d7a3bbc513f0-t.jpg",
-    "n": 30
    }
   ],
   "news": [
@@ -263,14 +263,20 @@
     "title": "全日本大学選手権、日体大が3年ぶり優勝 ナムバルダグワは大学4冠",
     "category": "全日本大学選手権",
     "date": "2026-11-15",
-    "lead": "全日本大学選手権(フリースタイル)の最終日、日体大が4階級を制して62点で団体優勝した。125kg級のナムバルダグワが連覇で大学の全国大会4つを制し、最優秀選手は65kg級連覇の西内悠人。"
+    "lead": "全日本大学選手権(フリースタイル)の最終日、日体大が4階級を制して62点で団体優勝した。125kg級のナムバルダグワが連覇で大学の全国大会4つを制し、最優秀選手は65kg級連覇の西内悠人。",
+    "img": "/assets/news/2026-univ-free-final.jpg",
+    "w": 1600,
+    "h": 1201
    },
    {
     "slug": "2026-univ-free-day1",
     "title": "全日本大学選手権、ナムバルダグワが決勝へ 前回王者4人も勝ち上がる",
     "category": "全日本大学選手権",
     "date": "2026-11-14",
-    "lead": "全日本大学選手権(フリースタイル)の第1日は10階級の準決勝まで。125kg級のナムバルダグワが連覇に向けて決勝へ進み、前回王者の勝目大翔・西内悠人・吉田アリヤ・須田宝も決勝に進んだ。"
+    "lead": "全日本大学選手権(フリースタイル)の第1日は10階級の準決勝まで。125kg級のナムバルダグワが連覇に向けて決勝へ進み、前回王者の勝目大翔・西内悠人・吉田アリヤ・須田宝も決勝に進んだ。",
+    "img": "/assets/news/2026-univ-free-day1.jpg",
+    "w": 1600,
+    "h": 1201
    },
    {
     "slug": "2026-yog-beach-day2",
@@ -388,6 +394,12 @@
     "href": "/en/photos/regional-関東-qualifier/",
     "label": "Kanto High School Selection / Rookie Tournament (National Selection Qualifier) 2026",
     "src": "/assets/photos/c0ea6ebdad24-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/university-championship/2026/",
+    "label": "All Japan University Championships 2026",
+    "src": "/assets/photos/8f85c963d6e3-t.jpg",
     "n": 30
    },
    {
@@ -550,12 +562,6 @@
     "href": "/en/photos/u23-selection/2025/",
     "label": "U23 All Japan Championships & Japan Team Trials 2025",
     "src": "/assets/photos/d5ae0873f355-t.jpg",
-    "n": 30
-   },
-   {
-    "href": "/en/photos/u15-selection/2025/",
-    "label": "U15 All Japan Championships & Japan Team Trials 2025",
-    "src": "/assets/photos/d7a3bbc513f0-t.jpg",
     "n": 30
    }
   ]

@@ -54,6 +54,15 @@
    "href": "/photos/shakaijin-open/2026/",
    "label": "全国社会人オープン選手権 2026年",
    "credit": "撮影:Japan Wrestling Channel"
+  },
+  {
+   "src": "/assets/photos/38916030f470.jpg",
+   "srcset": "/assets/photos/38916030f470-t.jpg 480w, /assets/photos/38916030f470.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/photos/university-championship/2026/",
+   "label": "全日本大学選手権 2026年",
+   "credit": "撮影:Japan Wrestling Channel"
   }
  ],
  "en": [
@@ -109,6 +118,15 @@
    "h": 1201,
    "href": "/en/photos/shakaijin-open/2026/",
    "label": "All Japan Working Adults Open Championships 2026",
+   "credit": "Photo: Japan Wrestling Channel"
+  },
+  {
+   "src": "/assets/photos/38916030f470.jpg",
+   "srcset": "/assets/photos/38916030f470-t.jpg 480w, /assets/photos/38916030f470.jpg 1600w",
+   "w": 1600,
+   "h": 1201,
+   "href": "/en/photos/university-championship/2026/",
+   "label": "All Japan University Championships 2026",
    "credit": "Photo: Japan Wrestling Channel"
   }
  ]

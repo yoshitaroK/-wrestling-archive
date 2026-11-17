@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-17T14:24:02+09:00",
+ "built_at": "2026-11-17T23:10:46+09:00",
  "as_of": "2026-11-17",
  "video_count": 3367,
  "raw_count": 3367,
@@ -187,11 +187,11 @@
   "series": 10
  },
  "photos": {
-  "entries": 901,
-  "shown": 901,
+  "entries": 931,
+  "shown": 931,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 30,
+  "pages_with_photos": 31,
   "by_page": {
    "/events/east-autumn/2025/": 30,
    "/events/east-league/2025/": 30,
@@ -219,6 +219,7 @@
    "/events/u15-selection/2025/": 30,
    "/events/u23-selection/2025/": 30,
    "/events/university-championship/2025/": 30,
+   "/events/university-championship/2026/": 30,
    "/events/university-greco/2025/": 30,
    "/events/university-greco/2026/": 30,
    "/events/x-asian-championships/": 30,
@@ -227,7 +228,7 @@
   "warnings": [],
   "errors": [],
   "unlisted_files": [],
-  "albums": 33,
+  "albums": 34,
   "from_manifest": 301
  },
  "news": {
@@ -331,7 +332,7 @@
   "warnings": []
  },
  "en": {
-  "pages": 1849,
+  "pages": 1850,
   "names": 640,
   "machine_translations": 3492,
   "missing_names": [
