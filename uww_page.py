@@ -180,7 +180,7 @@ def groups_html(lst, bp, open_n=2):
     for i, k in enumerate(keys):
         vids = sorted(groups[k], key=lambda v: (v["p"], v["t"]))
         head = f'{ev_name(k[1])} {k[0]}'.strip()
-        h += (f'<details class="uww-g"{" open" if i < open_n else ""}><summary>{e(head)}<small>{L(f"{len(vids)}本", f"{len(vids)} videos")}</small></summary>'
+        h += (f'<details class="uww-g"{" open" if i < open_n else ""}><summary><h2>{e(head)}</h2><small>{L(f"{len(vids)}本", f"{len(vids)} videos")}</small></summary>'
               f'<ul class="vlist">{"".join(row(v, bp) for v in vids)}</ul></details>')
     return h
 
@@ -342,6 +342,7 @@ UWW_CSS = """
 .uww-count{font-size:13px;color:var(--ink3);margin:0 0 8px}
 .uww-g{margin:10px 0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
 .uww-g summary{cursor:pointer;font-weight:700;font-size:16px}
+.uww-g summary h2{display:inline;margin:0;font:inherit;letter-spacing:inherit;word-break:inherit}
 .uww-g summary small{margin-left:8px;font-weight:400;font-size:12px;color:var(--ink3)}
 .uww-g .vlist{margin-top:10px}
 .uww-who{font-size:13px;margin-top:4px;color:var(--ink2)}
