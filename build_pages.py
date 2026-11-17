@@ -1722,7 +1722,7 @@ __CONTACT_JS__
 PRIVACY_UPDATED = "2026-10-07"
 
 
-FAQ_UPDATED = "2026-11-02"
+FAQ_UPDATED = "2026-11-17"
 
 
 # 選手ページの大会成績の出典(出典URL のサイト → 日本語・英語の名前)。ここに無いサイトは「その他」にまとめる
@@ -1757,8 +1757,9 @@ def _en_list(xs):
     return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
 
 
-def faq_items(data, series_list, players_list=None):
-    """よくある質問。数字はデータから入れるので、毎日の更新で最新になる"""
+def faq_items(data, series_list, players_list=None, ctx=None):
+    """よくある質問。数字はデータから入れるので、毎日の更新で最新になる。
+    ctx を渡すと、歴代優勝者・国際大会の動画・ニュースの質問も足す(数が0のものは出さない。#345)"""
     n_videos = len(data.get("videos", []))
     years = [e["year"] for e in data.get("events", []) if e.get("n")]
     y0 = min(years) if years else ""
@@ -1798,6 +1799,43 @@ def faq_items(data, series_list, players_list=None):
               + ". Each result has a Source link that opens the original document. "
               "We do not make player pages for minors (including wrestlers not yet confirmed to be adults). If you find a mistake, please let us know through the contact form."),
             ("/contact.html", L("お問い合わせ", "Contact"))))
+    ctx = ctx or {}
+    # 歴代優勝者(/champions/)。大会の数は champions.build と同じ表(ctx["champions"])から
+    n_champ = len(ctx.get("champions") or {})
+    if n_champ:
+        import champions
+        items.append((
+            L("歴代優勝者は見られますか?", "Can I see past champions?"),
+            L(f"見られます。天皇杯全日本選手権・明治杯全日本選抜選手権など{n_champ}大会の歴代優勝者を、スタイル・階級・年ごとの表で載せています。"
+              f"日本レスリング協会が公開している入賞者一覧と、{champions.HISTORY_SOURCE}から作っています。",
+              f"Yes. Past champions of {n_champ} tournaments, including the Emperor's Cup and the Meiji Cup, are listed in tables by style, weight class and year. "
+              f"They are compiled from the medalist lists published by the Japan Wrestling Federation and {champions.HISTORY_SOURCE_EN}."),
+            ("/champions/", L("歴代優勝者", "Champions"))))
+    # 国際大会の動画(/uww/)。本数はページに載せている動画と同じ数え方(uww_page.load)
+    n_uww = ctx.get("uww_n") or 0
+    if n_uww:
+        items.append((
+            L("世界選手権など国際大会の動画はありますか?", "Are there videos of international events such as the World Championships?"),
+            L(f"あります。世界レスリング連合(UWW)の公式 YouTube にある動画のうち、日本人選手が出ている試合・ハイライトなど{n_uww:,}本を、年代・年・大会ごとにまとめています。"
+              "動画はこのサイトの中で再生できます。",
+              f"Yes. {n_uww:,} matches, highlights and other videos featuring Japanese wrestlers from the official YouTube channel of United World Wrestling (UWW) "
+              "are organized by age category, year and event. Videos play right on this site."),
+            ("/uww/", L("国際大会の動画", "International videos"))))
+    # ニュース(/news/)。日本語版だけにあるページなので、英語版では出さない
+    n_news = len(ctx.get("news_articles") or [])
+    if n_news and not i18n.en():
+        items.append((
+            "大会の結果のニュースはありますか?",
+            f"あります。国内・海外の大会の結果や話題を記事にしていて、現在{n_news:,}本を載せています。記事ごとに日付と出典を書いています。",
+            ("/news/", "ニュース")))
+    # 高校生以下の選手の扱い。今の決まりをそのまま書く(広げも狭めもしない。運営者の考え 2026-11-13)
+    items.append((
+        L("高校生以下の選手のページはありますか?", "Are there player pages for high school and younger wrestlers?"),
+        L("ありません。未成年の選手(大人と確認できていない選手を含む)の選手ページは作っていません。大会の開催回ページの優勝者・入賞者の欄にも載せていません。"
+          "ニュース記事の本文と結果の表には名前と所属(学校)が出ますが、選手ページへのリンクは付けていません。掲載について伝えたいことがあれば、お問い合わせからお知らせください。",
+          "No. We do not make player pages for minors (including wrestlers not yet confirmed to be adults), and they are not listed in the champions and medalists sections of tournament edition pages. "
+          "Their names and schools do appear in the text and result tables of news articles, without links to player pages. If you have a request about a listing, please use the contact form."),
+        ("/contact.html", L("お問い合わせ", "Contact"))))
     items += [
         (L("写真は使ってもいいですか? 取り下げてほしい写真があります", "Can I use the photos? I want a photo removed"),
          L("写真は撮影者の許可を得て掲載しています。著作権は撮影者にあるため、利用したい場合は撮影者にご確認ください。写真の取り下げのご依頼は、お問い合わせの「写真の掲載・取り下げについて」から受け付けています。",
@@ -1861,7 +1899,7 @@ def about_page(data, series_list, ctx):
 
 def faq_page(data, series_list, ctx):
     """よくある質問(/faq/)。FAQPage の構造化データ付き(Google や AI が答えとして引用しやすい形)"""
-    items = faq_items(data, series_list, ctx.get("players"))
+    items = faq_items(data, series_list, ctx.get("players"), ctx)
     crumbs = [(L("トップ", "Home"), "/"), (L("よくある質問", "FAQ"), None)]
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
         "@type": "FAQPage", "url": SITE + U("/faq/"), "dateModified": FAQ_UPDATED,
@@ -2723,13 +2761,15 @@ def build(root=HERE, inline_css=False, only=None):
             # 国際大会(UWW)の動画のページ(uww_videos.csv があるときだけ作る)
             import uww_page
             pages.extend(uww_page.build(root, ctx, me))
+            # よくある質問の「国際大会の動画」の本数(ページに載せている動画と同じ数え方。#345)
+            ctx["uww_n"] = sum(len(v) for v in uww_page.load(root, ctx).values())
             # プライバシーポリシー(アプリの審査・Firebase にも登録する URL)
             pages.append((*privacy_page(ctx), PRIVACY_UPDATED))
             # よくある質問
             pages.append((*faq_page(data, listed, ctx), data.get("as_of")))
             # トップの検索欄で、ニュース・大会の結果(速報)の大人の部・よくある質問も探せるように(assets/search.json)
             import search_index
-            search_index.write(root, data, ctx, faq_items(data, listed, ctx.get("players")), ctx.get("news_articles") or [], search_report)
+            search_index.write(root, data, ctx, faq_items(data, listed, ctx.get("players"), ctx), ctx.get("news_articles") or [], search_report)
             # 運営者情報
             pages.append((*about_page(data, listed, ctx), data.get("as_of")))
             contact = os.path.join(root, U("/contact.html").lstrip("/"))
