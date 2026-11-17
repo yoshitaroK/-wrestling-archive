@@ -2036,7 +2036,7 @@ def llms_txt(data, series_list, ctx):
         f"- [プライバシーポリシー]({SITE}/privacy/)",
         "",
         "## 詳しい一覧",
-        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧",
+        f"- [llms-full.txt]({SITE}/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)、国際大会の動画(年代・年ごとのページと大会名・本数)、技術動画(区分・チャンネルごとのページ)、書籍(書名・著者・出版社)の一覧",
         "",
         "## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)",
     ]
@@ -2101,7 +2101,35 @@ def llms_full_txt(data, series_list, ctx):
             label = p["name"] + (f"({p['kana']})" if p["kana"] else "")
             lines.append(f"- [{label}]({SITE}/players/{p['id']}/)" + (": " + "・".join(parts) if parts else ""))
         lines.append("")
+    # 国際大会の動画(年代・年ごとのページ)・技術動画(区分・チャンネルのページ)・書籍。ページに出ている大会名・本数・URL だけ(選手名は足さない)
+    import uww_page
+    import books
+    lines += uww_page.llms_lines(ctx.get("root") or ".", ctx, SITE)
+    lines += tech_llms_lines(ctx)
+    lines += books.llms_lines(ctx, SITE)
     return "\n".join(lines).rstrip("\n") + "\n"
+
+
+def tech_llms_lines(ctx):
+    """llms-full.txt の「技術動画」の節。区分ごと・チャンネルごとのページの URL と本数(tech_pages と同じ数え方)"""
+    t = ctx.get("tech_llms")
+    if not t or not t["shown"]:
+        return []
+    cats, shown, channels = t["cats"], t["shown"], t["channels"]
+    lines = [f"## 技術動画(レスリングクラブが公開している技術・トレーニング動画 {len(shown)}本)",
+             "区分ごと・チャンネルごとのページがあります。動画はサイトの中(YouTube のプレーヤー)で再生できます。", "",
+             f"- 入口のページ: {SITE}/technique/", "", "### 区分ごとのページ"]
+    for c in cats:
+        n = sum(1 for v in shown if v["cat"] == c["slug"])
+        if n:
+            lines.append(f"- [{c['name']}の技術動画]({SITE}/technique/{c['slug']}/): 動画{n}本" + (f"。{c['description']}" if c.get("description") else ""))
+    if channels:
+        lines += ["", "### チャンネルごとのページ"]
+        for ch in channels:
+            n = sum(1 for v in shown if v["_chslug"] == ch["slug"])
+            lines.append(f"- [{ch['name']}]({SITE}/technique/{ch['slug']}/): 動画{n}本" + (f"。{ch['note']}" if ch.get("note") else ""))
+    lines.append("")
+    return lines
 
 
 # 404 ページだけで動く小さなスクリプト(#331)。開いた URL の親(/events/kids/2025/ → /events/kids/ → /events/)を
@@ -2649,6 +2677,9 @@ def build(root=HERE, inline_css=False, only=None):
             order = {slug: i for i, slug in enumerate(tcfg.get("display_order", []))}
             cats_view = sorted(cats, key=lambda c: order.get(c["slug"], len(order)))
             pages.extend(tech_pages(tech, cats_view, shown, ctx))
+            if not i18n.en():
+                ctx["root"] = root
+                ctx["tech_llms"] = {"cats": cats_view, "shown": shown, "channels": tech.get("channels", [])}
             # 写真ページ(/photos/)。photos.json に写真があるページの分だけ作る
             pages.extend(photo_gallery.photo_pages(ctx, photos_by_page, me))
             hero[lang] = photo_gallery.hero_items(ctx, photos_by_page, me)

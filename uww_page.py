@@ -274,6 +274,47 @@ def build(root, ctx, bp):
     return out
 
 
+def llms_lines(root, ctx, site):
+    """llms-full.txt の「国際大会の動画」の節。年代ごと・年ごとに、ページの URL・動画の本数・大会名ごとの本数だけを並べる。
+    数えるのはページに載せている動画と同じ(load)。選手名と動画のタイトルは書かない"""
+    data = load(root, ctx)
+    if not data:
+        return []
+
+    def evs(lst):
+        cnt = defaultdict(int)
+        for v in lst:
+            cnt[v["ev"] or "その他の大会"] += 1
+        return "、".join(f"{ev} {n}本" for ev, n in sorted(cnt.items(), key=lambda x: (EV_ORDER.get(x[0], 99), x[0])))
+
+    total = sum(len(lst) for lst in data.values())
+    lines = ["## 国際大会の動画(世界レスリング連合 UWW の公式 YouTube。日本人選手が出ている動画)",
+             f"世界レスリング連合(UWW)の公式 YouTube にある、日本人選手が出ている試合・ハイライトなどの動画{total:,}本を、年代・年・大会ごとにまとめています。"
+             "動画のタイトルは UWW が公開しているもの(英語)です。"
+             "U20・U17 などは、出ている日本人選手が全員、選手ページを公開している大人の選手と確認できた動画だけを載せています。", "",
+             f"- 入口のページ: {site}/uww/", ""]
+    for cat, _, ja, _ in CATS:
+        lst = data.get(cat, [])
+        if not lst:
+            continue
+        lines.append(f"### {ja}")
+        if cat not in SPLIT_CATS:
+            lines += [f"- [国際大会の動画({ja})]({site}/uww/{cat}/): 動画{len(lst):,}本({evs(lst)})", ""]
+            continue
+        by_year = defaultdict(list)
+        for v in lst:
+            by_year[v["y"]].append(v)
+        years = sorted((y for y in by_year if y), key=int, reverse=True)
+        kept = here_years(years, by_year)
+        lines.append(f"- [国際大会の動画({ja})]({site}/uww/{cat}/): 動画{len(lst):,}本。"
+                     + (f"{'・'.join(kept)}年の動画はこのページに、" if kept else "") + "ほかの年は下の年ごとのページにあります")
+        for y in years:
+            url = f"{site}/uww/{cat}/" + (f"#y{y}" if y in kept else f"{y}/")
+            lines.append(f"- [{y}年 国際大会の動画({ja})]({url}): 動画{len(by_year[y]):,}本({evs(by_year[y])})")
+        lines.append("")
+    return lines
+
+
 def write_search_index(root, data):
     """トップページの検索で国際大会の動画も探せるように、サイトに出している動画の一覧を assets/uww.json に書く。
     v: i=動画ID t=タイトル p=公開日 c=年代 e=大会 y=年 pl=[選手ID, 氏名, ローマ字, 読み](公開している大人の選手だけ)"""
