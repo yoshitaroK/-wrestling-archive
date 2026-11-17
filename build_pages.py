@@ -797,11 +797,14 @@ def event_page(ev, ctx):
         h += f'<div class="ev-anchor" id="photos">{gallery}</div>'
 
     # 動画(試合配信は日付→マット順)
-    if vids:
-        h += '<div class="ev-anchor" id="videos">'
     by_day = defaultdict(list)
     for v in matches:
         by_day[v.get("dh") or ""].append(v)
+    if vids:
+        # 動画の欄の見出し(#340)。下の小見出し(h3)をまとめる h2。欄が1つだけのときは、すぐ下の小見出しに同じ本数が出るので、ここには本数を出さない
+        n_groups = len(by_day) + sum(1 for k in KIND_ORDER[1:] if any((v.get("k") or "other") == k for v in vids))
+        h += ('<div class="ev-anchor" id="videos"><h2 class="vh">' + L("配信動画", "Videos")
+              + (f' <small>{L(f"{len(vids)}本", str(len(vids)))}</small>' if n_groups > 1 else "") + '</h2>')
     for day in sorted(by_day):
         lst = sorted(by_day[day], key=lambda v: (v.get("m") or "~", v.get("p") or ""))
         sess = next((x for x in ev.get("sessions") or [] if x.get("start_date", "") <= day <= x.get("end_date", "")), None) if day else None
@@ -2218,6 +2221,8 @@ PAGE_CSS = """
 .page .vgroup h3{margin:0 0 8px;font-size:16px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .page .vgroup h3 small{font-weight:400;color:var(--ink3);font-size:12px}
 .vgroup{margin-top:26px}
+.page .ev-anchor>h2.vh{margin:26px 0 0}
+.ev-anchor>h2.vh+.vgroup{margin-top:12px}
 .related{margin-top:28px}
 .related h2{font-size:18px;margin:0 0 10px}
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 24px}
