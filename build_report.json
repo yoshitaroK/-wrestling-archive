@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-17T14:21:49+09:00",
+ "built_at": "2026-11-17T14:24:02+09:00",
  "as_of": "2026-11-17",
  "video_count": 3367,
  "raw_count": 3367,
@@ -246,14 +246,14 @@
    "results": 200,
    "results_excluded": 236,
    "results_linked": 184,
-   "faq": 10
+   "faq": 14
   },
   "en": {
    "news": 0,
    "results": 200,
    "results_excluded": 236,
    "results_linked": 184,
-   "faq": 10
+   "faq": 13
   }
  },
  "tech": {
