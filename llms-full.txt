@@ -23,7 +23,7 @@
 - [プライバシーポリシー](https://japanwrestlingchannel.com/privacy/)
 
 ## 詳しい一覧
-- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)の一覧
+- [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)、国際大会の動画(年代・年ごとのページと大会名・本数)、技術動画(区分・チャンネルごとのページ)、書籍(書名・著者・出版社)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2026年 動画124本
@@ -2156,3 +2156,104 @@
 - [齋藤 僚太](https://japanwrestlingchannel.com/players/p-8fc4fe/): トヨタモビリティ東京・2024年全国社会人オープン選手権 準優勝・大会成績3件
 - [齋藤 成龍](https://japanwrestlingchannel.com/players/p-c09c31/): 神奈川大学・2022年全日本学生選手権 5位・大会成績1件
 - [齋藤 未来](https://japanwrestlingchannel.com/players/p-7a424c/): 小田開発工業(株)・2021年明治杯全日本選抜選手権 3位・大会成績9件
+
+## 国際大会の動画(世界レスリング連合 UWW の公式 YouTube。日本人選手が出ている動画)
+世界レスリング連合(UWW)の公式 YouTube にある、日本人選手が出ている試合・ハイライトなどの動画3,080本を、年代・年・大会ごとにまとめています。動画のタイトルは UWW が公開しているもの(英語)です。U20・U17 などは、出ている日本人選手が全員、選手ページを公開している大人の選手と確認できた動画だけを載せています。
+
+- 入口のページ: https://japanwrestlingchannel.com/uww/
+
+### シニア
+- [国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/): 動画2,181本。2026・2025年の動画はこのページに、ほかの年は下の年ごとのページにあります
+- [2026年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/#y2026): 動画30本(アジア選手権 14本、ランキングシリーズ等 8本、その他の大会 8本)
+- [2025年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/#y2025): 動画63本(世界選手権 18本、アジア選手権 14本、ランキングシリーズ等 16本、その他の大会 15本)
+- [2024年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2024/): 動画261本(オリンピック 2本、オリンピック予選 1本、世界選手権 3本、アジア選手権 8本、ランキングシリーズ等 5本、その他の大会 242本)
+- [2023年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2023/): 動画93本(世界選手権 27本、アジア選手権 13本、その他の大会 53本)
+- [2022年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2022/): 動画85本(世界選手権 11本、アジア選手権 70本、その他の大会 4本)
+- [2021年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2021/): 動画194本(オリンピック 1本、オリンピック予選 57本、世界選手権 77本、アジア選手権 43本、ランキングシリーズ等 4本、その他の大会 12本)
+- [2020年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2020/): 動画118本(アジア選手権 116本、その他の大会 2本)
+- [2019年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2019/): 動画349本(世界選手権 117本、ワールドカップ 42本、アジア選手権 95本、ランキングシリーズ等 50本、その他の大会 45本)
+- [2018年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2018/): 動画365本(世界選手権 121本、ワールドカップ 4本、アジア選手権 87本、ランキングシリーズ等 40本、その他の大会 113本)
+- [2017年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2017/): 動画179本(世界選手権 74本、ワールドカップ 30本、アジア選手権 68本、その他の大会 7本)
+- [2016年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2016/): 動画199本(オリンピック予選 66本、世界選手権 47本、アジア選手権 57本、ランキングシリーズ等 28本、その他の大会 1本)
+- [2015年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2015/): 動画193本(世界選手権 61本、ワールドカップ 29本、アジア選手権 63本、ランキングシリーズ等 38本、その他の大会 2本)
+- [2014年 国際大会の動画(シニア)](https://japanwrestlingchannel.com/uww/senior/2014/): 動画52本(ユース五輪 1本、世界選手権 51本)
+
+### U23
+- [国際大会の動画(U23)](https://japanwrestlingchannel.com/uww/u23/): 動画286本(世界選手権 286本)
+
+### U20
+- [国際大会の動画(U20)](https://japanwrestlingchannel.com/uww/u20/): 動画319本(世界選手権 249本、アジア選手権 38本、その他の大会 32本)
+
+### U17
+- [国際大会の動画(U17)](https://japanwrestlingchannel.com/uww/u17/): 動画294本(世界選手権 225本、アジア選手権 63本、その他の大会 6本)
+
+## 技術動画(レスリングクラブが公開している技術・トレーニング動画 60本)
+区分ごと・チャンネルごとのページがあります。動画はサイトの中(YouTube のプレーヤー)で再生できます。
+
+- 入口のページ: https://japanwrestlingchannel.com/technique/
+
+### 区分ごとのページ
+- [タックルの技術動画](https://japanwrestlingchannel.com/technique/tackle/): 動画14本。片足タックル、両足タックル、ハイクロッチなど
+- [組み手・スタンドの技術動画](https://japanwrestlingchannel.com/technique/stand/): 動画10本。組み手争い、差し、崩しなど立った状態の攻防
+- [投げ技の技術動画](https://japanwrestlingchannel.com/technique/throw/): 動画3本。反り投げ、首投げ、腕取り、一本背負いなど
+- [グラウンドの技術動画](https://japanwrestlingchannel.com/technique/ground/): 動画5本。ローリング、アンクルホールド、股裂き、がぶりなど寝技の攻め
+- [ディフェンスの技術動画](https://japanwrestlingchannel.com/technique/defense/): 動画4本。スプロール、タックル切り、逃げ方、返し技など守りの技術
+- [フィジカル・基礎運動の技術動画](https://japanwrestlingchannel.com/technique/physical/): 動画5本。筋トレ、体幹、ブリッジ、柔軟、受け身、マット運動など
+- [練習メニュー・ドリルの技術動画](https://japanwrestlingchannel.com/technique/drill/): 動画19本。ウォームアップ、打ち込み、練習の流れなど
+
+### チャンネルごとのページ
+- [巻っずレスリング](https://japanwrestlingchannel.com/technique/makidswrestling/): 動画43本。新潟市(旧・巻町)のレスリングクラブ。技術・トレーニング紹介が中心
+- [GOLDKIDS WRESTLING](https://japanwrestlingchannel.com/technique/goldkids_wrestling/): 動画17本。キッズレスリングクラブ
+
+## 書籍(レスリングの本 48冊)
+書名・著者・出版社・発売年月は openBD とブクログのデータによります。各ページに表紙と、書店・図書館へのリンクがあります。
+
+- 一覧のページ: https://japanwrestlingchannel.com/books/
+- [弾丸タックル コミック 1-10巻セット (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B01EIWE49I/)
+- [弾丸タックル　6 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B00T9M126Q/)
+- [弾丸タックル　9 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B017H3OU9Y/)
+- [弾丸タックル　10 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B01CG97MGM/)
+- [弾丸タックル　7 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B010N0XU9O/)
+- [弾丸タックル　8 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B010ULGXIG/)
+- [弾丸タックル　3 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B00IHUGQBW/)
+- [弾丸タックル　2 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B00IHUGQBM/)
+- [弾丸タックル　5 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B00N28N9MI/)
+- [弾丸タックル　4 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B00JJBDVUC/)
+- [弾丸タックル　1 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B00IHUGQCQ/)
+- [弾丸タックル　１【期間限定　無料お試し版】 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/B017NLTJUU/)
+- [弾丸タックル : 高校レスリング青春物語 9](https://japanwrestlingchannel.com/books/9784253211895/): 佐藤由幸・秋田書店・2015年11月発売
+- [弾丸タックル : 高校レスリング青春物語 6](https://japanwrestlingchannel.com/books/9784253211864/): 佐藤由幸・秋田書店・2014年11月発売
+- [弾丸タックル : 高校レスリング青春物語 5](https://japanwrestlingchannel.com/books/9784253211857/): 佐藤由幸・秋田書店・2014年7月発売
+- [弾丸タックル : 高校レスリング青春物語 10](https://japanwrestlingchannel.com/books/9784253211901/): 佐藤由幸・秋田書店・2016年3月発売
+- [弾丸タックル : 高校レスリング青春物語 4](https://japanwrestlingchannel.com/books/9784253211802/): 佐藤由幸・秋田書店・2014年3月発売
+- [弾丸タックル : 高校レスリング青春物語 3](https://japanwrestlingchannel.com/books/9784253211796/): 佐藤由幸・秋田書店・2013年11月発売
+- [弾丸タックル 1 (少年チャンピオン・コミックス)](https://japanwrestlingchannel.com/books/9784253211772/)
+- [中京女子大学女子レスリング王国その強さの秘密](https://japanwrestlingchannel.com/books/9784583038117/)
+- [オリンピック金メダリスト直伝! レスリング入門 What is Wrestling?](https://japanwrestlingchannel.com/books/9784583039121/)
+- [図解コーチ レスリング](https://japanwrestlingchannel.com/books/9784415001319/)
+- [栄光へのレスリング](https://japanwrestlingchannel.com/books/9784062004121/)
+- [女子レスリング](https://japanwrestlingchannel.com/books/9784483001563/)
+- [少年・少女レスリング教室](https://japanwrestlingchannel.com/books/9784469262964/)
+- [アテネでつかむ金メダル 中京女子大レスリング部からアテネ五輪へ飛ぶ三人](https://japanwrestlingchannel.com/books/9784764820197/)
+- [佐藤満レスリング入門 □.1](https://japanwrestlingchannel.com/books/9784873899770/)
+- [DVDでよくわかるレスリング](https://japanwrestlingchannel.com/books/9784408453293/)
+- [日本レスリングの物語](https://japanwrestlingchannel.com/books/9784000242929/): 柳澤健・岩波書店・2012年5月発売
+- [弾丸タックル 2](https://japanwrestlingchannel.com/books/9784253211789/): 佐藤由幸・秋田書店・2013年7月発売
+- [弾丸タックル : 高校レスリング青春物語 7](https://japanwrestlingchannel.com/books/9784253211871/): 佐藤由幸・秋田書店・2015年3月発売
+- [ALSOKパワーで勝つ!レスリング最強バイブル](https://japanwrestlingchannel.com/books/9784780416138/): 大橋正教・メイツ出版・2015年6月発売
+- [弾丸タックル : 高校レスリング青春物語 8](https://japanwrestlingchannel.com/books/9784253211888/): 佐藤由幸・秋田書店・2015年7月発売
+- [女子レスリング 吉田・伊調・登坂・土性・川井 (チームでつかんだ栄光のメダル)](https://japanwrestlingchannel.com/books/9784811323459/)
+- [まんがNHKアスリートの魂 : 進化する技と心 : レスリング吉田沙保里 ラグビー五郎丸歩 体操白井健三](https://japanwrestlingchannel.com/books/9784052046193/): 山田幸雄・上地優歩・海野そら太・高岩ヨシヒロ・学研プラス・2017年6月発売
+- [なぜ日本の女子レスリングは強くなったのか : 吉田沙保里と伊調馨](https://japanwrestlingchannel.com/books/9784575312331/): 布施鋼治・双葉社・2017年3月発売
+- [ルールと見どころ!オリンピック・パラリンピック全競技 3](https://japanwrestlingchannel.com/books/9784591157374/): 日本オリンピックアカデミー・ポプラ社・2018年4月発売
+- [ALSOKパワーで勝つ!レスリング最強バイブル](https://japanwrestlingchannel.com/books/9784780421453/): 大橋正教・メイツ出版・2019年3月発売
+- [日本女子レスリング](https://japanwrestlingchannel.com/books/9784811325453/): 布施鋼治・汐文社・2020年1月発売
+- [子どもの運動神経が良くなるレスリング式トレーニング : Gold Kids Method : 園児から中学生まで](https://japanwrestlingchannel.com/books/9784583112909/): 成國晶子・ベースボール・マガジン社・2020年8月発売
+- [日本レスリングの物語](https://japanwrestlingchannel.com/books/9784006033262/): 柳澤健・岩波書店・2021年7月発売
+- [すべてはレスリングのために 藤波朱理、笑顔でつかむ金メダル](https://japanwrestlingchannel.com/books/9784575321029/): 布施鋼治・双葉社
+- [闘魂燃ゆ アントニオ猪木30周年記念写真集](https://japanwrestlingchannel.com/books/9784331503485/)
+- [レスリング式 5分間エクササイズ](https://japanwrestlingchannel.com/books/9784620314235/)
+- [レスリングが、総合格闘技がメキメキ強くなる これが木口式トレーニングだ!! (スポーツ新基本)](https://japanwrestlingchannel.com/books/9784862950123/)
+- [レスリング 勝つためのトレーニング (講談社スポーツシリーズ)](https://japanwrestlingchannel.com/books/9784061415010/)
+- [レスリング (Do Sports Series)](https://japanwrestlingchannel.com/books/9784891963965/)
+- [レスリング [1994]](https://japanwrestlingchannel.com/books/9784891963767/): 沼尻直・一橋出版・1994年6月発売

@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-17T12:35:27+09:00",
+ "built_at": "2026-11-17T14:21:49+09:00",
  "as_of": "2026-11-17",
  "video_count": 3367,
  "raw_count": 3367,
@@ -26,17 +26,17 @@
   "wre-2026-other-d6636195-0930"
  ],
  "events_with_videos": 217,
- "previous_video_count": 3366,
+ "previous_video_count": 3367,
  "missing_from_previous": [],
- "new_since_previous": 1,
+ "new_since_previous": 0,
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
   "total": 3492,
   "translated": 3492,
-  "new": 1,
+  "new": 0,
   "pending": 0,
-  "chars_used": 10,
+  "chars_used": 0,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
