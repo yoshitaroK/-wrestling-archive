@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-18T23:19:29+09:00",
+ "built_at": "2026-11-18T23:33:07+09:00",
  "as_of": "2026-11-18",
  "video_count": 3384,
  "raw_count": 3384,
@@ -26,17 +26,17 @@
   "wre-2026-other-d6636195-0930"
  ],
  "events_with_videos": 219,
- "previous_video_count": 3375,
+ "previous_video_count": 3384,
  "missing_from_previous": [],
- "new_since_previous": 9,
+ "new_since_previous": 0,
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
   "total": 3509,
   "translated": 3509,
-  "new": 17,
+  "new": 0,
   "pending": 0,
-  "chars_used": 786,
+  "chars_used": 0,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
@@ -234,7 +234,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 30
+  "articles": 31
  },
  "books": {
   "errors": [],
@@ -243,7 +243,7 @@
  },
  "search": {
   "ja": {
-   "news": 30,
+   "news": 31,
    "results": 260,
    "results_excluded": 176,
    "results_linked": 233,
