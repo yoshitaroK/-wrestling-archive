@@ -2106,9 +2106,40 @@ def llms_txt(data, series_list, ctx):
     return "\n".join(lines) + "\n"
 
 
+def llms_winners(data, ctx):
+    """llms-full.txt の開催回の行に足す「結果(速報)の1位」(event_results.csv)。{開催回ID: 1行}
+    行は検索欄と同じ search_index.adult_result_rows で絞る(高校生以下の部・高校/中学の所属・未成年と同じ名前の人は入れない)。
+    書くのは1位の名前と所属と、その行の出典 URL だけ(選手ページへのリンクは付けない)"""
+    import search_index
+    root = ctx.get("root") or "."
+    rows, _ = search_index.adult_result_rows(root, search_index.minor_names(root), search_index.adult_events(data))
+    # 絞り込みの前の1位の数(大会ごと)。落ちた階級がある大会には「全階級は出典で」と添える(載っていない階級を「優勝者なし」と読まれないため)
+    import csv
+    path = os.path.join(root, search_index.players_mod.EVENT_RESULTS_CSV)
+    all_first = Counter()
+    if os.path.exists(path):
+        with open(path, encoding="utf-8-sig", newline="") as f:
+            all_first.update(r["開催回ID"] for r in csv.DictReader(f) if (r.get("成績") or "").strip() == "1位")
+    by_ev = defaultdict(list)
+    for r in rows:
+        if (r.get("成績") or "").strip() == "1位":
+            by_ev[r["開催回ID"]].append(r)
+    out = {}
+    for ev, lst in by_ev.items():
+        divs = defaultdict(list)
+        for r in lst:
+            divs[r["種別"].strip()].append(f"{r['階級'].strip()} {r['氏名'].strip()}({r['所属'].strip()})" if r.get("所属") else f"{r['階級'].strip()} {r['氏名'].strip()}")
+        srcs = list(dict.fromkeys(r["出典URL"].strip() for r in lst if r.get("出典URL")))
+        out[ev] = (f"  - 結果(速報)の1位(大人の部・掲載できる人のみ)" + (f"(出典: {'、'.join(srcs)})" if srcs else "") + ": "
+                   + "/".join(f"{d} " + "、".join(xs) for d, xs in divs.items())
+                   + ("(大人と確かめられた部・階級だけを載せています。全階級の結果は出典を見てください)" if all_first[ev] > len(lst) else ""))
+    return out
+
+
 def llms_full_txt(data, series_list, ctx):
     """llms.txt の詳しい版。大会ごとに、開催回の開催日・会場・動画の本数・ページのURLを並べる"""
     lines = [llms_txt(data, series_list, ctx).rstrip("\n"), "", "## 開催回の一覧(新しい順)", ""]
+    winners = llms_winners(data, ctx)
     for x in series_list:
         lines.append(f"### {x['name']}")
         lines.append(f"- 大会ページ: {SITE}/events/{x['id']}/")
@@ -2126,6 +2157,8 @@ def llms_full_txt(data, series_list, ctx):
             jwf, done = jwf_link(v, view_status(v))
             if jwf and done:
                 lines.append(f"  - 結果(日本レスリング協会): {jwf}")
+            if v["id"] in winners:
+                lines.append(winners[v["id"]])
             for a in ctx.get("news_by_event", {}).get(v["id"], []):
                 lines.append(f"  - ニュース: [{a['title']}]({SITE}/news/{a['slug']}/)")
         lines.append("")
