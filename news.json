@@ -2,6 +2,21 @@
  "about": "ニュースの一覧。1件ごとに slug(URL)・date・title・category・event_id(開催回ID)・lead(一覧に出す1文)・tags を書き、本文は articles/<slug>.md に書きます。書き方は news.py の説明を見てください。 sources には記事に使った出典の URL を入れます(自動でニュースを作るとき、同じ結果を二度記事にしないために使います)。",
  "articles": [
   {
+   "slug": "2026-juniorhigh-senbatsu-preview",
+   "date": "2026-11-18",
+   "title": "全中選抜U15が21日開幕 3スタイル33階級で中学日本一を争う",
+   "category": "全国中学選抜U15選手権",
+   "event_id": "wre-2026-juniorhigh-senbatsu-1121",
+   "lead": "東京都知事杯 第17回全国中学選抜U15選手権が11月21・22日に東京・駒沢体育館で行われる。組み合わせが発表され、男子フリースタイル・グレコローマン・女子の各11階級で中学日本一を争う。決勝は22日の13時30分から。",
+   "tags": [
+    "全国中学選抜U15選手権2026"
+   ],
+   "sources": [
+    "https://wrestling-spirits.jp/2026/11/17/298370/",
+    "https://wrestling-spirits.jp/2026/06/30/290025/"
+   ]
+  },
+  {
    "slug": "2026-univ-free-final",
    "date": "2026-11-15",
    "title": "全日本大学選手権、日体大が3年ぶり優勝 ナムバルダグワは大学4冠",
