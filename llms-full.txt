@@ -1,6 +1,6 @@
 # レスリング配信アーカイブ(Japan Wrestling Channel アーカイブ)
 
-> YouTubeで公開されている日本のレスリング大会の配信・動画3,367本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
+> YouTubeで公開されている日本のレスリング大会の配信・動画3,375本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
 - データ更新日: 2026年11月18日
@@ -26,6 +26,7 @@
 - [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)、国際大会の動画(年代・年ごとのページと大会名・本数)、技術動画(区分・チャンネルごとのページ)、書籍(書名・著者・出版社)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
+- [全国中学選抜・全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/): 2014〜2026年 動画128本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2026年 動画124本
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
 - [全日本大学グレコローマン選手権](https://japanwrestlingchannel.com/events/university-greco/): 2014〜2026年 動画98本
@@ -47,7 +48,6 @@
 - [高谷惣亮杯(ゴールドキッズ年末合宿)](https://japanwrestlingchannel.com/events/x-takatani-cup/): 2022〜2025年 動画8本
 - [第24回兵庫県ジュニアレスリングオープン大会](https://japanwrestlingchannel.com/events/local-280653/): 2025年 動画4本
 - [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/): 2014〜2025年 動画475本
-- [全国中学選抜・全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/): 2014〜2025年 動画120本
 - [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2025年 動画104本
 - [東日本大学女子リーグ戦](https://japanwrestlingchannel.com/events/east-women-league/): 2024〜2025年 動画3本
 - [障がい者レスリング エキシビションマッチ](https://japanwrestlingchannel.com/events/x-para/): 2023〜2025年 動画2本
@@ -94,6 +94,20 @@
 - [西日本学生春季リーグ戦](https://japanwrestlingchannel.com/events/west-spring-league/): 2015年 動画7本
 
 ## 開催回の一覧(新しい順)
+
+### 全国中学選抜・全国中学選抜U15選手権
+- 大会ページ: https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/
+- [東京都知事杯全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2026/): 2026年11月21日〜22日(予定)・東京・駒沢体育館・動画8本
+- [令和7年度 東京都知事杯 第16回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2025/): 2025年12月6日〜7日・東京・駒沢屋内球技場・動画8本・写真あり
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2945
+- [令和6年度 東京都知事杯第15回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2024/): 2024年11月30日〜12月1日・東京・駒沢屋内球技場・動画8本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1448
+- [東京都知事杯全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2023/): 2023年11月25日〜26日・東京・駒沢屋内球技場・動画8本
+- [東京都知事杯全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2021/): 2021年11月27日〜28日・東京・駒沢屋内球技場・動画29本
+- [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2017/): 2017年11月25日〜26日・東京・駒沢屋内球技場・動画16本
+- [全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2016/): 2016年11月26日〜27日・東京・駒沢体育館・動画18本
+- [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2015/): 2015年11月28日〜29日・東京・駒沢体育館・動画17本
+- [全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2014/): 2014年11月23日〜24日・東京・駒沢体育館・動画16本
 
 ### 全日本大学選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/university-championship/
@@ -304,19 +318,6 @@
 - [全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2016/): 2016年12月21日〜23日・東京・代々木競技場第2体育館・動画16本
 - [天皇杯全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2015/): 2015年12月21日〜23日・東京・代々木競技場第2体育館・動画23本
 - [全日本選手権](https://japanwrestlingchannel.com/events/tenno-cup/2014/): 2014年12月21日〜23日・東京・代々木競技場第2体育館・動画41本
-
-### 全国中学選抜・全国中学選抜U15選手権
-- 大会ページ: https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/
-- [令和7年度 東京都知事杯 第16回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2025/): 2025年12月6日〜7日・東京・駒沢屋内球技場・動画8本・写真あり
-  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2945
-- [令和6年度 東京都知事杯第15回全国中学選抜U15レスリング選手権大会](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2024/): 2024年11月30日〜12月1日・東京・駒沢屋内球技場・動画8本
-  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2024/1448
-- [東京都知事杯全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2023/): 2023年11月25日〜26日・東京・駒沢屋内球技場・動画8本
-- [東京都知事杯全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2021/): 2021年11月27日〜28日・東京・駒沢屋内球技場・動画29本
-- [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2017/): 2017年11月25日〜26日・東京・駒沢屋内球技場・動画16本
-- [全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2016/): 2016年11月26日〜27日・東京・駒沢体育館・動画18本
-- [全国中学生選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2015/): 2015年11月28日〜29日・東京・駒沢体育館・動画17本
-- [全国中学選抜選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/2014/): 2014年11月23日〜24日・東京・駒沢体育館・動画16本
 
 ### 東日本学生選手権（秋季大会）
 - 大会ページ: https://japanwrestlingchannel.com/events/east-autumn/
