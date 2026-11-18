@@ -1,11 +1,11 @@
 {
- "built_at": "2026-11-18T15:33:22+09:00",
+ "built_at": "2026-11-18T23:19:29+09:00",
  "as_of": "2026-11-18",
- "video_count": 3375,
- "raw_count": 3375,
+ "video_count": 3384,
+ "raw_count": 3384,
  "duplicate_ids_removed": 0,
  "link_counts": {
-  "matched": 2441,
+  "matched": 2450,
   "unmatched": 191,
   "manual": 42,
   "derived": 302,
@@ -25,18 +25,18 @@
   "x-kansai-camp-2023-03-12",
   "wre-2026-other-d6636195-0930"
  ],
- "events_with_videos": 218,
+ "events_with_videos": 219,
  "previous_video_count": 3375,
  "missing_from_previous": [],
- "new_since_previous": 0,
+ "new_since_previous": 9,
  "unavailable_now": [],
  "from_other_channels": 277,
  "translation": {
-  "total": 3500,
-  "translated": 3500,
-  "new": 0,
+  "total": 3509,
+  "translated": 3509,
+  "new": 17,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 786,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
@@ -332,9 +332,9 @@
   "warnings": []
  },
  "en": {
-  "pages": 1851,
+  "pages": 1852,
   "names": 640,
-  "machine_translations": 3500,
+  "machine_translations": 3509,
   "missing_names": [
    "1偵戦大",
    "KeePer技研",
