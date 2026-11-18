@@ -1413,6 +1413,19 @@ def cat_nav(cats, counts, current=None, base="/technique/"):
     return f'<nav class="catnav" aria-label="{L("区分", "Categories")}">{"".join(items)}</nav>'
 
 
+def tech_ld(name, path, lead, vids):
+    """技術動画のページの CollectionPage(#346)。description はページに見えている説明の文、
+    dateModified は sitemap.xml の lastmod と同じ元(載せている動画の公開日のいちばん新しい日)。動画が0本なら dateModified は出さない"""
+    cp = {"@type": "CollectionPage", "name": name, "url": SITE + U(path), "inLanguage": L("ja", "en")}
+    if lead:
+        cp["description"] = lead
+    mod = max((jst_date(v.get("p")) for v in vids if v.get("p")), default="")
+    if mod:
+        cp["dateModified"] = mod
+    cp["publisher"] = {"@id": ORG_ID}
+    return cp
+
+
 def tech_pages(tech, cats, shown, ctx):
     cat_names = {c["slug"]: c["name"] for c in cats}
     counts = defaultdict(int)
@@ -1429,13 +1442,14 @@ def tech_pages(tech, cats, shown, ctx):
     cat_list = [N(c["name"]) for c in cats if counts.get(c["slug"])]
     desc = L("レスリングクラブが公開している技術・トレーニング動画を、" + "・".join(cat_list) + f"などの区分で探せます。{len(shown)}本掲載。",
              f"Wrestling technique and training videos published by clubs, organized by category ({', '.join(cat_list)}). {i18n.plural(len(shown), 'video')}.")
+    lead = L(f"レスリングクラブが公開している、技術やトレーニング方法を紹介する動画です。区分を選ぶと、その技術の動画だけを見られます。現在{len(shown)}本を掲載しています。",
+             f"Videos from wrestling clubs that teach techniques and training methods. Choose a category to see only those videos. {i18n.plural(len(shown), 'video')} listed. Titles are in Japanese.")
     jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": tech_t, "url": SITE + U(path),
+        **tech_ld(tech_t, path, lead, shown),
         "hasPart": [{"@type": "WebPage", "name": N(c["name"]), "url": SITE + U(f"/technique/{c['slug']}/")} for c in cats if counts.get(c["slug"])]}]}
     h = head(title, desc, path, f"https://i.ytimg.com/vi/{shown[0]['id']}/hqdefault.jpg" if shown else "", jsonld, ctx["css"])
     h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(tech_t)}</h1>"
-    h += '<p class="lead">' + e(L(f"レスリングクラブが公開している、技術やトレーニング方法を紹介する動画です。区分を選ぶと、その技術の動画だけを見られます。現在{len(shown)}本を掲載しています。",
-                                  f"Videos from wrestling clubs that teach techniques and training methods. Choose a category to see only those videos. {i18n.plural(len(shown), 'video')} listed. Titles are in Japanese.")) + '</p>'
+    h += '<p class="lead">' + e(lead) + '</p>'
     h += cat_nav(cats, counts)
     h += '<ul class="catcards">' + "".join(
         f'<li><a href="{U("/technique/" + c["slug"] + "/")}"><span class="cn">{e(N(c["name"]))}</span><span class="cd">{e(N(c.get("description", "")))}</span>'
@@ -1460,12 +1474,13 @@ def tech_pages(tech, cats, shown, ctx):
         crumbs = [(home, "/"), (tech_t, "/technique/"), (cn, None)]
         title = L(f"{cn}の技術動画({len(vids)}本)|{SITE_NAME}", f"{cn} – Technique Videos ({len(vids)}) | {site_name()}")
         desc = L(f"レスリングの{cn}の技術・練習動画{len(vids)}本。{cd}。", f"{i18n.plural(len(vids), 'wrestling technique video')}: {cn}. {cd}.")
+        lead = L(f"{cd}。レスリングクラブが公開している動画{len(vids)}本を、公開日の新しい順に並べています。",
+                 f"{cd}. {i18n.plural(len(vids), 'video')} published by wrestling clubs, newest first.")
         jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs),
-                  {"@type": "CollectionPage", "name": L(f"{cn}の技術動画", f"{cn} technique videos"), "url": SITE + U(path)}]}
+                  tech_ld(L(f"{cn}の技術動画", f"{cn} technique videos"), path, lead, vids)]}
         h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg", jsonld, ctx["css"])
         h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(cn)}</h1>"
-        h += '<p class="lead">' + e(L(f"{cd}。レスリングクラブが公開している動画{len(vids)}本を、公開日の新しい順に並べています。",
-                                      f"{cd}. {i18n.plural(len(vids), 'video')} published by wrestling clubs, newest first.")) + '</p>'
+        h += '<p class="lead">' + e(lead) + '</p>'
         h += cat_nav(cats, counts, current=c["slug"])
         h += tech_list(cn, n_videos(len(vids)), vids, cat_names, gid="list")
         h += "</main>" + footer(ctx["as_of"])
@@ -1480,12 +1495,14 @@ def tech_pages(tech, cats, shown, ctx):
         title = L(f"{chn} 技術動画一覧({len(vids)}本)|{SITE_NAME}", f"{chn} – Technique Videos ({len(vids)}) | {site_name()}")
         desc = L(f"{chn}が公開している技術・トレーニング動画{len(vids)}本を区分ごとに掲載。" + (f"{note}。" if note else ""),
                  f"{i18n.plural(len(vids), 'technique and training video')} published by {chn}, by category." + (f" {note}." if note else ""))
-        jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs)]}
+        lead = L(f"{note}。技術・トレーニング動画{len(vids)}本を区分ごとに並べています。",
+                 f"{note}. {i18n.plural(len(vids), 'technique and training video')}, by category.") if note else ""
+        jsonld = {"@context": "https://schema.org", "@graph": [breadcrumb_ld(crumbs),
+                  tech_ld(L(f"{chn}の技術動画", f"{chn} technique videos"), path, lead, vids)]}
         h = head(title, desc, path, f"https://i.ytimg.com/vi/{vids[0]['id']}/hqdefault.jpg" if vids else "", jsonld, ctx["css"])
         h += '<main id="content" class="wrap page">' + breadcrumb_html(crumbs) + f"<h1>{e(chn)}</h1>"
-        if note:
-            h += '<p class="lead">' + e(L(f"{note}。技術・トレーニング動画{len(vids)}本を区分ごとに並べています。",
-                                          f"{note}. {i18n.plural(len(vids), 'technique and training video')}, by category.")) + '</p>'
+        if lead:
+            h += '<p class="lead">' + e(lead) + '</p>'
         ch_counts = defaultdict(int)
         for v in vids:
             ch_counts[v["cat"]] += 1
