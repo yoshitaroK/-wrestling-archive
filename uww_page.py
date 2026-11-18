@@ -126,9 +126,26 @@ def note(cat):
     return ""
 
 
-def page(bp, ctx, path, title, desc, crumbs, body):
-    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs),
-              {"@type": "CollectionPage", "name": title, "url": bp.SITE + U(path)}]}
+def about_ld(lst, year=None):
+    """構造化データの about。ページの見出しに出している大会の名前だけ(開催日・会場は足さない。#346)。
+    年ごとのページは見出しと同じ「大会名 年」、年代のページは大会名だけ。大会が分からない動画は入れない"""
+    evs = sorted({v["ev"] for v in lst if v["ev"]}, key=lambda ev: (EV_ORDER.get(ev, 99), ev))
+    return [{"@type": "Thing", "name": f"{ev_name(ev)} {year}" if year else ev_name(ev)} for ev in evs]
+
+
+def page(bp, ctx, path, title, desc, crumbs, body, lead="", modified="", about=None, parts=None):
+    """lead はページに見えている説明の文(構造化データの description)。modified は sitemap.xml の lastmod と同じ日付(build の戻り値の3つ目)"""
+    cp = {"@type": "CollectionPage", "name": title, "url": bp.SITE + U(path), "inLanguage": L("ja", "en")}
+    if lead:
+        cp["description"] = lead
+    if modified:
+        cp["dateModified"] = modified
+    if about:
+        cp["about"] = about
+    if parts:
+        cp["hasPart"] = [{"@type": "CollectionPage", "name": n, "url": bp.SITE + U(p)} for n, p in parts]
+    cp["publisher"] = {"@id": bp.ORG_ID}
+    jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), cp]}
     h = bp.head(f"{title}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
     return h + '<main id="content" class="wrap page uww">' + bp.breadcrumb_html(crumbs) + body + "</main>" + bp.footer(ctx["as_of"])
 
@@ -185,6 +202,10 @@ def groups_html(lst, bp, open_n=2):
     return h
 
 
+def year_title(cat, y):
+    return L(f"{y}年 国際大会の動画({cat_name(cat)})", f"International videos {y} ({cat_name(cat)})")
+
+
 def eyebrow(cat=None):
     """見出しの上の細い英字(トップ・大会ページと同じ調子)"""
     return f'<p class="uww-eyebrow" aria-hidden="true">INTERNATIONAL{" / " + cat.upper() if cat else ""}</p>'
@@ -218,7 +239,9 @@ def build(root, ctx, bp):
     body = (f'{eyebrow()}<h1>{top_t}</h1><p class="lead">{e(intro())}</p>'
             f'<h2>{L("年代から選ぶ", "Choose an age category")}</h2><ul class="uww-cards">{cards}</ul>'
             f'<h2>{L("新着の動画", "Latest videos")}</h2><ul class="vlist">{"".join(row(v, bp) for v in new)}</ul>')
-    out.append(("/uww/", page(bp, ctx, "/uww/", top_t, intro(), [home, (top_t, None)], body), latest))
+    top_parts = [(L(f"国際大会の動画({cat_name(c)})", f"International videos ({cat_name(c)})"), f"/uww/{c}/") for c, _, _, _ in CATS if data.get(c)]
+    out.append(("/uww/", page(bp, ctx, "/uww/", top_t, intro(), [home, (top_t, None)], body,
+                              lead=intro(), modified=latest, parts=top_parts), latest))
     # 年代ごと。シニアは本数が多い(1ページ 1.5MB)ので年ごとのページに分ける(Issue #294)
     for cat, _, _, _ in CATS:
         lst = data.get(cat, [])
@@ -236,7 +259,9 @@ def build(root, ctx, bp):
         body += f'<p class="uww-count">{L(f"{len(lst):,}本", f"{len(lst):,} videos")}</p>'
         if cat not in SPLIT_CATS:
             body += groups_html(lst, bp)
-            out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body), max(v["p"] for v in lst)))
+            cmod = max(v["p"] for v in lst)
+            out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body,
+                                    lead=intro(), modified=cmod, about=about_ld(lst)), cmod))
             continue
         by_year = defaultdict(list)
         for v in lst:
@@ -252,14 +277,18 @@ def build(root, ctx, bp):
                          f'<small>{L(f"{len(by_year[y])}本", f"{len(by_year[y])} videos")}</small></h3>{groups_html(by_year[y], bp)}</section>')
         if by_year.get(""):
             body += f'<h2>{L("年が分からない動画", "Videos with no year")}</h2>' + groups_html(by_year[""], bp, open_n=0)
-        out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body), max(v["p"] for v in lst)))
+        cmod = max(v["p"] for v in lst)
+        year_parts = [(year_title(cat, y), f"/uww/{cat}/{y}/")
+                      for y in years if y not in kept]
+        out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body,
+                                lead=intro(), modified=cmod, about=about_ld(lst), parts=year_parts), cmod))
         # 年ごとのページ(まとめページに載せている新しい年は作らない)
         for y in years:
             if y in kept:
                 continue
             vids = by_year[y]
             n_ev = len({v["ev"] for v in vids})
-            ytitle = L(f"{y}年 国際大会の動画({cat_name(cat)})", f"International videos {y} ({cat_name(cat)})")
+            ytitle = year_title(cat, y)
             fact = L(f"{y}年の世界レスリング連合(UWW){cat_name(cat)}の大会動画 {len(vids):,}本({n_ev}大会)。",
                      f"{len(vids):,} {cat_name(cat)} videos from {i18n.plural(n_ev, 'United World Wrestling (UWW) event')} in {y}.")
             lead = fact + L("日本人選手が出ている試合・ハイライトなどを大会ごとにまとめました。動画はこのサイトの中で再生できます。動画のタイトルは UWW が公開しているもの(英語)です。",
@@ -270,7 +299,9 @@ def build(root, ctx, bp):
                      + groups_html(vids, bp)
                      + f'<p class="uww-back"><a href="{U(cpath)}">{L(f"{cat_name(cat)}のすべての年を見る", f"See all years ({cat_name(cat)})")}</a></p>')
             crumbs = [home, (top_t, "/uww/"), (cat_name(cat), cpath), (L(f"{y}年", y), None)]
-            out.append((ypath, page(bp, ctx, ypath, ytitle, cat_desc(cat, vids, y), crumbs, ybody), max(v["p"] for v in vids)))
+            ymod = max(v["p"] for v in vids)
+            out.append((ypath, page(bp, ctx, ypath, ytitle, cat_desc(cat, vids, y), crumbs, ybody,
+                                    lead=lead, modified=ymod, about=about_ld(vids, y)), ymod))
     return out
 
 

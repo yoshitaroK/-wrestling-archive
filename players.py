@@ -662,8 +662,11 @@ def index_page(players, ctx, bp):
     order = sorted(groups, key=lambda c: (-len(groups[c]), c == "", norm(c)))
     desc = L(f"掲載している選手{len(players)}人の一覧。名前や所属で検索でき、選手ごとの大会成績と試合動画を見られます。",
              f"{i18n.plural(len(players), 'player')} listed. Search by name or club to see each player's tournament results and match videos.")
+    # description はページに見えている説明の文と同じ。dateModified は書かない(sitemap.xml の lastmod は毎朝の更新日で、
+    # 一覧の中身が変わった日ではないため。champions.py の Dataset と同じ考え方。#346)
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), {
-        "@type": "CollectionPage", "name": L("選手一覧", "Players"), "url": SITE + U(path)}]}
+        "@type": "CollectionPage", "name": L("選手一覧", "Players"), "url": SITE + U(path), "inLanguage": L("ja", "en"),
+        "description": desc, "publisher": {"@id": bp.ORG_ID}}]}
     h = bp.head(L(f"選手検索・選手一覧({len(players)}人)|{bp.SITE_NAME}", f"Player search ({len(players)} players) | {bp.site_name()}"), desc, path, "", jsonld, ctx["css"])
     # 頭:細い英字+大きな見出し+数字の帯(#320)。数字は players.csv・player_results.csv から数えたものだけ
     nclubs = sum(1 for c in groups if c)
