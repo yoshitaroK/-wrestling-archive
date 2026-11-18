@@ -27,7 +27,7 @@ import i18n
 import players as players_mod
 
 # 大人の部として検索に入れる「種別」(event_results.csv)。ここに無い部名は入れない
-ADULT_DIVISIONS = {"成年男子フリースタイル", "成年男子グレコローマン", "男子グレコローマン", "シニア", "女子"}
+ADULT_DIVISIONS = {"成年男子フリースタイル", "成年男子グレコローマン", "男子フリースタイル", "男子グレコローマン", "シニア", "女子"}
 # 高校・中学校の所属(生徒)。「高教」「中教」(先生)は当てはまらない
 SCHOOL_CLUB_RE = re.compile(r"(高|高校|高等学校|高専|中|中学|中学校|中等教育学校|特別支援学校|高等支援学校)$")
 # 大人が出る大会の区分(data.json の series[].groups)。高校・中学・少年少女・年代別だけの大会の結果は、部の名前が
@@ -35,7 +35,7 @@ SCHOOL_CLUB_RE = re.compile(r"(高|高校|高等学校|高専|中|中学|中学�
 ADULT_GROUPS = {"一般", "大学", "社会人", "女子", "マスターズ"}
 YOUTH_GROUPS = {"高校", "中学", "少年少女", "年代別"}
 # 英語版の部名(players.DIVISION_EN に無いもの)
-DIVISION_EN = {"シニア": "Senior", "男子グレコローマン": "Men's Greco-Roman"}
+DIVISION_EN = {"シニア": "Senior", "男子フリースタイル": "Men's freestyle", "男子グレコローマン": "Men's Greco-Roman"}
 # 子どものクラブ・学校の部(所属にこの言葉を含む行は外す。大人の指導者の所属かもしれないが、念のため)
 YOUTH_CLUB_WORDS = ("少年団", "ジュニア", "キッズ", "高等部", "中等部")
 # 大会名の別名(series_aliases.json)のほかに足す言い換え。同じ意味だと確かなものだけ
