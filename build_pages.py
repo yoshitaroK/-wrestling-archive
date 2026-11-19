@@ -535,6 +535,25 @@ def same_name_events(events, S):
     return {i for ids in groups.values() if len(ids) > 1 for i in ids}
 
 
+def title_name(ev, s):
+    """開催回ページの <title>・説明文の頭に置く大会名(#358)。
+    日本語版は、まとめている大会(シリーズ)の名前(例:天皇杯全日本選手権)。「令和7年度」「第〇回」で始まる正式名より、
+    検索で打たれる言葉に近いため。見出し(h1)と SportsEvent の name は今までどおり正式名(event_name)。
+    シリーズとしてまとめていない地方大会など・英語版は event_name のまま"""
+    if not i18n.en() and s.get("master"):
+        return series_name(s)
+    return event_name(ev, s)
+
+
+def same_title_events(events, S):
+    """今の言語で、同じ年に <title> の大会名(title_name)が同じになる開催回の ID(タイトルの重複を避けるため。#358)"""
+    groups = defaultdict(list)
+    for ev in events:
+        s = S.get(ev["series"], {"id": ev["series"], "name": ev["name"], "master": False})
+        groups[(title_name(ev, s), ev["year"])].append(ev["id"])
+    return {i for ids in groups.values() if len(ids) > 1 for i in ids}
+
+
 def jwf_link(ev, status):
     """日本レスリング協会の大会ページ(結果が載る)の (URL, 終わった回か)。開催回ページと llms-full.txt の両方で使う(#280)"""
     jwf = next((x["url"] for x in ev.get("sources") or [] if JWF_COMPETITION.match(x.get("url") or "")), "")
@@ -620,6 +639,14 @@ def event_page(ev, ctx):
     if ev["id"] in ctx.get("same_name", ()) and ev.get("start") and not ev.get("derived"):
         day = fmt_date(ev["start"])[5:] if not i18n.en() else fmt_date(ev["start"]).rsplit(",", 1)[0]
     yr = f"{ev['year']}" + (L(f"年({day})", f" ({day})") if day else L("年", ""))
+    # <title>・説明文の頭の大会名と年(#358)。大会名が同じ年にほかの開催回とかぶるときは、日付を足して見分ける
+    tname = title_name(ev, s)
+    tday = day
+    if not tday and ev["id"] in ctx.get("same_title", ()) and ev.get("start"):
+        tday = fmt_date(ev["start"])[5:] if not i18n.en() else fmt_date(ev["start"]).rsplit(",", 1)[0]
+    tyr = f"{ev['year']}" + (L(f"年({tday})", f" ({tday})") if tday else L("年", ""))
+    # このページに結果の欄(入賞者の欄 または 結果(速報)の欄)がある年だけ、題名・説明文に「結果」と書く(#358)
+    has_results = bool(summ) or bool(ctx.get("event_results", {}).get(ev["id"]))
     # 説明文の後ろの「いつ・どこで」。日付が推定(derived)の回は「開催」と書かず、本文と同じく動画の配信日を書く。
     # 文の終わりの「。」/「.」は1つだけにする(#300。前は推定の回が「…本。。」になっていた)
     if i18n.en():
@@ -640,11 +667,15 @@ def event_page(ev, ctx):
         jv = ev.get("venue") if not ev.get("derived") else ""
         when = (f"動画の配信日は{rng}(公式の開催日は確認中)。" if ev.get("derived") else
                 f"{rng}開催" + (f"、会場は{jv}。" if jv else "。")) if ev.get("start") else (f"会場は{jv}。" if jv else "")
-        title = f"{name} {yr} 配信動画一覧({len(vids)}本)|{SITE_NAME}"
-        desc = f"{name}({ev['year']}年)の配信・動画{len(vids)}本。{counts}。" + when
+        # 題名は「大会名 西暦 配信・動画(本数)」の順(検索で打たれる言葉を前に。#358)。
+        # 「レスリング」は題名の終わりのサイト名(レスリング配信アーカイブ)に入っているので重ねず、説明文の頭に入れる。
+        # 結果の欄がある年だけ「結果」を入れる
+        res_t, res_d = ("・結果", "の結果と") if has_results else ("", "の")
+        title = f"{tname} {tyr} 配信・動画{res_t}({len(vids)}本)|{SITE_NAME}"
+        desc = f"{tname} {ev['year']}年のレスリング{res_d}配信・動画{len(vids)}本。{counts}。" + when
         if not vids:
-            title = f"{name} {yr} 写真|{SITE_NAME}"
-            desc = f"{name}({ev['year']}年)の写真。" + when
+            title = f"{tname} {tyr} 写真{res_t}|{SITE_NAME}"
+            desc = f"{tname} {ev['year']}年のレスリング{res_d}写真。" + when
         # 入賞者の欄がある回は、説明文の終わりに人数を足す(日付・会場より後ろ。全体で120字ほどに収まるときだけ。#314)
         if summ:
             n_w, uww = summ
@@ -2749,6 +2780,7 @@ def build(root=HERE, inline_css=False, only=None):
         import og_cards
         ctx["event_cards"] = og_cards.Cards(root, 0, og_cards.EVENT_DIR, keep_others=only is not None)
         ctx["same_name"] = same_name_events([ev for ev in data["events"] if ev["id"] in slugs], S)
+        ctx["same_title"] = same_title_events([ev for ev in data["events"] if ev["id"] in slugs], S)
         for ev in data["events"]:
             if ev["id"] in slugs and (only is None or ev["id"] in only):
                 path, doc = event_page(ev, ctx)
