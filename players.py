@@ -486,7 +486,9 @@ def player_page(p, ctx, bp, card=""):
     profile = {"@type": "ProfilePage", "url": SITE + U(path), "mainEntity": person}
     upd = last_updated(p, ctx, ctx.get("as_of", ""))
     if upd:
-        profile["dateModified"] = upd
+        # Google の ProfilePage は日時(時刻と時差つき)を求める。日付だけだと Search Console で
+        # 「dateModified の日時の値が無効」になるので、日本時間の0時として書く
+        profile["dateModified"] = upd + "T00:00:00+09:00"
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), profile]}
     # SNS 用画像(og_cards.py で作ったもの)。作れなかったときは試合動画のサムネイル
     first = (p["videos"] or uww)[:1]
