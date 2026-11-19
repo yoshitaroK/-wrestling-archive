@@ -10,7 +10,11 @@
   (二か所に書かないため)。読めなかったときは書き込まずに、今までの空の形のままにする(ビルドは止めない)。
 - 書き込む場所は index.html の <!--pre:名前--> と <!--/pre:名前--> の間。毎日の更新で中身が入れ替わる。
   元のファイル(PR で直す index.html)では、この間は空の形(DEFAULT)にしておく。en_index.py は英語版を作る前に strip() で空の形に戻す。
-- 高校生以下の選手の決まり:書き込むのは大会名・日付・会場・本数・リンクだけで、選手の名前は入れない(top.js と同じ範囲)。
+- 高校生以下の選手の決まり:書き込むのは top.js が描くのと同じものだけ(大会名・日付・会場・本数・リンク、「最近追加した動画」「技術動画」の
+  動画の題名、最新ニュースの見出し)。選手の名前を足したり、選手ページへのリンクを足したりはしない。動画の題名は大会ページにも同じものが出ている。
+- トップを軽くする(Issue #368):トップの列はすべて(renderShelves と同じ)、上の細い帯(renderStrip)、データ更新の行(build-info)、
+  特集の全件と開催年の選択肢(<script type="application/json" id="top-pre">)も書き込む。top.js はこれがあれば data.json(約1.5MB)を
+  最初は読まず、検索・絞り込みを使ったときに読む。書き込みに失敗したときは top-pre を空にするので、top.js は今までどおり data.json を読む。
 """
 import datetime
 import json
@@ -25,6 +29,7 @@ DEFAULT = {
     "feat": '<div class="feat" id="feat" hidden data-wait></div>',
     "credit": '<a class="jcredit" id="jhero-credit" hidden></a>',
     "main": '<div class="loading">データを読み込んでいます</div>',
+    "json": '',
 }
 _RE = re.compile(r"<!--pre:(\w+)-->(.*?)<!--/pre:\1-->", re.S)
 
@@ -37,13 +42,18 @@ DEFAULT_EN = dict(DEFAULT, main='<div class="loading">Loading data…</div>')  #
 _SPOTS = {
     "stat": re.compile(r'(<b class="num" id="stat-v">)[^<]*(</b>)'),
     "asof": re.compile(r'(<span id="master-asof">)[^<]*(</span>)'),
+    "build": re.compile(r'(<p id="build-info">)[^<]*(</p>)'),
+}
+# 中に HTML を書き込む場所(上の細い帯)。空の形は「中身なし」(en_index.py の PAIRS と同じ行に戻る)
+_HTML_SPOTS = {
+    "strip": re.compile(r'(<nav class="tstrip" id="tstrip" aria-label="[^"]*">).*?(</nav>)', re.S),
 }
 
 
 def strip(s, lang="ja"):
     """書き込まれた中身を、空の形(DEFAULT)に戻す"""
     base = DEFAULT_EN if lang == "en" else DEFAULT
-    for r in _SPOTS.values():
+    for r in list(_SPOTS.values()) + list(_HTML_SPOTS.values()):
         s = r.sub(r"\1\2", s)
     return _RE.sub(lambda m: f"<!--pre:{m.group(1)}-->{base.get(m.group(1), '')}<!--/pre:{m.group(1)}-->", s)
 
@@ -55,6 +65,9 @@ def _fill(s, parts):
     for k, r in _SPOTS.items():
         if parts.get(k):
             s = r.sub(lambda m, v=parts[k]: m.group(1) + esc(v) + m.group(2), s)
+    for k, r in _HTML_SPOTS.items():
+        if parts.get(k):
+            s = r.sub(lambda m, v=parts[k]: m.group(1) + v + m.group(2), s, count=1)
     return _RE.sub(rep, s)
 
 
@@ -338,21 +351,117 @@ class _Top:
                 '<div class="row" id="' + rid + '">' + ''.join(tiles) + '</div>' +
                 '<button type="button" class="rbtn next" data-row="' + rid + '" data-dir="1" tabindex="-1" aria-hidden="true">›</button></div></section>')
 
-    def shelves_html(self):
+    # ---- トップの列(renderShelves と同じ HTML。全部の列) ----
+    def latest(self, s):
+        """top.js の s.latest:動画のある開催回のいちばん新しい開催日"""
+        m = ''
+        for e in s["events"]:
+            if e.get("n", 0) > 0 and (e.get("start") or '') > m:
+                m = e["start"]
+        return m
+
+    def tile_series(self, s):
+        evs = [e for e in s["events"] if e.get("n", 0) > 0]
+        lv = self.by_event.get(evs[-1]["id"], []) if evs else []
+        fv = next((v for v in lv if v.get("k") == 'match'), lv[0] if lv else None)
+        yrs = [e["year"] for e in evs]
+        span = ''
+        if yrs:
+            lo, hi = min(yrs), max(yrs)
+            span = str(lo) + ((L('〜', '–') + str(hi)) if lo != hi else '') + L('年', '')
+        return ('<a class="tile" href="' + esc(self.series_page(s["id"]) or self.link_to(s["id"], '')) + '">' + thumb(fv["id"] if fv else '', self.N(s["name"])) +
+                '<div class="tt">' + esc(self.N(s["name"])) + '</div><div class="tm"><span class="num">' + str(s.get("n", 0)) + '</span>' + L('本 ', ' videos · ') + span + '</div></a>')
+
+    def series_page(self, sid):
+        s = self.S.get(sid)
+        return self.U('/events/' + sid + '/') if s and s.get("n", 0) > 0 else ''
+
+    @staticmethod
+    def jst_date(iso):
+        """top.js の jstDate:日時を日本時間の日付にする"""
+        if not iso:
+            return ''
+        d = datetime.datetime.fromisoformat(iso.replace('Z', '+00:00'))
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=datetime.timezone.utc)
+        return (d.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=9)).date().isoformat()
+
+    SHELF_CATS = {'ja': [['大学', '大学の大会', 'UNIVERSITY'], ['高校', '高校の大会', 'HIGH SCHOOL'], ['社会人', '社会人の大会', 'CLUB & CORPORATE'], ['少年少女', '少年少女の大会', 'KIDS']],
+                  'en': [['大学', 'University'], ['高校', 'High school'], ['社会人', 'Working adults'], ['少年少女', 'Kids']]}
+
+    def shelves_html(self, home=None):
+        home = home or {}
         E = self.d.get("events", [])
+        series = [self.S[x["id"]] for x in self.d.get("series", []) if x["id"] in self.S]
         past = _js_sort([e for e in E if (e.get("n", 0) > 0 or (e.get("links") and e["id"] in self.PAGES)) and e.get("start") and e["start"] <= self.today_iso and e.get("status") != 'cancelled'],
                         lambda a, b: a["start"] < b["start"])[:12]
         future = _js_sort([e for e in E if e.get("n", 0) > 0 and e.get("start") and e["start"] > self.today_iso], lambda a, b: not (a["start"] < b["start"]))
-        h, k = '', 0
-        if future:
-            k += 1
-            h += self.shelf(k, L('これから開催される大会', 'Upcoming tournaments'), L('配信枠が公開されています', 'Stream pages are already published'),
-                            [self.tile_event(e) for e in future], '<a class="all" href="' + self.U('/events/calendar/') + '">' + L('カレンダーを見る ›', 'See the calendar ›') + '</a>', 'UPCOMING')
-        if past:
-            k += 1
-            h += self.shelf(k, L('最近開催された大会', 'Recent tournaments'), '', [self.tile_event(e) for e in past],
-                            '<a class="all" href="' + self.U('/events/') + '">' + L('すべて見る ›', 'See all ›') + '</a>', 'RESULTS')
-        return h or None
+        recent = _js_sort([v for v in self.d.get("videos", []) if v.get("vs") != 'unavailable'], lambda a, b: a["p"] < b["p"])[:12]
+        rich = sorted([x for x in series if x.get("master") and x.get("n", 0) > 0], key=lambda x: -x["n"])[:12]
+        k = [0]
+        all_ = lambda href, text=None: '<a class="all" href="' + href + '">' + (text or L('すべて見る ›', 'See all ›')) + '</a>'
+
+        def shelf(title, sub, tiles, more, en=''):
+            if not tiles:
+                return ''
+            k[0] += 1
+            return self.shelf(k[0], title, sub, tiles, more, en)
+        h = ''
+        h += shelf(L('これから開催される大会', 'Upcoming tournaments'), L('配信枠が公開されています', 'Stream pages are already published'),
+                   [self.tile_event(e) for e in future], all_(self.U('/events/calendar/'), L('カレンダーを見る ›', 'See the calendar ›')), 'UPCOMING')
+        h += shelf(L('最近開催された大会', 'Recent tournaments'), '', [self.tile_event(e) for e in past], all_(self.U('/events/')), 'RESULTS')
+        h += self.news_html(home.get("news") or [])
+
+        def vtile(v):
+            s = self.S.get(v.get("s")) if v.get("s") else None
+            return ('<a class="tile" href="' + esc(yt(v["id"])) + '" target="_blank" rel="noopener">' + thumb(v["id"], self.N(s["name"]) if s else '') +
+                    '<div class="tt"' + L('', ' lang="ja"') + '>' + esc(v["t"]) + '</div><div class="tm">' +
+                    L(esc(fmt_date(self.jst_date(v["p"]))) + 'に公開', 'Published ' + esc(fmt_date(self.jst_date(v["p"])))) + '</div></a>')
+        h += shelf(L('最近追加した動画', 'Recently added videos'), L('YouTubeへの公開が新しい順', 'Newest on YouTube first'), [vtile(v) for v in recent], '', 'NEW VIDEOS')
+        for c in self.SHELF_CATS[i18n.LANG]:
+            lst = _js_sort([x for x in series if x.get("n", 0) > 0 and c[0] in (x.get("groups") or [])],
+                           lambda a, b: not ((self.latest(b) or '') < (self.latest(a) or '')))[:12]
+            if lst:
+                h += shelf(c[1], '', [self.tile_series(x) for x in lst], '<button type="button" class="all" data-cat="' + esc(c[0]) + '">' + L('すべて見る ›', 'See all ›') + '</button>', c[2] if len(c) > 2 else '')
+        tech = home.get("tech") or []
+        h += shelf(L('技術動画', 'Technique videos'), L('レスリングクラブが公開している技術・トレーニングの動画', 'Technique and training videos from wrestling clubs'),
+                   ['<a class="tile" href="' + esc(yt(v["id"])) + '" target="_blank" rel="noopener">' + thumb(v["id"], v.get("cat")) + '<div class="tt"' + L('', ' lang="ja"') + '>' + esc(v["t"]) +
+                    '</div><div class="tm">' + esc(v.get("cat")) + '</div></a>' for v in tech], all_(self.U('/technique/')), 'TECHNIQUE')
+        photos = home.get("photos") or []
+        h += shelf(L('写真', 'Photos'), L('大会で撮影された写真', 'Photos taken at tournaments'),
+                   ['<a class="tile" href="' + esc(p["href"]) + '"><div class="thumb photo"><img src="' + esc(p["src"]) + '" alt="" loading="lazy" decoding="async"></div><div class="tt">' + esc(p["label"]) +
+                    '</div><div class="tm"><span class="num">' + str(p["n"]) + '</span>' + L('枚', ' photos') + '</div></a>' for p in photos], all_(self.U('/photos/')), 'PHOTOS')
+        h += shelf(L('動画が充実している大会', 'Tournaments with the most videos'), L('収録本数の多い順', 'Most videos first'), [self.tile_series(x) for x in rich], '', 'MOST VIDEOS')
+        n_ser = sum(1 for x in series if x.get("n", 0) > 0)
+        h += '<p class="allbtn"><a href="' + self.U('/events/') + '">' + L(f'すべての大会を見る <b class="num">{n_ser}</b>大会', f'See all <b class="num">{n_ser}</b> tournaments') + '</a></p>'
+        return h if k[0] else None
+
+    # ---- 上の細い帯(renderStrip と同じ HTML) ----
+    def strip_html(self):
+        today = self.today
+
+        def d2(iso):
+            p = iso[:10].split('-')
+            return p[1] + '.' + p[2]
+
+        def item(e, kind):
+            s = self.S.get(e["series"])
+            lab = {'live': 'LIVE', 'next': 'NEXT', 'res': 'RESULT'}[kind]
+            href = self.event_page(e["id"]) or (self.link_to(e["series"], e["id"]) if kind == 'res' else self.U('/events/calendar/'))
+            return ('<a class="ts ' + kind + '" href="' + esc(href) + '"><span class="ts-k"><i>' + lab + '</i>' + d2(e["start"]) +
+                    ((' – ' + d2(e["end"])) if e.get("end") and e["end"] != e["start"] else '') + '</span><span class="ts-t">' + esc(self.N(s["name"] if s else e.get("name"))) + '</span></a>')
+        ok = lambda e: e.get("start") and e.get("status") not in ('cancelled', 'postponed')
+        E = self.d.get("events", [])
+        live = [e for e in E if ok(e) and e["start"] <= today and (e.get("end") or e["start"]) >= today]
+        nxt = _js_sort([e for e in E if ok(e) and e["start"] > today], lambda a, b: not (a["start"] < b["start"]))[:1 if live else 2]
+        res = _js_sort([e for e in E if ok(e) and (e.get("end") or e["start"]) < today and (e.get("n", 0) > 0 or (e.get("links") and e["id"] in self.PAGES))],
+                       lambda a, b: a["start"] < b["start"])[:4]
+        h = ''.join([item(e, 'live') for e in live] + [item(e, 'next') for e in nxt] + [item(e, 'res') for e in res])
+        return '<div class="wrap">' + h + '</div>' if h else None
+
+    def years(self):
+        """開催年の選択肢(renderControls の f-year。動画のある開催回の年、新しい順)"""
+        return sorted({str(e["year"]) for e in self.d.get("events", []) if e.get("n", 0) > 0}, reverse=True)
 
     # ---- 最新ニュース(top.js の newsBlock と同じ HTML。日本語版だけ) ----
     @staticmethod
@@ -373,13 +482,18 @@ class _Top:
                     '<span class="sr">・' + day(x["date"]) + '</span></span><span class="tn-t">' + esc(x["title"]) + '</span></a></li>' for x in ns[1:6]) + '</ol></div></section>')
 
 
+def yt(vid):
+    from urllib.parse import quote
+    return 'https://www.youtube.com/watch?v=' + quote(vid, safe="-_.!~*'()")
+
+
 def fmt_date(iso):
     """top.js の fmtDate と同じ書き方(2026年9月24日 / Sep 24, 2026)"""
     p = iso[:10].split('-')
     return L(f"{int(p[0])}年{int(p[1])}月{int(p[2])}日", f"{MON[int(p[1]) - 1]} {int(p[2])}, {p[0]}")
 
 
-def render(data, slugs, hero, rules, now=None, news=None, uww_n=0):
+def render(data, slugs, hero, rules, now=None, home=None, uww_n=0):
     """いまの言語(i18n.LANG)のトップページに書き込む中身 {名前: HTML}"""
     names = {}
     if i18n.LANG == 'en':
@@ -389,7 +503,8 @@ def render(data, slugs, hero, rules, now=None, news=None, uww_n=0):
                 names[ev["fy_label"]] = i18n.fy_label(ev["fy_label"])
     t = _Top(data, slugs, hero, rules, names, now or datetime.datetime.now(datetime.timezone.utc))
     parts = {}
-    fh = t.feature_html(t.feature())
+    feat = t.feature()
+    fh = t.feature_html(feat)
     if fh:
         feat_div, img, credit = fh
         parts["feat"] = feat_div
@@ -397,16 +512,28 @@ def render(data, slugs, hero, rules, now=None, news=None, uww_n=0):
             parts["img"] = img
         if credit:
             parts["credit"] = credit
-    sh = t.shelves_html()
+    sh = t.shelves_html(home or {})
     if sh:
-        # 最新ニュースは、top.js の renderShelves と同じく「最近開催された大会」の列のすぐ後ろ(日本語版だけ)
-        parts["main"] = sh + (t.news_html(news or []) if i18n.LANG == 'ja' else '')
+        # トップの列は全部(top.js の renderShelves と同じ。最新ニュースは「最近開催された大会」の列のすぐ後ろ、日本語版だけ)
+        parts["main"] = sh
+    strip_h = t.strip_html()
+    if strip_h:
+        parts["strip"] = strip_h
     # 収録本数(top.js の afterRender と同じ:動画の本数+国際大会の動画の本数)と、照合用の大会データの時点
     n = len(data.get("videos", [])) + (uww_n or 0)
     if n:
         parts["stat"] = str(n)
     if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", data.get("master_as_of") or ""):
         parts["asof"] = fmt_date(data["master_as_of"])
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", data.get("as_of") or ""):
+        nv = (data.get("report") or {}).get("video_count") or len(data.get("videos", []))
+        parts["build"] = L(f"データ更新:{fmt_date(data['as_of'])}。動画{nv}本。", f"Data updated: {fmt_date(data['as_of'])}. {nv} {'video' if nv == 1 else 'videos'}.")
+    # top.js が data.json を読まずに最初の画面を動かすための中身(特集の全件・開催年の選択肢・作った日)。
+    # トップの列と特集が両方そろったときだけ書く(どちらかが欠けたら、top.js は今までどおり data.json を読む)
+    if sh and fh and parts.get("stat") and parts.get("build"):
+        pre = {"today": t.today, "iso": t.today_iso, "feat": feat, "years": t.years(), "stripEmpty": not strip_h}
+        parts["json"] = ('<script type="application/json" id="top-pre">' +
+                         json.dumps(pre, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + '</script>')
     return parts
 
 
@@ -448,9 +575,10 @@ def write(root, data, slugs, hero, report=None, home=None):
                 continue
             try:
                 uww_n = _uww_n(root)
-                parts = render(data, slugs, hero.get(lang, []), rules, news=((home or {}).get(lang) or {}).get("news"), uww_n=uww_n)
+                parts = render(data, slugs, hero.get(lang, []), rules, home=(home or {}).get(lang) or {}, uww_n=uww_n)
                 if not uww_n:
                     parts.pop("stat", None)  # 国際大会の本数が読めないときは、足りない数を書かない
+                    parts.pop("json", None)  # 収録本数が書けないときは、top.js に data.json を読ませる
             except Exception as ex:
                 msg = f"トップページの書き込みをしませんでした({path}: {ex!r})"
                 print("[トップ] " + msg)
