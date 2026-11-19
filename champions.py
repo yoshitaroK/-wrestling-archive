@@ -489,6 +489,55 @@ def prepare(root, data, ctx):
     return report
 
 
+def previous_winners(ev, ctx):
+    """開催前(予定・開催中)の開催回ページに出す「前回の優勝者」。(年, [(スタイル, [(階級, [優勝者])])])。出さない回は None。
+    表は歴代優勝者のページ・llms-full.txt と同じ ctx["champions"](名前を載せない人の決まりも同じ。shown_winner で「—」)。
+    その開催回より前で、記録があるいちばん新しい年を1つ選ぶ"""
+    t = ctx.get("champions", {}).get(ev.get("series"))
+    if not t or not isinstance(ev.get("year"), int):
+        return None
+    years = [y for st in STYLES for y in (t.get(st) or {}) if y < ev["year"]]
+    if not years:
+        return None
+    y = max(years)
+    groups = [(st, [(w, t[st][y][w]) for w in sorted(t[st][y], key=wkey)]) for st in STYLES if t.get(st, {}).get(y)]
+    return (y, groups) if groups else None
+
+
+def previous_html(ev, ctx, bp):
+    """開催前の開催回ページの「前回の優勝者」の欄。見た目は「掲載している優勝者」の欄(.ev-champs)と同じ部品を使う"""
+    prev = previous_winners(ev, ctx)
+    if not prev:
+        return ""
+    e = bp.e
+    y, groups = prev
+    sid = ev["series"]
+    link = edition_link(sid, y, ctx)
+    ytxt = f'<a href="{U(link)}">{L(f"{y}年", str(y))}</a>' if link else L(f"{y}年", str(y))
+    cols = ""
+    for st, ws in groups:
+        rows = ""
+        for w, winners in ws:
+            names = ""
+            for x in winners:
+                name, club = shown_winner(x, ctx)
+                if not name:
+                    names += '<span class="wc-n">—</span>'
+                    continue
+                nm = f'<a href="{U("/players/" + x["id"] + "/")}">{e(name)}</a>' if x["id"] else e(name)
+                names += f'<span class="wc-n">{nm}{(" <small>" + e(club) + "</small>") if club else ""}</span>'
+            rows += f'<li><span class="wc-w">{e(wname(w))}</span><span class="wc-p">{names}</span></li>'
+        cols += f'<div class="wc-col"><h3>{e(N(st))}</h3><ul>{rows}</ul></div>'
+    note = L(f"大会の前に、前回({ytxt})の各階級の優勝者を載せています。所属は前回の大会のときのものです。" + e(HERE_NOTE_MINOR),
+             f"Before the tournament, here are the champions of the previous edition ({ytxt}). Clubs are as of that tournament. "
+             "Names are not shown (—) for minors or for wrestlers without a confirmed romanization.")
+    more = (f' <a href="{U("/champions/" + sid + "/")}">{L("歴代優勝者を見る", "All past champions")}</a>')
+    return (f'<section class="ev-champs" id="champions" aria-labelledby="champions-h"><div class="wc-head">'
+            f'<h2 id="champions-h">{L("前回の優勝者", "Previous champions")} <small>{L(f"{y}年", str(y))}</small></h2>'
+            f'<p class="hint">{note}{more}</p></div>'
+            f'<div class="wc-cols{" one" if len(groups) == 1 else ""}">{cols}</div></section>')
+
+
 def link_html(s, ctx):
     """大会ページに出す「歴代優勝者」へのリンク(表がある大会だけ)"""
     if s["id"] not in ctx.get("champions", {}):
