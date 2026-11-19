@@ -29,34 +29,52 @@ function fyEn(s){ var m = /^(令和|平成)(元|\d+)年度$/.exec(s||''); if(!m)
   root.classList.add('overlay'); size(); onScroll();
   window.addEventListener('resize', size); window.addEventListener('scroll', onScroll, {passive:true});
 })();
-// 特集の写真(assets/hero.json)と、技術動画・写真の列(assets/home.json)。data.json と並べて読み込む
+// data.json(約1.5MB)と、いっしょに使う特集の写真(assets/hero.json)・技術動画と写真の列(assets/home.json)・
+// 大会ページの URL 表(page_slugs.json)・英語版の機械翻訳(translations_en.json)は、まとめて同時に読む(順番に待たない。Issue #284)。
+// トップの最初の画面がビルドのときに書き込まれていれば(top_prerender.py の <script id="top-pre">)、
+// これらは最初は読まず、検索・絞り込みを使ったときに初めて読む(トップを軽くする。Issue #368)
 function getJSON(u){ return fetch(u,{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }); }
-var heroP = getJSON('/assets/hero.json'), homeP = getJSON('/assets/home.json');
-// 大会ページの URL 表(page_slugs.json)と、英語版の機械翻訳(translations_en.json)も、data.json と同時に読み始める(順番に待たない。Issue #284)
-var pagesP = getJSON('/page_slugs.json'), trP = LANG==='en' ? getJSON('/translations_en.json') : Promise.resolve(null);
-var DATA = window.__DATA__;
-if(!DATA){
-  try{ var res = await fetch('/data.json',{cache:'no-cache'}); DATA = await res.json(); }
-  catch(e){ document.getElementById('feat').removeAttribute('data-wait'); document.getElementById('main').innerHTML = L('<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>', '<p class="empty"><strong>Could not load the data.</strong> Please reload the page.</p>'); return; }
+var DATA = null, PAGES = {}, TR = {}, HERO = [], HOME = {}, READY = false, dataP = null, LITE = false;
+var TODAY = new Date(); var TODAY_ISO = TODAY.toISOString().slice(0,10);
+var S = {}, E = {}, V = [];
+var byEvent = {}, bySeriesLoose = {}, candByEvent = {}, loose = [];
+function loadData(){
+  if(dataP) return dataP;
+  var heroP = getJSON('/assets/hero.json'), homeP = getJSON('/assets/home.json');
+  var pagesP = getJSON('/page_slugs.json'), trP = LANG==='en' ? getJSON('/translations_en.json') : Promise.resolve(null);
+  var dP = window.__DATA__ ? Promise.resolve(window.__DATA__) : fetch('/data.json',{cache:'no-cache'}).then(function(r){ return r.json(); });
+  dataP = Promise.all([dP, pagesP, trP, heroP, homeP]).then(function(a){
+    DATA = a[0]; PAGES = (a[1] || {}).events || {}; TR = (a[2] || {}).texts || {};
+    HERO = (a[3]||{})[LANG] || []; HOME = (a[4]||{})[LANG] || {};
+    prep(); READY = true; return true;
+  }, function(){
+    // 書き込まれた画面のまま(LITE)なら、列は消さずに上の欄で知らせる。もう一度使ったときに読み直す
+    if(LITE){ dataP = null; var sb = document.getElementById('status'); sb.hidden = false; sb.innerHTML = '<span class="count">'+L('データを読み込めませんでした。もう一度試すか、ページを再読み込みしてください。','Could not load the data. Please try again or reload the page.')+'</span>'; return false; }
+    document.getElementById('feat').removeAttribute('data-wait'); document.getElementById('main').innerHTML = L('<p class="empty"><strong>データを読み込めませんでした。</strong>ページを再読み込みしてください。解決しない場合は data.json がリポジトリにあるか確認してください。</p>', '<p class="empty"><strong>Could not load the data.</strong> Please reload the page.</p>');
+    return false;
+  });
+  return dataP;
+}
+// data.json を使う処理は、読み終わってから動かす(まだなら読み始めて、読み終わったら動かす)
+function withData(fn){
+  if(READY){ fn(); return; }
+  var sb = document.getElementById('status');
+  if(sb){ sb.hidden = false; sb.innerHTML = '<span class="count">'+L('データを読み込んでいます…','Loading data…')+'</span>'; }
+  loadData().then(function(ok){ if(ok) fn(); });
 }
 
 /* ---------- 大会・開催回ページのURL ---------- */
-var PAGES = {};
-PAGES = ((await pagesP) || {}).events || {};
-// 英語版:動画タイトルなどの機械翻訳(translate_en.py が作る)
-var TR = {};
-TR = ((await trP) || {}).texts || {};
+// 英語版:動画タイトルなどの機械翻訳(translate_en.py が作る。TR)
 function trLine(ja){ var t = LANG==='en' && ja ? TR[String(ja).trim()] : ''; return t ? '<div class="vtr" lang="en">'+esc(t)+' <span class="mt">auto-translated</span></div>' : ''; }
 function eventPage(eid){ return PAGES[eid] ? U('/events/'+PAGES[eid]+'/') : ''; }
 function seriesPage(sid){ var x = DATA.series.filter(function(s){return s.id===sid;})[0]; return x && x.n>0 ? U('/events/'+sid+'/') : ''; }
 
-/* ---------- 準備 ---------- */
-var TODAY = new Date(); var TODAY_ISO = TODAY.toISOString().slice(0,10);
-var S = {}, E = {}, V = DATA.videos;
+/* ---------- 準備(data.json を読んだあとに1回だけ) ---------- */
+function prep(){
+V = DATA.videos;
 DATA.series.forEach(function(s){ S[s.id]=s; s.events=[]; s.videoIds=[]; });
 DATA.events.forEach(function(e){ E[e.id]=e; if(S[e.series]) S[e.series].events.push(e); });
 Object.keys(S).forEach(function(k){ S[k].events.sort(function(a,b){ return (a.start||a.year+'-99') < (b.start||b.year+'-99') ? -1 : 1; }); });
-var byEvent = {}, bySeriesLoose = {}, candByEvent = {}, loose = [];
 V.forEach(function(v){
   if(v.e){ (byEvent[v.e]=byEvent[v.e]||[]).push(v); }
   else if(v.s){ (bySeriesLoose[v.s]=bySeriesLoose[v.s]||[]).push(v); }
@@ -64,16 +82,6 @@ V.forEach(function(v){
   if(!v.e && v.c){ v.c.forEach(function(c){ (candByEvent[c]=candByEvent[c]||[]).push(v); }); }
   if(v.s && S[v.s]) S[v.s].videoIds.push(v.id);
 });
-
-var HERO = ((await heroP)||{})[LANG] || [], HOME = ((await homeP)||{})[LANG] || {};
-
-function skey(s){
-  s = String(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
-  s = s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
-  s = s.replace(/[髙﨑德]/g,function(c){return {'髙':'高','﨑':'崎','德':'徳'}[c];}); // 名前の異体字は普通の字として探す
-  s = s.replace(/[\s・･\/／「」『』()（）\[\]【】\u200b-\u200f\u2060\ufeff]/g,'').replace(/レスリング/g,'');
-  return s;
-}
 DATA.series.forEach(function(s){
   // 英語名でも探せるように、英語名を別名の最後に足す
   s.aliases = (s.aliases||[]).slice(); if(EN[s.name] && s.aliases.indexOf(EN[s.name])<0) s.aliases.push(EN[s.name]);
@@ -83,6 +91,15 @@ DATA.series.forEach(function(s){
   s.latest = s.events.reduce(function(m,e){ return (e.n>0 && (e.start||'')>m) ? e.start : m; }, '');
 });
 V.forEach(function(v){ v.key = skey(v.t); });
+}
+
+function skey(s){
+  s = String(s||'').replace(/\u309b/g,'\u3099').replace(/\u309c/g,'\u309a').normalize('NFKC').toLowerCase();
+  s = s.replace(/[\u3041-\u3096]/g,function(c){return String.fromCharCode(c.charCodeAt(0)+0x60);});
+  s = s.replace(/[髙﨑德]/g,function(c){return {'髙':'高','﨑':'崎','德':'徳'}[c];}); // 名前の異体字は普通の字として探す
+  s = s.replace(/[\s・･\/／「」『』()（）\[\]【】\u200b-\u200f\u2060\ufeff]/g,'').replace(/レスリング/g,'');
+  return s;
+}
 
 var CATS = ['一般','大学','高校','中学','少年少女','年代別','女子','社会人','マスターズ','ビーチ','未確認'];
 var STYLES = ['フリー','グレコ','女子','未確認'];
@@ -161,7 +178,7 @@ function toHash(){
   if(st.sort && st.sort!=='date') p.set('o',st.sort);
   var s = p.toString(); return s ? '#'+s : location.pathname+location.search;
 }
-function commit(push){ var h = toHash(); if(push) history.pushState(null,'',h); else history.replaceState(null,'',h); render(); }
+function commit(push){ var h = toHash(); if(push) history.pushState(null,'',h); else history.replaceState(null,'',h); withData(render); }
 var legacyNote = '';
 
 /* ---------- 絞り込み ---------- */
@@ -616,7 +633,7 @@ function loadPlayers(){
   if(PL || plLoading) return; plLoading = true;
   fetch('/assets/players.json',{cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : []; }).then(function(d){
     PL = (d||[]).map(function(p){ p.key = skey([p.n,p.k,p.r,p.c,p.ce].join(' ')); return p; });
-    if(st.q) render();
+    if(st.q && READY) render();
   }).catch(function(){ PL = []; });
 }
 function playerHits(){
@@ -648,7 +665,7 @@ function loadUww(){
       v.key = skey([v.t, v.e, v.ee, c[0], c[1], v.y].concat(v.pl.map(function(p){ return p.slice(1).join(' '); })).join(' '));
       return v;
     });
-    if(st.q) render();
+    if(st.q && READY) render();
   }).catch(function(){ UW = []; });
 }
 function uwwHits(){
@@ -690,7 +707,7 @@ function loadSearch(){
       }),
       faq: (d.faq||[]).map(function(f){ f.key = skey(f.q+' '+f.a); return f; })
     };
-    if(st.q) render();
+    if(st.q && READY) render();
   }).catch(function(){ SX = {news:[], res:[], faq:[]}; });
 }
 // 検索語 t(skey 済み)が key に入っているか。言い換えがある言葉は、どれか1つが入っていればよい
@@ -818,6 +835,22 @@ function afterRender(){
   if(pendingScroll){ var el = document.getElementById(pendingScroll); pendingScroll=''; if(el){ el.scrollIntoView({block:'start'}); var f = el.querySelector('.shead'); if(f) f.focus({preventScroll:true}); } }
 }
 var pendingScroll = '';
+// 書き込まれた最初の画面で使う、data.json の要らない版の renderControls・afterRender
+function renderControlsLite(){
+  fillSelect('f-year', PRE.years || [], '', yl);
+  fillSelect('f-cat', CATS, ''); fillSelect('f-style', STYLES, ''); fillSelect('f-scope', SCOPES, '');
+  fillSelect('f-kind', KINDS.map(function(k){return k[0];}), '', kindLabel);
+}
+function afterRenderLite(){
+  var sv = document.getElementById('stat-v'), n = parseInt(sv.textContent, 10);
+  // 入口の演出(収録本数を 0 から数え上げる)は afterRender と同じ。あとで data.json を読んでも、もう一度はしない
+  if(document.documentElement.classList.contains('intro') && !sv.dataset.done && window.requestAnimationFrame && n > 0){
+    var t0 = 0, step = function(t){ if(!t0) t0 = t; var k = Math.min(1, (t - t0) / 1400); sv.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if(k < 1) requestAnimationFrame(step); };
+    sv.textContent = '0'; requestAnimationFrame(step);
+  }
+  sv.dataset.done = '1';
+  Array.prototype.forEach.call(document.querySelectorAll('.rowwrap .row'), function(r){ updRow(r); r.addEventListener('scroll', function(){ updRow(r); }, {passive:true}); });
+}
 
 /* ---------- 操作 ---------- */
 var qTimer;
@@ -826,13 +859,16 @@ document.getElementById('q').addEventListener('input', function(ev){
   qTimer = setTimeout(function(){ st.q = val.trim(); legacyNote=''; commit(false); }, 180);
 });
 // 検索用のデータは、検索欄を使い始めたときに初めて読む(トップを開いた時点では読まない)
-document.getElementById('q').addEventListener('focus', function(){ loadPlayers(); loadUww(); loadSearch(); });
+document.getElementById('q').addEventListener('focus', function(){ loadData(); loadPlayers(); loadUww(); loadSearch(); });
 document.getElementById('q').addEventListener('keydown', function(ev){ if(ev.key==='Enter'){ clearTimeout(qTimer); st.q = ev.target.value.trim(); commit(true); } });
 [['f-year','y'],['f-cat','c'],['f-style','sty'],['f-scope','sc'],['f-kind','k']].forEach(function(p){
   document.getElementById(p[0]).addEventListener('change', function(ev){ st[p[1]] = ev.target.value; if(p[1]==='y') st.e=''; commit(true); });
 });
 document.getElementById('f-all').addEventListener('change', function(ev){ st.all = ev.target.checked; commit(true); });
-document.getElementById('home').addEventListener('click', function(ev){ ev.preventDefault(); st = blankState(); legacyNote=''; commit(true); window.scrollTo(0,0); });
+document.getElementById('home').addEventListener('click', function(ev){ ev.preventDefault();
+  // まだ検索・絞り込みを使っていない(書き込まれた最初の画面のまま)なら、data.json を読まずに上へ戻るだけ
+  if(!dataP && !location.hash){ window.scrollTo(0,0); return; }
+  st = blankState(); legacyNote=''; commit(true); window.scrollTo(0,0); });
 document.addEventListener('change', function(ev){ if(ev.target.id==='sort'){ st.sort = ev.target.value; commit(true); } });
 document.addEventListener('click', function(ev){
   var t = ev.target.closest('[data-series],[data-event],[data-drop],[data-setyear],[data-more],[data-cat],[data-feat],[data-featto],.rbtn,#clear,a.tile[href^="#"],.event a[href^="#"]');
@@ -850,7 +886,7 @@ document.addEventListener('click', function(ev){
   if(t.dataset.event){ st.e=t.dataset.event; commit(true); var p=document.getElementById('ev-'+st.e); if(p) p.scrollIntoView({block:'nearest'}); var b=document.querySelector('[data-event="'+CSS.escape(st.e)+'"]'); if(b) b.focus({preventScroll:true}); return; }
   if(t.tagName==='A'){ ev.preventDefault(); var p2 = new URLSearchParams(t.getAttribute('href').slice(1)); st.s=p2.get('s')||''; st.e=p2.get('e')||''; st.q=''; st.y=''; st.c=''; st.sty=''; st.sc=''; st.k=''; pendingScroll='s-'+st.s; commit(true); }
 });
-window.addEventListener('popstate', function(){ readHash(); render(); });
+window.addEventListener('popstate', function(){ withData(function(){ readHash(); render(); }); });
 // 表示色の切り替え(アイコンは今の状態:白なら☀、黒なら🌙)
 var themeBtn = document.getElementById('theme-btn');
 function themeLabel(){ var light = document.documentElement.getAttribute('data-theme')==='light';
@@ -858,12 +894,28 @@ function themeLabel(){ var light = document.documentElement.getAttribute('data-t
 themeBtn.addEventListener('click', function(){ window.__setTheme(document.documentElement.getAttribute('data-theme')==='light' ? 'dark' : 'light'); themeLabel(); });
 themeLabel();
 
-readHash();
-if(st.s) pendingScroll = 's-'+st.s;
-renderStrip();
-FEAT = buildFeature(); showFeature(0);
-document.getElementById('feat').removeAttribute('data-wait');
-render();
+// ビルドのときに書き込まれた最初の画面(top_prerender.py)。特集の全件・開催年の選択肢・書き込んだ日(日本時間)
+var PRE = (function(){ try{ var el = document.getElementById('top-pre'); return el ? JSON.parse(el.textContent) : null; }catch(x){ return null; } })();
+var blankUrl = !location.hash.replace(/^#/,'') && !new URLSearchParams(location.search).get('q');
+// 書き込んだ日が今日(日本時間)で、検索・絞り込みの指定が URL に無いときは、data.json を読まずに書き込まれた画面をそのまま使う。
+// 日付が変わったあと(次の更新の前)は、開催中・これからの大会の並びが変わるので、今までどおり data.json を読んで描き直す
+// (列の「これから/最近」は世界時の日付 TODAY_ISO で分けるので、それも書き込んだときと同じであること)
+if(PRE && !window.__DATA__ && blankUrl && PRE.today === jstDate(new Date().toISOString()) && PRE.iso === TODAY_ISO){
+  LITE = true;
+  FEAT = PRE.feat || []; showFeature(0);
+  document.getElementById('feat').removeAttribute('data-wait');
+  if(PRE.stripEmpty) document.getElementById('tstrip').hidden = true;
+  renderControlsLite();
+  afterRenderLite();
+} else {
+  if(!(await loadData())) return;
+  readHash();
+  if(st.s) pendingScroll = 's-'+st.s;
+  renderStrip();
+  FEAT = buildFeature(); showFeature(0);
+  document.getElementById('feat').removeAttribute('data-wait');
+  render();
+}
 // 画面の幅が変わったら、列の矢印の高さと表示を合わせ直す
 window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('.rowwrap .row'), updRow); });
 })();
