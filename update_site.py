@@ -187,6 +187,13 @@ def main():
     except Exception as ex:
         print(f"[書籍] スキップしました: {ex}")
 
+    # 提携先のレスリング・スピリッツの新着記事(ニュース一覧の右の欄)。失敗しても更新は続ける
+    try:
+        import news
+        print(f"[スピリッツ] {news.fetch_spirits('.')}")
+    except Exception as ex:
+        print(f"[スピリッツ] スキップしました: {ex}")
+
     # 大会・開催回ごとのページ(events/)と sitemap.xml を作り直す
     import build_pages
     build_pages.build()
