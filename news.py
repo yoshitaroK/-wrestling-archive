@@ -23,7 +23,7 @@
 一覧(/news/)はサイトのテーマのまま(黒が標準)。最新の1本を大きく、残りは月ごとの列。区分のチップで絞り込める(CSS だけ)。
 一覧の右の欄に、提携先のレスリング・スピリッツの新着記事(見出しと外へのリンク)を出す。記事の一覧(RSS)は
 毎朝の自動更新(update_site.py)で fetch_spirits() が取り、spirits_feed.json に入れる(手で編集しない)。
-高校生以下の大会の記事は、見出しに選手の名前が出ることがあるので出さない(SPIRITS_SKIP)。
+スピリッツの記事なので、高校生以下の大会の記事もそのまま出す(運営者の判断 2026-11-19)。
 """
 import html
 import json
@@ -43,8 +43,6 @@ WEEK = "月火水木金土日"
 SPIRITS_FEED = "https://wrestling-spirits.jp/feed/"
 SPIRITS_JSON = "spirits_feed.json"
 SPIRITS_SHOW = 8  # 一覧の右の欄に出す本数
-# 見出しにこの言葉がある記事は出さない(高校生以下の選手の名前が見出しに出ることがあるため)
-SPIRITS_SKIP = re.compile(r"高校|高等学校|インターハイ|高校生|少年|少女|中学|全中|U1[0-9]|ジュニア|キッズ|小学|幼年|選抜")
 
 
 def load(root, report):
@@ -412,13 +410,13 @@ def fetch_spirits(root, keep=30):
 
 
 def spirits_items(root):
-    """一覧の右の欄に出すスピリッツの記事(高校生以下の大会の記事を除いて、新しい順に SPIRITS_SHOW 本)"""
+    """一覧の右の欄に出すスピリッツの記事(新しい順に SPIRITS_SHOW 本)"""
     path = os.path.join(root, SPIRITS_JSON)
     if not os.path.exists(path):
         return []
     with open(path, encoding="utf-8") as f:
         items = json.load(f).get("items", [])
-    return [x for x in items if not SPIRITS_SKIP.search(x.get("title", ""))][:SPIRITS_SHOW]
+    return items[:SPIRITS_SHOW]
 
 
 def list_html(arts, ctx, bp, crumbs, desc):
