@@ -894,6 +894,8 @@ def event_results_html(ev, ctx, bp):
     for r in rows:
         divs[r.get("種別", "")][r.get("階級", "")].append(r)
     body = ""
+    # 部ごとの要約の文(大人の部・名前を出してよい人だけ。表は今のまま全部の行を残す)
+    sents = result_sentences(ev, ctx)
     for d in divs:  # CSV に書いた順
         trs = ""
         for w in sorted(divs[d], key=weight_key):
@@ -906,13 +908,88 @@ def event_results_html(ev, ctx, bp):
                 cells.append(f'<span class="wr"><b>{e(rank(r.get("成績", "")))}</b> {name}'
                              + (f' <small lang="ja">{e(where)}</small>' if where else "") + "</span>")
             trs += f"<tr><th>{e(w)}</th><td>{''.join(cells)}</td></tr>"
-        body += f'<h3>{e(L(d, DIVISION_EN.get(d, d)))}</h3><div class="rtable"><table class="winners"><tbody>{trs}</tbody></table></div>'
-    srcs = list(dict.fromkeys(r.get("出典URL") for r in rows if r.get("出典URL")))
-    src = "".join(f' <a href="{e(u)}" target="_blank" rel="noopener">{L("出典", "Source")} ↗</a>' for u in srcs)
+        sent = sents.get(d.strip())
+        body += (f'<h3>{e(L(d, DIVISION_EN.get(d, d)))}</h3>' + (f'<p class="rs-sum">{e(sent)}</p>' if sent else "")
+                 + f'<div class="rtable"><table class="winners"><tbody>{trs}</tbody></table></div>')
     hint = L("決勝・準決勝に進んだ選手と5位の選手です(3位・5位は複数)。選手名にリンクがある人は選手ページへ移れます。",
              "Finalists, semifinalists and 5th-place finishers (3rd and 5th are shared). Linked names open the player page.")
     return (f'<section class="section event-results"><h2>{L("結果(速報)", "Results (live)")}</h2>'
-            f'<p class="hint">{hint}{src}</p>{body}</section>')
+            f'{results_source_html(ev, ctx, e)}<p class="hint">{hint}</p>{body}</section>')
+
+
+# 結果(速報)の出典の記事の日付(レスリング・スピリッツの記事の URL は /年/月/日/ の形)
+SOURCE_DATE_RE = re.compile(r"wrestling-spirits\.jp/(\d{4})/(\d{2})/(\d{2})/")
+MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+SOURCE_NAMES = {"wrestling-spirits.jp": ("レスリング・スピリッツ", "Wrestling Spirits"),
+                "www.japan-wrestling.jp": ("日本レスリング協会", "Japan Wrestling Federation")}
+
+
+def results_sources(ev, ctx):
+    """結果(速報)の出典 [(URL, 日付 YYYY-MM-DD か "")](CSV に書いた順、同じ URL は1回)"""
+    urls = dict.fromkeys(r.get("出典URL") for r in ctx.get("event_results", {}).get(ev["id"], []) if r.get("出典URL"))
+    out = []
+    for u in urls:
+        m = SOURCE_DATE_RE.search(u)
+        out.append((u, "-".join(m.groups()) if m else ""))
+    return out
+
+
+def results_date(ev, ctx):
+    """結果(速報)の出典の記事のいちばん新しい日付(無ければ "")。sitemap の lastmod に使う"""
+    return max((d for _, d in results_sources(ev, ctx) if d), default="")
+
+
+def results_source_html(ev, ctx, e):
+    """結果の欄の頭の「出典」の行。出典のサイト名と記事の日付を読める文で出す(日付は URL から読めるときだけ)"""
+    srcs = results_sources(ev, ctx)
+    if not srcs:
+        return ""
+    import urllib.parse
+    links = []
+    for u, d in srcs:
+        host = urllib.parse.urlparse(u).netloc
+        nm = L(*SOURCE_NAMES[host]) if host in SOURCE_NAMES else host
+        if d:
+            y, m, dd = (int(x) for x in d.split("-"))
+            when = L(f"{y}年{m}月{dd}日の記事", f"article of {MONTHS_EN[m - 1]} {dd}, {y}")
+            t = L(f"{nm}({when})", f"{nm} ({when})")
+        else:
+            t = nm
+        links.append(f'<a href="{e(u)}" target="_blank" rel="noopener">{e(t)} ↗</a>')
+    return (f'<p class="rs-src">{L("速報の出典:", "Source of these live results: ")}{L("、", ", ").join(links)}'
+            f'{L("。公式の結果と違う場合は、公式の結果が正しいものです。", ". If they differ from the official results, the official results prevail.")}</p>')
+
+
+def result_firsts(ev, ctx):
+    """結果(速報)の1位のうち、名前を文に出してよい人だけ。[(種別, [(階級, 氏名, 所属, 選手 or None)]), 絞り込みで落ちた1位があるか]
+    行は ctx["adult_results"](search_index.adult_result_rows。検索欄・llms-full.txt と同じ絞り込み)から取る。
+    高校生以下の部・高校/中学の所属・未成年と同じ名前の人はここに来ない。部は CSV に書いた順、階級は軽い順"""
+    rows = [r for r in ctx.get("adult_results", {}).get(ev["id"], []) if (r.get("成績") or "").strip() == "1位"]
+    if not rows:
+        return []
+    linked = {(r.get("種別", ""), r.get("階級", ""), r.get("氏名", "")): r.get("player")
+              for r in ctx.get("event_results", {}).get(ev["id"], [])}
+    all_first = Counter(r.get("種別", "").strip() for r in ctx.get("event_results", {}).get(ev["id"], [])
+                        if (r.get("成績") or "").strip() == "1位")
+    divs = defaultdict(list)
+    for r in rows:
+        divs[r["種別"].strip()].append((r["階級"].strip(), r["氏名"].strip(), (r.get("所属") or "").strip(),
+                                       linked.get((r.get("種別", ""), r.get("階級", ""), r.get("氏名", "")))))
+    return [(d, sorted(xs, key=lambda x: weight_key(x[0])), all_first[d] > len(xs)) for d, xs in divs.items()]
+
+
+def result_sentences(ev, ctx):
+    """結果(速報)の部ごとの要約の文 {種別: 文}。名前は result_firsts の人だけ(高校生以下の部は文にしない)。
+    ページの結果の欄と、構造化データ(SportsEvent の description)で同じ文を使う"""
+    out = {}
+    for d, xs, partial in result_firsts(ev, ctx):
+        if i18n.en():
+            items = ", ".join(f"{w} {(p['roman'] if p and p.get('roman') else nm)}" for w, nm, club, p in xs)
+            out[d] = f"{DIVISION_EN.get(d, d)}: winners were {items}." + (" Other weight classes are in the table." if partial else "")
+        else:
+            items = "、".join(f"{w}{'級' if w.endswith('kg') else ''} {nm}" + (f"({club})" if club else "") for w, nm, club, p in xs)
+            out[d] = f"{d}の優勝は、{items}です。" + ("ほかの階級は表をご覧ください。" if partial else "")
+    return out
 
 
 def coming_soon_page(ctx, bp):

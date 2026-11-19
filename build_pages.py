@@ -668,6 +668,10 @@ def event_page(ev, ctx):
         champs = players.champions_text(ev, ctx)
         if champs:
             se["description"] += L(f"掲載している優勝者:{champs}。", f" Champions listed here: {champs}.")
+        # 結果(速報)がある回は、ページの結果の欄の要約と同じ文(大人の部・名前を出してよい人だけ。#359)
+        rsents = players.result_sentences(ev, ctx)
+        if rsents:
+            se["description"] += L("結果(速報):", " Live results: ") + L("", " ").join(rsents.values())
         if venue:
             se["location"] = {"@type": "Place", "name": venue}
             # 住所:会場名の都道府県・市(英語版はローマ字の都道府県と国コードだけ)と、overrides の「会場」の文字
@@ -757,6 +761,11 @@ def event_page(ev, ctx):
     bp = sys.modules[__name__]
     champs_html = players.champions_html(ev, ctx, bp)
     results_html = players.event_results_html(ev, ctx, bp)
+    # 開催前(予定・開催中)で、結果も入賞者の欄もまだ無い回は「前回の優勝者」(歴代優勝者の表がある大会だけ。#359)
+    prev_html = ""
+    if not champs_html and not results_html and status in ("scheduled", "live"):
+        import champions
+        prev_html = champions.previous_html(ev, ctx, bp)
     news_html = ""
     # この大会のニュース(news.json の event_id が一致する記事。ニュースは日本語だけ)
     if not i18n.en():
@@ -770,6 +779,8 @@ def event_page(ev, ctx):
     jump = []
     if champs_html:
         jump.append(("#champions", L("日本代表の成績", "Team Japan results") if summ[1] else L("優勝者・入賞者", "Champions & medalists"), ""))
+    if prev_html:
+        jump.append(("#champions", L("前回の優勝者", "Previous champions"), ""))
     if results_html:
         jump.append(("#results", L("結果(速報)", "Results (live)"), ""))
     if vids:
@@ -787,8 +798,11 @@ def event_page(ev, ctx):
             f'<a href="{a}">{t}{(" <b>" + n + "</b>") if n else ""}</a>' for a, t, n in jump) + "</nav>")
     h += "</header>"
 
-    # 掲載している優勝者と入賞者の欄(頭のすぐ下。#314)
-    h += champs_html
+    # 掲載している優勝者と入賞者の欄(頭のすぐ下。#314)。開催前の回は前回の優勝者
+    h += champs_html or prev_html
+    # 結果(速報)の欄は、ニュース・動画より上(大会の当日〜翌日に結果を探して来た人が、すぐ見られるように。#359)
+    if results_html:
+        h += f'<div class="ev-anchor" id="results">{results_html}</div>'
     h += news_html
 
     # 開催年の年表(ほかの年へのリンク)
@@ -823,8 +837,6 @@ def event_page(ev, ctx):
                                      "The tournament name or year in these titles is ambiguous, so they are not yet confirmed for this edition. The basis is shown.") + '</p>'
               + vgroup(L("確認待ち", "Pending review"), n_videos(len(cands)), cands, show_basis=True) + '</details>')
 
-    if results_html:
-        h += f'<div class="ev-anchor" id="results">{results_html}</div>'
     h += rel_html
     h += info_html
     h += f'<p class="tosearch-line"><a href="{U("/")}#s={e(s["id"])}&amp;e={e(ev["id"])}">{L("スタイルなどで絞り込む(検索ページで開く)", "Filter by style and more (open in search)")}</a></p>'
@@ -2124,11 +2136,13 @@ def llms_winners(data, ctx):
     for r in rows:
         if (r.get("成績") or "").strip() == "1位":
             by_ev[r["開催回ID"]].append(r)
+    import players
     out = {}
     for ev, lst in by_ev.items():
-        divs = defaultdict(list)
-        for r in lst:
-            divs[r["種別"].strip()].append(f"{r['階級'].strip()} {r['氏名'].strip()}({r['所属'].strip()})" if r.get("所属") else f"{r['階級'].strip()} {r['氏名'].strip()}")
+        # 部・階級の並びは開催回ページの要約の文と同じ(players.result_firsts。#359)
+        rctx = {"adult_results": {ev: lst}, "event_results": ctx.get("event_results", {})}
+        divs = {d: [f"{w} {nm}({club})" if club else f"{w} {nm}" for w, nm, club, _ in xs]
+                for d, xs, _ in players.result_firsts({"id": ev}, rctx)}
         srcs = list(dict.fromkeys(r["出典URL"].strip() for r in lst if r.get("出典URL")))
         out[ev] = (f"  - 結果(速報)の1位(大人の部・掲載できる人のみ)" + (f"(出典: {'、'.join(srcs)})" if srcs else "") + ": "
                    + "/".join(f"{d} " + "、".join(xs) for d, xs in divs.items())
@@ -2544,6 +2558,10 @@ a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);backgr
 .ev-jump a:hover{border-color:var(--pink)}
 .ev-anchor,.ev-champs,#ev-news,#related,#sources{scroll-margin-top:84px}
 .ev-champs{position:relative;margin-top:22px}
+/* site: 結果(速報)の欄の出典の行と、部ごとの要約の文(#359) */
+.event-results .rs-src{margin:0 0 6px;font-size:13px;line-height:1.7;color:var(--ink2)}
+.event-results .rs-src a{padding:4px 0}
+.event-results .rs-sum{margin:2px 0 6px;font-size:15px;line-height:1.7;max-width:60em}
 .wc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;margin:0 0 10px}
 .page .wc-head h2{margin:0;padding-left:10px;border-left:3px solid var(--pink);font-size:19px;font-weight:700;letter-spacing:.04em}
 .wc-head h2 small{margin-left:4px;font-weight:400;font-size:12px;color:var(--ink3);letter-spacing:0}
@@ -2728,6 +2746,13 @@ def build(root=HERE, inline_css=False, only=None):
     # 大会ごとの歴代優勝者(player_results.csv の1位)。大会ページのリンクでも使うので先に読む
     import champions
     creport = champions.prepare(root, data, ctx)
+    # 結果(速報)のうち、名前を文に出してよい大人の部の行(検索欄・llms-full.txt と同じ search_index.adult_result_rows)。
+    # 開催回ページの要約の文・構造化データ・llms-full.txt の3か所で同じ行を使う(#359)
+    import search_index
+    adult_rows, _ = search_index.adult_result_rows(root, search_index.minor_names(root), search_index.adult_events(data))
+    ctx["adult_results"] = defaultdict(list)
+    for r in adult_rows:
+        ctx["adult_results"][r["開催回ID"]].append(r)
     # 開催回ごとのニュース記事(開催回ページの「この大会のニュース」)。エラーはニュースのページを作るときに出す
     import news
     ctx["news_by_event"] = news.by_event(root)
@@ -2753,6 +2778,8 @@ def build(root=HERE, inline_css=False, only=None):
             if ev["id"] in slugs and (only is None or ev["id"] in only):
                 path, doc = event_page(ev, ctx)
                 lastmod = max((jst_date(v.get("p")) for v in by_event.get(ev["id"], [])), default=data.get("as_of"))
+                # 結果(速報)を載せた回は、結果の出典の記事の日付が新しければそれにする(#359)
+                lastmod = max(lastmod or "", players.results_date(ev, ctx)) or lastmod
                 pages.append((path, doc, lastmod))
         ctx.setdefault("og_cards", {})["events-" + lang] = ctx.pop("event_cards").finish()
         for s in data["series"]:
