@@ -869,6 +869,9 @@ document.getElementById('home').addEventListener('click', function(ev){ ev.preve
   // まだ検索・絞り込みを使っていない(書き込まれた最初の画面のまま)なら、data.json を読まずに上へ戻るだけ
   if(!dataP && !location.hash){ window.scrollTo(0,0); return; }
   st = blankState(); legacyNote=''; commit(true); window.scrollTo(0,0); });
+// 検索欄に入力中に条件の × などを押すと、検索欄から離れた瞬間に入力のヒントが消えて下の行が上にずれ、
+// 指を離した位置に × が無くなって押せなかった。押し始めで検索欄から離れないようにして、行がずれないようにする
+document.addEventListener('mousedown', function(ev){ if(ev.target.closest && ev.target.closest('#status [data-drop],#status #clear,#status [data-setyear]')) ev.preventDefault(); });
 document.addEventListener('change', function(ev){ if(ev.target.id==='sort'){ st.sort = ev.target.value; commit(true); } });
 document.addEventListener('click', function(ev){
   var t = ev.target.closest('[data-series],[data-event],[data-drop],[data-setyear],[data-more],[data-cat],[data-feat],[data-featto],.rbtn,#clear,a.tile[href^="#"],.event a[href^="#"]');
