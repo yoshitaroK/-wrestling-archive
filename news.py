@@ -21,6 +21,9 @@
 見た目は白地のニュース記事(ヘッダー・フッターはほかのページと同じ黒)。右の欄に、大会ページ・記事に出てくる選手・新着ニュースを出す。
 本文の下に、同じ大会の記事・前後の記事・一覧へのリンクを出す(#321)。
 一覧(/news/)はサイトのテーマのまま(黒が標準)。最新の1本を大きく、残りは月ごとの列。区分のチップで絞り込める(CSS だけ)。
+一覧の右の欄に、提携先のレスリング・スピリッツの新着記事(見出しと外へのリンク)を出す。記事の一覧(RSS)は
+毎朝の自動更新(update_site.py)で fetch_spirits() が取り、spirits_feed.json に入れる(手で編集しない)。
+高校生以下の大会の記事は、見出しに選手の名前が出ることがあるので出さない(SPIRITS_SKIP)。
 """
 import html
 import json
@@ -37,6 +40,11 @@ IMAGE_DIR = "assets/news"  # 記事の写真(手で入れる)
 PHOTO_RE = re.compile(r"\[\[photo:([\w.-]+)\|([^\]|]+)(?:\|([^\]]+))?\]\]")
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,80}$")
 WEEK = "月火水木金土日"
+SPIRITS_FEED = "https://wrestling-spirits.jp/feed/"
+SPIRITS_JSON = "spirits_feed.json"
+SPIRITS_SHOW = 8  # 一覧の右の欄に出す本数
+# 見出しにこの言葉がある記事は出さない(高校生以下の選手の名前が見出しに出ることがあるため)
+SPIRITS_SKIP = re.compile(r"高校|高等学校|インターハイ|高校生|少年|少女|中学|全中|U1[0-9]|ジュニア|キッズ|小学|幼年|選抜")
 
 
 def load(root, report):
@@ -365,6 +373,54 @@ def build(root, ctx, bp, report):
     return pages
 
 
+def fetch_spirits(root, keep=30):
+    """レスリング・スピリッツの記事の一覧(RSS)を取り、spirits_feed.json に入れる(毎朝の自動更新から呼ぶ)。
+    取れなかったときは前のファイルのまま。[{title, url, date}] を新しい順に keep 本"""
+    import urllib.request
+    import xml.etree.ElementTree as ET
+    from email.utils import parsedate_to_datetime
+    from datetime import timedelta, timezone
+    path = os.path.join(root, SPIRITS_JSON)
+    old = []
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            old = json.load(f).get("items", [])
+    req = urllib.request.Request(SPIRITS_FEED, headers={"User-Agent": "JapanWrestlingChannel-archive/1.0"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        root_el = ET.fromstring(r.read())
+    jst = timezone(timedelta(hours=9))
+    new = []
+    for it in root_el.iter("item"):
+        title, url, pub = ((it.findtext(k) or "").strip() for k in ("title", "link", "pubDate"))
+        if not title or not url.startswith("https://wrestling-spirits.jp/"):
+            continue
+        try:
+            day = parsedate_to_datetime(pub).astimezone(jst).strftime("%Y-%m-%d")
+        except (TypeError, ValueError):
+            continue
+        new.append({"title": title, "url": url, "date": day})
+    seen, items = set(), []
+    for x in new + old:
+        if x["url"] not in seen:
+            seen.add(x["url"])
+            items.append(x)
+    items = sorted(items, key=lambda x: x["date"], reverse=True)[:keep]
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump({"about": "自動生成。レスリング・スピリッツの新着記事(news.py の fetch_spirits)。手で編集しない", "items": items},
+                  f, ensure_ascii=False, indent=1)
+    return f"{len(new)}本を取得(保存 {len(items)}本)"
+
+
+def spirits_items(root):
+    """一覧の右の欄に出すスピリッツの記事(高校生以下の大会の記事を除いて、新しい順に SPIRITS_SHOW 本)"""
+    path = os.path.join(root, SPIRITS_JSON)
+    if not os.path.exists(path):
+        return []
+    with open(path, encoding="utf-8") as f:
+        items = json.load(f).get("items", [])
+    return [x for x in items if not SPIRITS_SKIP.search(x.get("title", ""))][:SPIRITS_SHOW]
+
+
 def list_html(arts, ctx, bp, crumbs, desc):
     """ニュース一覧の本体(#321)。サイトのテーマ(黒が標準・白テーマなら白)に合わせる。
     最新の1本を大きく、残りは月ごとの見出し(h2)で区切った「日付+区分+見出し+リード」の列。記事は全部 HTML のリンクで出す。
@@ -450,6 +506,13 @@ def list_html(arts, ctx, bp, crumbs, desc):
             h += (f'<li><a href="{U("/events/" + ctx["slugs"][eid] + "/")}">{e(bp.event_name(ev, s))}'
                   f'<small>{ev["year"]}年・記事{n}本</small></a></li>')
         h += "</ul></section>"
+    sp = spirits_items(ctx.get("root", "."))
+    if sp:
+        h += ('<section aria-labelledby="nl-sp-h"><h2 id="nl-sp-h" data-en="WRESTLING SPIRITS">レスリング・スピリッツの新着</h2>'
+              '<p class="nl-sp-n">提携しているレスリング専門のWebメディアの記事です(外のサイトが開きます)</p><ul>'
+              + "".join(f'<li><a href="{e(x["url"])}" target="_blank" rel="noopener">{e(x["title"])}'
+                        f'<small>{e(fmt_day(x["date"]))}・レスリング・スピリッツ ↗</small></a></li>' for x in sp)
+              + '</ul><p class="nl-sp-more"><a href="https://wrestling-spirits.jp/" target="_blank" rel="noopener">レスリング・スピリッツのサイトへ ↗</a></p></section>')
     h += (f'<section aria-labelledby="nl-go-h"><h2 id="nl-go-h" data-en="SEARCH">大会を探す</h2><ul>'
           f'<li><a href="{U("/events/calendar/")}">大会カレンダー<small>これからの大会・最近の大会</small></a></li>'
           f'<li><a href="{U("/events/")}">大会一覧<small>結果・動画のある大会</small></a></li></ul></section>')
@@ -584,6 +647,9 @@ NEWS_CSS = """
 .nl-side a{display:block;padding:11px 0;color:var(--ink);font-size:14px;font-weight:700;line-height:1.55;text-decoration:none}
 .nl-side a:hover{color:var(--pink)}
 .nl-side small{display:block;font-size:12px;font-weight:400;color:var(--ink3)}
+.nl-side .nl-sp-n{margin:8px 0 0;font-size:12px;color:var(--ink3)}
+.nl-side .nl-sp-more{margin:10px 0 0}
+.nl-side .nl-sp-more a{display:inline;padding:0;font-size:13px;color:var(--pink)}
 @media (max-width:900px){.nl-grid{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){
   .nl-h h1{font-size:26px}
