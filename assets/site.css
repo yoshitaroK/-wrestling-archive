@@ -501,7 +501,7 @@ html.nohero.overlay .top.see-through{background:rgba(11,11,14,.96);border-bottom
 .tn-l{font-size:14px;line-height:1.8;color:var(--ink2)}
 .tn-lead:hover .tn-t,.tn-rank a:hover .tn-t{text-decoration:underline}
 .tn-rank{list-style:none;margin:0;padding:0;border-top:2px solid var(--pink-fill)}
-.tn-rank a{display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:12px;padding:13px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+.tn-rank a{display:grid;grid-template-columns:78px minmax(0,1fr);column-gap:12px;padding:13px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
 .tn-rank .tn-d{grid-row:1/3;font-family:var(--num);font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;color:var(--pink)}
 .tn-rank .tn-t{font-size:15px;font-weight:700;line-height:1.55}
 /* 「すべての大会を見る」ボタン(一覧は大会一覧のページへ) */
@@ -541,6 +541,8 @@ html.nohero.overlay .top.see-through{background:rgba(11,11,14,.96);border-bottom
   .tn-lead .tn-t{font-size:21px}
   .tn-lead.noimg{padding:18px 18px 20px}
   .tn-lead.noimg .tn-t{font-size:22px}
+  .tn-rank a{grid-template-columns:64px minmax(0,1fr);column-gap:10px}
+  .tn-rank .tn-d{font-size:21px}
   .allbtn a{padding:14px 26px;font-size:15px}
 }
 /* 入口の演出(トップページ・ブラウザを開いて最初の1回だけ。html に intro が付いたときだけ動く) */
@@ -839,6 +841,10 @@ a.sx-next:hover{border-color:var(--line-hi);border-left-color:var(--pink);backgr
 .ev-jump a:hover{border-color:var(--pink)}
 .ev-anchor,.ev-champs,#ev-news,#related,#sources{scroll-margin-top:84px}
 .ev-champs{position:relative;margin-top:22px}
+/* site: 結果(速報)の欄の出典の行と、部ごとの要約の文(#359) */
+.event-results .rs-src{margin:0 0 6px;font-size:13px;line-height:1.7;color:var(--ink2)}
+.event-results .rs-src a{padding:4px 0}
+.event-results .rs-sum{margin:2px 0 6px;font-size:15px;line-height:1.7;max-width:60em}
 .wc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;margin:0 0 10px}
 .page .wc-head h2{margin:0;padding-left:10px;border-left:3px solid var(--pink);font-size:19px;font-weight:700;letter-spacing:.04em}
 .wc-head h2 small{margin-left:4px;font-weight:400;font-size:12px;color:var(--ink3);letter-spacing:0}
