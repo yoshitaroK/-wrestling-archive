@@ -1782,7 +1782,7 @@ __CONTACT_JS__
 PRIVACY_UPDATED = "2026-10-07"
 
 
-FAQ_UPDATED = "2026-11-17"
+FAQ_UPDATED = "2026-11-20"
 
 
 # 選手ページの大会成績の出典(出典URL のサイト → 日本語・英語の名前)。ここに無いサイトは「その他」にまとめる
@@ -1810,6 +1810,20 @@ def faq_result_sources(players_list):
     if count[""]:
         parts.append((L("その他", "other sources"), count[""]))
     return total, parts
+
+
+# レスリング・スピリッツ(wrestling-spirits.jp)との提携と役割分担。/about/ と /faq/ で同じ文を使う
+# 出典:レスリング・スピリッツの紹介記事(2026-11-19)「Japan Wrestling Channel(レスリング・スピリッツ提携)」
+SPIRITS_URL = "https://wrestling-spirits.jp/"
+SPIRITS_INTRO_URL = "https://wrestling-spirits.jp/2026/11/19/298500/"
+
+
+def spirits_text():
+    """提携と役割分担の文(1〜2文)。出典のある事実だけを書く"""
+    return L("このサイトは、レスリング専門のウェブメディア「レスリング・スピリッツ」(wrestling-spirits.jp)と提携しています(2026年11月19日にレスリング・スピリッツの記事で紹介)。"
+             "大会の記事と結果はレスリング・スピリッツ、大会の配信動画と選手ごとのデータはこのサイトが受け持ち、選手の成績と歴代優勝者の出典にはレスリング・スピリッツのサイトで公開されている資料も使っています。",
+             "This site is a partner of Wrestling Spirits (wrestling-spirits.jp), a Japanese web media outlet dedicated to wrestling (introduced in a Wrestling Spirits article on November 19, 2026). "
+             "Wrestling Spirits covers tournament articles and results, while this site covers tournament streams and player data; documents published on the Wrestling Spirits site are also among the sources for player results and past champions.")
 
 
 def _en_list(xs):
@@ -1859,6 +1873,9 @@ def faq_items(data, series_list, players_list=None, ctx=None):
               + ". Each result has a Source link that opens the original document. "
               "We do not make player pages for minors (including wrestlers not yet confirmed to be adults). If you find a mistake, please let us know through the contact form."),
             ("/contact.html", L("お問い合わせ", "Contact"))))
+    # レスリング・スピリッツとの関係(提携と役割分担。/about/ と同じ文)
+    items.append((L("レスリング・スピリッツとの関係は?", "What is the relationship with Wrestling Spirits?"), spirits_text(),
+                  (SPIRITS_INTRO_URL, L("レスリング・スピリッツの紹介記事", "Introduction on Wrestling Spirits (in Japanese)"))))
     ctx = ctx or {}
     # 歴代優勝者(/champions/)。大会の数は champions.build と同じ表(ctx["champions"])から
     n_champ = len(ctx.get("champions") or {})
@@ -1939,6 +1956,7 @@ def about_page(data, series_list, ctx):
         (L("データの出典", "Data sources"),
          L("動画は YouTube(Japan Wrestling Channel ほか)の公開情報から取得しています。大会の開催日・会場は、公益財団法人日本レスリング協会の大会ページ・事業報告書、旧協会サイト由来の記録、専門媒体の記事などをもとにした照合用の大会データに基づきます。出典は各開催回のページに表示しています。国際大会の動画は、世界レスリング連合(UWW)の公式 YouTube から日本人選手が出ている動画を集めています。",
            "Videos come from public YouTube information (Japan Wrestling Channel and others). Tournament dates and venues come from our reference data, based on Japan Wrestling Federation event pages and annual reports, records from the former federation site and specialist media. Sources are shown on each edition page. International videos featuring Japanese wrestlers come from the official YouTube channel of United World Wrestling (UWW).")),
+        (L("提携", "Partner"), spirits_text()),
         (L("更新", "Updates"),
          L("毎日、日本時間の朝6時ごろに新しい動画を取り込み、ページを自動で作り直しています。動画と大会の対応が確定していないものは「確認待ち」として区別し、確認できたものから手作業で直しています。",
            "Every day at around 6:00 a.m. Japan time, new videos are added and the pages are rebuilt automatically. Videos not yet confirmed to belong to an edition are marked \"Pending review\" and corrected by hand once checked.")),
