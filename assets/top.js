@@ -315,7 +315,7 @@ var NO_HERO = {'x-fujinami-cup':1};
 // 特集の一番前に出さない開催回(国スポは終わったので、次の大会に席を譲る)。大会ページや下の列には今までどおり出る
 var HIDE_FEAT = {'wre-2026-kokutai-1012':1};
 // 特集の一番前に並べる順番(開催中→まもなく開催→結果の順に分けたうえで、ここに書いた開催回が先、あとは開催日の新しい順)
-var FEAT_ORDER = ['wre-2026-university-championship-1114', 'wre-2026-university-greco-1023', 'wre-2026-women-open-1024'];
+var FEAT_ORDER = ['wre-2026-juniorhigh-senbatsu-1121', 'wre-2026-university-championship-1114', 'wre-2026-university-greco-1023', 'wre-2026-women-open-1024'];
 // 3日前より早く「まもなく開催」に出す開催回(書いた日から出す)
 var FEAT_FROM = {'wre-2026-university-championship-1114':'2026-11-03'};
 // 特集の背景に使う、大会ごとに作った絵(assets/feature/)。写真も動画もまだない大会に使う。pos はスマホで見せる横の位置
