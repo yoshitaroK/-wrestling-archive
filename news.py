@@ -24,6 +24,8 @@
 一覧の右の欄に、提携先のレスリング・スピリッツの新着記事(見出しと外へのリンク)を出す。記事の一覧(RSS)は
 毎朝の自動更新(update_site.py)で fetch_spirits() が取り、spirits_feed.json に入れる(手で編集しない)。
 スピリッツの記事なので、高校生以下の大会の記事もそのまま出す(運営者の判断 2026-11-19)。
+記事の本文の下にも、同じ大会のスピリッツの記事を1本出す(spirits_for_event)。同じ大会だと確かめられたものだけ。
+大会ページには出さない(運営者の方針)。
 """
 import html
 import json
@@ -270,6 +272,16 @@ def build(root, ctx, bp, report):
         return h
 
     idx = {a["slug"]: i for i, a in enumerate(arts)}
+    # 記事ごとの、同じ大会のスピリッツの記事(本文の下に1本)
+    sn = series_names(root)
+    sp_by_slug = {}
+    for a in arts:
+        eid = a.get("event_id")
+        if eid and eid in ctx["events_by_id"]:
+            ev = ctx["events_by_id"][eid]
+            hit = spirits_for_event(root, ev, sn.get(ev["series"], []) + [ev.get("name") or ""], a["date"])
+            if hit:
+                sp_by_slug[a["slug"]] = hit
 
     def more(a):
         """記事の本文の下:同じ大会の記事(同じ開催回、無ければ同じ区分)・前後の記事・一覧へ(#321)。
@@ -289,6 +301,13 @@ def build(root, ctx, bp, report):
                 f'<li><a href="{U("/news/" + x["slug"] + "/")}"><time datetime="{e(x["date"])}">'
                 f'<span class="nd" aria-hidden="true">{x["date"][5:].replace("-", ".")}</span><span class="sr">{e(fmt_day(x["date"]))}</span></time>'
                 f'<span class="nt">{e(x["title"])}</span></a></li>' for x in rel[:4]) + "</ol></section>"
+        sp = sp_by_slug.get(a["slug"])
+        if sp:
+            # 同じ大会のスピリッツの記事(1本。外のサイト)
+            h += ('<section><h2 data-en="WRESTLING SPIRITS">レスリング・スピリッツの記事</h2><ol class="nw-rows">'
+                  f'<li><a href="{e(sp["url"])}" target="_blank" rel="noopener"><time datetime="{e(sp["date"])}">'
+                  f'<span class="nd" aria-hidden="true">{sp["date"][5:].replace("-", ".")}</span><span class="sr">{e(fmt_day(sp["date"]))}</span></time>'
+                  f'<span class="nt">{e(sp["title"])}<small class="nw-src">レスリング・スピリッツ(外のサイトが開きます)↗</small></span></a></li></ol></section>')
         if newer or older:
             h += '<div class="nw-pn">'
             if older:
@@ -384,9 +403,11 @@ def build(root, ctx, bp, report):
     return pages
 
 
-def fetch_spirits(root, keep=30):
+def fetch_spirits(root, keep=400):
     """レスリング・スピリッツの記事の一覧(RSS)を取り、spirits_feed.json に入れる(毎朝の自動更新から呼ぶ)。
-    取れなかったときは前のファイルのまま。[{title, url, date}] を新しい順に keep 本"""
+    取れなかったときは前のファイルのまま。[{title, url, date}] を新しい順に keep 本。
+    RSS には新しい記事しか無いので、前に取った記事も残して貯める(記事の下の「同じ大会の記事」が
+    1〜2週間で消えないように。一覧の右の欄は SPIRITS_SHOW 本で切るので見た目は変わらない)"""
     import urllib.request
     import xml.etree.ElementTree as ET
     from email.utils import parsedate_to_datetime
@@ -430,6 +451,75 @@ def spirits_items(root):
     with open(path, encoding="utf-8") as f:
         items = json.load(f).get("items", [])
     return items[:SPIRITS_SHOW]
+
+
+SP_DATE_RE = re.compile(r"^(\d{1,2})\.(\d{1,2})(?:[～~〜-]\d{1,2}(?:\.\d{1,2})?)?")
+
+
+def _sp_norm(t):
+    """見出しと大会名を比べやすくする(空白・「レスリング」「大会」「U15」を除く。U15 は中学選抜の名前の揺れ)"""
+    t = re.sub(r"\s", "", t)
+    for w in ("レスリング", "大会", "U15"):
+        t = t.replace(w, "")
+    return t
+
+
+def spirits_for_event(root, ev, names, after=""):
+    """開催回 ev と同じ大会だと確かめられたスピリッツの記事を1本。無ければ None。
+    当てはまる記事のうち、こちらの記事の日付(after)以後でいちばん早いもの(その日の試合の記事が出やすい)。
+    無ければ、いちばん新しいもの。
+    同じ大会とみなすのは、見出しに次のどちらかがあるときだけ(ほかの年・ほかの大会の記事を出さないため)。
+      ・「<開催年>年<大会名>」(例:2026年全日本大学選手権)。年と大会名の間に何も挟まらない
+      ・先頭が開催回の始まりの日の「月.日」(例:11.21～23東京都知事杯…)で、そのあとに大会名を含む
+    大会名は series_aliases.json の表示名・別名と開催回の名前(names)。記事の日付は開催の30日前〜60日後の間だけ。
+    【リンク】(ほかの媒体の記事の紹介)は出さない"""
+    import datetime
+    if not ev.get("start") or not ev.get("year"):
+        return None
+    keys = {k for k in (_sp_norm(n) for n in names if n) if len(k) >= 4}
+    if not keys:
+        return None
+    try:
+        start = datetime.date.fromisoformat(ev["start"])
+        end = datetime.date.fromisoformat(ev.get("end") or ev["start"])
+    except ValueError:
+        return None
+    path = os.path.join(root, SPIRITS_JSON)
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        items = json.load(f).get("items", [])
+    hits = []
+    for x in reversed(items):  # 古い順
+        title = x.get("title") or ""
+        if title.startswith("【リンク】") or not str(x.get("url") or "").startswith("https://wrestling-spirits.jp/"):
+            continue
+        try:
+            day = datetime.date.fromisoformat(x.get("date") or "")
+        except ValueError:
+            continue
+        if not (start - datetime.timedelta(days=30) <= day <= end + datetime.timedelta(days=60)):
+            continue
+        t = _sp_norm(title)
+        ok = any(f'{ev["year"]}年{k}' in t for k in keys)
+        if not ok:
+            m = SP_DATE_RE.match(t)
+            if m and (int(m.group(1)), int(m.group(2))) == (start.month, start.day):
+                ok = any(k in t[m.end():] for k in keys)
+        if ok:
+            hits.append(x)
+    later = [x for x in hits if x["date"] >= after]
+    return (later[0] if later else hits[-1]) if hits else None
+
+
+def series_names(root):
+    """series_aliases.json の series_id → [表示名, 別名…]"""
+    path = os.path.join(root, "series_aliases.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return {s["series_id"]: [s.get("display_name") or ""] + list(s.get("search_aliases") or [])
+                for s in json.load(f).get("series", []) if s.get("series_id")}
 
 
 def list_html(arts, ctx, bp, crumbs, desc):
@@ -586,6 +676,7 @@ NEWS_CSS = """
 .nw-rows .nd{font-family:var(--num);font-weight:600;font-size:25px;line-height:1.1;letter-spacing:.02em;color:var(--pink)}
 .nw-rows .nt{font-size:15px;font-weight:700;line-height:1.6}
 .nw-rows a:hover .nt{color:var(--link);text-decoration:underline}
+.nw-rows .nw-src{display:block;margin-top:2px;font-size:12px;font-weight:400;color:var(--ink3)}
 .nw-pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 22px}
 .nw-pn a{display:flex;flex-direction:column;gap:4px;min-width:0;padding:14px 16px;border:1px solid var(--line-hi);border-radius:8px;color:var(--ink);text-decoration:none}
 .nw-pn .next{grid-column:2;text-align:right}
