@@ -169,6 +169,23 @@ def year_href(cat, y, kept):
     return U(f"/uww/{cat}/") + f"#y{y}" if y in kept else U(f"/uww/{cat}/{y}/")
 
 
+def year_link(root, ctx, y, cat="senior"):
+    """ほかのページ(海外ニュースの記事など)から「その年の国際大会の動画」へのリンク先と本数。
+    /uww/senior/ の新しい年はまとめページの中(#y2026)、古い年は年ページ(/uww/senior/2024/)。
+    year_href と同じ作り方なので、年ページに分かれたら自動で付け替わる。その年の動画が無ければ None"""
+    data = load(root, ctx)
+    vids = [v for v in data.get(cat, []) if v["y"] == y]
+    if not vids:
+        return None
+    if cat not in SPLIT_CATS:
+        return U(f"/uww/{cat}/"), len(vids)
+    by_year = defaultdict(list)
+    for v in data[cat]:
+        by_year[v["y"]].append(v)
+    years = sorted((x for x in by_year if x), key=int, reverse=True)
+    return year_href(cat, y, here_years(years, by_year)), len(vids)
+
+
 def years_html(cat, years, by_year, kept, cur, bp, compact=False):
     """年の一覧。compact=False はまとめページのカード(年・本数・大会の数)、True は年ページの上の小さな並び"""
     e = bp.e
