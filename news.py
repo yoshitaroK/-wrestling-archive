@@ -235,6 +235,9 @@ def build(root, ctx, bp, report):
     ctx = dict(ctx, news_slugs={a["slug"] for a in arts}, news_root=root)
     rendered = {a["slug"]: render_body(a["body"], ctx, report, a["slug"]) for a in arts}
 
+    import uww_page
+    uww_year = {}
+
     def side(a, players):
         h = ""
         eid = a.get("event_id")
@@ -250,6 +253,16 @@ def build(root, ctx, bp, report):
                 n = len(p["results"])
                 h += f'<li><a href="{U("/players/" + p["id"] + "/")}">{e(p["name"])}<small>{e(p["club"])}{"・大会成績" + str(n) + "件" if n else ""}</small></a></li>'
             h += "</ul></section>"
+        # 海外ニュース(出典が UWW の記事)から、その年の国際大会の動画(シニア)の場所へ
+        if any("uww.org/" in str(x) for x in a.get("sources") or []):
+            y = a["date"][:4]
+            if y not in uww_year:
+                uww_year[y] = uww_page.year_link(root, ctx, y)
+            link = uww_year[y]
+            if link:
+                h += ('<section><h2>国際大会の動画</h2><ul>'
+                      f'<li><a href="{e(link[0])}">{e(y)}年の国際大会の動画(シニア)<small>世界レスリング連合(UWW)の公式動画・{link[1]}本</small></a></li>'
+                      '</ul></section>')
         others = [x for x in arts if x["slug"] != a["slug"]][:5]
         if others:
             h += '<section><h2>新着ニュース</h2><ul>' + "".join(
