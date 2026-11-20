@@ -1295,6 +1295,7 @@ table.champs td.none{color:var(--ink3)}
 .nw-rows .nd{font-family:var(--num);font-weight:600;font-size:25px;line-height:1.1;letter-spacing:.02em;color:var(--pink)}
 .nw-rows .nt{font-size:15px;font-weight:700;line-height:1.6}
 .nw-rows a:hover .nt{color:var(--link);text-decoration:underline}
+.nw-rows .nw-src{display:block;margin-top:2px;font-size:12px;font-weight:400;color:var(--ink3)}
 .nw-pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 22px}
 .nw-pn a{display:flex;flex-direction:column;gap:4px;min-width:0;padding:14px 16px;border:1px solid var(--line-hi);border-radius:8px;color:var(--ink);text-decoration:none}
 .nw-pn .next{grid-column:2;text-align:right}
