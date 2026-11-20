@@ -390,9 +390,11 @@ def build(root, ctx, bp, report):
     return pages
 
 
-def fetch_spirits(root, keep=30):
+def fetch_spirits(root, keep=400):
     """レスリング・スピリッツの記事の一覧(RSS)を取り、spirits_feed.json に入れる(毎朝の自動更新から呼ぶ)。
-    取れなかったときは前のファイルのまま。[{title, url, date}] を新しい順に keep 本"""
+    取れなかったときは前のファイルのまま。[{title, url, date}] を新しい順に keep 本。
+    RSS には新しい記事しか無いので、前に取った記事も残して貯める(記事の下の「同じ大会の記事」が
+    1〜2週間で消えないように。一覧の右の欄は SPIRITS_SHOW 本で切るので見た目は変わらない)"""
     import urllib.request
     import xml.etree.ElementTree as ET
     from email.utils import parsedate_to_datetime
