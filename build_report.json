@@ -1,11 +1,11 @@
 {
- "built_at": "2026-11-21T08:42:17+09:00",
+ "built_at": "2026-11-21T11:03:41+09:00",
  "as_of": "2026-11-21",
- "video_count": 3384,
- "raw_count": 3384,
+ "video_count": 3386,
+ "raw_count": 3386,
  "duplicate_ids_removed": 0,
  "link_counts": {
-  "matched": 2450,
+  "matched": 2452,
   "unmatched": 191,
   "manual": 42,
   "derived": 302,
@@ -28,8 +28,11 @@
  "events_with_videos": 219,
  "previous_video_count": 3384,
  "missing_from_previous": [],
- "new_since_previous": 0,
- "unavailable_now": [],
+ "new_since_previous": 2,
+ "unavailable_now": [
+  "xKG3ZxG6klM",
+  "x1DJCCY2U1Q"
+ ],
  "from_other_channels": 277,
  "translation": {
   "total": 3509,
