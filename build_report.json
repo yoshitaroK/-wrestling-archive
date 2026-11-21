@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-21T11:03:41+09:00",
+ "built_at": "2026-11-21T22:07:08+09:00",
  "as_of": "2026-11-21",
  "video_count": 3386,
  "raw_count": 3386,
@@ -26,9 +26,9 @@
   "wre-2026-other-d6636195-0930"
  ],
  "events_with_videos": 219,
- "previous_video_count": 3384,
+ "previous_video_count": 3386,
  "missing_from_previous": [],
- "new_since_previous": 2,
+ "new_since_previous": 0,
  "unavailable_now": [
   "xKG3ZxG6klM",
   "x1DJCCY2U1Q"
