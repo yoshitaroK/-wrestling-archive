@@ -338,6 +338,28 @@ body { background:
 .endfig { width: 120px; margin: 0 auto 4px; position: relative; z-index: 1; }
 .endfig svg { width: 100%; display: block; overflow: visible; }
 ul.plain li b { color: var(--gold2); }
+
+/* ===== 必殺技 ===== */
+.spbtn { display: flex; align-items: center; gap: 10px; width: 100%; margin: 0 0 8px; padding: 12px; border-radius: 14px; cursor: pointer; font-family: inherit; text-align: left;
+  color: #fff; border: 2px solid #ff9a3c; background: linear-gradient(180deg, #5a2a08, #2a1204); box-shadow: 0 3px 0 #1a0a02; }
+.spbtn .ic { font-size: 30px; }
+.spbtn b { display: block; font-size: 16px; color: #ffd08a; }
+.spbtn span { font-size: 11px; color: #e6c7a8; }
+.spbtn .sw { margin-left: auto; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: #3a2a25; color: #b3a49b; white-space: nowrap; }
+.spbtn.on { border-color: #ffd34d; background: linear-gradient(180deg, #c2410c, #7c2d12); box-shadow: 0 0 18px rgba(255,150,40,.7), 0 3px 0 #3a1204; animation: spglow 1s ease-in-out infinite alternate; }
+.spbtn.on .sw { background: #ffd34d; color: #3a1a00; }
+@keyframes spglow { to { box-shadow: 0 0 30px rgba(255,190,60,.95), 0 3px 0 #3a1204; } }
+.spbtn.used { opacity: .45; border-color: #4a352d; background: #241917; cursor: default; animation: none; }
+.tactics.armed .btn { box-shadow: 0 0 0 2px #ff9a3c inset, 0 3px 0 #120c0b; }
+.spcut { position: absolute; inset: 0; z-index: 7; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;
+  background: linear-gradient(100deg, transparent 0 8%, rgba(150,30,0,.92) 8% 92%, transparent 92%); animation: spcut 1.5s ease-out both; }
+.spcut small { color: #ffd08a; font-size: 13px; letter-spacing: .3em; font-weight: 800; }
+.spcut b { color: #fff; font-size: 30px; font-weight: 900; text-shadow: 0 3px 0 #000, 0 0 18px #ff8a00; }
+@keyframes spcut { 0% { transform: translateX(-110%) skewX(-12deg); } 18% { transform: translateX(0) skewX(-12deg); } 80% { transform: translateX(0) skewX(-12deg); opacity: 1; } 100% { transform: translateX(110%) skewX(-12deg); opacity: 0; } }
+.spline { color: #ffb347; font-weight: 800; }
+.spinfo { margin-top: 6px; padding: 7px 9px; border-radius: 10px; background: linear-gradient(90deg, #3a1a06, #1c120c); border: 1px solid #7c3a12; font-size: 12px; }
+.spinfo b { color: #ffd08a; }
+.spname { margin: 10px 0 4px; }
 </style>
 </head>
 <body>
@@ -359,8 +381,8 @@ var WL = (function () {
     declineOther: 2,     // 31歳以降、年末にほかの3能力が下がる量
     olyStep: 5.5,        // オリンピックの相手が4年ごとに強くなる量(基準68)
     trialsStep: 5,       // 代表選考会の相手が4年ごとに強くなる量(基準67)
-    topBonus: 4.5,       // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
-    legendBonus: 2,      // 24・28・32歳で3連覇した人だけ、36歳の代表選考会とオリンピックで相手から引く強さ
+    topBonus: 9,         // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
+    legendBonus: 1,      // 24・28・32歳で3連覇した人だけ、36歳の代表選考会とオリンピックで相手から引く強さ
     tactic: 4,           // 作戦が当たったときに有利になる量(戦闘力の差に足す)
     styleSwitch: 0.35,   // 第2ピリオドで相手が作戦を変えてくる確率
     randomEventRate: 0.35
@@ -422,7 +444,42 @@ var WL = (function () {
     { tec: 75, name: '一本背負い', pts: 4 },
     { tec: 90, name: 'スープレックス', pts: 5 }
   ];
-  var TECH_GAP = 10;   // 10点差がつくとテクニカルスペリオリティで試合終了
+  var TECH_GAP = 10;
+
+  // 必殺の得意技(12歳で1つ選ぶ。1試合に1回だけ使える)
+  //  stat の値で成功率が変わる。成功・失敗したときの点数は種類ごとにちがう
+  var SPECIALS = {
+    tackle: { def: '稲妻タックル', stat: 'spd', pts: 2, icon: '⚡', kind: '確実型',
+      desc: 'スピードで決める高速タックル。決まりやすく、決まるとそのピリオドは勢いに乗って有利。失敗しても失点なし。',
+      rate: function (v) { return clamp(0.55 + (v - 40) / 100, 0.5, 0.95); } },
+    throw: { def: '豪腕ぶっこ抜き', stat: 'str', pts: 4, icon: '💥', kind: '一発逆転型',
+      desc: '筋力で相手を引っこ抜く大技。決まれば4点、失敗すると返されて相手に2点。',
+      rate: function (v) { return clamp(0.4 + (v - 40) / 100, 0.3, 0.85); } },
+    roll: { def: '無限ローリング', stat: 'tec', pts: 2, icon: '🌪', kind: '連続型',
+      desc: '技術で回し続けるローリング。成功するたびに2点、2回まで続く。',
+      rate: function (v) { return clamp(0.35 + (v - 40) / 110, 0.3, 0.75); } }
+  };
+  function specialRate(g) {
+    var sp = g.special && SPECIALS[g.special.type];
+    return sp ? sp.rate(g.stats[sp.stat]) : 0;
+  }
+  // 必殺技を打ったときの得点の場面。成功・失敗も決める
+  function specialLines(g) {
+    var sp = SPECIALS[g.special.type], p = specialRate(g), nm = g.special.name, lines = [];
+    if (g.special.type === 'roll') {
+      for (var i = 0; i < 2; i++) {
+        if (rand() < p) lines.push({ who: 'me', move: nm, pts: 2, special: true, chain: i + 1 });
+        else break;
+      }
+      if (!lines.length) lines.push({ who: 'me', move: nm, pts: 0, special: true, miss: true });
+    } else if (rand() < p) {
+      lines.push({ who: 'me', move: nm, pts: sp.pts, special: true });
+    } else {
+      lines.push({ who: 'me', move: nm, pts: 0, special: true, miss: true });
+      if (g.special.type === 'throw') lines.push({ who: 'opp', move: '返し技', pts: 2, counter: true });
+    }
+    return lines;
+  }   // 10点差がつくとテクニカルスペリオリティで試合終了
 
   var PREFS = ['北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県',
     '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県',
@@ -601,6 +658,13 @@ var WL = (function () {
         options: ['univ', 'corp', 'abroad'].map(function (k) { return { id: k, label: af[k].name, desc: af[k].desc }; }) };
     }
     if (a === 36 && threePeat(g)) return { id: 'legend', title: '4連覇への挑戦', text: '24歳・28歳・32歳——オリンピック3連覇。\n世界中が「史上初の4連覇なるか」と' + g.name + 'に注目している。\n\n王者の風格に、対戦相手たちはマットに上がる前から押されている。\n(今年の代表選考会とオリンピックでは、相手が少し弱くなる)' };
+    if (a >= 12 && !g.special) {
+      return { id: 'special', title: '得意技を決める', text: '練習を重ねるうちに、自分だけの「得意な形」が見えてきた。\nコーチ「お前の必殺技を1つ決めよう。試合で1回だけ、ここぞという場面で出すんだ」\n\n名前を付けて、3つの中から選ぼう。',
+        options: ['tackle', 'throw', 'roll'].map(function (k) {
+          var sp = SPECIALS[k];
+          return { id: k, label: sp.icon + ' ' + sp.def + '(' + sp.kind + ')', desc: sp.desc + '(' + STAT_NAMES[sp.stat] + 'で成功率が上がる)' };
+        }) };
+    }
     if (a >= 8 && rand() < BAL.randomEventRate) {
       var pool = RANDOM_EVENTS.filter(function (e) { return e.ok(g); });
       var e = pick(pool);
@@ -620,7 +684,7 @@ var WL = (function () {
     g.phase = g.event ? 'event' : 'train';
   }
 
-  function resolveEvent(g, optionId) {
+  function resolveEvent(g, optionId, extra) {
     if (g.phase !== 'event' || !g.event) return;
     var e = g.event;
     if (e.options) {
@@ -633,6 +697,10 @@ var WL = (function () {
         g.after = optionId;
         g.lastMsg = COURSES.after[optionId].name + 'の道を選んだ!';
         if (optionId === 'abroad') { addStat(g, 'men', 5); g.lastMsg += '(メンタル+5)'; }
+      } else if (e.id === 'special') {
+        var nm = String(extra || '').replace(/\s+/g, ' ').trim().slice(0, 10) || SPECIALS[optionId].def;
+        g.special = { type: optionId, name: nm };
+        g.lastMsg = '必殺技「' + nm + '」を身につけた! 試合で1回だけ使える。';
       }
     }
     g.event = null;
@@ -783,9 +851,10 @@ var WL = (function () {
   }
 
   // 1ピリオド戦う
-  function playPeriod(g, tactic) {
+  function playPeriod(g, tactic, useSpecial) {
     var t = g.tour, m = t && t.cur;
     if (!m || m.done || m.tie || m.periods.length >= 2 || !TACTIC_BY_ID[tactic]) return null;
+    useSpecial = !!(useSpecial && g.special && !m.specialUsed);
     var pn = m.periods.length + 1;
     // 古いセーブデータで、すでに10点差がついている試合はその場で終了
     if (Math.abs(m.me - m.op) >= TECH_GAP) {
@@ -802,10 +871,24 @@ var WL = (function () {
     }
     var edge = tacticEdge(tactic, m.opp.style);
     var d = m.diff + edge * BAL.tactic;
+    // 必殺技はピリオドの最初に打つ。稲妻タックルが決まると、そのピリオドは勢いに乗る
+    var sl = null;
+    if (useSpecial) {
+      m.specialUsed = true;
+      sl = specialLines(g);
+      if (g.special.type === 'tackle' && !sl[0].miss) d += BAL.tactic / 2;
+      var rec0 = ensure(g).rec;
+      rec0.spTry = (rec0.spTry || 0) + 1;
+      if (!sl[0].miss) rec0.sp = (rec0.sp || 0) + 1;
+    }
     var a = Math.max(0, Math.round(2 + d / 7 + rnd(-2.5, 2.5)));
     var b = Math.max(0, Math.round(2 - d / 7 + rnd(-2.5, 2.5)));
     var lines = narrate(a, myMoves(g), 'me').concat(narrate(b, oppMoves(m.oppPower), 'opp'));
     for (var i = lines.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var tmp = lines[i]; lines[i] = lines[j]; lines[j] = tmp; }
+    if (sl) {
+      lines = sl.concat(lines);
+      sl.forEach(function (l) { if (l.who === 'me') a += l.pts; else b += l.pts; });
+    }
     // 10点差がついた瞬間に試合終了(テクニカルスペリオリティ)
     var tech = false, sa = 0, sb = 0;
     for (var k = 0; k < lines.length; k++) {
@@ -813,7 +896,7 @@ var WL = (function () {
       if (Math.abs((m.me + sa) - (m.op + sb)) >= TECH_GAP) { tech = true; lines = lines.slice(0, k + 1); a = sa; b = sb; break; }
     }
     m.me += a; m.op += b;
-    var per = { me: a, opp: b, lines: lines, tactic: tactic, style: m.opp.style, edge: edge, switched: switched };
+    var per = { me: a, opp: b, lines: lines, tactic: tactic, style: m.opp.style, edge: edge, switched: switched, special: useSpecial };
     m.periods.push(per);
     m.opp.hidden = false;
     if (tech) {
@@ -888,13 +971,14 @@ var WL = (function () {
   }
 
   // 自動プレイ用: 大会を最後まで進める。chooser(g, 試合) が作戦を返す
-  function autoTournament(g, chooser) {
+  // useSpecial: 必殺技を打つか(g, 試合)を返す関数。省略すると第2ピリオドで必ず打つ
+  function autoTournament(g, chooser, useSpecial) {
     var guard = 0;
     while (g.phase === 'tournament' && g.tour && !g.tour.sum && guard++ < 200) {
       var m = g.tour.cur;
       if (m && !m.done) {
         if (m.tie) resolveTie(g, 'auto');
-        else playPeriod(g, chooser ? chooser(g, m) : 'atk');
+        else playPeriod(g, chooser ? chooser(g, m) : 'atk', useSpecial ? useSpecial(g, m) : m.periods.length === 1);
       } else advanceTournament(g);
     }
   }
@@ -985,7 +1069,7 @@ var WL = (function () {
     OLYMPIC_AGES: OLYMPIC_AGES, MOVES: MOVES,
     setRandom: setRandom, newGame: newGame, ensure: ensure, goldCount: goldCount, continueAfterGold: continueAfterGold, retireAfterGold: retireAfterGold, startInfancy: startInfancy, chooseInfancy: chooseInfancy,
     resolveEvent: resolveEvent, train: train, finishTournament: finishTournament, nextYear: nextYear,
-    TACTICS: TACTICS, STYLE_NAMES: STYLE_NAMES, tacticEdge: tacticEdge, playPeriod: playPeriod, resolveTie: resolveTie,
+    TACTICS: TACTICS, STYLE_NAMES: STYLE_NAMES, SPECIALS: SPECIALS, specialRate: specialRate, tacticEdge: tacticEdge, playPeriod: playPeriod, resolveTie: resolveTie,
     advanceTournament: advanceTournament, autoTournament: autoTournament, smartTactic: smartTactic,
     tournamentFor: tournamentFor, power: power, matchPower: matchPower, stars: stars, stageName: stageName,
     ageCoef: ageCoef, fatigueCoef: fatigueCoef, courseMul: courseMul, courseFat: courseFat
@@ -1102,7 +1186,8 @@ if (typeof module !== 'undefined') module.exports = WL;
     },
     unlock: function () { tone(988, 0.09, 'triangle', 0.09); tone(1319, 0.09, 'triangle', 0.09, 0.09); tone(1976, 0.25, 'triangle', 0.09, 0.18); },
     event: function () { tone(587, 0.12, 'sine', 0.08); tone(880, 0.25, 'sine', 0.08, 0.12); },
-    gauge: function () { tone(1200, 0.05, 'square', 0.05); }
+    gauge: function () { tone(1200, 0.05, 'square', 0.05); },
+    special: function () { tone(220, 0.5, 'sawtooth', 0.09, 0, 880); noise(0.6, 0.12, 900, 0.6); tone(1760, 0.3, 'square', 0.06, 0.45); }
   };
   function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
 
@@ -1184,6 +1269,8 @@ if (typeof module !== 'undefined') module.exports = WL;
     { id: 'allmedal', ic: '🎖', n: 'メダルコレクター', d: '金・銀・銅をすべて取る', t: function () { return ['金', '銀', '銅'].every(function (k) { return g.medals.some(function (m) { return m.medal === k; }); }); } },
     { id: 'rival10', ic: '⚔️', n: 'ライバルを超えて', d: 'ライバルに10勝する', t: function () { return g.rival && g.rival.w >= 10; } },
     { id: 'rivalp', ic: '😤', n: '一度も負けない', d: 'ライバルに10勝以上・無敗で引退', t: function () { return retired() && g.rival && g.rival.w >= 10 && g.rival.l === 0; } },
+    { id: 'sp1', ic: '🔥', n: '必殺技、炸裂', d: '必殺技を初めて決める', t: function () { return (g.rec.sp || 0) >= 1; } },
+    { id: 'sp30', ic: '☄️', n: '代名詞', d: '必殺技を30回決める', t: function () { return (g.rec.sp || 0) >= 30; } },
     { id: 'fall10', ic: '💥', n: 'フォールの鬼', d: 'フォール勝ちを10回', t: function () { return g.rec.falls >= 10; } },
     { id: 'win100', ic: '💯', n: '通算100勝', d: '試合に100回勝つ', t: function () { return g.rec.wins >= 100; } },
     { id: 'iron', ic: '🦾', n: '鉄人', d: '一度もケガをせずに引退', t: function () { return retired() && g.rec.inj === 0; } },
@@ -1287,6 +1374,7 @@ if (typeof module !== 'undefined') module.exports = WL;
       '<p class="small">つまり <b>攻め ▶ 守り ▶ カウンター ▶ 攻め</b> のじゃんけん。相手の型に勝つ作戦を選ぼう。</p>' +
       '<p class="small">相手の型は表示されるが、ライバルや王者は第1ピリオドが終わるまで分からない。第2ピリオドで作戦を変えてくる相手もいる。</p>' +
       '<h3>得点とテクニカルスペリオリティ</h3><p class="small">押し出し1点、タックル・バックポイント・返し技2点、投げ技・持ち上げタックル4点、スープレックス5点。技術を上げると使える技が増える。<b>10点差</b>がつくと、その場で試合終了(テクニカルスペリオリティ)。</p>' +
+      '<h3>🔥 必殺技</h3><p class="small">12歳で自分だけの必殺技を選んで名前を付ける。試合中に1回だけ、作戦ボタンの上の「必殺技」をタップしてから作戦を選ぶと、そのピリオドの最初に打てる。<br>⚡稲妻タックル(スピード):決まりやすい / 💥豪腕ぶっこ抜き(筋力):決まれば4点、失敗すると返される / 🌪無限ローリング(技術):2点を最大2連続。</p>' +
       '<h3>③ 同点なら一発勝負</h3><p class="small">ゲージが金色の真ん中に来た瞬間に「今だ!」を押すと、ラストポイントを取りやすい。</p>' +
       '<h3>④ ゴール</h3><p class="small">24・28・32・36歳のオリンピックで金メダル。取ったあとも現役を続けて連覇をねらえる。結果は「殿堂」に残る。</p>' +
       '<button class="btn" data-act="closeHelp">とじる</button></div></div>';
@@ -1373,6 +1461,10 @@ if (typeof module !== 'undefined') module.exports = WL;
     html += '<div class="power"><span>戦闘力 <b class="gold-t">' + n0(WL.power(g)) + '</b>' +
       (f > 50 ? '(試合では ' + n0(WL.matchPower(g)) + ')' : '') + '</span><span>' + fl + '</span></div>';
     if (g.rival) html += '<div class="small muted">ライバル ' + esc(g.rival.name) + ':' + g.rival.w + '勝' + g.rival.l + '敗</div>';
+    if (g.special) {
+      var spx = WL.SPECIALS[g.special.type];
+      html += '<div class="spinfo">' + spx.icon + ' 必殺技 <b>「' + esc(g.special.name) + '」</b> 成功率 <b>' + Math.round(WL.specialRate(g) * 100) + '%</b><span class="muted">(' + WL.STAT_NAMES[spx.stat] + 'で上がる)</span></div>';
+    }
     return '<div class="card">' + html + '</div>';
   }
 
@@ -1381,6 +1473,8 @@ if (typeof module !== 'undefined') module.exports = WL;
     var e = g.event;
     var body = '<div class="card ' + (e.options ? 'gold' : 'red') + '"><div class="label">' + g.age + '歳の年のはじめ</div>' +
       '<h2>' + esc(e.title) + '</h2><p style="white-space:pre-line">' + esc(e.text) + '</p>';
+    if (e.id === 'special') body += '<div class="label spname">必殺技の名前(10文字まで。空なら技の名前のまま)</div>' +
+      '<input type="text" id="spName" maxlength="10" placeholder="例:' + esc(g.name.split(' ')[0]) + 'スペシャル">';
     if (e.options) {
       body += e.options.map(function (o) {
         return '<button class="btn choice" data-act="event" data-id="' + esc(o.id) + '"><b>' + esc(o.label) + '</b><span>' + esc(o.desc) + '</span></button>';
@@ -1428,6 +1522,10 @@ if (typeof module !== 'undefined') module.exports = WL;
   var STYLE_ICON = { atk: '⚔️', ctr: '🌀', def: '🛡' };
   function lineText(l, oppName) {
     var who = l.who === 'me' ? esc(g.name) : esc(oppName);
+    if (l.special) return l.miss
+      ? '<div class="red-t">' + who + 'の必殺技「' + esc(l.move) + '」…かわされた!</div>'
+      : '<div class="spline">🔥 ' + who + 'の必殺技「' + esc(l.move) + '」' + (l.chain > 1 ? '(' + l.chain + '連続)' : '') + '! +' + l.pts + '</div>';
+    if (l.counter) return '<div class="muted">' + who + 'に返された! +' + l.pts + '</div>';
     if (l.move === 'アクティビティタイム') return '<div class="' + (l.who === 'me' ? 'gold-t' : 'muted') + '">' + who + 'に1点! 相手が消極的(アクティビティタイム)</div>';
     return '<div class="' + (l.who === 'me' ? 'gold-t' : 'muted') + '">' + who + 'の' + esc(l.move) + '! +' + l.pts + '</div>';
   }
@@ -1463,8 +1561,16 @@ if (typeof module !== 'undefined') module.exports = WL;
     var btns = WL.TACTICS.map(function (tc) {
       return '<button class="btn" data-act="tactic" data-id="' + tc.id + '"><b>' + TACTIC_ICON[tc.id] + '</b>' + esc(tc.short) + '<span>' + STYLE_ICON[tc.beats] + WL.STYLE_NAMES[tc.beats] + '<br>に勝つ</span></button>';
     }).join('');
+    var spb = '';
+    if (g.special) {
+      var sp = WL.SPECIALS[g.special.type], rate = Math.round(WL.specialRate(g) * 100);
+      var hint = pn === 2 && !m.specialUsed ? '最後のチャンス! ' : '';
+      spb = m.specialUsed
+        ? '<button class="spbtn used" disabled><span class="ic">' + sp.icon + '</span><div><b>必殺技「' + esc(g.special.name) + '」</b><span>この試合ではもう使った</span></div><span class="sw">使用済み</span></button>'
+        : '<button class="spbtn ' + (spArmed ? 'on' : '') + '" data-act="arm"><span class="ic">' + sp.icon + '</span><div><b>必殺技「' + esc(g.special.name) + '」</b><span>' + hint + '成功率 ' + rate + '%・1試合に1回</span></div><span class="sw">' + (spArmed ? '使う!' : 'タップで準備') + '</span></button>';
+    }
     return '<div class="card"><div class="label">第' + pn + 'ピリオドの作戦を選ぶ' + (pn === 2 ? '(いま ' + m.me + '-' + m.op + ')' : '') + '</div>' +
-      '<div class="readrow">' + read + '</div><div class="tactics">' + btns + '</div>' +
+      '<div class="readrow">' + read + '</div>' + spb + '<div class="tactics' + (spArmed && !m.specialUsed ? ' armed' : '') + '">' + btns + '</div>' +
       '<div class="rps">▶=勝つ: ⚔️攻め ▶ 🛡守り ▶ 🌀カウンター ▶ ⚔️攻め</div></div>';
   }
   function tiePanel(m) {
@@ -1559,15 +1665,28 @@ if (typeof module !== 'undefined') module.exports = WL;
         var l = per.lines[i];
         var me = l.who === 'me';
         var A = me ? '.fw.a' : '.fw.b', D = me ? '.fw.b' : '.fw.a';
-        if (l.pts >= 4) { setCls(A, 'throw'); setCls(D, 'fly'); }
+        if (l.special && (l.chain || 1) === 1) {
+          var ar = $('#arena');
+          if (ar) { var cut = document.createElement('div'); cut.className = 'spcut'; cut.innerHTML = '<small>必 殺 技</small><b>' + esc(l.move) + '</b>'; ar.appendChild(cut); }
+          SFX.special(); buzz(120);
+          await sleep(1300);
+          if (ar && cut) cut.remove();
+        }
+        if (l.special && l.miss) {
+          setCls(A, 'atk'); await sleep(300); callout('op', 'MISS', 'かわされた!'); SFX.pointOpp(); liveAdd(lineText(l, m.opp.name));
+          await sleep(900); setCls(A, 'bob'); continue;
+        }
+        if (l.special && g.special.type === 'roll') { setCls(A, 'throw'); setCls(D, 'fly'); }
+        else if (l.special && g.special.type === 'tackle') { setCls(A, 'atk'); setCls(D, 'fly'); }
+        else if (l.pts >= 4) { setCls(A, 'throw'); setCls(D, 'fly'); }
         else if (l.move === 'アクティビティタイム') { setCls(D, 'sad'); }
         else if (l.pts === 1) { setCls(A, 'push'); setCls(D, 'hit'); }
         else { setCls(A, 'atk'); setCls(D, 'hit'); }
         await sleep(260);
-        SFX.thud(); if (l.pts >= 4) fx('shake');
-        if (me) { sm += l.pts; setScore('sm', sm); if (l.pts >= 4) SFX.big(); else SFX.point(); buzz(l.pts >= 4 ? 60 : 25); }
+        SFX.thud(); if (l.pts >= 4 || l.special) fx('shake');
+        if (me) { sm += l.pts; setScore('sm', sm); if (l.pts >= 4 || l.special) SFX.big(); else SFX.point(); buzz(l.pts >= 4 ? 60 : 25); }
         else { so += l.pts; setScore('so', so); SFX.pointOpp(); }
-        callout(me ? 'me' : 'op', '+' + l.pts, l.move === 'アクティビティタイム' ? '相手が消極的!' : esc(l.move) + '!');
+        callout(me ? 'me' : 'op', '+' + l.pts, l.counter ? '返された!' : l.move === 'アクティビティタイム' ? '相手が消極的!' : esc(l.move) + (l.chain > 1 ? '連続!' : '!'));
         liveAdd(lineText(l, m.opp.name));
         await sleep(l.pts >= 4 ? 1000 : 780);
         setCls(A, 'bob'); setCls(D, 'bob');
@@ -1778,7 +1897,8 @@ if (typeof module !== 'undefined') module.exports = WL;
     var r = g.rec;
     return '<div class="card">' + powerChart() +
       '<div class="kpis"><div><b>' + r.wins + '</b>勝</div><div><b>' + (r.matches - r.wins) + '</b>敗</div><div><b>' + r.falls + '</b>フォール勝ち</div><div><b>' + r.peak + '</b>最高戦闘力</div></div>' +
-      '<div class="small muted center">ケガ ' + r.inj + '回' + (r.matches ? '・勝率 ' + Math.round(r.wins / r.matches * 100) + '%' : '') + '</div></div>' +
+      '<div class="small muted center">ケガ ' + r.inj + '回' + (r.matches ? '・勝率 ' + Math.round(r.wins / r.matches * 100) + '%' : '') + '</div>' +
+      (g.special ? '<div class="spinfo center">' + WL.SPECIALS[g.special.type].icon + ' 必殺技「' + esc(g.special.name) + '」 ' + (r.sp || 0) + '回成功 / ' + (r.spTry || 0) + '回</div>' : '') + '</div>' +
       '<div class="card"><h3>📸 結果カード</h3><div id="shareCanvasHost"></div>' +
       '<div class="row"><button class="btn gold" data-act="saveCard">画像を保存</button><button class="btn" data-act="share">シェアする</button></div></div>';
   }
@@ -1821,6 +1941,7 @@ if (typeof module !== 'undefined') module.exports = WL;
       ['世界選手権', '優勝 ' + countTitle('世界選手権') + '回'],
       ['通算', g.rec.wins + '勝' + (g.rec.matches - g.rec.wins) + '敗・優勝' + g.titles.length + '回'],
       ['ライバル', g.rival ? g.rival.name + ' に ' + g.rival.w + '勝' + g.rival.l + '敗' : '—'],
+      ['必殺技', g.special ? '「' + g.special.name + '」' + (g.rec.sp || 0) + '回成功' : '—'],
       ['最高戦闘力', String(g.rec.peak)]
     ];
     rows.forEach(function (r, i) {
@@ -1868,6 +1989,7 @@ if (typeof module !== 'undefined') module.exports = WL;
 
   // ---- 操作 ----
   var busy = false;
+  var spArmed = false;       // 必殺技を準備しているか(画面だけの状態)
   document.addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-act]');
     if (!b || b.disabled) return;
@@ -1894,16 +2016,21 @@ if (typeof module !== 'undefined') module.exports = WL;
     else if (act === 'speed') { settings.fast = !settings.fast; saveSettings(); SFX.click(); }
     else if (act === 'toInfancy') { WL.startInfancy(g); SFX.click(); }
     else if (act === 'infancy') { WL.chooseInfancy(g, id); SFX.train(); }
-    else if (act === 'event') { WL.resolveEvent(g, id); SFX.click(); }
+    else if (act === 'event') {
+      var spIn = document.getElementById('spName');
+      WL.resolveEvent(g, id, spIn ? spIn.value : '');
+      if (g.special && spIn) SFX.special(); else SFX.click();
+    }
+    else if (act === 'arm') { var mm = g.tour && g.tour.cur; if (!mm || mm.specialUsed) return; spArmed = !spArmed; SFX.click(); }
     else if (act === 'train') {
       var r = WL.train(g, id); wasFresh = true;
       if (r && r.injured) { SFX.hurt(); buzz(200); } else if (id === 'rest') SFX.rest(); else SFX.train();
     }
-    else if (act === 'tourAdvance') { WL.advanceTournament(g); SFX.click(); if (g.tour && g.tour.cur && !g.tour.cur.periods.length) SFX.cheer(1.2); }
+    else if (act === 'tourAdvance') { spArmed = false; WL.advanceTournament(g); SFX.click(); if (g.tour && g.tour.cur && !g.tour.cur.periods.length) SFX.cheer(1.2); }
     else if (act === 'tactic') {
       var m = g.tour.cur; if (!m || m.done || m.tie) return;
       var before = { me: m.me, op: m.op }, pn = m.periods.length + 1;
-      var per = WL.playPeriod(g, id); if (!per) return;
+      var per = WL.playPeriod(g, id, spArmed); spArmed = false; if (!per) return;
       save(); animToken++; skipAnim = false; SFX.click();
       animatePeriod(m, per, pn, before);
       return;
