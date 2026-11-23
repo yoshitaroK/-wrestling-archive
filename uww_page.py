@@ -94,16 +94,41 @@ def intro():
              "organized by age category. Videos play right on this site in the YouTube player. Titles are shown as published by UWW.")
 
 
-def cat_desc(cat, lst, year=None):
-    """年代ページの説明文(meta description)。年代名・本数と、そのページに載っている大会名(動画の多い順に最大2つ)をデータから入れる(Issue #224)"""
+def top_events(lst):
+    """そのページの動画の多い大会(最大2つ)と、ほかにも大会があるか。説明文(cat_desc)と題名(seo_title)で同じものを使う"""
     cnt = defaultdict(int)
     for v in lst:
         if v["ev"]:
             cnt[v["ev"]] += 1
     top = sorted(cnt, key=lambda ev: (-cnt[ev], EV_ORDER.get(ev, 99)))[:2]
+    return top, len(cnt) > len(top)
+
+
+HEAD_TITLE_MAX = 32   # <title> のサイト名より前の字数の上限(日本語。スマホの検索結果で切れないように)
+
+
+def seo_title(cat, lst, year=None):
+    """<title> 用の題名。検索される言葉(年・大会名・レスリング)を前に置く(#385)。
+    大会名はそのページで動画の多い大会(最大2つ。説明文と同じデータ)。「など」は付けない。
+    大会名が「〜等」で終わるとき・大会が分からないときは None(今までの題名のまま)"""
+    top, _ = top_events(lst)
+    if not top or any(ev.endswith("等") for ev in top):
+        return None
+    y = f"{year}年 " if year else ""
+    for evs in (top, top[:1]):
+        ja = f"{y}{'・'.join(evs)}のレスリング動画({cat_name(cat)})"
+        if len(ja) <= HEAD_TITLE_MAX:
+            break
+    en_y = f"{year} " if year else ""
+    return L(ja, f"{en_y}{' & '.join(EV_EN.get(ev, ev) for ev in evs)} wrestling videos ({cat_name(cat)})")
+
+
+def cat_desc(cat, lst, year=None):
+    """年代ページの説明文(meta description)。年代名・本数と、そのページに載っている大会名(動画の多い順に最大2つ)をデータから入れる(Issue #224)"""
+    top, more = top_events(lst)
     n = len(lst)
     # 大会名が「〜等」「… and other events」で終わるときは「など」「and more」を重ねない
-    more = len(cnt) > len(top) and not (top and top[-1].endswith("等"))
+    more = more and not (top and top[-1].endswith("等"))
     ja_ev = f"({'・'.join(top)}{'など' if more else ''})" if top else ""
     en_ev = f" ({', '.join(EV_EN.get(ev, ev) for ev in top)}{' and more' if more else ''})" if top else ""
     if year:
@@ -133,8 +158,9 @@ def about_ld(lst, year=None):
     return [{"@type": "Thing", "name": f"{ev_name(ev)} {year}" if year else ev_name(ev)} for ev in evs]
 
 
-def page(bp, ctx, path, title, desc, crumbs, body, lead="", modified="", about=None, parts=None):
-    """lead はページに見えている説明の文(構造化データの description)。modified は sitemap.xml の lastmod と同じ日付(build の戻り値の3つ目)"""
+def page(bp, ctx, path, title, desc, crumbs, body, lead="", modified="", about=None, parts=None, head_title=None):
+    """lead はページに見えている説明の文(構造化データの description)。modified は sitemap.xml の lastmod と同じ日付(build の戻り値の3つ目)。
+    head_title は <title>・og:title だけに使う題名(無ければ title)。見出し・パンくず・構造化データの name は title のまま"""
     cp = {"@type": "CollectionPage", "name": title, "url": bp.SITE + U(path), "inLanguage": L("ja", "en")}
     if lead:
         cp["description"] = lead
@@ -146,7 +172,7 @@ def page(bp, ctx, path, title, desc, crumbs, body, lead="", modified="", about=N
         cp["hasPart"] = [{"@type": "CollectionPage", "name": n, "url": bp.SITE + U(p)} for n, p in parts]
     cp["publisher"] = {"@id": bp.ORG_ID}
     jsonld = {"@context": "https://schema.org", "@graph": [bp.breadcrumb_ld(crumbs), cp]}
-    h = bp.head(f"{title}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
+    h = bp.head(f"{head_title or title}{L('|', ' | ')}{bp.site_name()}", desc, path, "", jsonld, ctx["css"])
     return h + '<main id="content" class="wrap page uww">' + bp.breadcrumb_html(crumbs) + body + "</main>" + bp.footer(ctx["as_of"])
 
 
@@ -278,7 +304,7 @@ def build(root, ctx, bp):
             body += groups_html(lst, bp)
             cmod = max(v["p"] for v in lst)
             out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body,
-                                    lead=intro(), modified=cmod, about=about_ld(lst)), cmod))
+                                    lead=intro(), modified=cmod, about=about_ld(lst), head_title=seo_title(cat, lst)), cmod))
             continue
         by_year = defaultdict(list)
         for v in lst:
@@ -298,7 +324,8 @@ def build(root, ctx, bp):
         year_parts = [(year_title(cat, y), f"/uww/{cat}/{y}/")
                       for y in years if y not in kept]
         out.append((cpath, page(bp, ctx, cpath, title, cat_desc(cat, lst), cat_crumbs, body,
-                                lead=intro(), modified=cmod, about=about_ld(lst), parts=year_parts), cmod))
+                                lead=intro(), modified=cmod, about=about_ld(lst), parts=year_parts,
+                                head_title=seo_title(cat, lst)), cmod))
         # 年ごとのページ(まとめページに載せている新しい年は作らない)
         for y in years:
             if y in kept:
@@ -318,7 +345,7 @@ def build(root, ctx, bp):
             crumbs = [home, (top_t, "/uww/"), (cat_name(cat), cpath), (L(f"{y}年", y), None)]
             ymod = max(v["p"] for v in vids)
             out.append((ypath, page(bp, ctx, ypath, ytitle, cat_desc(cat, vids, y), crumbs, ybody,
-                                    lead=lead, modified=ymod, about=about_ld(vids, y)), ymod))
+                                    lead=lead, modified=ymod, about=about_ld(vids, y), head_title=seo_title(cat, vids, y)), ymod))
     return out
 
 
