@@ -388,6 +388,7 @@ var WL = (function () {
     spThrow: 0.48,
     spRoll: 0.18,
     spGuard: 0.19,
+    spGuardMax: 0.4,     // 鉄壁の見切りの成功率の上限(spMul をかける前)
     tactic: 4,           // 作戦が当たったときに有利になる量(戦闘力の差に足す)
     styleSwitch: 0.35,   // 第2ピリオドで相手が作戦を変えてくる確率
     randomEventRate: 0.35
@@ -464,8 +465,8 @@ var WL = (function () {
       desc: '技術で回し続けるローリング。成功するたびに2点、2回まで続く。',
       rate: function (v) { return clamp(BAL.spRoll + (v - 40) / 120, 0.15, 0.55); } },
     guard: { def: '鉄壁の見切り', stat: 'men', pts: 0, icon: '🛡', kind: '回避型',
-      desc: '集中して相手の技を見切る守りの技。そのピリオド、相手の得点を最大2回かわす。',
-      rate: function (v) { return clamp(BAL.spGuard + (v - 40) / 110, 0.2, 0.65); } }
+      desc: '集中して相手の技を見切る守りの技。そのピリオド、相手の得点を最大2回かわし、かわすたびに相手を押し出して1点。',
+      rate: function (v) { return clamp(BAL.spGuard + (v - 40) / 110, 0.15, BAL.spGuardMax); } }
   };
   function specialRate(g) {
     var sp = g.special && SPECIALS[g.special.type];
@@ -898,11 +899,18 @@ var WL = (function () {
       var ok = !sl[0].miss;
       // 鉄壁の見切り: 相手の得点を、1回ずつ成功率で判定して最大2回かわす
       if (sl[0].guard) {
-        var gp = specialRate(g), ev = 0;
+        // かわしたら、そのまま相手を場外に押し出して1点
+        var gp = specialRate(g), ev = 0, out = [];
         lines.forEach(function (l) {
+          out.push(l);
           if (l.who !== 'opp' || l.pts <= 0 || ev >= 2) return;
-          if (rand() < gp) { l.evaded = true; l.orig = l.pts; b -= l.pts; l.pts = 0; ev++; }
+          if (rand() < gp) {
+            l.evaded = true; l.orig = l.pts; b -= l.pts; l.pts = 0; ev++;
+            out.push({ who: 'me', move: '場外押し出し', pts: 1, push: true });
+            a += 1;
+          }
         });
+        lines = out;
         sl[0].evades = ev;
         ok = ev > 0;
       }
@@ -1395,7 +1403,7 @@ if (typeof module !== 'undefined') module.exports = WL;
       '<p class="small">つまり <b>攻め ▶ 守り ▶ カウンター ▶ 攻め</b> のじゃんけん。相手の型に勝つ作戦を選ぼう。</p>' +
       '<p class="small">相手の型は表示されるが、ライバルや王者は第1ピリオドが終わるまで分からない。第2ピリオドで作戦を変えてくる相手もいる。</p>' +
       '<h3>得点とテクニカルスペリオリティ</h3><p class="small">押し出し1点、タックル・バックポイント・返し技2点、投げ技・持ち上げタックル4点、スープレックス5点。技術を上げると使える技が増える。<b>10点差</b>がつくと、その場で試合終了(テクニカルスペリオリティ)。</p>' +
-      '<h3>🔥 必殺技</h3><p class="small">12歳で自分だけの必殺技を選んで名前を付ける。試合中に1回だけ、作戦ボタンの上の「必殺技」をタップしてから作戦を選ぶと、そのピリオドの最初に打てる。<br>⚡稲妻タックル(スピード):決まりやすい / 💥豪腕ぶっこ抜き(筋力):決まれば4点、失敗すると返される / 🌪無限ローリング(技術):2点を最大2連続 / 🛡鉄壁の見切り(メンタル):そのピリオド、相手の得点を最大2回かわす。</p>' +
+      '<h3>🔥 必殺技</h3><p class="small">12歳で自分だけの必殺技を選んで名前を付ける。試合中に1回だけ、作戦ボタンの上の「必殺技」をタップしてから作戦を選ぶと、そのピリオドの最初に打てる。<br>⚡稲妻タックル(スピード):決まりやすい / 💥豪腕ぶっこ抜き(筋力):決まれば4点、失敗すると返される / 🌪無限ローリング(技術):2点を最大2連続 / 🛡鉄壁の見切り(メンタル):そのピリオド、相手の得点を最大2回かわし、かわすたびに押し出して1点。</p>' +
       '<h3>③ 同点なら一発勝負</h3><p class="small">ゲージが金色の真ん中に来た瞬間に「今だ!」を押すと、ラストポイントを取りやすい。</p>' +
       '<h3>④ ゴール</h3><p class="small">24・28・32・36歳のオリンピックで金メダル。取ったあとも現役を続けて連覇をねらえる。結果は「殿堂」に残る。</p>' +
       '<button class="btn" data-act="closeHelp">とじる</button></div></div>';
@@ -1545,6 +1553,7 @@ if (typeof module !== 'undefined') module.exports = WL;
     var who = l.who === 'me' ? esc(g.name) : esc(oppName);
     if (l.guard) return '<div class="spline">🛡 ' + who + 'の必殺技「' + esc(l.move) + '」発動! このピリオドは相手の技を見切る' +
       (l.evades === 0 ? '<span class="muted">…が、かわせなかった</span>' : '') + '</div>';
+    if (l.push) return '<div class="spline">🛡 かわした勢いで' + esc(oppName) + 'を場外に押し出した! +1</div>';
     if (l.evaded) return '<div class="spline">🛡 ' + esc(oppName) + 'の' + esc(l.move) + 'を見切ってかわした!(' + l.orig + '点を防いだ)</div>';
     if (l.special) return l.miss
       ? '<div class="red-t">' + who + 'の必殺技「' + esc(l.move) + '」…かわされた!</div>'
