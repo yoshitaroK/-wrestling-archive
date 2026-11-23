@@ -403,6 +403,8 @@ CONFUSABLE = {
 }
 
 # マスター未収録の大会(動画を削除せず保持するためのグループ)。国内/海外と区分はサイト側の判断。
+# 名前はそのまま題名・見出しに出るので、「(海外)」「(マスター未収録の回)」のような作業用の書き足しは入れない。
+# 回や大会名の整理ができていない大会は、build_pages.py の UNTIDY_SERIES に ID を入れる(「関連する大会」に出さない)
 DERIVED_RULES = [
     ("x-fujinami-cup", "藤波朱理杯 三重県少年少女レスリング大会", ["少年少女"], "国内", lambda k: "藤波朱理杯" in k),
     ("x-takatani-cup", "高谷惣亮杯(ゴールドキッズ年末合宿)", ["少年少女"], "国内", lambda k: "高谷惣亮杯" in k or "TAKATANI" in k or "年末合宿マッチ" in k),
@@ -414,26 +416,26 @@ DERIVED_RULES = [
     ("x-tokyo-team", "東京都団体戦予選", ["少年少女"], "国内", lambda k: "東京都団体戦予選" in k),
     ("x-kanto-jh-tokyo", "関東中学生選手権 東京代表選考会", ["中学"], "国内", lambda k: "関東中学生東京代表選考会" in k),
     ("x-maki-kids", "巻キッズレスリング大会", ["少年少女"], "国内", lambda k: "巻キッズ" in k),
-    ("x-veterans-world", "世界ベテランズ選手権(海外)", ["マスターズ"], "海外", lambda k: "ベテランズ" in k),
-    ("x-asian-championships", "アジア選手権(海外)", ["一般"], "海外", lambda k: "アジア選手権" in k and "代表" not in k),
+    ("x-veterans-world", "世界ベテランズ選手権", ["マスターズ"], "海外", lambda k: "ベテランズ" in k),
+    ("x-asian-championships", "アジア選手権", ["一般"], "海外", lambda k: "アジア選手権" in k and "代表" not in k),
     ("x-suginami", "杉並区区民体育祭・杉並区レスリング大会", ["少年少女"], "国内", lambda k: "杉並区" in k),
     ("x-ibaraki-junior", "茨城ジュニア大会", ["少年少女"], "国内", lambda k: "茨城ジュニア" in k),
     ("x-kanto-kids-yokosuka", "関東少年少女レスリング横須賀大会", ["少年少女"], "国内", lambda k: "関東少年少女" in k),
     ("x-east-kids", "東日本少年少女レスリング選手権大会", ["少年少女"], "国内", lambda k: "東日本少年少女" in k),
     ("x-kinki-kids", "近畿少年少女選手権・兵庫県ジュニアオープン", ["少年少女"], "国内", lambda k: "近畿少年少女" in k),
-    ("x-hyogo-junior", "兵庫県ジュニアオープン(マスター未収録の回)", ["少年少女"], "国内", lambda k: "兵庫" in k and "ジュニア" in k),
-    ("x-hino-junior", "日野町少年少女レスリング大会(マスター未収録の回)", ["少年少女"], "国内", lambda k: "日野町" in k or "HINOCUP" in k),
-    ("x-sakai-junior", "堺市少年少女レスリング大会(マスター未収録の回)", ["少年少女"], "国内", lambda k: "堺" in k),
+    ("x-hyogo-junior", "兵庫県ジュニアオープン", ["少年少女"], "国内", lambda k: "兵庫" in k and "ジュニア" in k),
+    ("x-hino-junior", "日野町少年少女レスリング大会", ["少年少女"], "国内", lambda k: "日野町" in k or "HINOCUP" in k),
+    ("x-sakai-junior", "堺市少年少女レスリング大会", ["少年少女"], "国内", lambda k: "堺" in k),
     ("x-kanto-hs-league", "関東高校リーグ戦(齋藤つよし杯)", ["高校"], "国内", lambda k: "関東高校リーグ" in k),
-    ("x-world-championships", "世界選手権(海外)", ["一般"], "海外", lambda k: "世界選手権" in k and "代表" not in k and "U23" not in k),
-    ("x-olympics", "オリンピック(海外)", ["一般"], "海外",
+    ("x-world-championships", "世界選手権", ["一般"], "海外", lambda k: "世界選手権" in k and "代表" not in k and "U23" not in k),
+    ("x-olympics", "オリンピック", ["一般"], "海外",
      lambda k: bool(re.search(r"(パリ|東京)オリンピック|オリンピック20\d\d", k)) and not re.search(r"プレーオフ|代表決定|出場枠|出場内定", k)),
-    ("x-beach-world-series", "ビーチレスリング・ワールドシリーズ(海外)", ["ビーチ"], "海外", lambda k: "ワールドシリーズ" in k),
+    ("x-beach-world-series", "ビーチレスリング・ワールドシリーズ", ["ビーチ"], "海外", lambda k: "ワールドシリーズ" in k),
     ("x-combat-asia", "COMBAT WRESTLING ASIA", ["一般"], "国内", lambda k: "COMBATWRESTLING" in k),
     ("x-bunsugi", "BUNSUGI International Wrestling Friendly Match", ["一般"], "未確認", lambda k: "BUNSUGI" in k),
     ("x-para", "障がい者レスリング エキシビションマッチ", ["一般"], "国内", lambda k: "障害者" in k or "障がい者" in k),
     ("x-kansai-camp", "関西オープン合宿", ["未確認"], "国内", lambda k: "関西オープン合宿" in k),
-    ("x-oshitate", "押立杯(大会名の確認が必要)", ["少年少女"], "国内", lambda k: k.startswith("押立杯")),
+    ("x-oshitate", "押立杯", ["少年少女"], "国内", lambda k: k.startswith("押立杯")),
 ]
 DERIVED_META = {sid: {"name": name, "groups": groups, "scope": scope} for sid, name, groups, scope, _ in DERIVED_RULES}
 
@@ -843,7 +845,8 @@ def build(videos_raw, master, aliases, overrides, legacy_map=None, as_of=None, p
                 "name": DERIVED_META[xsid]["name"] + (f"(第{kai}回)" if kai else ""),
                 "status": "unverified", "start_date": first.isoformat(), "end_date": last.isoformat(),
                 "venue": None, "date_quality": "video_published_date", "derived": True,
-                "source_urls": [], "notes": ["マスター未収録。日付は動画の公開日から推定したもので、公式の開催日ではありません。"],
+                "source_urls": [], "notes": ["公式の大会日程では確かめられていない大会です。日付は動画の公開日から推定したもので、公式の開催日ではありません。"]
+                + (["正式な大会名は公式の資料で確かめられていません。"] if xsid == "x-oshitate" else []),
             })
             for v in run:
                 v["event"] = eid
