@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-23T11:55:23+09:00",
+ "built_at": "2026-11-23T11:57:54+09:00",
  "as_of": "2026-11-23",
  "video_count": 3386,
  "raw_count": 3386,
@@ -37,9 +37,9 @@
  "translation": {
   "total": 3510,
   "translated": 3510,
-  "new": 2,
+  "new": 0,
   "pending": 0,
-  "chars_used": 80,
+  "chars_used": 0,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
