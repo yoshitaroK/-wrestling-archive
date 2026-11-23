@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-23T11:57:54+09:00",
+ "built_at": "2026-11-23T23:04:45+09:00",
  "as_of": "2026-11-23",
  "video_count": 3386,
  "raw_count": 3386,
@@ -94,8 +94,8 @@
   "errors": [],
   "video_excluded": 5,
   "video_links": 1125,
-  "event_results": 565,
-  "event_results_linked": 234,
+  "event_results": 605,
+  "event_results_linked": 260,
   "uww_video_links": 1966,
   "og_cards": {
    "events-ja": {
@@ -237,7 +237,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 33
+  "articles": 34
  },
  "books": {
   "errors": [],
@@ -246,16 +246,16 @@
  },
  "search": {
   "ja": {
-   "news": 33,
+   "news": 34,
    "results": 260,
-   "results_excluded": 305,
+   "results_excluded": 345,
    "results_linked": 233,
    "faq": 15
   },
   "en": {
    "news": 0,
    "results": 260,
-   "results_excluded": 305,
+   "results_excluded": 345,
    "results_linked": 233,
    "faq": 14
   }
