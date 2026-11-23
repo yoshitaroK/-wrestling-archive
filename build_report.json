@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-23T23:04:45+09:00",
+ "built_at": "2026-11-23T23:36:56+09:00",
  "as_of": "2026-11-23",
  "video_count": 3386,
  "raw_count": 3386,
@@ -237,7 +237,7 @@
  "news": {
   "errors": [],
   "warnings": [],
-  "articles": 34
+  "articles": 35
  },
  "books": {
   "errors": [],
@@ -246,7 +246,7 @@
  },
  "search": {
   "ja": {
-   "news": 34,
+   "news": 35,
    "results": 260,
    "results_excluded": 345,
    "results_linked": 233,
