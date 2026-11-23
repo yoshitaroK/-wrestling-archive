@@ -878,6 +878,8 @@ def event_page(ev, ctx):
 RELATED_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}")
 RELATED_DAYS = 10  # 「同じ時期の大会」は、開始日の前後この日数に始まった大会
 RELATED_MAX = 5
+# 回や大会名の整理がまだできていない大会(build_data.py の DERIVED_RULES)。「同じ時期の大会」に出さない
+UNTIDY_SERIES = {"x-hyogo-junior", "x-hino-junior", "x-sakai-junior", "x-oshitate"}
 
 
 def related_html(ev, ctx):
@@ -890,10 +892,9 @@ def related_html(ev, ctx):
 
     def gap(x):
         return abs((datetime.strptime(x["start"][:10], "%Y-%m-%d") - day).days)
-    # 「(マスター未収録の回)」「(大会名の確認が必要)」のような、まだ整理できていない大会は出さない
+    # 回や大会名の整理がまだできていない大会(UNTIDY_SERIES)は出さない
     def tidy(x):
-        name = S.get(x["series"], {}).get("name") or x.get("name") or ""
-        return not any(k in name for k in ("未収録", "確認が必要"))
+        return x.get("series") not in UNTIDY_SERIES
     others = [x for x in ctx["all_events"] if x["id"] != ev["id"] and x["id"] in slugs and x.get("series") != ev.get("series") and tidy(x)
               and RELATED_DATE.match(x.get("start") or "") and x.get("status") != "cancelled"]
     near = sorted((x for x in others if gap(x) <= RELATED_DAYS), key=lambda x: (gap(x), x["start"]))[:RELATED_MAX]
