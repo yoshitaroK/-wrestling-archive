@@ -381,12 +381,13 @@ var WL = (function () {
     declineOther: 2,     // 31歳以降、年末にほかの3能力が下がる量
     olyStep: 5.5,        // オリンピックの相手が4年ごとに強くなる量(基準68)
     trialsStep: 5,       // 代表選考会の相手が4年ごとに強くなる量(基準67)
-    topBonus: 7,    // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
-    legendBonus: 1,      // 24・28・32歳で3連覇した人だけ、36歳の代表選考会とオリンピックで相手から引く強さ
-    spTackle: 0.3,       // 必殺技の成功率の基準(能力40のとき)。下げると必殺技が弱くなる
-    spThrow: 0.33,
+    topBonus: 8,    // 代表選考会とオリンピックの相手に足す強さ(難しさ調整用)
+    legendBonus: 3.5,    // 24・28・32歳で3連覇した人だけ、36歳の代表選考会とオリンピックで相手から引く強さ
+    spMul: 0.5,          // 必殺技の成功率に全体でかける倍率(必殺技の強さの調整用)
+    spTackle: 0.32,      // 必殺技の成功率の基準(能力40のとき)。下げると必殺技が弱くなる
+    spThrow: 0.48,
     spRoll: 0.18,
-    spGuard: 0.22,
+    spGuard: 0.19,
     tactic: 4,           // 作戦が当たったときに有利になる量(戦闘力の差に足す)
     styleSwitch: 0.35,   // 第2ピリオドで相手が作戦を変えてくる確率
     randomEventRate: 0.35
@@ -457,7 +458,7 @@ var WL = (function () {
       desc: 'スピードで決める高速タックル。決まりやすい。失敗しても失点なし。',
       rate: function (v) { return clamp(BAL.spTackle + (v - 40) / 110, 0.25, 0.8); } },
     throw: { def: '豪腕ぶっこ抜き', stat: 'str', pts: 4, icon: '💥', kind: '一発逆転型',
-      desc: '筋力で相手を引っこ抜く大技。決まれば4点、失敗すると返されて相手に2点。',
+      desc: '筋力で相手を引っこ抜く大技。決まれば4点。失敗すると返されて相手に2点取られることがある。',
       rate: function (v) { return clamp(BAL.spThrow + (v - 40) / 110, 0.15, 0.65); } },
     roll: { def: '無限ローリング', stat: 'tec', pts: 2, icon: '🌪', kind: '連続型',
       desc: '技術で回し続けるローリング。成功するたびに2点、2回まで続く。',
@@ -468,7 +469,7 @@ var WL = (function () {
   };
   function specialRate(g) {
     var sp = g.special && SPECIALS[g.special.type];
-    return sp ? sp.rate(g.stats[sp.stat]) : 0;
+    return sp ? sp.rate(g.stats[sp.stat]) * BAL.spMul : 0;
   }
   // 必殺技を打ったときの得点の場面。成功・失敗も決める
   function specialLines(g) {
@@ -486,7 +487,7 @@ var WL = (function () {
       lines.push({ who: 'me', move: nm, pts: sp.pts, special: true });
     } else {
       lines.push({ who: 'me', move: nm, pts: 0, special: true, miss: true });
-      if (g.special.type === 'throw') lines.push({ who: 'opp', move: '返し技', pts: 2, counter: true });
+      if (g.special.type === 'throw' && rand() < 0.3) lines.push({ who: 'opp', move: '返し技', pts: 2, counter: true });
     }
     return lines;
   }   // 10点差がつくとテクニカルスペリオリティで試合終了
