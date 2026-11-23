@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-23T10:29:53+09:00",
+ "built_at": "2026-11-23T11:55:23+09:00",
  "as_of": "2026-11-23",
  "video_count": 3386,
  "raw_count": 3386,
@@ -35,11 +35,11 @@
  ],
  "from_other_channels": 277,
  "translation": {
-  "total": 3509,
-  "translated": 3509,
-  "new": 0,
+  "total": 3510,
+  "translated": 3510,
+  "new": 2,
   "pending": 0,
-  "chars_used": 0,
+  "chars_used": 80,
   "error": "",
   "name_fixed": 0,
   "name_suspects": 8,
@@ -337,7 +337,7 @@
  "en": {
   "pages": 1852,
   "names": 640,
-  "machine_translations": 3509,
+  "machine_translations": 3510,
   "missing_names": [
    "1偵戦大",
    "KeePer技研",

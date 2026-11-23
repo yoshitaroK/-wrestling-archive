@@ -57,21 +57,21 @@
 - [第10回日野町少年少女大会](https://japanwrestlingchannel.com/events/local-264485/): 2025年 動画6本
 - [第18回堺市レスリング連盟少年少女レスリング選手権大会](https://japanwrestlingchannel.com/events/local-263382/): 2025年 動画6本
 - [関東高校リーグ戦(齋藤つよし杯)](https://japanwrestlingchannel.com/events/x-kanto-hs-league/): 2024年 動画4本
-- [兵庫県ジュニアオープン(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/): 2023〜2024年 動画6本
-- [オリンピック(海外)](https://japanwrestlingchannel.com/events/x-olympics/): 2024年 動画12本
+- [兵庫県ジュニアオープン](https://japanwrestlingchannel.com/events/x-hyogo-junior/): 2023〜2024年 動画6本
+- [オリンピック](https://japanwrestlingchannel.com/events/x-olympics/): 2024年 動画12本
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/): 2014〜2024年 動画85本
-- [押立杯(大会名の確認が必要)](https://japanwrestlingchannel.com/events/x-oshitate/): 2024年 動画2本
+- [押立杯](https://japanwrestlingchannel.com/events/x-oshitate/): 2024年 動画2本
 - [明治杯全日本選抜選手権](https://japanwrestlingchannel.com/events/meiji-cup/): 2014〜2024年 動画355本
 - [巻キッズレスリング大会](https://japanwrestlingchannel.com/events/x-maki-kids/): 2024年 動画1本
-- [日野町少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-hino-junior/): 2023〜2024年 動画12本
-- [世界ベテランズ選手権(海外)](https://japanwrestlingchannel.com/events/x-veterans-world/): 2018年 動画3本
-- [堺市少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-sakai-junior/): 2023〜2024年 動画7本
+- [日野町少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-hino-junior/): 2023〜2024年 動画12本
+- [世界ベテランズ選手権](https://japanwrestlingchannel.com/events/x-veterans-world/): 2018年 動画3本
+- [堺市少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-sakai-junior/): 2023〜2024年 動画7本
 - [関東高校選抜・新人・全国高校選抜予選](https://japanwrestlingchannel.com/events/regional-関東-qualifier/): 2024年 動画24本
 - [日韓高校選抜交流・交歓競技会（日本開催・親善試合）](https://japanwrestlingchannel.com/events/japan-korea-highschool/): 2023年 動画1本
 - [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/): 2014〜2023年 動画53本
-- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/): 2021〜2023年 動画37本
+- [世界選手権](https://japanwrestlingchannel.com/events/x-world-championships/): 2021〜2023年 動画37本
 - [日本代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/): 2018〜2023年 動画36本
-- [ビーチレスリング・ワールドシリーズ(海外)](https://japanwrestlingchannel.com/events/x-beach-world-series/): 2023年 動画1本
+- [ビーチレスリング・ワールドシリーズ](https://japanwrestlingchannel.com/events/x-beach-world-series/): 2023年 動画1本
 - [U23日本代表選考会・U23全日本選手権](https://japanwrestlingchannel.com/events/u23-selection/): 2023年 動画2本
 - [ジュニアクイーンズカップ](https://japanwrestlingchannel.com/events/queens-cup/): 2016〜2023年 動画41本
 - [関西オープン合宿](https://japanwrestlingchannel.com/events/x-kansai-camp/): 2023年 動画4本
@@ -83,7 +83,7 @@
 - [全国少年少女選手権](https://japanwrestlingchannel.com/events/kids/): 2022年 動画25本
 - [茨城オープン](https://japanwrestlingchannel.com/events/x-ibaraki-open/): 2022年 動画17本
 - [東京都団体戦予選](https://japanwrestlingchannel.com/events/x-tokyo-team/): 2022年 動画13本
-- [アジア選手権(海外)](https://japanwrestlingchannel.com/events/x-asian-championships/): 2021年 動画2本
+- [アジア選手権](https://japanwrestlingchannel.com/events/x-asian-championships/): 2021年 動画2本
 - [全国中学生選手権](https://japanwrestlingchannel.com/events/juniorhigh/): 2014〜2022年 動画143本
 - [群馬県千代田町少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-chiyoda-kids/): 2021年 動画59本
 - [西日本学生選手権](https://japanwrestlingchannel.com/events/west-championship/): 2014〜2021年 動画41本
@@ -375,14 +375,14 @@
 - 大会ページ: https://japanwrestlingchannel.com/events/x-kanto-hs-league/
 - [関東高校リーグ戦(齋藤つよし杯)](https://japanwrestlingchannel.com/events/x-kanto-hs-league/2024/): 2025年1月12日・動画4本
 
-### 兵庫県ジュニアオープン(マスター未収録の回)
+### 兵庫県ジュニアオープン
 - 大会ページ: https://japanwrestlingchannel.com/events/x-hyogo-junior/
-- [兵庫県ジュニアオープン(マスター未収録の回)(第23回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/2024/): 2024年12月21日〜22日・動画5本
-- [兵庫県ジュニアオープン(マスター未収録の回)(第22回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/2023/): 2023年12月17日・動画1本
+- [兵庫県ジュニアオープン(第23回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/2024/): 2024年12月21日〜22日・動画5本
+- [兵庫県ジュニアオープン(第22回)](https://japanwrestlingchannel.com/events/x-hyogo-junior/2023/): 2023年12月17日・動画1本
 
-### オリンピック(海外)
+### オリンピック
 - 大会ページ: https://japanwrestlingchannel.com/events/x-olympics/
-- [オリンピック(海外)](https://japanwrestlingchannel.com/events/x-olympics/2024/): 2024年8月5日〜11日・パリ(フランス)・動画12本
+- [オリンピック](https://japanwrestlingchannel.com/events/x-olympics/2024/): 2024年8月5日〜11日・パリ(フランス)・動画12本
 
 ### 全国高校総体（インターハイ）
 - 大会ページ: https://japanwrestlingchannel.com/events/interhigh/
@@ -397,9 +397,9 @@
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2015/): 2015年8月2日〜5日・京都・舞鶴文化公園体育館・動画16本
 - [全国高校総体（インターハイ）](https://japanwrestlingchannel.com/events/interhigh/2014/): 2014年8月2日〜5日・神奈川・横須賀アリーナ・動画18本
 
-### 押立杯(大会名の確認が必要)
+### 押立杯
 - 大会ページ: https://japanwrestlingchannel.com/events/x-oshitate/
-- [押立杯(大会名の確認が必要)](https://japanwrestlingchannel.com/events/x-oshitate/2024/): 2024年6月23日・動画2本
+- [押立杯](https://japanwrestlingchannel.com/events/x-oshitate/2024/): 2024年6月23日・動画2本
 
 ### 明治杯全日本選抜選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/meiji-cup/
@@ -423,19 +423,19 @@
 - 大会ページ: https://japanwrestlingchannel.com/events/x-maki-kids/
 - [巻キッズレスリング大会(第14回)](https://japanwrestlingchannel.com/events/x-maki-kids/2024/): 2024年5月14日・動画1本
 
-### 日野町少年少女レスリング大会(マスター未収録の回)
+### 日野町少年少女レスリング大会
 - 大会ページ: https://japanwrestlingchannel.com/events/x-hino-junior/
-- [日野町少年少女レスリング大会(マスター未収録の回)(第9回)](https://japanwrestlingchannel.com/events/x-hino-junior/2024/): 2024年3月9日〜10日・動画6本
-- [日野町少年少女レスリング大会(マスター未収録の回)(第8回)](https://japanwrestlingchannel.com/events/x-hino-junior/2023/): 2023年3月11日〜12日・動画6本
+- [日野町少年少女レスリング大会(第9回)](https://japanwrestlingchannel.com/events/x-hino-junior/2024/): 2024年3月9日〜10日・動画6本
+- [日野町少年少女レスリング大会(第8回)](https://japanwrestlingchannel.com/events/x-hino-junior/2023/): 2023年3月11日〜12日・動画6本
 
-### 世界ベテランズ選手権(海外)
+### 世界ベテランズ選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/x-veterans-world/
-- [世界ベテランズ選手権(海外)](https://japanwrestlingchannel.com/events/x-veterans-world/2018/): 2024年2月20日・動画3本
+- [世界ベテランズ選手権](https://japanwrestlingchannel.com/events/x-veterans-world/2018/): 2024年2月20日・動画3本
 
-### 堺市少年少女レスリング大会(マスター未収録の回)
+### 堺市少年少女レスリング大会
 - 大会ページ: https://japanwrestlingchannel.com/events/x-sakai-junior/
-- [堺市少年少女レスリング大会(マスター未収録の回)(第17回)](https://japanwrestlingchannel.com/events/x-sakai-junior/2024/): 2024年2月11日・動画3本
-- [堺市少年少女レスリング大会(マスター未収録の回)](https://japanwrestlingchannel.com/events/x-sakai-junior/2023/): 2023年2月12日・動画4本
+- [堺市少年少女レスリング大会(第17回)](https://japanwrestlingchannel.com/events/x-sakai-junior/2024/): 2024年2月11日・動画3本
+- [堺市少年少女レスリング大会](https://japanwrestlingchannel.com/events/x-sakai-junior/2023/): 2023年2月12日・動画4本
 
 ### 関東高校選抜・新人・全国高校選抜予選
 - 大会ページ: https://japanwrestlingchannel.com/events/regional-関東-qualifier/
@@ -457,11 +457,11 @@
 - [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/2016/): 2016年10月2日・静岡・三島市民体育館・動画24本
 - [全日本女子オープン選手権](https://japanwrestlingchannel.com/events/women-open/2014/): 2014年10月5日・静岡・三島市立体育館・動画14本
 
-### 世界選手権(海外)
+### 世界選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/x-world-championships/
-- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/2023/): 2023年9月18日〜24日・動画17本
-- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/2022/): 2022年9月10日〜18日・ベオグラード(セルビア)・動画19本
-- [世界選手権(海外)](https://japanwrestlingchannel.com/events/x-world-championships/2021/): 2021年10月2日〜10日・オスロ(ノルウェー)・動画1本
+- [世界選手権](https://japanwrestlingchannel.com/events/x-world-championships/2023/): 2023年9月18日〜24日・動画17本
+- [世界選手権](https://japanwrestlingchannel.com/events/x-world-championships/2022/): 2022年9月10日〜18日・ベオグラード(セルビア)・動画19本
+- [世界選手権](https://japanwrestlingchannel.com/events/x-world-championships/2021/): 2021年10月2日〜10日・オスロ(ノルウェー)・動画1本
 
 ### 日本代表決定プレーオフ
 - 大会ページ: https://japanwrestlingchannel.com/events/national-team-playoff/
@@ -469,9 +469,9 @@
 - [東京オリンピック代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/2021/): 2021年6月12日・東京・味の素トレーニングセンター・動画1本
 - [世界選手権代表決定プレーオフ](https://japanwrestlingchannel.com/events/national-team-playoff/2018/): 2018年7月7日・埼玉・和光市総合体育館・動画10本
 
-### ビーチレスリング・ワールドシリーズ(海外)
+### ビーチレスリング・ワールドシリーズ
 - 大会ページ: https://japanwrestlingchannel.com/events/x-beach-world-series/
-- [ビーチレスリング・ワールドシリーズ(海外)](https://japanwrestlingchannel.com/events/x-beach-world-series/2023/): 2023年5月9日・動画1本
+- [ビーチレスリング・ワールドシリーズ](https://japanwrestlingchannel.com/events/x-beach-world-series/2023/): 2023年5月9日・動画1本
 
 ### U23日本代表選考会・U23全日本選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/u23-selection/
@@ -523,9 +523,9 @@
 - 大会ページ: https://japanwrestlingchannel.com/events/x-tokyo-team/
 - [東京都団体戦予選](https://japanwrestlingchannel.com/events/x-tokyo-team/2022/): 2022年7月11日・動画13本
 
-### アジア選手権(海外)
+### アジア選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/x-asian-championships/
-- [アジア選手権(海外)](https://japanwrestlingchannel.com/events/x-asian-championships/2021/): 2022年6月24日・動画2本
+- [アジア選手権](https://japanwrestlingchannel.com/events/x-asian-championships/2021/): 2022年6月24日・動画2本
 
 ### 全国中学生選手権
 - 大会ページ: https://japanwrestlingchannel.com/events/juniorhigh/
