@@ -1,6 +1,6 @@
 # レスリング配信アーカイブ(Japan Wrestling Channel アーカイブ)
 
-> YouTubeで公開されている日本のレスリング大会の配信・動画3,386本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
+> YouTubeで公開されている日本のレスリング大会の配信・動画3,387本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
 - データ更新日: 2026年11月24日
@@ -26,7 +26,7 @@
 - [llms-full.txt](https://japanwrestlingchannel.com/llms-full.txt): すべての大会の開催回(開催日・会場・動画の本数・ページのURL)、主な大会の歴代優勝者(いちばん新しい年の階級別の優勝者)、ニュース記事(日付・見出し・要旨)、選手(所属・主な成績・ページのURL)、国際大会の動画(年代・年ごとのページと大会名・本数)、技術動画(区分・チャンネルごとのページ)、書籍(書名・著者・出版社)の一覧
 
 ## 大会(大会ごとのページ。各ページから開催回ごとのページへ移れます)
-- [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2026年 動画113本
+- [東日本学生選手権（秋季大会）](https://japanwrestlingchannel.com/events/east-autumn/): 2014〜2026年 動画114本
 - [全国中学選抜・全国中学選抜U15選手権](https://japanwrestlingchannel.com/events/juniorhigh-senbatsu/): 2014〜2026年 動画130本
 - [全日本大学選手権](https://japanwrestlingchannel.com/events/university-championship/): 2014〜2026年 動画124本
 - [全国社会人オープン選手権](https://japanwrestlingchannel.com/events/shakaijin-open/): 2022〜2026年 動画29本
@@ -97,7 +97,8 @@
 
 ### 東日本学生選手権（秋季大会）
 - 大会ページ: https://japanwrestlingchannel.com/events/east-autumn/
-- [令和8年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2026/): 2026年11月23日〜25日(予定)・東京・駒沢オリンピック公園総合運動場体育館・動画9本
+- [令和8年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2026/): 2026年11月23日〜25日(予定)・東京・駒沢オリンピック公園総合運動場体育館・動画10本
+  - ニュース: [東日本学生秋季・新人戦フリー 山梨学院大が4階級、北村と山本は2スタイル制覇](https://japanwrestlingchannel.com/news/2026-east-autumn-day2/)
   - ニュース: [東日本学生秋季が開幕 新人戦グレコで育英大が4階級制す](https://japanwrestlingchannel.com/news/2026-east-autumn-day1/)
 - [令和7年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2025/): 2025年11月27日〜29日・東京・駒沢屋内球技場・動画10本・写真あり
   - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2025/2943
@@ -650,6 +651,7 @@
 
 ## ニュース(新しい順)
 
+- 2026-11-24 [東日本学生秋季・新人戦フリー 山梨学院大が4階級、北村と山本は2スタイル制覇](https://japanwrestlingchannel.com/news/2026-east-autumn-day2/): 東日本学生選手権(秋季)の第2日は新人戦の男子フリースタイルを行い、Aでは山梨学院大が4階級で優勝した。北村春斗(育英大)と山本侑季(国士舘大)は、前日のグレコローマンに続いてフリースタイルでも優勝した。
 - 2026-11-23 [「誰も思っていなかった」初挑戦のグレコで全中選抜V](https://japanwrestlingchannel.com/news/2026-juniorhigh-senbatsu-tsutsumi-interview/): 全国中学選抜U15選手権の男子グレコローマン52kg級で、初めてグレコローマンの試合に出た堤空葵(福島・ふたば未来学園中3年)が優勝した。中学ではベスト8にも届かなかったダークホースに、大会のあとで話を聞いた。
 - 2026-11-23 [東日本学生秋季が開幕 新人戦グレコで育英大が4階級制す](https://japanwrestlingchannel.com/news/2026-east-autumn-day1/): 東日本学生選手権(秋季)の第1日は新人戦の男子グレコローマン10階級を行い、育英大が60kg級・63kg級・67kg級・87kg級の4階級で優勝した。国士舘大は97kg級と130kg級を制した。
 - 2026-11-22 [全中選抜U15が閉幕 3スタイル33階級の中学王者が決まる](https://japanwrestlingchannel.com/news/2026-juniorhigh-senbatsu-final/): 東京都知事杯 第17回全国中学選抜U15選手権の最終日が11月22日に行われ、3スタイル・33階級の優勝者が決まった。最優秀選手賞は男子フリースタイル48kg級を制した保坂彪悟。
