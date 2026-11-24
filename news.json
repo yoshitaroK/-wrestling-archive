@@ -64,7 +64,12 @@
    ],
    "sources": [
     "https://wrestling-spirits.jp/2026/11/22/298782/"
-   ]
+   ],
+   "image": {
+    "file": "2026-juniorhigh-senbatsu-final.jpg",
+    "alt": "決勝に進んだ選手たちの入場(東京都知事杯 全国中学選抜U15選手権)",
+    "credit": "撮影:Japan Wrestling Channel"
+   }
   },
   {
    "slug": "2026-juniorhigh-senbatsu-day1",
@@ -78,7 +83,12 @@
    ],
    "sources": [
     "https://wrestling-spirits.jp/2026/11/21/298693/"
-   ]
+   ],
+   "image": {
+    "file": "2026-juniorhigh-senbatsu-day1.jpg",
+    "alt": "全国中学選抜U15選手権の男子の試合",
+    "credit": "撮影:Japan Wrestling Channel"
+   }
   },
   {
    "slug": "2026-juniorhigh-senbatsu-preview",
@@ -93,7 +103,12 @@
    "sources": [
     "https://wrestling-spirits.jp/2026/11/17/298370/",
     "https://wrestling-spirits.jp/2026/06/30/290025/"
-   ]
+   ],
+   "image": {
+    "file": "2026-juniorhigh-senbatsu-preview.jpg",
+    "alt": "全国中学選抜U15選手権の女子の試合",
+    "credit": "撮影:Japan Wrestling Channel"
+   }
   },
   {
    "slug": "2026-univ-free-final",
