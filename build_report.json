@@ -1,5 +1,5 @@
 {
- "built_at": "2026-11-24T23:52:50+09:00",
+ "built_at": "2026-11-24T23:56:04+09:00",
  "as_of": "2026-11-24",
  "video_count": 3387,
  "raw_count": 3387,
@@ -190,11 +190,11 @@
   "series": 10
  },
  "photos": {
-  "entries": 931,
-  "shown": 931,
+  "entries": 961,
+  "shown": 961,
   "hidden": 0,
   "unconfirmed": 0,
-  "pages_with_photos": 31,
+  "pages_with_photos": 32,
   "by_page": {
    "/events/east-autumn/2025/": 30,
    "/events/east-league/2025/": 30,
@@ -210,6 +210,7 @@
    "/events/joc-junior/2025/": 30,
    "/events/joc-junior/2026/": 30,
    "/events/juniorhigh-senbatsu/2025/": 30,
+   "/events/juniorhigh-senbatsu/2026/": 30,
    "/events/meiji-cup/2025/": 30,
    "/events/meiji-cup/2026/": 30,
    "/events/regional-関東-qualifier/": 30,
@@ -231,7 +232,7 @@
   "warnings": [],
   "errors": [],
   "unlisted_files": [],
-  "albums": 34,
+  "albums": 35,
   "from_manifest": 301
  },
  "news": {
@@ -335,7 +336,7 @@
   "warnings": []
  },
  "en": {
-  "pages": 1852,
+  "pages": 1853,
   "names": 640,
   "machine_translations": 3511,
   "missing_names": [

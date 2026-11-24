@@ -89,6 +89,12 @@
     "n": 30
    },
    {
+    "href": "/photos/juniorhigh-senbatsu/2026/",
+    "label": "全国中学選抜・全国中学選抜U15選手権 2026年",
+    "src": "/assets/photos/294c5905542a-t.jpg",
+    "n": 30
+   },
+   {
     "href": "/photos/university-championship/2026/",
     "label": "全日本大学選手権 2026年",
     "src": "/assets/photos/8f85c963d6e3-t.jpg",
@@ -249,12 +255,6 @@
     "label": "JOC杯全日本ジュニア・U20・U17選手権 2025年",
     "src": "/assets/photos/f92098c3ec48-t.jpg",
     "n": 30
-   },
-   {
-    "href": "/photos/u23-selection/2025/",
-    "label": "U23日本代表選考会・U23全日本選手権 2025年",
-    "src": "/assets/photos/d5ae0873f355-t.jpg",
-    "n": 30
    }
   ],
   "news": [
@@ -400,6 +400,12 @@
     "href": "/en/photos/regional-関東-qualifier/",
     "label": "Kanto High School Selection / Rookie Tournament (National Selection Qualifier) 2026",
     "src": "/assets/photos/c0ea6ebdad24-t.jpg",
+    "n": 30
+   },
+   {
+    "href": "/en/photos/juniorhigh-senbatsu/2026/",
+    "label": "All Japan Junior High School Selection Championships (incl. U15) 2026",
+    "src": "/assets/photos/294c5905542a-t.jpg",
     "n": 30
    },
    {
@@ -562,12 +568,6 @@
     "href": "/en/photos/joc-junior/2025/",
     "label": "JOC Cup All Japan Junior Championships (U20/U17) 2025",
     "src": "/assets/photos/f92098c3ec48-t.jpg",
-    "n": 30
-   },
-   {
-    "href": "/en/photos/u23-selection/2025/",
-    "label": "U23 All Japan Championships & Japan Team Trials 2025",
-    "src": "/assets/photos/d5ae0873f355-t.jpg",
     "n": 30
    }
   ]
