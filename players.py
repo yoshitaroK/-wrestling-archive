@@ -362,9 +362,36 @@ def optout_note(listing=False):
 TOP_NATIONAL = ("天皇杯", "明治杯")
 
 
+def olympic_medals(p):
+    """player_results.csv のオリンピックのメダル [(開催年, 成績, 大会名)](古い順。MEDAL は下の選手一覧のところ)"""
+    # 同じ大会・同じ年の行が2つあっても1個に数える(いちばん良い順位を使う)
+    best = {}
+    for r in p["results"]:
+        if r.get("大会名") in OLYMPICS and r.get("成績") in MEDAL:
+            k = (r.get("開催年", ""), r["大会名"])
+            best[k] = min(best.get(k, "9位"), r["成績"])
+    return sorted((y, rk, n) for (y, n), rk in best.items())
+
+
+def olympic_medals_text(medals):
+    """メダルが2つ以上の人の書き方。金・銀・銅の順に、開催年(日本語版は都市名と年)を添える。
+    例: オリンピック 金メダル3個(アテネ 2004・北京 2008・ロンドン 2012)・銀メダル1個(リオデジャネイロ 2016)
+        Olympic gold (2004, 2008, 2012) and silver (2016) medalist"""
+    by = [(k, [m for m in medals if m[1] == k]) for k in ("1位", "2位", "3位")]
+    by = [(k, ms) for k, ms in by if ms]
+    if i18n.en():
+        return "Olympic " + " and ".join(f"{MEDAL[k][1].lower()} ({', '.join(y for y, _, _ in ms)})" for k, ms in by) + " medalist"
+    city = lambda n: OLYMPICS[n][0].replace(" オリンピック代表", "")
+    return "オリンピック " + "・".join(f"{MEDAL[k][0]}{len(ms)}個({'・'.join(city(n) for _, _, n in ms)})" for k, ms in by)
+
+
 def best_result(p, ctx, bp):
-    """説明文に入れる、いちばん良い成績(例: 2025年全日本学生選手権 優勝)。
-    オリンピック → 世界選手権・U23世界選手権のメダル → 順位 → 天皇杯・明治杯 → 新しい年 の順に選ぶ。日本語版だけ"""
+    """説明文に入れる、いちばん良い成績(例: 2025年全日本学生選手権 優勝 / 1st at 2025 All-Japan ...)。
+    オリンピック → 世界選手権・U23世界選手権のメダル → 順位 → 天皇杯・明治杯 → 新しい年 の順に選ぶ。
+    オリンピックのメダルが2つ以上ある人は、そのメダルをすべて書く(olympic_medals_text)"""
+    medals = olympic_medals(p)
+    if len(medals) >= 2:
+        return olympic_medals_text(medals)
     def key(r):
         m = re.match(r"^(\d+)位$", r.get("成績", ""))
         name = r.get("大会名", "")
@@ -380,6 +407,10 @@ def best_result(p, ctx, bp):
     ev = ctx["events_by_id"].get(r.get("開催回ID", ""))
     if name not in OLYMPICS and name not in WORLDS and ev and ev["series"] in ctx["S"]:
         name = bp.series_name(ctx["S"][ev["series"]])
+    if i18n.en():
+        if name in OLYMPICS and r["成績"] in MEDAL:
+            return f"Olympic {MEDAL[r['成績']][1].lower()} medalist ({OLYMPICS[name][1].replace(' Olympian', '')})"
+        return f"{rank(r['成績'])} at {r.get('開催年', '')} {tournament_name(r, ctx, bp)}".replace("  ", " ")
     name = re.sub(r"[（(](インカレ)[）)]$", "", N(name))
     if name in OLYMPICS:
         rk = {"1位": "金メダル", "2位": "銀メダル", "3位": "銅メダル"}.get(r["成績"], r["成績"])
@@ -463,29 +494,45 @@ def player_page(p, ctx, bp, card=""):
     uww = ctx.get("uww_by_player", {}).get(p["id"], [])
     nu = len(uww)
     span, latest = result_span(p), latest_class(p)
-    if i18n.en():
-        desc = f"{name}{(' (' + club + ')') if club else ''}: " + (
-            f"{i18n.plural(nr, 'tournament result')}{f' ({span})' if span else ''} and {i18n.plural(nv, 'match video')}" if nr else f"{i18n.plural(nv, 'match video')}")
-        desc += f", plus {i18n.plural(nu, 'video')} from international events." if nu else "."
-        if latest:
-            tail = f" Competed in {latest[1]} {latest[2]} in {latest[0]}."
-            if len(desc + tail) > 160 and span:   # 長くなりすぎるときは年の幅を省く
-                desc = desc.replace(f" ({span})", "", 1)
-            if len(desc + tail) <= 160:           # それでも長いときは、この一文を足さない
-                desc += tail
-    else:
-        parts = [f"{name}選手"]
-        if club:
-            parts.append(f"({club})")
-        best = best_result(p, ctx, bp)
-        parts.append(f"のレスリングの成績。{best}など" if best else "の")
-        parts.append((f"大会成績{nr}件{f'({span})' if span else ''}" + (f"と試合動画{nv}本" if nv else "")) if nr else f"試合動画{nv}本")
-        parts.append(f"、国際大会の動画{nu}本。" if nu else "。")
-        if latest:
-            parts.append(f"{latest[0]}年は{latest[1]}{latest[2]}級に出場。")
-        desc = "".join(parts)
-        if len(desc) > 120 and span:   # 長くなりすぎるときは年の幅を省く
-            desc = desc.replace(f"({span})", "", 1)
+    best = best_result(p, ctx, bp)
+    if i18n.en() and not best.isascii():
+        best = ""   # 大会名の英語が無い(日本語のまま)ときは、成績を書かない
+
+    def make(use_span, use_latest, use_counts):
+        """説明文(meta description・og:description・JSON-LD・本文の最初の段落で同じ文)。
+        名前といちばん良い成績(五輪のメダルなど)を先頭に置き、0件・0本の数は書かない"""
+        sp = span if use_span else ""
+        if i18n.en():
+            counts = " and ".join(x for x in (
+                f"{i18n.plural(nr, 'tournament result')}{f' ({sp})' if sp else ''}" if nr else "",
+                i18n.plural(nv, "match video") if nv else "") if x)
+            if nu:
+                intl = f"{i18n.plural(nu, 'video')} from international events"
+                counts = f"{counts}, plus {intl}" if counts else intl
+            counts = counts[:1].upper() + counts[1:] if use_counts else ""
+            d = f"{name}{(' (' + club + ')') if club else ''}: " + ". ".join(x for x in (best, counts) if x) + "."
+            if latest and use_latest:
+                d += f" Competed in {latest[1]} {latest[2]} in {latest[0]}."
+            return d
+        counts = "と".join(x for x in (f"大会成績{nr}件{f'({sp})' if sp else ''}" if nr else "", f"試合動画{nv}本" if nv else "") if x)
+        if nu:
+            counts = f"{counts}、国際大会の動画{nu}本" if counts else f"国際大会の動画{nu}本"
+        counts = counts if use_counts else ""
+        d = f"{name}選手" + (f"({club})" if club else "")
+        if best:
+            d += f"のレスリングの成績。{best}" + (f"など{counts}。" if counts else "。")
+        else:
+            d += f"の{counts}。" if counts else "のレスリングの成績。"
+        if latest and use_latest:
+            d += f"{latest[0]}年は{latest[1]}{latest[2]}級に出場。"
+        return d
+
+    # 長いときは「年の幅 → 『〇年は〜級に出場』 → 件数の文」の順に省く(日本語120字・英語160字)
+    limit = 160 if i18n.en() else 120
+    for opts in ((1, 1, 1), (0, 1, 1), (0, 0, 1), (0, 0, 0)):
+        desc = make(*opts)
+        if len(desc) <= limit:
+            break
     person = {"@type": "Person", "name": name, "url": SITE + U(path)}
     # 別名:ふりがな(日本語版)と players.csv の別表記(旧姓・異体字など)。英語版は日本語の氏名も別名にする。
     # 別表記には動画タイトルの誤字を拾うためのものも混ざるので、ページの文には出さず構造化データだけに入れる
