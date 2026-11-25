@@ -15,6 +15,11 @@
     動画IDは YouTube の動画のURL(…watch?v=XXXX)の XXXX。名前がタイトルに入っているだけで、
     その選手の試合ではない動画(ほかの選手のインタビューなど)を外すのに使う
 
+  player_same_as.csv … 同じ人の外部ページ(1行 = 1選手の1ページ。無くてもよい。#362)
+    選手ID, URL, 確かめ方
+    選手ページの構造化データ(Person)の sameAs に出す。同じ人だと確かめられたページだけを入れ、推測で入れない
+    (まずは五輪メダリストの Olympedia の選手ページ。種目・順位が player_results.csv と合い、原名が氏名・別表記と合うもの)
+
 ルール
   - 「公開」が「はい」で、かつ「未成年」が「いいえ」の選手だけページを作る
     (未成年の選手・公開していない選手は、ページも検索対象も作らない)
@@ -48,6 +53,7 @@ COMING_SOON_EN = ""
 PLAYERS_CSV = "players.csv"
 RESULTS_CSV = "player_results.csv"
 VIDEO_EXCLUDE_CSV = "player_video_exclude.csv"
+SAME_AS_CSV = "player_same_as.csv"
 # 開催回ごとの結果(速報など)。1行 = 1人の成績。選手検索の選手と名前が一致すれば選手ページへリンクする
 #   開催回ID, 種別, 階級, 成績, 氏名, 都道府県, 所属, 出典URL
 EVENT_RESULTS_CSV = "event_results.csv"
@@ -162,6 +168,15 @@ def load(root):
         p = by_id.get(r.get("選手ID", ""))
         if p:
             p["results"].append(r)
+    # 同じ人の外部ページ(#362)。ページの無い選手(未成年・非公開)の行は使わない
+    for i, r in enumerate(read_csv(os.path.join(root, SAME_AS_CSV)), start=2):
+        pid, url = r.get("選手ID", ""), r.get("URL", "")
+        if not url.startswith("https://") or any(c.isspace() for c in url):
+            report["errors"].append(f"{SAME_AS_CSV} {i}行目: URL「{url}」は https:// で始まる URL にしてください")
+        elif pid not in seen:
+            report["errors"].append(f"{SAME_AS_CSV} {i}行目: 選手ID「{pid}」が players.csv にありません")
+        elif pid in by_id and url not in by_id[pid].setdefault("same_as", []):
+            by_id[pid]["same_as"].append(url)
     return players, report
 
 
@@ -480,6 +495,9 @@ def player_page(p, ctx, bp, card=""):
         person["alternateName"] = alt[0] if len(alt) == 1 else alt
     if club:
         person["affiliation"] = {"@type": "SportsOrganization", "name": club}
+    if p.get("same_as"):
+        # 同じ人の外部ページ(player_same_as.csv。#362)。AI・検索が同姓同名の人と取り違えないように
+        person["sameAs"] = p["same_as"][0] if len(p["same_as"]) == 1 else p["same_as"]
     aw = awards(p, ctx, bp)
     if aw:
         person["award"] = aw
