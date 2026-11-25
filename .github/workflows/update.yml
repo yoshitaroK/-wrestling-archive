@@ -20,6 +20,7 @@ on:
       - 'players.csv'
       - 'player_results.csv'
       - 'player_video_exclude.csv'
+      - 'player_same_as.csv'
       - 'champions.csv'
       - 'en_names.csv'
       - 'translations_en.json'
