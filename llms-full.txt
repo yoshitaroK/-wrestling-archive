@@ -3,7 +3,7 @@
 > YouTubeで公開されている日本のレスリング大会の配信・動画3,387本を、大会名・開催年・日程ごとに整理した Japan Wrestling Channel 公式のアーカイブです。動画はサイト内の YouTube プレーヤーで再生できます。大会の開催日・会場は照合用の大会データに基づきます。
 
 - サイト: https://japanwrestlingchannel.com/
-- データ更新日: 2026年11月25日
+- データ更新日: 2026年11月26日
 - お問い合わせ: https://japanwrestlingchannel.com/contact.html
 
 ## 主なページ
@@ -97,7 +97,8 @@
 
 ### 東日本学生選手権（秋季大会）
 - 大会ページ: https://japanwrestlingchannel.com/events/east-autumn/
-- [令和8年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2026/): 2026年11月23日〜25日(予定)・東京・駒沢オリンピック公園総合運動場体育館・動画10本
+- [令和8年度 東日本学生レスリング選手権大会(秋季大会)](https://japanwrestlingchannel.com/events/east-autumn/2026/): 2026年11月23日〜25日・東京・駒沢オリンピック公園総合運動場体育館・動画10本
+  - 結果(日本レスリング協会): https://www.japan-wrestling.jp/competition/2026/7549
   - ニュース: [東日本学生秋季が閉幕 選手権グレコで育英大が4階級制す](https://japanwrestlingchannel.com/news/2026-east-autumn-final/)
   - ニュース: [東日本学生秋季・新人戦フリー 山梨学院大が4階級、北村と山本は2スタイル制覇](https://japanwrestlingchannel.com/news/2026-east-autumn-day2/)
   - ニュース: [東日本学生秋季が開幕 新人戦グレコで育英大が4階級制す](https://japanwrestlingchannel.com/news/2026-east-autumn-day1/)
